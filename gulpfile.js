@@ -34,7 +34,7 @@ gulp.task('develop', function () {
 });
 
 gulp.task('default', [
-  'stylus',
+  //'stylus',
   'develop',
-  'watch'
+  //'watch'
 ]);

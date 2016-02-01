@@ -17,11 +17,16 @@
     "jade": "^1.11.0"
   },
   "devDependencies": {
+    "css-loader": "^0.23.1",
+    "file-loader": "^0.8.5",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
     "gulp-nodemon": "^2.0.2",
     "gulp-plumber": "^1.0.0",
     "gulp-stylus": "^2.0.0",
+    "style-loader": "^0.13.0",
+    "stylus-loader": "^1.5.1",
+    "url-loader": "^0.5.7",
     "webpack": "^1.12.12",
     "webpack-dev-server": "^1.14.1"
   }

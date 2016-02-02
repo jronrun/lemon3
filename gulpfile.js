@@ -25,7 +25,7 @@ gulp.task('develop', function () {
   livereload.listen();
   nodemon({
     script: 'app.js',
-    ext: 'js coffee jade',
+    ext: 'coffee jade',
     stdout: false
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
@@ -69,14 +69,14 @@ gulp.task("webpack:build", function(callback) {
 // Webpack Production build
 gulp.task("build", ["webpack:build"]);
 
-// this & 'npm run dev'
+// this & 'gulp webpack' || this & 'npm run dev'
 gulp.task('default', [
   //'stylus',
   'develop',
   //'watch:stylus'
 ]);
 
-//wepack & 'npm start'
+//this & 'gulp' || this & 'npm start'
 gulp.task("webpack", ["webpack:dev-server"]);
 
 gulp.task('webpack:dev-server', function () {

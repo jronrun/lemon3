@@ -1,5 +1,5 @@
 require('../css/style.styl');
 
 $(function() {
-  $('#abc').text(VERSION+"ddef");
+  $('#abc').text(VERSION+"ddc");
 })

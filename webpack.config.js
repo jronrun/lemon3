@@ -2,7 +2,8 @@ var path = require("path");
 var webpack = require("webpack");
 
 module.exports = {
-  cache: false,
+  cache: true,
+  debug: true,
   entry: {
     index: "./public/entry/index.js"
   },

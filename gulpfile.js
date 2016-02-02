@@ -66,11 +66,48 @@ gulp.task("webpack:build", function(callback) {
   });
 });
 
-// Webpack Production build, develop: 'npm run dev'
+// Webpack Production build
 gulp.task("build", ["webpack:build"]);
 
+// this & 'npm run dev'
 gulp.task('default', [
   //'stylus',
   'develop',
   //'watch:stylus'
 ]);
+
+//wepack & 'npm start'
+gulp.task("webpack", ["webpack:dev-server"]);
+
+gulp.task('webpack:dev-server', function () {
+  var devServerConfig = Object.create(webpackConfig)
+  // webpack need this to send request to webpack-dev-server
+  devServerConfig.plugins = devServerConfig.plugins || []
+  devServerConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
+  devServerConfig.devtool = "sourcemap";
+  devServerConfig.debug = true;
+
+  // inline mode
+  devServerConfig.entry.index.unshift('webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server')
+
+  var compiler = webpack(devServerConfig)
+  new WebpackDevServer(compiler, {
+    // contentBase: {target: 'http://localhost:3000/'},
+    // Set this as true if you want to access dev server from arbitrary url.
+    // This is handy if you are using a html5 router.
+    historyApiFallback: false,
+    proxy: {
+      '*': 'http://localhost:3000'
+    },
+    publicPath: '/dist/',
+    lazy: false,
+    hot: false
+  }).listen(8080, 'localhost', function (err) {
+    if (err) {
+      throw new gutil.PluginError('webpack-dev-server', err)
+    }
+
+    gutil.log('[webpack-dev-server]', 'http://localhost:8080/')
+  })
+})
+

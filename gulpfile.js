@@ -88,7 +88,7 @@ gulp.task('webpack:dev-server', function () {
   // webpack need this to send request to webpack-dev-server
   devServerConfig.plugins = devServerConfig.plugins || []
   devServerConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
-  devServerConfig.devtool = "sourcemap";
+  devServerConfig.devtool = "source-map";
   devServerConfig.debug = true;
 
   var webpackAddr = util.format('http://%s:%s', config.host, config.wpport);

@@ -1,3 +1,5 @@
+//
+//npm run debug, npm run debugtool, gulp webpack
 var gulp = require('gulp'),
   gutil = require("gulp-util"),
   nodemon = require('gulp-nodemon'),
@@ -5,6 +7,8 @@ var gulp = require('gulp'),
   livereload = require('gulp-livereload'),
   stylus = require('gulp-stylus');
 
+var util = require('util');
+var config = require('./config/config.js');
 var webpack = require("webpack");
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
@@ -25,7 +29,7 @@ gulp.task('develop', function () {
   livereload.listen();
   nodemon({
     script: 'app.js',
-    ext: 'coffee jade',
+    ext: 'js coffee jade',
     stdout: false
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
@@ -87,8 +91,9 @@ gulp.task('webpack:dev-server', function () {
   devServerConfig.devtool = "sourcemap";
   devServerConfig.debug = true;
 
+  var webpackAddr = util.format('http://%s:%s', config.host, config.wpport);
   // inline mode
-  devServerConfig.entry.index.unshift('webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server')
+  devServerConfig.entry.index.unshift('webpack-dev-server/client?' + webpackAddr, 'webpack/hot/dev-server')
 
   var compiler = webpack(devServerConfig)
   new WebpackDevServer(compiler, {
@@ -97,17 +102,17 @@ gulp.task('webpack:dev-server', function () {
     // This is handy if you are using a html5 router.
     historyApiFallback: false,
     proxy: {
-      '*': 'http://localhost:3000'
+      '*': 'http://' + config.host + ':' + config.port
     },
     publicPath: '/dist/',
     lazy: false,
     hot: false
-  }).listen(8080, 'localhost', function (err) {
+  }).listen(config.wpport, config.host, function (err) {
     if (err) {
       throw new gutil.PluginError('webpack-dev-server', err)
     }
 
-    gutil.log('[webpack-dev-server]', 'http://localhost:8080/')
+    gutil.log('[webpack-dev-server]', webpackAddr);
   })
 })
 

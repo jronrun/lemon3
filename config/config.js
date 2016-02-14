@@ -9,6 +9,8 @@ var config = {
       name: 'lemon3'
     },
     port: 3000,
+    wpport: 8080,
+    host: 'localhost'
   },
 
   test: {

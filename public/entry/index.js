@@ -6,6 +6,7 @@ CodeMirror = require('codemirror/lib/codemirror');
 require('codemirror/lib/codemirror.css');
 require('font-awesome/css/font-awesome.css');
 JSON5 = require('json5/lib/json5');
+lemon = require('lemon/coffee/lemon.coffee');
 
 $(function() {
   $('#abc').text(VERSION+"hellw");

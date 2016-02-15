@@ -20,6 +20,7 @@ module.exports = {
       { test: /\.png$/, loader: "url-loader?limit=100000" },
       { test: /\.jpg$/, loader: "file-loader" },
       { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' },
+      { test: /\.coffee$/, loader: "coffee-loader" },
 
       { test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery' },
       //{ test: /\.css$/, loaders: [ 'style', 'css', 'postcss' ] },

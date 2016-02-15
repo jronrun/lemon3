@@ -1,11 +1,12 @@
 var path = require("path");
 var webpack = require("webpack");
+var autoprefixer = require('autoprefixer');
 
 module.exports = {
   cache: true,
   debug: true,
   entry: {
-    index: [ "./public/entry/index.js" ]
+    index: [ "./public/entry/index.js", 'bootstrap-loader' ]
   },
   output: {
     path: path.join(__dirname, "public/dist"),
@@ -15,12 +16,18 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.css$/, loader: "style-loader!css-loader" },
+      //{ test: /\.css$/, loader: "style-loader!css-loader" },
       { test: /\.png$/, loader: "url-loader?limit=100000" },
       { test: /\.jpg$/, loader: "file-loader" },
-      { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' }
+      { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' },
+
+      { test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery' },
+      { test: /\.css$/, loaders: [ 'style', 'css', 'postcss' ] },
+      { test: /\.scss$/, loaders: [ 'style', 'css', 'postcss', 'sass' ] },
+      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=10000' }
     ]
   },
+  postcss: [ autoprefixer ],
   externals: {
 
   },

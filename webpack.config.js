@@ -16,13 +16,13 @@ module.exports = {
   },
   module: {
     loaders: [
-      //{ test: /\.css$/, loader: "style-loader!css-loader" },
+      { test: /\.css$/, loader: "style-loader!css-loader" },
       { test: /\.png$/, loader: "url-loader?limit=100000" },
       { test: /\.jpg$/, loader: "file-loader" },
       { test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader' },
 
       { test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery' },
-      { test: /\.css$/, loaders: [ 'style', 'css', 'postcss' ] },
+      //{ test: /\.css$/, loaders: [ 'style', 'css', 'postcss' ] },
       { test: /\.scss$/, loaders: [ 'style', 'css', 'postcss', 'sass' ] },
       { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=10000' }
     ]

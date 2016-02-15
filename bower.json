@@ -9,6 +9,7 @@
   "dependencies": {
     "jquery": "^2.2.0",
     "bootstrap": "v4.0.0-alpha.2",
-    "tether": "^1.1.1"
+    "tether": "^1.1.1",
+    "font-awesome": "fontawesome#^4.5.0"
   }
 }

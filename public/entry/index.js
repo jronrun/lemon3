@@ -4,6 +4,7 @@ require('../css/style.styl');
 Tether = require('tether');
 CodeMirror = require('codemirror/lib/codemirror');
 require('codemirror/lib/codemirror.css');
+require('font-awesome/css/font-awesome.css');
 
 $(function() {
   $('#abc').text(VERSION+"hellw");

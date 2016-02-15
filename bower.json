@@ -12,6 +12,8 @@
     "tether": "^1.1.1",
     "font-awesome": "fontawesome#^4.5.0",
     "codemirror": "^5.11.0",
-    "jquery-pjax": "^1.9.6"
+    "jquery-pjax": "^1.9.6",
+    "json5": "^0.4.0",
+    "lz-string": "^1.4.4"
   }
 }

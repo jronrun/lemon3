@@ -32,6 +32,7 @@
     "gulp-plumber": "^1.0.0",
     "gulp-stylus": "^2.0.0",
     "imports-loader": "^0.6.5",
+    "lz-string": "^1.4.4",
     "node-sass": "^3.4.2",
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.1.2",

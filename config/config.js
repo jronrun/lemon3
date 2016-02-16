@@ -9,7 +9,9 @@ var config = {
       name: 'lemon3'
     },
     port: 3000,
-    wpport: 8080,
+    webpackPort: 8080,
+    inspectorWebPort: 8000,
+    inspectorDebugPort: 5858,
     host: 'localhost'
   },
 

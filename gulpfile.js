@@ -29,7 +29,7 @@ gulp.task('watch:stylus', function() {
 gulp.task('develop', function () {
   livereload.listen();
   nodemon({
-    exec: 'node-inspector --web-port=8000 & node --debug',
+    exec: util.format('node-inspector --web-port=%s & node --debug=%s', config.inspectorWebPort, config.inspectorDebugPort),
     script: 'app.js',
     ext: 'js coffee jade',
     stdout: false
@@ -100,7 +100,7 @@ gulp.task('webpack:dev-server', function () {
   devServerConfig.devtool = "source-map";
   devServerConfig.debug = true;
 
-  var webpackAddr = util.format('http://%s:%s', config.host, config.wpport);
+  var webpackAddr = util.format('http://%s:%s', config.host, config.webpackPort);
   // inline mode
   devServerConfig.entry.index.unshift('webpack-dev-server/client?' + webpackAddr, 'webpack/hot/dev-server')
 
@@ -116,7 +116,7 @@ gulp.task('webpack:dev-server', function () {
     publicPath: '/dist/',
     lazy: false,
     hot: false
-  }).listen(config.wpport, config.host, function (err) {
+  }).listen(config.webpackPort, config.host, function (err) {
     if (err) {
       throw new gutil.PluginError('webpack-dev-server', err)
     }

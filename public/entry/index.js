@@ -5,8 +5,10 @@ Tether = require('tether');
 CodeMirror = require('codemirror/lib/codemirror');
 require('codemirror/lib/codemirror.css');
 require('font-awesome/css/font-awesome.css');
-JSON5 = require('json5/lib/json5');
+JSON5 = require('json5');
 lemon = require('lemon/coffee/lemon.coffee');
+jju = require('jju/lib/parse');
+LZString = require('lz-string');
 
 $(function() {
   $('#abc').text(VERSION+"hell");

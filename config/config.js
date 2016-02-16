@@ -12,7 +12,7 @@ var config = {
     webpackPort: 8080,
     inspectorWebPort: 8000,
     inspectorDebugPort: 5858,
-    host: 'localhost'
+    host: '192.168.20.19'
   },
 
   test: {

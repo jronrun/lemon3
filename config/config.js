@@ -20,7 +20,7 @@ var config = {
     app: {
       name: 'lemon3'
     },
-    port: 3000,
+    port: 3000
   },
 
   production: {
@@ -28,7 +28,7 @@ var config = {
     app: {
       name: 'lemon3'
     },
-    port: 3000,
+    port: 3000
   }
 };
 

@@ -22,7 +22,7 @@ gulp.task('stylus', function () {
     .pipe(livereload());
 });
 
-gulp.task('watch:stylus', function() {
+gulp.task('watch:stylus', function () {
   gulp.watch('./public/css/*.styl', ['stylus']);
 });
 
@@ -35,7 +35,7 @@ gulp.task('develop', function () {
     stdout: false
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
-      if(/^Express server listening on port/.test(chunk)){
+      if (/^Express server listening on port/.test(chunk)) {
         livereload.changed(__dirname);
       }
     });
@@ -44,7 +44,7 @@ gulp.task('develop', function () {
   });
 });
 
-gulp.task("webpack:build", function(callback) {
+gulp.task("webpack:build", function (callback) {
   // modify some webpack config options
   var myConfig = Object.create(webpackConfig);
   myConfig.plugins = myConfig.plugins.concat(
@@ -66,8 +66,8 @@ gulp.task("webpack:build", function(callback) {
   );
 
   // run webpack
-  webpack(myConfig, function(err, stats) {
-    if(err) {
+  webpack(myConfig, function (err, stats) {
+    if (err) {
       throw new gutil.PluginError("webpack:build", err);
     }
 
@@ -85,7 +85,7 @@ gulp.task("build", ["webpack:build"]);
 // this & 'gulp webpack' || this & 'npm run dev'
 gulp.task('default', [
   //'stylus',
-  'develop',
+  'develop'
   //'watch:stylus'
 ]);
 
@@ -93,25 +93,27 @@ gulp.task('default', [
 gulp.task("webpack", ["webpack:dev-server"]);
 
 gulp.task('webpack:dev-server', function () {
-  var devServerConfig = Object.create(webpackConfig)
+  var devServerConfig = Object.create(webpackConfig);
   // webpack need this to send request to webpack-dev-server
-  devServerConfig.plugins = devServerConfig.plugins || []
-  devServerConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
+  devServerConfig.plugins = devServerConfig.plugins || [];
+  devServerConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
   devServerConfig.devtool = "source-map";
   devServerConfig.debug = true;
 
   var webpackAddr = util.format('http://%s:%s', config.host, config.webpackPort);
   // inline mode
-  devServerConfig.entry.index.unshift('webpack-dev-server/client?' + webpackAddr, 'webpack/hot/dev-server')
+  devServerConfig.entry.index.unshift('webpack-dev-server/client?' + webpackAddr, 'webpack/hot/dev-server');
 
-  var compiler = webpack(devServerConfig)
+  var compiler = webpack(devServerConfig);
+  var appServer = util.format('http://%s:%s', config.host, config.port);
+
   new WebpackDevServer(compiler, {
-    // contentBase: {target: 'http://localhost:3000/'},
+    // contentBase: {target: appServer},
     // Set this as true if you want to access dev server from arbitrary url.
     // This is handy if you are using a html5 router.
     historyApiFallback: false,
     proxy: {
-      '*': 'http://' + config.host + ':' + config.port
+      '*': appServer
     },
     publicPath: '/dist/',
     lazy: false,
@@ -123,5 +125,5 @@ gulp.task('webpack:dev-server', function () {
 
     gutil.log('[webpack-dev-server]', webpackAddr);
   })
-})
+});
 

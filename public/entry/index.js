@@ -9,6 +9,6 @@ JSON5 = require('json5/lib/json5');
 lemon = require('lemon/coffee/lemon.coffee');
 
 $(function() {
-  $('#abc').text(VERSION+"hellw");
+  $('#abc').text(VERSION+"hell");
   $('#test').html('<button type="button" class="btn btn-default">Primary</button>');
 });

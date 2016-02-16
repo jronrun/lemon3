@@ -1,5 +1,6 @@
 //
-//npm run debug, npm run debugtool, gulp webpack
+//1. gulp, gulp webpack
+//2. npm run debug, npm run debugtool, gulp webpack
 var gulp = require('gulp'),
   gutil = require("gulp-util"),
   nodemon = require('gulp-nodemon'),
@@ -28,6 +29,7 @@ gulp.task('watch:stylus', function() {
 gulp.task('develop', function () {
   livereload.listen();
   nodemon({
+    exec: 'node-inspector --web-port=8000 & node --debug',
     script: 'app.js',
     ext: 'js coffee jade',
     stdout: false

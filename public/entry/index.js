@@ -9,11 +9,42 @@ JSON5 = require('json5');
 lemon = require('lemon/coffee/lemon.coffee');
 jju = require('jju/lib/parse');
 LZString = require('lz-string');
+_ = require('lodash');
 
 testJson = "N4KABBYGYPYwXGA5AIwIYCckBpyQO4AWAlgDYCmiALhgK7m54RUkDOiSxrYaYAOiAC2tUlWIBaUsQB25MKxoyA5jhBMwAeg1gWXMHrTT90qbLABjGIMHlpVPFsvX1hchkrID0mCzc5N2jKmck42dmqQmgBUOmz63LwopDDmANYWVmH2kZAsaFQZdjL03DBGhj6uGGDBYFEaEZCuAB6IAAzNACIAogCCnSjk5FC4kYRopFCIAHQArKOQACbkomiIANQAjG0LzAhgAJLSUDLEVACe2JBaPNKLYIPnZYsAhI0QJ9ITpOccvDRoMjKDLWNCqSIwQiIADa6kiACJ8HJWIQYCJFtIkAVYBglOQqPDdjkkJgMGhztxzIYwOMAG7kcE5CBYslA6RKEGCNDcKhwRkQAC6uAAviAgA";
+testJson2 = "PTAEBUAsEsGdQGbQDYFNR1AdwE7QC76oB2GpAUgMoDyAcgKyiwCex+AhgB4A0ox7+AK452yZM14AjQfj4AHALZ9UqACbx2oHKgDmg5OxwAoEKCp1EKVL1gB7UAGNbCuVdAA3aJoAGxRVsFSaRRVbwA6UAAhdFhhdHx7AGsVOVBJW3xIMiZWBwBCIyMAbyNQMr52BVQALlAAcgArO2J6Ou5S8vdUHFhoW2JauoAGMIAWMKG2jrLVVFgHPDl8PoH681pEWxxQTPQAUUpGbvYwqfLQZOYsLfVagG1G5rb6udaAXXbz9hlILcGAQVgKiUAGk4L9tKAADzsIGoBRhRLgraoAACOgU7BQYScCgAfGdyk42HhpAkevdpudQKZwNQACLUWqUX76VTYdDaBS2Lo7GDwIEOZb9bIIdjuLagWwIUAAcQIAAlBJI6vBkHB8AB+KnnUyQQhyWDVEA6AiQZU45zAWHAxLAJr9ejAYn4UkyLawHXlOoAWS4oFo7H4LGhmM4YX4weY6Mx2NxBM+1LKdX+xFU2iwoD2cBIkm6OmhQfTqCwqNQOeIeZwOjCsITXuT5BuQYgggcyW2UIazcrQnb3RjWOQlvxhLKHypsdWdXVkntzXoYSaY7S0Gns+d6qXsBXszkJFmxAc0DmtSKAF9EzNUO56ah92mSMfT6ASkmytyHJB2IMAH4ARgmMIAGZnnKWkGSZUAABlbFsRIyASUAfVsL9NHcAAmMIqUvKl5kWfAjVfBs0kEEJBjCYANwcLcmlAABaBxQDkdh23YHRUG3R0V3OIhYHwQZP2/Bj6LI0BUE4OQtkIkTtCknAiG2WB9wcHj3wgxlagAdVsNkMFkPM0lQQhuh2exZiQYh4kgOZ0DXUBNCEk5bCWeAkDQbVzlw85fiqFiOMGfV8DkY150dMIth0YAV3VBwSCBQYfQASXAFc5NsXpyWYM8SPwZh90GU18DUsphGQQKDSNE0zQtXFrThBQ7QdFowiKldcPPIA===";
+
+var json5format = function(target) {
+  lemon.info(target);
+  var tokens = jju.tokenize(target);
+  console.log(tokens);
+
+  _.each(tokens, function (token, key) {
+    switch (token.type) {
+      case 'whitespace':
+        break;
+      case 'comment':
+        break;
+      case 'key':
+        break;
+      case 'literal':
+        break;
+      case 'separator':
+        break;
+      case 'newline':
+        break;
+    }
+  });
+};
 
 $(function() {
+  lemon.console();
   $('#abc').text(VERSION+"hell");
   $('#test').html('<button type="button" class="btn btn-default">Primary</button>');
-  $('#json5').text(testJson);
+  $('#textarea').text(LZString.decompressFromBase64(testJson2));
+
+  $('#j5format').click(function () {
+    json5format($('#textarea').val());
+  });
+
 });

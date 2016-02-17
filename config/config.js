@@ -1,4 +1,5 @@
 var path = require('path'),
+    util = require('util'),
     rootPath = path.normalize(__dirname + '/..'),
     env = process.env.NODE_ENV || 'development';
 
@@ -31,5 +32,7 @@ var config = {
     port: 3000
   }
 };
+
+config.development.livereload = util.format('http://%s:35729/livereload.js', config.development.host);
 
 module.exports = config[env];

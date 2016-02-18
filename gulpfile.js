@@ -29,7 +29,8 @@ gulp.task('watch:stylus', function () {
 gulp.task('develop', function () {
   livereload.listen();
   nodemon({
-    exec: util.format('node-inspector --web-port=%s & node --debug=%s', config.inspectorWebPort, config.inspectorDebugPort),
+    exec: util.format('node-inspector --web-host=%s --web-port=%s & node --debug=%s',
+      config.host, config.inspectorWebPort, config.inspectorDebugPort),
     script: 'app.js',
     ext: 'js coffee jade',
     stdout: false

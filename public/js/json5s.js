@@ -2,6 +2,8 @@
 
 JSON5 = require('json5');
 var jju = require('jju/lib/parse');
+jju.stringify = require('jju/lib/stringify').stringify;
+jju.analyze = require('jju/lib/analyze').analyze;
 
 var tabs = function(count) {
   return new Array(count + 1).join('\t');

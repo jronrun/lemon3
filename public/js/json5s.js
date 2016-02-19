@@ -110,7 +110,10 @@ var json5format = function(target) {
 };
 
 module.exports = {
-  tool: jju,
+  parse: jju.parse,
+  tokenize: jju.tokenize,
+  stringify: jju.stringify,
+  analyze: jju.analyze,
   format: function (target) {
     return json5format(target);
   }

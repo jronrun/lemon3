@@ -28,7 +28,7 @@ gulp.task('watch:stylus', function () {
   gulp.watch('./public/css/*.styl', ['stylus']);
 });
 
-gulp.task('develop', function () {
+gulp.task('start:develop', function () {
   livereload.listen();
   nodemon({
     exec: util.format('node-inspector --web-host=%s --web-port=%s & node --debug=%s',
@@ -45,8 +45,7 @@ gulp.task('develop', function () {
     });
 
     bunyan = spawn('./node_modules/bunyan/bin/bunyan', [
-      '--output', 'short',
-      '--color'
+      '--output', 'short', '--color'
     ]);
 
     bunyan.stdout.pipe(process.stdout);
@@ -60,13 +59,34 @@ gulp.task('develop', function () {
   });
 });
 
+gulp.task("start:production", function () {
+  process.env.NODE_ENV = 'production';
+  nodemon({
+    script: 'app.js',
+    ext: 'js coffee jade',
+    stdout: false,
+    readable: false
+  }).on('readable', function () {
+    bunyan = spawn('./node_modules/bunyan/bin/bunyan', [
+      '--output', 'short', '--color'
+    ]);
+
+    bunyan.stdout.pipe(process.stdout);
+    bunyan.stderr.pipe(process.stderr);
+
+    this.stdout.pipe(bunyan.stdin);
+    this.stderr.pipe(bunyan.stdin);
+  });
+});
+
+gulp.task("production", ["build", "start:production"]);
+
 gulp.task("webpack:build", function (callback) {
   // modify some webpack config options
   var myConfig = Object.create(webpackConfig);
   myConfig.plugins = myConfig.plugins.concat(
     new webpack.DefinePlugin({
       "process.env": {
-        // This has effect on the react lib size
         "NODE_ENV": JSON.stringify("production")
       }
     }),
@@ -101,7 +121,7 @@ gulp.task("build", ["webpack:build"]);
 // this & 'gulp webpack' || this & 'npm run dev'
 gulp.task('default', [
   //'stylus',
-  'develop'
+  'start:develop'
   //'watch:stylus'
 ]);
 

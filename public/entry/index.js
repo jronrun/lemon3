@@ -9,7 +9,7 @@ require('codemirror/lib/codemirror.css');
 require('font-awesome/css/font-awesome.css');
 lemon = require('lemon/coffee/lemon.coffee');
 var LZString = require('lz-string');
-var _ = require('lodash');
+_ = require('lodash');
 json5s = require('../js/json5s');
 
 testJson = "N4KABBYGYPYwXGA5AIwIYCckBpyQO4AWAlgDYCmiALhgK7m54RUkDOiSxrYaYAOiAC2tUlWIBaUsQB25MKxoyA5jhBMwAeg1gWXMHrTT90qbLABjGIMHlpVPFsvX1hchkrID0mCzc5N2jKmck42dmqQmgBUOmz63LwopDDmANYWVmH2kZAsaFQZdjL03DBGhj6uGGDBYFEaEZCuAB6IAAzNACIAogCCnSjk5FC4kYRopFCIAHQArKOQACbkomiIANQAjG0LzAhgAJLSUDLEVACe2JBaPNKLYIPnZYsAhI0QJ9ITpOccvDRoMjKDLWNCqSIwQiIADa6kiACJ8HJWIQYCJFtIkAVYBglOQqPDdjkkJgMGhztxzIYwOMAG7kcE5CBYslA6RKEGCNDcKhwRkQAC6uAAviAgA";

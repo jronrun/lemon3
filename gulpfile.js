@@ -6,13 +6,15 @@ var gulp = require('gulp'),
   nodemon = require('gulp-nodemon'),
   plumber = require('gulp-plumber'),
   livereload = require('gulp-livereload'),
-  stylus = require('gulp-stylus');
+  stylus = require('gulp-stylus'),
+  spawn = require('child_process').spawn,
+  bunyan = require('bunyan');
 
 var util = require('util');
-var config = require('./config/config.js');
+var config = require('./config/config');
 var webpack = require("webpack");
 var WebpackDevServer = require("webpack-dev-server");
-var webpackConfig = require("./webpack.config.js");
+var webpackConfig = require("./webpack.config");
 
 gulp.task('stylus', function () {
   gulp.src('./public/css/*.styl')
@@ -33,15 +35,28 @@ gulp.task('develop', function () {
       config.host, config.inspectorWebPort, config.inspectorDebugPort),
     script: 'app.js',
     ext: 'js coffee jade',
-    stdout: false
+    stdout: false,
+    readable: false
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
       if (/^Express server listening on port/.test(chunk)) {
         livereload.changed(__dirname);
       }
     });
-    this.stdout.pipe(process.stdout);
-    this.stderr.pipe(process.stderr);
+
+    bunyan = spawn('./node_modules/bunyan/bin/bunyan', [
+      '--output', 'short',
+      '--color'
+    ]);
+
+    bunyan.stdout.pipe(process.stdout);
+    bunyan.stderr.pipe(process.stderr);
+
+    this.stdout.pipe(bunyan.stdin);
+    this.stderr.pipe(bunyan.stdin);
+
+    //this.stdout.pipe(process.stdout);
+    //this.stderr.pipe(process.stderr);
   });
 });
 

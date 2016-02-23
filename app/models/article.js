@@ -1,5 +1,6 @@
 // Example model
 
+var log = log_from('article');
 
 function Article (opts) {
   if(!opts) opts = {};

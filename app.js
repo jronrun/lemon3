@@ -5,6 +5,7 @@ var express = require('express'),
 
 var app = express();
 
+require('./app/coms/comm')(global, config);
 require('./config/express')(app, config);
 
 app.listen(config.port, function () {

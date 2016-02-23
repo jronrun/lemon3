@@ -18,7 +18,7 @@ module.exports = function(app, config) {
   app.set('view engine', 'jade');
 
   // app.use(favicon(config.root + '/public/img/favicon.ico'));
-  app.use(morgan('short'));
+  app.use(morgan(config.morganFmt));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: true

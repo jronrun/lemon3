@@ -6,6 +6,7 @@ var path = require('path'),
 var config = {
   development: {
     root: rootPath,
+    morganFmt: 'dev',
     app: {
       name: 'lemon3'
     },
@@ -18,6 +19,7 @@ var config = {
 
   test: {
     root: rootPath,
+    morganFmt: 'dev',
     app: {
       name: 'lemon3'
     },
@@ -26,6 +28,7 @@ var config = {
 
   production: {
     root: rootPath,
+    morganFmt: 'short',
     app: {
       name: 'lemon3'
     },

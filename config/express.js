@@ -3,7 +3,7 @@ var glob = require('glob');
 var _ = require('lodash');
 
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compress = require('compression');
@@ -18,7 +18,7 @@ module.exports = function(app, config) {
   app.set('view engine', 'jade');
 
   // app.use(favicon(config.root + '/public/img/favicon.ico'));
-  app.use(logger('dev'));
+  app.use(morgan('short'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: true

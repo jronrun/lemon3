@@ -1,5 +1,6 @@
 var path = require('path'),
-  logger = require('./log');
+  logger = require('./log'),
+  mongo = require('./mongo');
 
 module.exports = function(scope, config) {
 
@@ -9,6 +10,16 @@ module.exports = function(scope, config) {
 
   scope.log_from = function(options) {
     return logger(options);
+  };
+
+  scope.database = function() {
+    return mongo.db;
+  };
+
+  scope.model_bind = function(model, methods) {
+    var model = database().bind(model);
+    model.bind(methods || {});
+    return model;
   };
 
 };

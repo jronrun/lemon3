@@ -1,7 +1,9 @@
 var log = log_from('article');
 
-function Note (options) {
-}
+var note = model_bind('note', {
 
-module.exports = Note;
+});
+
+
+module.exports = note;
 

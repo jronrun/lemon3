@@ -9,9 +9,13 @@ module.exports = function (app) {
 
 router.get('/', function (req, res, next) {
 
-  //note.findById('56cd685a795aa57d37df8613', function(err, doc) {
-  //  log.info(doc);
-  //});
+  note.findById('56cd685a795aa57d37df8613', function(err, doc) {
+    log.info(doc);
+  });
+
+  note.nextId().then(function (id) {
+    log.info('nextId: ' + id);
+  });
 
   res.render('notebook/index', {
   });

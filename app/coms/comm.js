@@ -1,6 +1,7 @@
 var path = require('path'),
   logger = require('./log'),
-  mongo = require('./mongo');
+  mongo = require('./mongo'),
+  _ = require('lodash');
 
 module.exports = function(scope, config) {
 
@@ -16,9 +17,15 @@ module.exports = function(scope, config) {
     return mongo.db;
   };
 
-  scope.model_bind = function(model, methods) {
-    var model = database().bind(model);
-    model.bind(methods || {});
+  scope.model_bind = function(modelName, methods) {
+    var model = database().bind(modelName);
+    model.bind(_.extend({
+
+      nextId: function() {
+        return database().counter.nextSequence(modelName);
+      }
+
+    }, mongo.Base, methods || {}));
     return model;
   };
 

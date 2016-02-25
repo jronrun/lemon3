@@ -1,10 +1,11 @@
-var mongo = require('mongoskin');
+var mongo = require('mongoskin'),
+  when = require('when');
 
 //http://stackoverflow.com/questions/30389319/mongoskin-and-connection-issue-to-mongodb-replica-cluster
 //'mongodb://username:password@177.77.66.9:27017,88.052.72.91:27017/dbname?replicaSet=yourReplicaCluster';
 var url = 'mongodb://localhost:27017/lemon3';
 
-exports.db = mongo.db(url, {
+var db = mongo.db(url, {
   w: 0,
   native_parser: (process.env['TEST_NATIVE'] != null),
   auto_reconnect: true,
@@ -15,3 +16,30 @@ exports.db = mongo.db(url, {
     socketTimeoutMS: 0
   }
 });
+
+db.bind('counter').bind({
+
+  nextSequence: function(sequenceName) {
+    var deferred = when.defer();
+    db.collection('counter').findOneAndUpdate(
+      { _id: sequenceName},
+      { $inc: { seq: 1 }},
+      { upsert: true, returnOriginal: false},
+      function(err, doc) {
+        if (err) {
+          deferred.reject(err);
+        }
+
+        deferred.resolve(doc.value.seq);
+      }
+    );
+
+    return deferred.promise;
+  }
+
+});
+
+module.exports.db = db;
+module.exports.Base = {
+
+};

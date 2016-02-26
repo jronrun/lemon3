@@ -5,6 +5,8 @@ var path = require('path'),
 
 module.exports = function(scope, config) {
 
+  scope._ = _;
+
   scope.app_require = function(moduleName) {
     return require(path.join(config.root, path.sep, 'app', path.sep, moduleName));
   };

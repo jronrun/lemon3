@@ -17,6 +17,10 @@ router.get('/', function (req, res, next) {
     log.info('nextId: ' + id);
   });
 
+  note.nextId(function (id) {
+    log.info('nextId: ' + id);
+  });
+
   res.render('notebook/index', {
   });
 });

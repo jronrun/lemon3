@@ -1,6 +1,5 @@
 var express = require('express');
 var glob = require('glob');
-var _ = require('lodash');
 
 var favicon = require('serve-favicon');
 var morgan = require('morgan');

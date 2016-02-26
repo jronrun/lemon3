@@ -43,8 +43,15 @@ module.exports.db = db;
 module.exports.Base = function(model, modelName) {
   return {
 
-    nextId: function() {
-      return db.counter.nextSequence(modelName);
+    nextId: function(callback) {
+      var promise = db.counter.nextSequence(modelName);
+      if (_.isFunction(callback)) {
+        promise.then(function (id) {
+          callback(id);
+        });
+      }
+
+      return promise;
     }
 
   }

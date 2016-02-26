@@ -40,6 +40,12 @@ db.bind('counter').bind({
 });
 
 module.exports.db = db;
-module.exports.Base = {
+module.exports.Base = function(model, modelName) {
+  return {
 
+    nextId: function() {
+      return db.counter.nextSequence(modelName);
+    }
+
+  }
 };

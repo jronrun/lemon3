@@ -19,13 +19,7 @@ module.exports = function(scope, config) {
 
   scope.model_bind = function(modelName, methods) {
     var model = database().bind(modelName);
-    model.bind(_.extend({
-
-      nextId: function() {
-        return database().counter.nextSequence(modelName);
-      }
-
-    }, mongo.Base, methods || {}));
+    model.bind(_.extend(mongo.Base(model, modelName), methods || {}));
     return model;
   };
 

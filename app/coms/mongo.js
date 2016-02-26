@@ -27,9 +27,9 @@ db.bind('counter').bind({
       function(err, doc) {
         if (err) {
           deferred.reject(err);
+        } else {
+          deferred.resolve(doc.value.seq);
         }
-
-        deferred.resolve(doc.value.seq);
       }
     );
 

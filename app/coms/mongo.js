@@ -1,5 +1,4 @@
-var mongo = require('mongoskin'),
-  when = require('when');
+var mongo = require('mongoskin');
 
 //http://stackoverflow.com/questions/30389319/mongoskin-and-connection-issue-to-mongodb-replica-cluster
 //'mongodb://username:password@177.77.66.9:27017,88.052.72.91:27017/dbname?replicaSet=yourReplicaCluster';

@@ -1,11 +1,13 @@
 var path = require('path'),
   logger = require('./log'),
   mongo = require('./mongo'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  when = require('when');
 
 module.exports = function(scope, config) {
 
   scope._ = _;
+  scope.when = when;
 
   scope.app_require = function(moduleName) {
     return require(path.join(config.root, path.sep, 'app', path.sep, moduleName));

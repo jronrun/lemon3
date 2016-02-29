@@ -1,10 +1,10 @@
 var mongo = require('mongoskin');
+var config = require('../../config/config');
 
 //http://stackoverflow.com/questions/30389319/mongoskin-and-connection-issue-to-mongodb-replica-cluster
 //'mongodb://username:password@177.77.66.9:27017,88.052.72.91:27017/dbname?replicaSet=yourReplicaCluster';
-var url = 'mongodb://localhost:27017/lemon3';
 
-var db = mongo.db(url, {
+var db = mongo.db(config.db, {
   w: 0,
   native_parser: (process.env['TEST_NATIVE'] != null),
   auto_reconnect: true,

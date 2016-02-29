@@ -3,6 +3,7 @@ var format = require('util').format;
 var host = '10.0.4.35'; //'192.168.20.19'
 
 module.exports = {
+  db: 'mongodb://localhost:27017/lemon3',
   morganFmt: 'dev',
   port: 3000,
 

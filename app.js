@@ -1,11 +1,13 @@
 
 
 var express = require('express'),
-  config = require('./config/config');
+  config = require('./config/config'),
+  passport = require('passport');
 
 var app = express();
 
 require('./app/coms/comm')(global, config);
+require('./config/passport')(passport);
 require('./config/express')(app, config);
 
 app.listen(config.port, function () {

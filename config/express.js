@@ -1,5 +1,6 @@
 var express = require('express');
 var session = require('express-session');
+var expressValidator = require('express-validator');
 var glob = require('glob');
 
 var favicon = require('serve-favicon');
@@ -35,6 +36,7 @@ module.exports = function(app, config) {
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(expressValidator({}));
   app.use(multer().array('image', 1));
   app.use(methodOverride(function (req) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {

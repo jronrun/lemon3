@@ -39,14 +39,14 @@ var analyst = function(item, parent) {
     log.error(new Error('Duplation Resource ID'), model);
   }
 
-  if (uniqueActions.indexOf(model.action) != -1) {
-    log.error(new Error('Duplation Resource Action'), model);
+  if (uniqueActions.indexOf(model.action + '_' + model.method) != -1) {
+    log.error(new Error('Duplation Resource Action and Method'), model);
   }
 
   parent[model.name] = model;
   models.push(_.clone(model));
   uniqueIds.push(model.id);
-  uniqueActions.push(model.action);
+  uniqueActions.push(model.action + '_' + model.method);
 
   _.each(children, function (child) {
     child.action = _.startsIf(child.action || '/', '/');
@@ -62,13 +62,20 @@ _.each(defined.items, function (item) {
   analyst(item, resource);
 });
 
-var getResource = function(actionOrID) {
+/**
+ * Get defined resource with given ID or action with method, method default is Method.GET
+ * @param actionOrID
+ * @param method
+ * @returns {*}
+ */
+var getResource = function(actionOrID, method) {
   var argType = 0, modelId = -1, action = '';  //1 integer, 2 string
   if (_.isInteger(actionOrID)) {
     argType = 1; modelId = actionOrID;
   } else if (_.isString(actionOrID)) {
     argType = 2; action = _.startsIf(actionOrID, '/');
     action = action.length > 1 ? _.trimEnd(action, '/') : action;
+    method = method || Method.GET;
   }
 
   var matched = {};
@@ -80,7 +87,7 @@ var getResource = function(actionOrID) {
         break;
       }
     } else if (2 == argType) {
-      if (curModel.action == action) {
+      if (curModel.action == action && curModel.method == method) {
         matched = curModel;
         break;
       }
@@ -89,8 +96,6 @@ var getResource = function(actionOrID) {
 
   return _.clone(matched);
 };
-
-log.warn('a', models);
 
 uniqueIds = null; uniqueActions = null;
 module.exports.getResource = getResource;

@@ -1,4 +1,4 @@
-var defined = require('../../config/resource'),
+var defined = require('../../config/source'),
   JSONSchemaValidator = require('ajv'),
   log = log_from('resource');
 

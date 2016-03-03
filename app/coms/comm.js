@@ -5,9 +5,34 @@ var path = require('path'),
   when = require('when'),
   async = require('async');
 
+var extend_lodash = {
+  startsIf: function (target, start) {
+    return _.startsWith(target, start) ? target : (start + target);
+  },
+
+  endsIf: function (target, end) {
+    return _.endsWith(target, end) ? target : (target + end);
+  },
+
+  aroundWith: function (target, around) {
+    return _.startsWith(target, around) && _.endsWith(target, around);
+  },
+
+  aroundIf: function (target, around) {
+    return _.endsIf(_.startsIf(target, around), around);
+  },
+
+  beforeOccur: function(target, delimiter, position) {
+    var tokens = target.split(delimiter).slice(position);
+    return delimiter + tokens.join(delimiter);
+  }
+};
+
 module.exports = function(scope, config) {
 
   scope._ = _;
+  _.extend(_, extend_lodash);
+
   scope.when = when;
   scope.async = async;
 
@@ -28,5 +53,9 @@ module.exports = function(scope, config) {
     model.bind(_.extend(mongo.Base(model, modelName), methods || {}));
     return model;
   };
+
+  var resource = require('./resource');
+  scope.getResource = resource.getResource;
+  scope.routes = resource.resource;
 
 };

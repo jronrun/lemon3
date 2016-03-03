@@ -1,12 +1,13 @@
 var express = require('express'),
   router = express.Router(),
-  log = log_from('notebook');
+  log = log_from('notebook'),
+  index = routes.user;
 
 module.exports = function (app) {
-  app.use('/user', router);
+  app.use(index.action, router);
 };
 
-router.get('/', function (req, res, next) {
+router.get(index.do, function (req, res, next) {
   res.render('users/index', {
   });
 });

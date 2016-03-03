@@ -21,6 +21,7 @@
     "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
+    "ajv": "^3.8.1",
     "async": "^1.5.2",
     "autoprefixer": "^6.3.3",
     "bootstrap": "^4.0.0-alpha.2",

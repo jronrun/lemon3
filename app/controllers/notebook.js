@@ -1,13 +1,14 @@
 var express = require('express'),
   router = express.Router(),
   note = require('../models/note'),
-  log = log_from('notebook');
+  log = log_from('notebook'),
+  index = routes.notebook;
 
 module.exports = function (app) {
-  app.use('/notebook', router);
+  app.use(index.action, router);
 };
 
-router.get('/', function (req, res, next) {
+router.get(index.do, function (req, res, next) {
 
   async.waterfall([
     function(callback) {

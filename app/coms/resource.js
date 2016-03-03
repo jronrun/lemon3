@@ -2,7 +2,7 @@ var defined = require('../../config/source'),
   JSONSchemaValidator = require('ajv'),
   log = log_from('resource');
 
-var resource = {}, uniqueIds = [], uniqueActions = [], models = [],
+var resource = {}, uniqueIds = [], uniqueActions = [], models = {},
   ajv = JSONSchemaValidator({allErrors: true}),
   validate = ajv.compile(defined.schema);
 
@@ -46,7 +46,7 @@ var analyst = function(item, parent) {
   }
 
   parent[model.name] = model;
-  models.push(_.clone(model));
+  models[model.id] = _.clone(model);
   uniqueIds.push(model.id);
   uniqueActions.push(model.action + '_' + model.method);
 
@@ -66,29 +66,24 @@ _.each(defined.items, function (item) {
 
 /**
  * Get defined resource with given ID or action with method, method default is Method.GET
- * @param actionOrID
+ * @param arg   ID or Action
  * @param method
  * @returns {*}
  */
-var getResource = function(actionOrID, method) {
-  var argType = 0, modelId = -1, action = '';  //1 integer, 2 string
-  if (_.isInteger(actionOrID)) {
-    argType = 1; modelId = actionOrID;
-  } else if (_.isString(actionOrID)) {
-    argType = 2; action = _.startsIf(actionOrID, '/');
-    action = action.length > 1 ? _.trimEnd(action, '/') : action;
-    method = method || Method.GET;
+var getResource = function(arg, method) {
+  var matched = {};
+  if (_.isInteger(arg)) {
+    matched = models[arg];
   }
 
-  var matched = {};
-  for (var idx = 0; idx < models.length; idx++) {
-    var curModel = models[idx];
-    if (1 == argType) {
-      if (curModel.id == modelId) {
-        matched = curModel;
-        break;
-      }
-    } else if (2 == argType) {
+  else if (_.isString(arg)) {
+    var action = _.startsIf(arg, '/');
+    action = action.length > 1 ? _.trimEnd(action, '/') : action;
+    method = method || defined.method.GET;
+
+    var items = _.values(models);
+    for (var idx = 0; idx < items.length; idx++) {
+      var curModel = items[idx];
       if (curModel.action == action && curModel.method == method) {
         matched = curModel;
         break;

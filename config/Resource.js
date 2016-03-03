@@ -14,8 +14,8 @@ var Type = require('./resource/type'),
 
   do: '/',                // [Auto Generator], action: '/user/vip/' when pid == 0 is '/'
                           // action: '/user/vip/put' when pid > 0 is '/put'
-  base: '',               // [Auto Generator] Top Level Action, pid == 0 is undefined
-  baseId: 1,              // [Auto Generator] Top Level ID, pid == 0 is undefined
+  base: '',               // [Auto Generator] Top Level Action, pid == 0 is ''
+  baseId: 1,              // [Auto Generator] Top Level ID, pid == 0 is resource ID
  }
  */
 var resource = [

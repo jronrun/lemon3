@@ -99,8 +99,6 @@ var getResource = function(actionOrID, method) {
   return _.clone(matched);
 };
 
-log.info('a', models);
-
 uniqueIds = null; uniqueActions = null;
 module.exports.getResource = getResource;
 module.exports.resource = resource;

@@ -49,6 +49,28 @@ module.exports = {
       "name": "children",
       "description": "Children Resource",
       "additionalItems": false
+    },
+    "do": {
+      "id": "do",
+      "type": "string",
+      "name": "do",
+      "default": "/",
+      "description": "[Auto Generator], if action: '/user/vip/' when pid == 0 is '/', " +
+      "if action: '/user/vip/put' when pid > 0 is '/put'"
+    },
+    "base": {
+      "id": "base",
+      "type": "string",
+      "name": "base",
+      "default": "",
+      "description": "[Auto Generator] Top Level Action, when pid == 0 is ''"
+    },
+    "baseId": {
+      "id": "baseId",
+      "type": "integer",
+      "name": "baseId",
+      "default": "",
+      "description": "[Auto Generator] Top Level ID, when pid == 0 is Resource ID"
     }
   },
   "required": [
@@ -57,6 +79,7 @@ module.exports = {
     "pid",
     "type",
     "method",
-    "action"
+    "action",
+    "do"
   ]
 };

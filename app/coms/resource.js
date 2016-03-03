@@ -9,6 +9,8 @@ var resource = {}, uniqueIds = [], uniqueActions = [], models = [],
 var asModel = function(item) {
   var source = _.extend({
     do: '/',
+    base: '',
+    baseId: item.baseId || item.id,
 
     pid: 0,
     action: '/',
@@ -96,6 +98,8 @@ var getResource = function(actionOrID, method) {
 
   return _.clone(matched);
 };
+
+log.info('a', models);
 
 uniqueIds = null; uniqueActions = null;
 module.exports.getResource = getResource;

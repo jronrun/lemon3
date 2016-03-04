@@ -18,6 +18,7 @@ var multer = require('multer');
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
+  var secret = config.app.name + 'kfvahtmgt';
   app.locals.ENV = env;
   app.locals.ENV_DEVELOPMENT = env == 'development';
   app.locals.pkg = config.pkg;
@@ -48,11 +49,11 @@ module.exports = function(app, config) {
   }));
 
   app.use(cookieParser());
-  app.use(cookieSession({ secret: 'secret' }));
+  app.use(cookieSession({ secret: secret }));
   app.use(session({
     resave: true,
     saveUninitialized: true,
-    secret: config.app.name,
+    secret: secret,
     store: new mongoStore({
       url: config.db,
       collection : 'sessions'
@@ -69,7 +70,13 @@ module.exports = function(app, config) {
   // should be declared after session and flash
   app.use(helpers(config.app.name));
 
-  app.use( function( req, res, next ) {
+  app.use(function (req, res, next) {
+    //getResource(req.path, req.method)
+
+    next();
+  });
+
+  app.use(function (req, res, next) {
     var _render = res.render;
 
     res.render = function (view, options, fn) {

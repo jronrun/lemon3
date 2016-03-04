@@ -3,7 +3,8 @@ var path = require('path'),
   mongo = require('./mongo'),
   _ = require('lodash'),
   when = require('when'),
-  async = require('async');
+  async = require('async'),
+  revalidator = require('revalidator');
 
 var extend_lodash = {
   startsIf: function (target, start) {
@@ -35,6 +36,15 @@ module.exports = function(scope, config) {
 
   scope.when = when;
   scope.async = async;
+  scope.schema = function(target) {
+    target = target.properties ? target : {
+      properties: target
+    };
+
+    return function(object) {
+      return revalidator.validate(object, target);
+    };
+  };
 
   scope.app_require = function(moduleName) {
     return require(path.join(config.root, path.sep, 'app', path.sep, moduleName));

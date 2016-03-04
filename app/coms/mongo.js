@@ -21,10 +21,10 @@ db.bind('counter').bind({
   nextSequence: function(sequenceName) {
     var deferred = when.defer();
     db.collection('counter').findOneAndUpdate(
-      { _id: sequenceName},
-      { $inc: { seq: 1 }},
-      { upsert: true, returnOriginal: false},
-      function(err, doc) {
+      {_id: sequenceName},
+      {$inc: {seq: 1}},
+      {upsert: true, returnOriginal: false},
+      function (err, doc) {
         if (err) {
           deferred.reject(err);
         } else {
@@ -35,7 +35,6 @@ db.bind('counter').bind({
 
     return deferred.promise;
   }
-
 });
 
 module.exports.db = db;

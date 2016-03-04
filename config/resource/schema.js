@@ -15,6 +15,12 @@ module.exports = {
       "name": "name",
       "description": "Resource Name"
     },
+    "desc": {
+      "id": "desc",
+      "type": "string",
+      "name": "desc",
+      "description": "Resource Description"
+    },
     "pid": {
       "id": "pid",
       "type": "integer",
@@ -76,6 +82,7 @@ module.exports = {
   "required": [
     "id",
     "name",
+    "desc",
     "pid",
     "type",
     "method",

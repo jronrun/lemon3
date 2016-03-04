@@ -71,7 +71,7 @@ _.each(defined.items, function (item) {
  * @returns {*}
  */
 var getResource = function(arg, method) {
-  var matched = {};
+  var matched = null;
   if (_.isInteger(arg)) {
     matched = models[arg];
   }
@@ -81,17 +81,12 @@ var getResource = function(arg, method) {
     action = action.length > 1 ? _.trimEnd(action, '/') : action;
     method = method || defined.method.GET;
 
-    var items = _.values(models);
-    for (var idx = 0; idx < items.length; idx++) {
-      var curModel = items[idx];
-      if (curModel.action == action && curModel.method == method) {
-        matched = curModel;
-        break;
-      }
-    }
+    matched = _.values(models).find(function(curModel) {
+      return curModel.action == action && curModel.method == method;
+    });
   }
 
-  return _.clone(matched);
+  return _.clone(matched || {});
 };
 
 uniqueIds = null; uniqueActions = null;

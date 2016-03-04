@@ -4,8 +4,9 @@ var Type = require('./resource/type'),
 
 /**
  {
-  id: 1,                  // require number, resource unique id
-  name: 'name',           // require string, resource name
+  id: 1,                  // require number, Resource Unique ID
+  name: 'name',           // require string, Resource Name
+  desc: 'desc',           // require string, Resource Description
   pid: 0,                 // [optional] default 0 or top level resource unique id, parent resource unique id
   action: '/',            // [optional] default is '/', resource URI
   type: Type.URL,         // [optional] default Type.URL, resource type
@@ -19,11 +20,11 @@ var Type = require('./resource/type'),
  }
  */
 var resource = [
-  { id: 10, name: 'home', action: '/' },
+  { id: 10, name: 'home', action: '/', desc: '首页' },
 
-  { id: 20, name: 'notebook', action: 'notebook'},
+  { id: 20, name: 'notebook', action: 'notebook', desc: '记事本'},
 
-  { id: 30, name: 'user', action: 'user'}
+  { id: 30, name: 'user', action: 'user', desc: '用户'}
 ];
 
 module.exports = { type: Type, method: Method, schema: Schema, items: resource };

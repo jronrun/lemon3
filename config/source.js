@@ -24,7 +24,11 @@ var resource = [
 
   { id: 20, name: 'notebook', action: 'notebook', desc: '记事本'},
 
-  { id: 30, name: 'user', action: 'user', desc: '用户'}
+  { id: 30, name: 'user', action: 'user', desc: '用户'},
+
+  { id: 200, name: 'manage', action: 'manage', desc: '管理', children: [
+
+  ]}
 ];
 
 module.exports = { type: Type, method: Method, schema: Schema, items: resource };

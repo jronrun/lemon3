@@ -10,8 +10,8 @@ module.exports = {
     notebook: './public/entry/notebook.js'
   },
   output: {
-    path: path.join(__dirname, "public/dist"),
-    publicPath: "public/dist/",
+    path: path.join(__dirname, "../public/dist"),
+    publicPath: "./public/dist/",
     filename: "[name].js",
     chunkFilename: "[chunkhash].js"
   },

@@ -32,7 +32,7 @@ module.exports = {
   postcss: [autoprefixer],
   externals: {},
   resolve: {
-    root: [path.join(__dirname, "public/components")],
+    root: [path.join(__dirname, "../public/components")],
     alias: {}
   },
   plugins: [

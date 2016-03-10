@@ -76,7 +76,8 @@ module.exports = function(app, config) {
   });
 
   app.use(function (req, res, next) {
-    var _render = res.render, isMobile = /mobile/i.test(req.header('user-agent'));
+    var _render = res.render;
+    req.isMobile = /mobile/i.test(req.header('user-agent'));
 
     res.render = function (view, options, fn) {
       if (app.locals.ENV_DEVELOPMENT) {

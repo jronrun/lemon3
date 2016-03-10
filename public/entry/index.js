@@ -4,23 +4,6 @@ require('../css/style.styl');
 Tether = require('tether');
 lemon = require('lemon/coffee/lemon.coffee');
 lemon.register(require('lz-string'));
+require('../js/store');
 
-
-// modular
-require('font-awesome/css/font-awesome.css');
-
-$(function () {
-
-  var themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
-  {};
-  var themeName = themeSettings.themeName || '';
-  if (themeName)
-  {
-    require('../css/app-' + themeName + '.scss');
-  }
-  else
-  {
-    require('../css/app.scss');
-  }
-
-});
+$(function() {});

@@ -8,7 +8,7 @@ module.exports.task = function (gulp, plugins, config) {
     exec: util.format('node-inspector --web-host=%s --web-port=%s & node --debug=%s',
       config.host, config.inspectorWebPort, config.inspectorDebugPort),
     script: 'app.js',
-    ext: 'js coffee jade',
+    ext: 'js coffee jade html',
     stdout: false,
     readable: false
   }).on('readable', function () {

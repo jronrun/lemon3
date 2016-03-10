@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  {{#block "head"}}
+    <title>{{title}}</title>
+    <script src="/dist/index.js"></script>
+    {{#if ENV_DEVELOPMENT}}
+        <script src="{{livereload}}"></script>
+    {{/if}}
+  {{/block}}
+</head>
+<body>
+  {{#block "header"}} {{/block}}
+
+  {{#block "content"}} {{/block}}
+
+  {{#block "footer"}} {{/block}}
+</body>
+</html>

@@ -12,9 +12,9 @@ var compression = require('compression');
 var methodOverride = require('method-override');
 var mongoStore = require('connect-mongo')(session);
 var passport = require('passport');
-var helpers = require('view-helpers');
-var flash = require('connect-flash');
 var multer = require('multer');
+var hbs = require('hbs');
+var hbsregist = app_require('coms/helpers/hbsregist');
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
@@ -27,10 +27,15 @@ module.exports = function(app, config) {
     threshold: 512
   }));
 
+  hbsregist.register(hbs.handlebars);
+  hbs.registerPartials(config.root + '/app/views/partials');
+
   app.use(express.static(config.root + '/public'));
 
+  app.set('view options', {layout: false});
   app.set('views', config.root + '/app/views');
-  app.set('view engine', 'jade');
+  app.set('view engine', 'html');
+  app.engine('html', hbs.__express);
 
   // app.use(favicon(config.root + '/public/img/favicon.ico'));
   app.use(morgan(config.morganFmt));
@@ -64,12 +69,6 @@ module.exports = function(app, config) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // connect flash for flash messages - should be declared after sessions
-  app.use(flash());
-
-  // should be declared after session and flash
-  app.use(helpers(config.app.name));
-
   app.use(function (req, res, next) {
     //getResource(req.path, req.method)
 
@@ -77,7 +76,7 @@ module.exports = function(app, config) {
   });
 
   app.use(function (req, res, next) {
-    var _render = res.render;
+    var _render = res.render, isMobile = /mobile/i.test(req.header('user-agent'));
 
     res.render = function (view, options, fn) {
       if (app.locals.ENV_DEVELOPMENT) {

@@ -5,6 +5,8 @@ Tether = require('tether');
 lemon = require('lemon/coffee/lemon.coffee');
 lemon.register(require('lz-string'));
 
+
+// modular
 require('font-awesome/css/font-awesome.css');
 
 $(function () {

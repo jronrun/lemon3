@@ -12,10 +12,8 @@
   {{/block}}
 </head>
 <body>
-  {{#block "header"}} {{/block}}
-
-  {{#block "content"}} {{/block}}
-
-  {{#block "footer"}} {{/block}}
+  {{> header}}
+  {{{body}}}
+  {{> footer}}
 </body>
 </html>

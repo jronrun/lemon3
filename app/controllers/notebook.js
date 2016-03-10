@@ -48,6 +48,7 @@ router.get(index.do, function (req, res, next) {
     log.info('nextId: ' + id);
   });
 
-  res.render('notebook/index', {
+  res.render(index.page, {
+    title: index.desc
   });
 });

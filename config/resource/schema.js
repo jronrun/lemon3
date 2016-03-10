@@ -33,13 +33,13 @@ module.exports = {
       "type": "string",
       "name": "action",
       "default": "/",
-      "description": "Resource URI"
+      "description": "Resource URI, default is same as name"
     },
     "type": {
       "id": "type",
       "type": "string",
       "name": "type",
-      "description": "Resource Type, Default is Type.URL",
+      "description": "Resource Type, Default is Type.page",
       "default": "URL"
     },
     "method": {
@@ -77,6 +77,14 @@ module.exports = {
       "name": "baseId",
       "default": "",
       "description": "[Auto Generator] Top Level ID, when pid == 0 is Resource ID"
+    },
+    "page": {
+      "id": "page",
+      "type": "string",
+      "name": "page",
+      "default": "",
+      "description": "[optional || Auto Generator] Page, If type == Type.page, " +
+        "when pid == 0 is '{name]/index', else same as Action"
     }
   },
   "required": [
@@ -86,7 +94,6 @@ module.exports = {
     "pid",
     "type",
     "method",
-    "action",
     "do"
   ]
 };

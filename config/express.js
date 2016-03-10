@@ -32,7 +32,7 @@ module.exports = function(app, config) {
 
   app.use(express.static(config.root + '/public'));
 
-  app.set('view options', {layout: false});
+  //app.set('view options', {layout: 'partials/layout'});
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'html');
   app.engine('html', hbs.__express);

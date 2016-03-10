@@ -14,9 +14,17 @@ var asModel = function(item) {
 
     pid: 0,
     action: '/',
-    type: defined.type.URL,
+    type: defined.type.page,
     method: defined.method.GET
   }, item || {});
+
+  if (defined.type.page == source.type && !source.page) {
+    if (source.pid > 0) {
+      source.page = _.trimStart(source.action, '/');
+    } else if (source.pid == 0) {
+      source.page = source.name + '/index';
+    }
+  }
 
   var valid = validate(source);
   if (!valid) {
@@ -33,6 +41,7 @@ var asModel = function(item) {
 var analyst = function(item, parent) {
   var children = item.children || [];
   delete item.children;
+  item.action = item.action || item.name;
   item.action = _.startsIf(item.action || '/', '/');
   item.action = item.action.length > 1 ? _.trimEnd(item.action, '/') : item.action;
   var model = asModel(item);
@@ -51,6 +60,7 @@ var analyst = function(item, parent) {
   uniqueActions.push(model.action + '_' + model.method);
 
   _.each(children, function (child) {
+    child.action = child.action || child.name;
     child.action = _.startsIf(child.action || '/', '/');
     child.action = (_.endsIf(model.action, '/') + child.action).replace(/\/\//g, '/');
     child.pid = model.id;
@@ -88,6 +98,8 @@ var getResource = function(arg, method) {
 
   return _.clone(matched || {});
 };
+
+//log.info(models);
 
 uniqueIds = null; uniqueActions = null;
 module.exports.getResource = getResource;

@@ -8,6 +8,6 @@ module.exports = function (app) {
 };
 
 router.get(index.do, function (req, res, next) {
-  res.render('users/index', {
+  res.render(index.page, {
   });
 });

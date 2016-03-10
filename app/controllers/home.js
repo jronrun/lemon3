@@ -8,7 +8,5 @@ module.exports = function (app) {
 };
 
 router.get(index.do, function (req, res, next) {
-  res.render(index.page, {
-
-  });
+  res.render(index);
 });

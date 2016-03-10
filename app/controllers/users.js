@@ -8,6 +8,17 @@ module.exports = function (app) {
 };
 
 router.get(index.do, function (req, res, next) {
-  res.render(index.page, {
-  });
+  res.render(index);
+});
+
+router.get(index.signin.do, function (req, res, next) {
+  res.render(index.signin);
+});
+
+router.get(index.signup.do, function (req, res, next) {
+  res.render(index.signup);
+});
+
+router.get(index.signout.do, function (req, res, next) {
+  res.render(index.signout);
 });

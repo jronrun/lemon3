@@ -5,7 +5,7 @@ var bunyan = require('bunyan'),
 var COMM_LOG_CONFIG = {
   streams: [
     {
-      level: 'info',
+      level: 'debug',
       stream: process.stdout
     },
     {

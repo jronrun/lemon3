@@ -1,20 +1,22 @@
-var express = require('express');
-var session = require('express-session');
-var expressValidator = require('express-validator');
-var glob = require('glob');
+var express = require('express'),
+  session = require('express-session'),
+  expressValidator = require('express-validator'),
+  glob = require('glob');
 
-var favicon = require('serve-favicon');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var cookieSession = require('cookie-session');
-var bodyParser = require('body-parser');
-var compression = require('compression');
-var methodOverride = require('method-override');
-var mongoStore = require('connect-mongo')(session);
-var passport = require('passport');
-var multer = require('multer');
-var hbs = require('hbs');
-var hbsregist = app_require('coms/helpers/hbsregist');
+var favicon = require('serve-favicon'),
+  morgan = require('morgan'),
+  cookieParser = require('cookie-parser'),
+  cookieSession = require('cookie-session'),
+  bodyParser = require('body-parser'),
+  compression = require('compression'),
+  methodOverride = require('method-override'),
+  mongoStore = require('connect-mongo')(session),
+  passport = require('passport'),
+  multer = require('multer');
+
+var hbs = require('hbs'),
+  hbsregist = app_require('coms/helpers/hbsregist'),
+  log = log_from('express');
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
@@ -79,12 +81,24 @@ module.exports = function(app, config) {
     var _render = res.render;
     req.isMobile = /mobile/i.test(req.header('user-agent'));
 
-    res.render = function (view, options, fn) {
+    res.render = function (source, options, fn) {
+      var view = '', options = options || {};
+      if (_.isString(source)) {
+        view = source;
+      } else {
+        view = source.page;
+        options = _.extend({
+          title: source.desc
+        }, options);
+      }
+
       if (app.locals.ENV_DEVELOPMENT) {
+        log.debug('render source ' + view, options);
         _.extend(options, {
           livereload: config.livereload
         });
       }
+
       _render.call(this, view, options, fn);
     };
 

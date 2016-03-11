@@ -72,15 +72,16 @@ module.exports = function(app, config) {
   app.use(passport.session());
 
   app.use(function (req, res, next) {
-    //getResource(req.path, req.method)
+    req.isMobile = /mobile/i.test(req.header('user-agent'));
+    req.requrl = req.baseUrl + req.url;
+    req.reqpath = req.baseUrl + req.path;
+    req.resource = getResource(req.reqpath, req.method);
 
     next();
   });
 
   app.use(function (req, res, next) {
     var _render = res.render;
-    req.isMobile = /mobile/i.test(req.header('user-agent'));
-
     res.render = function (source, options, fn) {
       var view = '', options = options || {};
       if (_.isString(source)) {
@@ -93,7 +94,7 @@ module.exports = function(app, config) {
       }
 
       if (app.locals.ENV_DEVELOPMENT) {
-        log.debug('render source ' + view, options);
+        log.debug('render source ' + (req.resource.id || req.requrl) + ' with ' + view, options);
         _.extend(options, {
           livereload: config.livereload
         });

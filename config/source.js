@@ -1,5 +1,5 @@
 var Type = require('./resource/type'),
-  Method = require('./resource/method'),
+  M = require('./resource/method'),
   Schema = require('./resource/schema');
 
 /**
@@ -29,10 +29,12 @@ var resource = [
 
   { id: 30, name: 'user', desc: 'User', children: [
     {id: 30001, name: 'signin', desc: 'Sign In'},
-    {id: 30002, extend: 30001, method: Method.POST},
+    {id: 30002, extend: 30001, method: M.POST},
 
     {id: 30003, name: 'signout', desc: 'Sign Out'},
-    {id: 30004, name: 'signup', desc: 'Sign Up'}
+
+    {id: 30004, name: 'signup', method: M.POST, desc: 'Sign Up'},
+    {id: 30005, extend: 30004, method: M.POST}
   ]},
 
   { id: 200, name: 'manage', desc: 'Manage', children: [
@@ -40,4 +42,4 @@ var resource = [
   ]}
 ];
 
-module.exports = { type: Type, method: Method, schema: Schema, items: resource };
+module.exports = { type: Type, method: M, schema: Schema, items: resource };

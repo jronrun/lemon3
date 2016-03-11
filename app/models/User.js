@@ -1,3 +1,5 @@
+'use strict';
+
 var log = log_from('user');
 
 var model = schema({

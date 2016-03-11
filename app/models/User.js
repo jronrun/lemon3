@@ -2,7 +2,7 @@
 
 var log = log_from('user');
 
-var model = schema({
+module.exports.model = schema({
   name: { type: 'string', required: true, allowEmpty: false },
   email: { type: 'string', format: 'email', allowEmpty: false },
   passwd: { type: 'string', required: true, allowEmpty: false },

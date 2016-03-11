@@ -3,6 +3,7 @@
 var express = require('express'),
   router = express.Router(),
   log = log_from('notebook'),
+  user = app_require('models/user'),
   index = routes.user;
 
 module.exports = function (app) {
@@ -29,7 +30,7 @@ router.get(index.signup.do, function (req, res, next) {
 });
 
 router.post(index.signup.do, function (req, res, next) {
-
+  log.info(req.body);
 });
 
 router.post(index.signout.do, function (req, res, next) {

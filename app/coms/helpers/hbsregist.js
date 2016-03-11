@@ -1,11 +1,13 @@
 'use strict';
 
 var layouts = require('handlebars-layouts'),
-  compare = require('./comparisons');
+  strings = require('./strings'),
+  comparisons = require('./comparisons');
 
 module.exports.register = function (handlebars, options) {
   options = options || {};
 
   handlebars.registerHelper(layouts(handlebars));
-  compare.register(handlebars);
+  comparisons.register(handlebars);
+  strings.register(handlebars);
 };

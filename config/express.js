@@ -27,6 +27,8 @@ module.exports = function(app, config) {
   app.locals.ENV = env;
   app.locals.ENV_DEVELOPMENT = env == 'development';
   app.locals.pkg = config.pkg;
+  app.locals.title = config.app.name;
+  app.locals.app_name = config.app.name;
 
   app.use(compression({
     threshold: 512

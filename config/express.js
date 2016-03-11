@@ -73,9 +73,8 @@ module.exports = function(app, config) {
 
   app.use(function (req, res, next) {
     req.isMobile = /mobile/i.test(req.header('user-agent'));
-    req.requrl = req.baseUrl + req.url;
-    req.reqpath = req.baseUrl + req.path;
-    req.resource = getResource(req.reqpath, req.method);
+    req.requri = req.baseUrl + req.path;
+    req.resource = getResource(req.requri, req.method);
 
     next();
   });
@@ -94,7 +93,7 @@ module.exports = function(app, config) {
       }
 
       if (app.locals.ENV_DEVELOPMENT) {
-        log.debug('render source ' + (req.resource.id || req.requrl) + ' with ' + view, options);
+        log.debug('render source ' + (req.resource.id || req.originalUrl) + ' with ' + view, options);
         _.extend(options, {
           livereload: config.livereload
         });

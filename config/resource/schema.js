@@ -28,6 +28,13 @@ module.exports = {
       "description": "Parent Resource Unique ID",
       "default": "0"
     },
+    "extend": {
+      "id": "extend",
+      "type": "integer",
+      "name": "extend",
+      "description": "Extend Resource Unique ID",
+      "default": "0"
+    },
     "action": {
       "id": "action",
       "type": "string",

@@ -2,7 +2,7 @@ var defined = require('../../config/source'),
   JSONSchemaValidator = require('ajv'),
   log = log_from('resource');
 
-var resource = {}, uniqueIds = [], uniqueActions = [], models = {},
+var resource = {}, uniqueIds = [], uniqueActions = [], models = {}, extend = [],
   ajv = JSONSchemaValidator({allErrors: true}),
   validate = ajv.compile(defined.schema);
 
@@ -39,6 +39,15 @@ var asModel = function(item) {
 };
 
 var analyst = function(item, parent) {
+  if (item.extend) {
+    if (!item.id || !item.method) {
+      log.error(new Error('Invalid Extend Resource, base properties: id, extend, method'), item);
+    } else {
+      extend.push(item);
+    }
+    return;
+  }
+
   var children = item.children || [];
   delete item.children;
   item.action = item.action || item.name;
@@ -60,12 +69,14 @@ var analyst = function(item, parent) {
   uniqueActions.push(model.action + '_' + model.method);
 
   _.each(children, function (child) {
-    child.action = child.action || child.name;
-    child.action = _.startsIf(child.action || '/', '/');
-    child.action = (_.endsIf(model.action, '/') + child.action).replace(/\/\//g, '/');
-    child.pid = model.id;
-    child.base = model.base || model.action;
-    child.baseId = model.baseId || model.id;
+    if (!child.extend) {
+      child.action = child.action || child.name;
+      child.action = _.startsIf(child.action || '/', '/');
+      child.action = (_.endsIf(model.action, '/') + child.action).replace(/\/\//g, '/');
+      child.pid = model.id;
+      child.base = model.base || model.action;
+      child.baseId = model.baseId || model.id;
+    }
     analyst(child, model);
   });
 };
@@ -98,6 +109,15 @@ var getResource = function(arg, method) {
 
   return _.clone(matched || {});
 };
+
+_.each(extend, function (item) {
+  var base = getResource(item.extend);
+  if (_.isMatch({}, base)) {
+    log.error(new Error('Cannot Find Extend Resource'), item);
+  } else {
+    models[item.id] = _.extend(base, item);
+  }
+});
 
 //log.info(models);
 

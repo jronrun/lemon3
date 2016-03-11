@@ -12,14 +12,14 @@ var Type = require('./resource/type'),
   type: Type.page,        // [optional] default Type.page, resource type
   method: Method.GET      // [optional] default is Method.GET, HTTP Method
   children: [],           // [optional] default is null, children resource
+  extend: 0,              // [optional] Extend Resource
 
   do: '/',                // [Auto Generator], action: '/user/vip/' when pid == 0 is '/'
                           // action: '/user/vip/put' when pid > 0 is '/put'
   base: '',               // [Auto Generator] Top Level Action, pid == 0 is ''
   baseId: 1,              // [Auto Generator] Top Level ID, pid == 0 is resource ID
-  page: '',               // [optional || Auto Generator] Page, If type == Type.page, when pid == 0 is '{name]/index',
-   else
-   same as Action
+  page: '',               // [optional || Auto Generator] Page, If type == Type.page,
+                          // when pid == 0 is '{name]/index', else same as Action
  }
  */
 var resource = [
@@ -29,8 +29,10 @@ var resource = [
 
   { id: 30, name: 'user', desc: 'User', children: [
     {id: 30001, name: 'signin', desc: 'Sign In'},
-    {id: 30002, name: 'signout', desc: 'Sign Out'},
-    {id: 30003, name: 'signup', desc: 'Sign Up'}
+    {id: 30002, extend: 30001, method: Method.POST},
+
+    {id: 30003, name: 'signout', desc: 'Sign Out'},
+    {id: 30004, name: 'signup', desc: 'Sign Up'}
   ]},
 
   { id: 200, name: 'manage', desc: 'Manage', children: [

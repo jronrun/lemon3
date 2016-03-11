@@ -1,3 +1,5 @@
+'use strict';
+
 (function(root, core, component){
 
   var proto = {};

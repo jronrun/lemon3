@@ -1,3 +1,5 @@
+'use strict';
+
 var defined = require('../../config/source'),
   JSONSchemaValidator = require('ajv'),
   log = log_from('resource');

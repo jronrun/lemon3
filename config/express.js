@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express'),
   session = require('express-session'),
   expressValidator = require('express-validator'),
@@ -11,6 +13,7 @@ var favicon = require('serve-favicon'),
   compression = require('compression'),
   methodOverride = require('method-override'),
   mongoStore = require('connect-mongo')(session),
+  flash = require('connect-flash'),
   passport = require('passport'),
   multer = require('multer');
 
@@ -71,6 +74,9 @@ module.exports = function(app, config) {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // connect flash for flash messages - should be declared after sessions
+  app.use(flash());
+
   app.use(function (req, res, next) {
     req.isMobile = /mobile/i.test(req.header('user-agent'));
     req.requri = req.baseUrl + req.path;
@@ -88,7 +94,8 @@ module.exports = function(app, config) {
       } else {
         view = source.page;
         options = _.extend({
-          title: source.desc
+          title: source.desc,
+          action: source.action
         }, options);
       }
 

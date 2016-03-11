@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * 1. gulp, gulp webpack
  * 2. npm run debug, npm run debugtool, gulp webpack

@@ -1,3 +1,5 @@
+'use strict';
+
 var bunyan = require('bunyan'),
   util = require('util'),
   spawn = require('child_process').spawn;

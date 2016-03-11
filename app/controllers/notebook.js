@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express'),
   router = express.Router(),
   note = require('../models/note'),

@@ -1,3 +1,4 @@
+'use strict';
 
 var User = app_require('models/user'),
   local = require('./passport/local');

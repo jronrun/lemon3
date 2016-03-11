@@ -1,3 +1,5 @@
+'use strict';
+
 var Type = require('./resource/type'),
   M = require('./resource/method'),
   Schema = require('./resource/schema');

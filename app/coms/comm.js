@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path'),
   logger = require('./log'),
   mongo = require('./mongo'),

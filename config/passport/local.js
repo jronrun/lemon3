@@ -1,3 +1,4 @@
+'use strict';
 
 var User = app_require('models/user'),
   LocalStrategy = require('passport-local').Strategy;

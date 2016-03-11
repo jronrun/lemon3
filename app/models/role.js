@@ -1,3 +1,5 @@
+'use strict';
+
 var log = log_from('role');
 
 var model = schema({

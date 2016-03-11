@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path'),
     extend = require('util')._extend;
 

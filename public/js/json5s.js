@@ -1,4 +1,4 @@
-//
+'use strict';
 
 JSON5 = require('json5');
 var jju = require('jju/lib/parse');

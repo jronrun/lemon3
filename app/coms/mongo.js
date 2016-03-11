@@ -1,3 +1,5 @@
+'use strict';
+
 var mongo = require('mongoskin');
 var config = require('../../config/config');
 

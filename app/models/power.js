@@ -2,7 +2,7 @@
 
 var log = log_from('power');
 
-var model = schema({
+module.exports.model = schema({
   id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
   desc: { type: 'string', allowEmpty: false },

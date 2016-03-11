@@ -2,7 +2,7 @@
 
 var log = log_from('article');
 
-var model = schema({
+module.exports.model = schema({
   name: { type: 'string', required: true, allowEmpty: false },
   summary: { type: 'string', allowEmpty: false },
   content: { type: 'string', required: true, allowEmpty: false },

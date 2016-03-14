@@ -2,7 +2,7 @@
 
 var log = log_from('article');
 
-module.exports.model = schema({
+var model = schema({
   name: { type: 'string', required: true, allowEmpty: false },
   summary: { type: 'string', allowEmpty: false },
   content: { type: 'string', required: true, allowEmpty: false },
@@ -11,7 +11,7 @@ module.exports.model = schema({
 
 var note = model_bind('note', {
 
-});
+}, model);
 
 
 module.exports = note;

@@ -14,14 +14,13 @@ var favicon = require('serve-favicon'),
   methodOverride = require('method-override'),
   mongoStore = require('connect-mongo')(session),
   flash = require('connect-flash'),
-  passport = require('passport'),
   multer = require('multer');
 
 var hbs = require('hbs'),
   hbsregist = app_require('coms/helpers/hbsregist'),
   log = log_from('express');
 
-module.exports = function(app, config) {
+module.exports = function(app, config, passport) {
   var env = process.env.NODE_ENV || 'development';
   var secret = config.app.name + 'kfvahtmgt';
   app.locals.ENV = env;
@@ -80,9 +79,40 @@ module.exports = function(app, config) {
   app.use(flash());
 
   app.use(function (req, res, next) {
+    req.isAuthenticated();
+
+    next();
+  });
+
+  app.use(function (req, res, next) {
     req.isMobile = /mobile/i.test(req.header('user-agent'));
     req.requri = req.baseUrl + req.path;
     req.resource = getResource(req.requri, req.method);
+
+    res.info = function(msg, source, options, fn) {
+      req.flash('info', msg);
+      if (source) {
+        return res.render(source, options, fn)
+      }
+    };
+    res.err = function(msg, source, options, fn) {
+      req.flash('errors', msg);
+      if (source) {
+        return res.render(source, options, fn)
+      }
+    };
+    res.succ = function(msg, source, options, fn) {
+      req.flash('success', msg);
+      if (source) {
+        return res.render(source, options, fn)
+      }
+    };
+    res.warn = function(msg, source, options, fn) {
+      req.flash('warning', msg);
+      if (source) {
+        return res.render(source, options, fn)
+      }
+    };
 
     next();
   });
@@ -101,6 +131,7 @@ module.exports = function(app, config) {
         }, options);
       }
 
+      options = _.extend(options, req.flash());
       if (app.locals.ENV_DEVELOPMENT) {
         log.debug('render source ' + (req.resource.id || req.originalUrl) + ' with ' + view, options);
         _.extend(options, {
@@ -116,7 +147,7 @@ module.exports = function(app, config) {
 
   var controllers = glob.sync(config.root + '/app/controllers/**/*.js');
   controllers.forEach(function (controller) {
-    require(controller)(app);
+    require(controller)(app, passport);
   });
 
   app.use(function (req, res, next) {

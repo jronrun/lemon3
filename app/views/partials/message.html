@@ -1,0 +1,35 @@
+{{#and info info.length}}
+    <div class="fade in alert alert-info">
+        <button class="close" type="button" data-dismiss="alert">×</button>
+        <ul> {{#each info}} <li>{{ this }}</li> {{/each}} </ul>
+    </div>
+{{/and}}
+
+{{#and errors errors.length}}
+    <div class="fade in alert alert-danger">
+        <button class="close" type="button" data-dismiss="alert">×</button>
+        <ul> {{#each errors}} <li>{{ this }}</li> {{/each}} </ul>
+    </div>
+{{/and}}
+
+{{#and error error.length}}
+    <div class="fade in alert alert-danger">
+        <button class="close" type="button" data-dismiss="alert">×</button>
+        <ul> {{#each error}} <li>{{ this }}</li> {{/each}} </ul>
+    </div>
+{{/and}}
+
+{{#and success success.length}}
+    <div class="fade in alert alert-success">
+        <button class="close" type="button" data-dismiss="alert">×</button>
+        <ul> {{#each success}} <li>{{ this }}</li> {{/each}} </ul>
+    </div>
+{{/and}}
+
+{{#and warning warning.length}}
+    <div class="fade in alert alert-warning">
+        <button class="close" type="button" data-dismiss="alert">×</button>
+        <ul> {{#each warning}} <li>{{ this }}</li> {{/each}} </ul>
+    </div>
+{{/and}}
+

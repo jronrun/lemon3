@@ -3,6 +3,7 @@
 var path = require('path'),
   logger = require('./log'),
   mongo = require('./mongo'),
+  crypto = require('./crypto'),
   _ = require('lodash'),
   when = require('when'),
   async = require('async'),
@@ -36,6 +37,7 @@ module.exports = function(scope, config) {
   scope._ = _;
   _.extend(_, extend_lodash);
 
+  scope.crypto = crypto;
   scope.when = when;
   scope.async = async;
   scope.schema = function(target) {
@@ -60,9 +62,9 @@ module.exports = function(scope, config) {
     return mongo.db;
   };
 
-  scope.model_bind = function(modelName, methods) {
+  scope.model_bind = function(modelName, methods, modelSchema) {
     var model = database().bind(modelName);
-    model.bind(_.extend(mongo.Base(model, modelName), methods || {}));
+    model.bind(_.extend(mongo.Base(model, modelName, modelSchema), methods || {}));
     return model;
   };
 

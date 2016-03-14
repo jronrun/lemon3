@@ -2,7 +2,7 @@
 
 var log = log_from('user');
 
-module.exports.model = schema({
+var model = schema({
   name: { type: 'string', required: true, allowEmpty: false },
   email: { type: 'string', format: 'email', allowEmpty: false },
   passwd: { type: 'string', required: true, allowEmpty: false },
@@ -17,8 +17,7 @@ module.exports.model = schema({
 
 var user = model_bind('user', {
 
-});
-
+}, model);
 
 module.exports = user;
 

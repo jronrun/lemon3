@@ -40,8 +40,28 @@ db.bind('counter').bind({
 });
 
 module.exports.db = db;
-module.exports.Base = function(model, modelName) {
+module.exports.Base = function(model, modelName, modelSchema) {
   return {
+
+    validate: function(target) {
+      var errMsg = modelName + ' model schema is undefined';
+      if (_.isFunction(modelSchema)) {
+        var ret = modelSchema(target);
+        if (ret.valid) {
+          return { valid: true };
+        }
+
+        var errs = []; _.each(ret.errors, function(err) {
+          errs.push(err.property + ' ' + err.message);
+        });
+        errMsg = errs.join(', ');
+      }
+
+      return {
+        valid: false,
+        msg: errMsg
+      }
+    },
 
     nextId: function(callback) {
       var promise = db.counter.nextSequence(modelName);

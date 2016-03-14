@@ -8,7 +8,7 @@ var app = express();
 
 require('./app/coms/comm')(global, config);
 require('./config/passport')(passport);
-require('./config/express')(app, config);
+require('./config/express')(app, config, passport);
 
 app.listen(config.port, function () {
   console.log('Express server listening on port ' + config.port);

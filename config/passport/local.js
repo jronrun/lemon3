@@ -6,7 +6,7 @@ var User = app_require('models/user'),
 module.exports = new LocalStrategy(
   function (username, password, done) {
 
-    User.find({username: username}).limit(1).next(function(err, user){
+    User.find({email: username}).limit(1).next(function(err, user){
       if (err) {
         return done(err);
       }
@@ -14,7 +14,7 @@ module.exports = new LocalStrategy(
         return done(null, false);
       }
 
-      if (user.password != password) {
+      if (user.passwd != crypto.encrypt(password)) {
         return done(null, false);
       }
 

@@ -33,6 +33,7 @@
     "connect-flash": "^0.1.1",
     "connect-mongo": "^1.1.0",
     "cookie-session": "^1.2.0",
+    "crypto": "0.0.3",
     "css-loader": "^0.23.1",
     "express-session": "^1.13.0",
     "express-validator": "^2.19.1",

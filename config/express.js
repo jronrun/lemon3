@@ -79,12 +79,6 @@ module.exports = function(app, config, passport) {
   app.use(flash());
 
   app.use(function (req, res, next) {
-    req.isAuthenticated();
-
-    next();
-  });
-
-  app.use(function (req, res, next) {
     req.isMobile = /mobile/i.test(req.header('user-agent'));
     req.requri = req.baseUrl + req.path;
     req.resource = getResource(req.requri, req.method);
@@ -113,6 +107,20 @@ module.exports = function(app, config, passport) {
         return res.render(source, options, fn)
       }
     };
+
+    next();
+  });
+
+  app.use(function (req, res, next) {
+    if (req.resource.protect) {
+      if (!req.isAuthenticated()) {
+        req.session.returnTo = req.originalUrl
+        res.redirect(routes.user.signin.action);
+        return;
+      }
+
+      //powers
+    }
 
     next();
   });

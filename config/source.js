@@ -26,7 +26,7 @@ var Type = require('./resource/type'),
  }
  */
 var resource = [
-  { id: 10, name: 'home', action: '/', desc: 'Home', page: 'index' },
+  { id: 10, name: 'home', action: '/', desc: 'Home', page: 'index', protect: false },
 
   { id: 20, name: 'notebook', desc: 'Notebook'},
 

@@ -4,7 +4,7 @@ var format = require('util').format;
 
 var host = '10.0.4.35';
 //var host = '192.168.20.19';
-var host = 'localhost';
+//var host = 'localhost';
 
 module.exports = {
   db: 'mongodb://localhost:27017/lemon3',

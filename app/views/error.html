@@ -1,5 +1,22 @@
 {{!#content "head"}}{{!/content}}
-
-<h1>{{message}}</h1>
-<h2>{{error.status}}</h2>
-<pre>{{error.stack}}</pre>
+{{> theme}}
+<div class="app blank sidebar-opened" id="err_able">
+    <article class="content">
+        <div class="error-card global">
+            <div class="error-title-block">
+                <h1 class="error-title">{{error.status}}</h1>
+                <h2 class="error-sub-title">
+                    {{message}}
+                </h2>
+            </div>
+            <pre style="display: none;">{{error.stack}}</pre>
+            <div class="error-container">
+                <p>Why not try refreshing your page? or you can contact support</p>
+                <a class="btn btn-primary" href="/">
+                    <i class="fa fa-angle-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </article>
+</div>

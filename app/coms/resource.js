@@ -17,7 +17,8 @@ var asModel = function(item) {
     pid: 0,
     action: '/',
     type: defined.type.page,
-    method: defined.method.GET
+    method: defined.method.GET,
+    protect: true
   }, item || {});
 
   if (defined.type.page == source.type && !source.page) {

@@ -14,7 +14,8 @@ var Type = require('./resource/type'),
   type: Type.page,        // [optional] default Type.page, resource type
   method: Method.GET      // [optional] default is Method.GET, HTTP Method
   children: [],           // [optional] default is null, children resource
-  extend: 0,              // [optional] Extend Resource
+  extend: 0,              // [optional] Extend Resource,
+  protect: true,          // [optional] Resource is protected, default is true
 
   do: '/',                // [Auto Generator], action: '/user/vip/' when pid == 0 is '/'
                           // action: '/user/vip/put' when pid > 0 is '/put'
@@ -30,12 +31,12 @@ var resource = [
   { id: 20, name: 'notebook', desc: 'Notebook'},
 
   { id: 30, name: 'user', desc: 'User', children: [
-    {id: 30001, name: 'signin', desc: 'Sign In'},
+    {id: 30001, name: 'signin', desc: 'Sign In', protect: false},
     {id: 30002, extend: 30001, method: M.POST},
 
     {id: 30003, name: 'signout', desc: 'Sign Out'},
 
-    {id: 30004, name: 'signup', method: M.POST, desc: 'Sign Up'},
+    {id: 30004, name: 'signup', method: M.POST, desc: 'Sign Up', protect: false},
     {id: 30005, extend: 30004, method: M.POST}
   ]},
 

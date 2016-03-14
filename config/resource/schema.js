@@ -94,6 +94,13 @@ module.exports = {
       "default": "",
       "description": "[optional || Auto Generator] Page, If type == Type.page, " +
         "when pid == 0 is '{name]/index', else same as Action"
+    },
+    "protect": {
+      "id": "protect",
+      "type": "boolean",
+      "name": "protect",
+      "description": "Resource is protected",
+      "default": "true"
     }
   },
   "required": [
@@ -103,6 +110,7 @@ module.exports = {
     "pid",
     "type",
     "method",
-    "do"
+    "do",
+    "protect"
   ]
 };

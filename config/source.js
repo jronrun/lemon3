@@ -41,8 +41,37 @@ var resource = [
   ]},
 
   { id: 200, name: 'manage', desc: 'Manage', children: [
+    { id: 200000, name: 'dashboard', desc: 'Dashboard', children: [
 
+    ]},
+    { id: 200001, name: 'power', desc: 'Power', children: [
+
+    ]},
+    { id: 200002, name: 'role', desc: 'Role', children: [
+
+    ]},
+    { id: 200003, name: 'user', desc: 'User', children: [
+
+    ]}
   ]}
 ];
 
-module.exports = { type: Type, method: M, schema: Schema, items: resource };
+/**
+ {
+  sourceId: null,       // Resource unique ID, if null then as node
+  name: null,           // Menu name, using resource desc if null
+  children: [],         // children menu
+ }
+ */
+var menu = [
+  { name: 'Dashboard', sourceId: 200000 },
+  { name: 'Users', children: [
+    { sourceId: 200003 }
+  ]},
+  { name: 'Settings', children: [
+    { sourceId: 200001 },
+    { sourceId: 200002 }
+  ]}
+];
+
+module.exports = { type: Type, method: M, schema: Schema, items: resource, menu: menu };

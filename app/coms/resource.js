@@ -84,9 +84,7 @@ var analyst = function(item, parent) {
   });
 };
 
-_.each(defined.items, function (item) {
-  analyst(item, resource);
-});
+_.each(defined.items, function (item) { analyst(item, resource); });
 
 /**
  * Get defined resource with given ID or action with method, method default is Method.GET
@@ -122,8 +120,34 @@ _.each(extend, function (item) {
   }
 });
 
+// { name: '', type: '1 node, 2 menu', action: '', sourceId: '', children: [] }
+
+var fillmenu = function (item, parent) {
+  var obj = {};
+
+  if (item.sourceId) {
+    var src = getResource(item.sourceId);
+    obj.name = item.name || src.desc;
+    obj.action = src.action;
+    obj.type = 2;
+  } else {
+    obj.type = 1;
+    obj.name = item.name;
+    obj.children = [];
+  }
+
+  _.each(item.children || [], function (child) {
+    fillmenu(child, obj.children);
+  });
+
+  parent.push(obj);
+};
+
+var menus = []; _.each(defined.menu, function (item) { fillmenu(item, menus); });
+
 //log.info(models);
 
 uniqueIds = null; uniqueActions = null;
 module.exports.getResource = getResource;
 module.exports.resource = resource;
+module.exports.menus = menus;

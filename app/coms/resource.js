@@ -148,6 +148,8 @@ var menus = []; _.each(defined.menu, function (item) { fillmenu(item, menus); })
 //log.info(models);
 
 uniqueIds = null; uniqueActions = null;
-module.exports.getResource = getResource;
-module.exports.resource = resource;
-module.exports.menus = menus;
+module.exports = {
+  getResource: getResource,
+  resource: resource,
+  menus: menus
+};

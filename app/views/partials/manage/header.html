@@ -1,0 +1,39 @@
+<header class="header">
+
+    <div class="header-block header-block-collapse hidden-lg-up" >
+        <button class="collapse-btn" id="sidebar-collapse-btn">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+
+
+    <div class="header-block header-block-search hidden-sm-down">
+        <form role="search">
+            <div class="input-container">
+                <i class="fa fa-search"></i>
+                <input type="search" placeholder="Search">
+                <div class="underline"></div>
+            </div>
+        </form>
+    </div>
+
+    <div class="header-block header-block-buttons" >
+        <a href="https://github.com/modularcode/modular-admin-html"
+           class="btn btn-oval btn-sm rounded-s header-btn">
+            <i class="fa fa-github-alt"></i>
+            View on GitHub
+        </a>
+        <a href="https://github.com/modularcode/modular-admin-html/releases/download/v{{pkg.version}}/modular-admin-html-{{pkg.version}}.zip"
+           class="btn btn-oval btn-sm rounded-s header-btn">
+            <i class="fa fa-cloud-download"></i>
+            Download .zip
+        </a>
+      {{!-- <button type="button" class="btn btn-default btn-sm rounded-s buttons header-btn">
+            <i class="fa fa-share-alt"></i>
+            Share
+        </button> --}}
+    </div>
+
+  {{> manage/nav}}
+
+</header>

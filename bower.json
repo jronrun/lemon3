@@ -19,6 +19,7 @@
     "jju": "^1.2.1",
     "animate.css": "^3.5.1",
     "store-js": "^1.3.20",
-    "crypto": "^3.46.1"
+    "crypto": "^3.46.1",
+    "metisMenu": "^2.4.3"
   }
 }

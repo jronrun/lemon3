@@ -17,7 +17,7 @@ var favicon = require('serve-favicon'),
   multer = require('multer');
 
 var hbs = require('hbs'),
-  hbsregist = app_require('coms/helpers/hbsregist'),
+  registrar = app_require('coms/helpers/registrar'),
   log = log_from('express');
 
 module.exports = function(app, config, passport) {
@@ -33,7 +33,7 @@ module.exports = function(app, config, passport) {
     threshold: 512
   }));
 
-  hbsregist.register(hbs.handlebars);
+  registrar.register(hbs.handlebars);
   hbs.registerPartials(config.root + '/app/views/partials');
 
   app.use(express.static(config.root + '/public'));
@@ -114,9 +114,9 @@ module.exports = function(app, config, passport) {
   app.use(function (req, res, next) {
     if (req.resource.protect) {
       if (!req.isAuthenticated()) {
-        req.session.returnTo = req.originalUrl;
-        res.redirect(routes.user.signin.action);
-        return;
+        //req.session.returnTo = req.originalUrl;
+        //res.redirect(routes.user.signin.action);
+        //return;
       }
 
       //powers

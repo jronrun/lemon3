@@ -9,7 +9,8 @@ module.exports = {
   entry: {
     index: ['./public/entry/index.js', 'bootstrap-loader'],
     notebook: './public/entry/notebook.js',
-    theme: './public/entry/theme.js'
+    theme: './public/entry/theme.js',
+    manage: './public/entry/manage/index.js'
   },
   output: {
     path: path.join(__dirname, "../public/dist"),

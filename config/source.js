@@ -1,6 +1,6 @@
 'use strict';
 
-var Type = require('./resource/type'),
+var T = require('./resource/type'),
   M = require('./resource/method'),
   Schema = require('./resource/schema');
 
@@ -11,7 +11,7 @@ var Type = require('./resource/type'),
   desc: 'desc',           // require string, Resource Description
   pid: 0,                 // [optional] default 0 or top level resource unique id, parent resource unique id
   action: '/',            // [optional] default is same as name, resource URI
-  type: Type.page,        // [optional] default Type.page, resource type
+  type: T.page,        // [optional] default T.page, resource type
   method: Method.GET      // [optional] default is Method.GET, HTTP Method
   children: [],           // [optional] default is null, children resource
   extend: 0,              // [optional] Extend Resource,
@@ -21,7 +21,7 @@ var Type = require('./resource/type'),
                           // action: '/user/vip/put' when pid > 0 is '/put'
   base: '',               // [Auto Generator] Top Level Action, pid == 0 is ''
   baseId: 1,              // [Auto Generator] Top Level ID, pid == 0 is resource ID
-  page: '',               // [optional || Auto Generator] Page, If type == Type.page,
+  page: '',               // [optional || Auto Generator] Page, If type == T.page,
                           // when pid == 0 is '{name]/index', else same as Action
  }
  */
@@ -74,4 +74,4 @@ var menu = [
   ]}
 ];
 
-module.exports = { type: Type, method: M, schema: Schema, items: resource, menu: menu };
+module.exports = { type: T, method: M, schema: Schema, items: resource, menu: menu };

@@ -4,7 +4,6 @@ var bunyan = require('bunyan'),
   spawn = require('child_process').spawn;
 
 module.exports.task = function (gulp, plugins, config) {
-  process.env.NODE_ENV = 'production';
   plugins.nodemon({
     script: 'app.js',
     ext: 'js coffee jade',

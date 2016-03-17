@@ -3,24 +3,37 @@
 require('animate.css');
 require('font-awesome/css/font-awesome.css');
 
+lemon.register({
+  css: function(style, styleId) {
+    var link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', style);
+    if (styleId) {
+      link.setAttribute('id', styleId);
+    }
+    lemon.query('head').appendChild(link);
+  },
+  animate: function (options) {
+    var animationName = "animated " + options.name;
+    var animationEnd = "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend";
+    $(options.selector).addClass(animationName).one(animationEnd, function () {
+      $(this).removeClass(animationName);
+    });
+  }
+});
+
 var theme = {
-    animate: function (options) {
-      var animationName = "animated " + options.name;
-      var animationEnd = "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend";
-      $(options.selector).addClass(animationName).one(animationEnd, function () {
-        $(this).removeClass(animationName);
-      });
-    },
 
     theme: function () {
-      var settings = lemon.store('settings') || {},
-        theme = settings.theme ? ('app-' + settings.theme) : 'app';
-      require('../css/' + theme + '.scss');
+      var settings = lemon.store('settings') || {}, theme = settings.theme || {},
+        themeName = theme.name ? ('app-' + theme.name) : 'app';
+      lemon.css('/dist/css/' + themeName + '.css', 'theme-style');
     },
 
     page_error: function() {
       var eId = '#err_able'; if ($(eId).length) {
-        theme.animate({
+        lemon.animate({
           name: 'flipInY',
           selector: '.error-card > .error-title-block'
         });
@@ -28,7 +41,7 @@ var theme = {
         setTimeout(function(){
           var $el = $('.error-card > .error-container');
 
-          theme.animate({
+          lemon.animate({
             name: 'fadeInUp',
             selector: $el
           });

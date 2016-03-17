@@ -114,9 +114,9 @@ module.exports = function(app, config, passport) {
   app.use(function (req, res, next) {
     if (req.resource.protect) {
       if (!req.isAuthenticated()) {
-        //req.session.returnTo = req.originalUrl;
-        //res.redirect(routes.user.signin.action);
-        //return;
+        req.session.returnTo = req.originalUrl;
+        res.redirect(routes.user.signin.action);
+        return;
       }
 
       //powers

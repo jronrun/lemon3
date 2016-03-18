@@ -71,5 +71,10 @@ module.exports = function(scope, config) {
   var resource = require('./resource');
   scope.getResource = resource.getResource;
   scope.routes = resource.resource;
+  scope.getUserMenu = function(source) {
+    var menus = resource.menus;
+
+    return menus;
+  };
 
 };

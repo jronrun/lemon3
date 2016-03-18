@@ -10,6 +10,9 @@ module.exports = function (app) {
 };
 
 router.get(index.do, function (req, res, next) {
+  var usr = req.user;
   res.render(index, {
+    username: usr.name,
+    menus: getUserMenu(usr.resource)
   });
 });

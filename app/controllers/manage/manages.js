@@ -16,3 +16,7 @@ router.get(index.do, function (req, res, next) {
     menus: getUserMenu(usr.resource)
   });
 });
+
+router.get(index.dashboard.do, function (req, res, next) {
+  res.render(index.dashboard);
+});

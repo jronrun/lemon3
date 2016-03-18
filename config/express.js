@@ -133,13 +133,23 @@ module.exports = function(app, config, passport) {
         view = source;
       } else {
         view = source.page;
-        options = _.extend({
+        _.extend({
           title: source.desc,
           action: source.action
         }, options);
       }
 
-      options = _.extend(options, req.flash());
+      if (req.headers['x-pjax']) {
+        options.layout = false;
+      } else if (_.startsWith(req.resource.action, '/manage')) {
+        _.extend(options, {
+          layout: 'manage/layout',
+          username: req.user.name,
+          menus: getUserMenu(req.user.resource)
+        });
+      }
+
+      _.extend(options, req.flash());
       if (app.locals.ENV_DEVELOPMENT) {
         log.debug('render source ' + (req.resource.id || req.originalUrl) + ' with ' + view, options);
         _.extend(options, {

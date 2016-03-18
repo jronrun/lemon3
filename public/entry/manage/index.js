@@ -3,14 +3,11 @@
 require('metisMenu/dist/metisMenu.css');
 var metisMenu = require('metisMenu');
 
-
 var manage = {
   sidebar: function() {
     $('#sidebar-menu, #customize-menu').metisMenu({
       activeClass: 'active open'
     });
-    //$('#sidebar-menu').metisMenu({});
-    //$('#customize-menu').metisMenu({});
 
     $('#sidebar-collapse-btn').on('click', function(event){
       event.preventDefault();

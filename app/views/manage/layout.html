@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+  {{#block "head"}}
+      <title>{{title}}</title>
+      <script src="/dist/index.js"></script>
+      <script src="/dist/theme.js"></script>
+      <script src="/dist/manage.js"></script>
+    {{#if ENV_DEVELOPMENT}}
+        <script src="{{livereload}}"></script>
+    {{/if}}
+  {{/block}}
+</head>
+<body>
+{{> header}}
+<div class="main-wrapper">
+    <div class="app" id="app">
+      {{> manage/header}}
+      {{> manage/sidebar}}
+
+        <article class="content {{pagename}}-page" id="page">
+          {{{body}}}
+        </article>
+
+      {{> manage/footer}}
+      {{> manage/modals}}
+    </div>
+</div>
+
+<div class="ref" id="ref">
+    <div class="color-primary"></div>
+    <div class="chart">
+        <div class="color-primary"></div>
+        <div class="color-secondary"></div>
+    </div>
+</div>
+
+{{> footer}}
+</body>
+</html>

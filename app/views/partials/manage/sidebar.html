@@ -17,12 +17,12 @@
 
                         <ul>
                             {{#each this.children}}
-                              <li><a href="{{this.action}}"> {{this.name}} </a></li>
+                              <li><a href="{{this.action}}" data-pjax> {{this.name}} </a></li>
                             {{/each}}
                         </ul>
                     {{/is}}
                     {{#is 2 "==" this.type}}
-                        <a href="{{this.action}}"> <i class="fa fa-home"></i> {{this.name}} </a>
+                        <a href="{{this.action}}" data-pjax> <i class="fa fa-home"></i> {{this.name}} </a>
                     {{/is}}
                   </li>
                 {{/each}}

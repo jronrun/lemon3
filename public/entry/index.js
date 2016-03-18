@@ -12,4 +12,4 @@ lemon.register(require('lz-string'));
 require('../js/store');
 require('jquery-pjax');
 
-$(function() { $(document).pjax('[data-pjax] a, a[data-pjax]', '#page'); });
+$(function() { $(document).pjax('a[data-pjax]', '#page'); });

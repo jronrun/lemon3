@@ -1,4 +1,6 @@
-JSON5 = require('json5');
+'use strict';
+
+global.JSON5 = require('json5');
 var jju = require('jju/lib/parse');
 jju.stringify = require('jju/lib/stringify').stringify;
 jju.analyze = require('jju/lib/analyze').analyze;

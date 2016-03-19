@@ -82,6 +82,7 @@ module.exports = function(app, config, passport) {
     req.isMobile = /mobile/i.test(req.header('user-agent'));
     req.requri = req.baseUrl + req.path;
     req.resource = getResource(req.requri, req.method);
+    req.isManage = _.startsWith(req.resource.action, '/manage');
 
     res.info = function(msg, source, options, fn) {
       req.flash('info', msg);
@@ -141,7 +142,7 @@ module.exports = function(app, config, passport) {
 
       if (req.headers['x-pjax']) {
         options.layout = false;
-      } else if (_.startsWith(req.resource.action, '/manage')) {
+      } else if (req.isManage) {
         _.extend(options, {
           layout: 'manage/layout',
           username: req.user.name,
@@ -176,10 +177,10 @@ module.exports = function(app, config, passport) {
 
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
+    res.render(req.isManage ? 'manage/error' : 'error', {
       message: err.message,
       error: err,
-      title: 'error'
+      title: 'Error'
     });
   });
 

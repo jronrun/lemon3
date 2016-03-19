@@ -134,7 +134,7 @@ module.exports = function(app, config, passport) {
         view = source;
       } else {
         view = source.page;
-        _.extend({
+        options = _.extend({
           title: source.desc,
           action: source.action
         }, options);
@@ -178,9 +178,7 @@ module.exports = function(app, config, passport) {
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render(req.isManage ? 'manage/error' : 'error', {
-      message: err.message,
-      error: err,
-      title: 'Error'
+      message: err.message, error: err
     });
   });
 

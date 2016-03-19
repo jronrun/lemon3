@@ -1,9 +1,11 @@
+'use strict';
 
-module.exports.register = function (handlebars) {
+//https://github.com/danharper/Handlebars-Helpers
+module.exports.register = function (Handlebars) {
 
   var isArray = function(value) {
     return Object.prototype.toString.call(value) === '[object Array]';
-  }
+  };
 
   var ExpressionRegistry = function() {
     this.expressions = [];
@@ -15,7 +17,7 @@ module.exports.register = function (handlebars) {
 
   ExpressionRegistry.prototype.call = function (operator, left, right) {
     if ( ! this.expressions.hasOwnProperty(operator)) {
-      throw new Error('Unknown operator "'+operator+'"');
+      throw Error('Unknown operator "'+operator+'"');
     }
 
     return this.expressions[operator](left, right);
@@ -37,11 +39,9 @@ module.exports.register = function (handlebars) {
   eR.add('<=', function(left, right) {
     return left <= right;
   });
-
   eR.add('==', function(left, right) {
     return left == right;
   });
-
   eR.add('===', function(left, right) {
     return left === right;
   });
@@ -63,9 +63,6 @@ module.exports.register = function (handlebars) {
       ,   options = args[3]
       ;
 
-
-    // console.log(args);
-
     if (args.length == 2) {
       options = args[1];
       if (left) return options.fn(this);
@@ -85,7 +82,13 @@ module.exports.register = function (handlebars) {
     return options.inverse(this);
   };
 
-  handlebars.registerHelper('is', isHelper);
+  Handlebars.registerHelper('is', isHelper);
+
+  Handlebars.registerHelper('nl2br', function(text) {
+    var nl2br = (text + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+    return new Handlebars.SafeString(nl2br);
+  });
 
   return eR;
+
 };

@@ -26,9 +26,13 @@ var extend_lodash = {
     return _.endsIf(_.startsIf(target, around), around);
   },
 
-  beforeOccur: function(target, delimiter, position) {
+  afterOccur: function(target, delimiter, position) {
     var tokens = target.split(delimiter).slice(position);
     return delimiter + tokens.join(delimiter);
+  },
+
+  beforeOccur: function(target, delimiter, position) {
+    return target.replace(extend_lodash.afterOccur(target, delimiter, position), '');
   }
 };
 

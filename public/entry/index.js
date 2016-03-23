@@ -4,6 +4,8 @@
 'use strict';
 
 require('../css/style.styl');
+global.$ = $;
+
 
 //Bootstrap tooltips require Tether (http://github.hubspot.com/tether/)
 global.Tether = require('tether');

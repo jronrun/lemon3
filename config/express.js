@@ -83,6 +83,7 @@ module.exports = function(app, config, passport) {
     req.requri = req.baseUrl + req.path;
     req.resource = getResource(req.requri, req.method);
     req.isManage = _.startsWith(req.resource.action, '/manage');
+    req.isGet = HttpMethod.GET == req.resource.method;
 
     res.info = function(msg, source, options, fn) {
       req.flash('info', msg);
@@ -144,7 +145,7 @@ module.exports = function(app, config, passport) {
         options.layout = false;
       } else if (req.isManage) {
         _.extend(options, {
-          layout: 'manage/layout',
+          layout: (req.isGet ? 'manage/layout' : (options.layout || false)),
           username: req.user.name,
           menus: getUserMenu(req.user.resource)
         });

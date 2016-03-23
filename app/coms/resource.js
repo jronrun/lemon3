@@ -160,5 +160,6 @@ uniqueIds = null; uniqueActions = null;
 module.exports = {
   getResource: getResource,
   resource: resource,
-  menus: menus
+  menus: menus,
+  methods: defined.method
 };

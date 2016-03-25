@@ -2,16 +2,42 @@
 
 var path = require("path");
 var webpack = require("webpack");
+var glob = require('glob');
+
+function entries (globPath) {
+  var files = glob.sync(globPath);
+  var entries = {}, entry, dirname, basename;
+
+  for (var i = 0; i < files.length; i++) {
+    entry = files[i];
+    dirname = path.dirname(entry);
+    basename = path.basename(entry, '.js');
+    var index = path.join(dirname, basename);
+    index = index.replace('public/entry/manage', 'manage');
+    index = index.replace('public/entry/', '');
+
+    entries[index] = './' + entry;
+    if ('index' === index) {
+      entries[index] = [entries[index], 'bootstrap-loader'];
+    }
+  }
+
+  console.log(entries);
+  return entries;
+}
 
 module.exports = {
   cache: true,
   debug: true,
-  entry: {
-    index: ['./public/entry/index.js', 'bootstrap-loader'],
-    notebook: './public/entry/notebook.js',
-    theme: './public/entry/theme.js',
-    manage: './public/entry/manage/index.js'
-  },
+  entry: entries('public/entry/**/*.js'),
+  /*
+   entry: {
+   index: ['./public/entry/index.js', 'bootstrap-loader'],
+   notebook: './public/entry/notebook.js',
+   theme: './public/entry/theme.js',
+   manage: './public/entry/manage/index.js'
+   },
+   */
   output: {
     path: path.join(__dirname, "../public/dist"),
     publicPath: "./public/dist/",

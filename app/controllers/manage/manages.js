@@ -22,17 +22,17 @@ router.get(index.dashboard.do, function (req, res, next) {
 });
 
 router.post(index.resource.do, function (req, res, next) {
-  res.render(index.resource);
+
 });
 
 router.post(index.resource.power.do, function (req, res, next) {
-  res.render(index.resource);
+
 });
 
 router.post(index.resource.role.do, function (req, res, next) {
-  res.render(index.resource);
+
 });
 
 router.post(index.resource.user.do, function (req, res, next) {
-  res.render(index.resource);
+
 });

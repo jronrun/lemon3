@@ -45,7 +45,7 @@ var asModel = function(item) {
 var analyst = function(item, parent) {
   if (item.extend) {
     if (!item.id || !item.method) {
-      log.error(new Error('Invalid Extend Resource, base properties: id, extend, method'), item);
+      log.error(Error('Invalid Extend Resource, base properties: id, extend, method'), item);
     } else {
       extend.push(item);
     }
@@ -60,11 +60,11 @@ var analyst = function(item, parent) {
   var model = asModel(item);
 
   if (uniqueIds.indexOf(model.id) != -1) {
-    log.error(new Error('Duplation Resource ID'), model);
+    log.error(Error('Duplation Resource ID'), model);
   }
 
   if (uniqueActions.indexOf(model.action + '_' + model.method) != -1) {
-    log.error(new Error('Duplation Resource Action and Method'), model);
+    log.error(Error('Duplation Resource Action and Method'), model);
   }
 
   parent[model.name] = model;
@@ -124,7 +124,7 @@ var getResource = function(arg, method) {
 _.each(extend, function (item) {
   var base = getResource(item.extend);
   if (_.isMatch({}, base)) {
-    log.error(new Error('Cannot Find Extend Resource'), item);
+    log.error(Error('Cannot Find Extend Resource'), item);
   } else {
     models[item.id] = _.extend(base, item);
   }

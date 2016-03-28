@@ -4,7 +4,7 @@ var defined = require('../../config/source'),
   JSONSchemaValidator = require('ajv'),
   log = log_from('resource');
 
-var resource = {}, uniqueIds = [], uniqueActions = [], cloneDefinedItems = _.cloneDeep(defined.items),
+var resource = {}, uniqueIds = [], uniqueActions = [],
   models = {}, extend = [], tree = [], menus = [],
   ajv = JSONSchemaValidator({allErrors: true}),
   validate = ajv.compile(defined.schema);
@@ -85,7 +85,7 @@ var analyst = function(item, parent) {
   });
 };
 
-_.each(defined.items, function (item) { analyst(item, resource); });
+_.each(_.cloneDeep(defined.items), function (item) { analyst(item, resource); });
 
 /**
  * Get defined resource with given ID or action with method, method default is Method.GET
@@ -177,13 +177,13 @@ var buildtree = function(item, parent) {
   }
 };
 
-_.each(cloneDefinedItems, function (item) { buildtree(item, tree); });
+_.each(defined.items, function (item) { buildtree(item, tree); });
 
 //log.info(JSON.stringify({items: tree}));
 //log.info(JSON.stringify(resource));
 //log.info(models);
 
-uniqueIds = null; uniqueActions = null; cloneDefinedItems = null;
+uniqueIds = null; uniqueActions = null;
 module.exports = {
   getResource: getResource,
   resource: resource,

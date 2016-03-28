@@ -4,31 +4,10 @@ var defined = require('../../config/source'),
   JSONSchemaValidator = require('ajv'),
   log = log_from('resource');
 
-var resource = {}, uniqueIds = [], uniqueActions = [],
+var resource = {}, uniqueIds = [], uniqueActions = [], cloneDefinedItems = _.cloneDeep(defined.items),
   models = {}, extend = [], tree = [], menus = [],
   ajv = JSONSchemaValidator({allErrors: true}),
   validate = ajv.compile(defined.schema);
-
-var buildtree = function(item, parent) {
-  var nod = {
-    id: item.id,
-    text: item.desc
-  };
-
-  var children = item.children || [];
-  if (children.length > 0) {
-    nod.nodes = [];
-    _.each(children, function (child) {
-      buildtree(child, nod.nodes);
-    });
-
-    nod.tags = [ String(nod.nodes.length) ];
-  }
-
-  parent.push(nod);
-};
-
-_.each(defined.items, function (item) { buildtree(item, tree); });
 
 var asModel = function(item) {
   var source = _.extend({
@@ -176,11 +155,35 @@ var fillmenu = function (item, parent) {
 
 _.each(defined.menu, function (item) { fillmenu(item, menus); });
 
+var buildtree = function(item, parent) {
+  var raw = getResource(item.id);
+  var nod = {
+    id: item.id,
+    text: raw.desc
+  };
+
+  var children = item.children || [];
+  if (children.length > 0) {
+    nod.nodes = [];
+    _.each(children, function (child) {
+      buildtree(child, nod.nodes);
+    });
+
+    nod.tags = [ String(nod.nodes.length) ];
+  }
+
+  if (false != raw.protect) {
+    parent.push(nod);
+  }
+};
+
+_.each(cloneDefinedItems, function (item) { buildtree(item, tree); });
+
 //log.info(JSON.stringify({items: tree}));
 //log.info(JSON.stringify(resource));
 //log.info(models);
 
-uniqueIds = null; uniqueActions = null;
+uniqueIds = null; uniqueActions = null; cloneDefinedItems = null;
 module.exports = {
   getResource: getResource,
   resource: resource,

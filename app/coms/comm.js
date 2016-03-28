@@ -81,5 +81,10 @@ module.exports = function(scope, config) {
 
     return menus;
   };
+  scope.getResourceTree = function() {
+    var tree = resource.tree;
+
+    return tree;
+  };
 
 };

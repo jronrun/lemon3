@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = {
-  page: 'page'
+  page: 'page',
+  json: 'json'
 };

@@ -18,9 +18,9 @@ lemon.register({
     });
   },
   chkboxtgl: function (selector, opt) {
-    //1 toggle, 2 check, 3 uncheck
+    //opt undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
     var checkBoxes = $(selector);
-    switch (opt = (opt || 1)) {
+    switch (opt = (opt || 4)) {
       case 1: checkBoxes.prop('checked', !checkBoxes.prop('checked')); break;
       case 2: checkBoxes.prop('checked', true); break;
       case 3: checkBoxes.prop('checked', false); break;

@@ -18,7 +18,7 @@ lemon.register({
     });
   },
   /**
-   * checkbox toggle
+   * group checkbox toggle
    * @param selector
    * @param opt   if undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
    * @returns {number}

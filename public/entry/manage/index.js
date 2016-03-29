@@ -30,21 +30,11 @@ lemon.register({
     //opt undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
     var check = 'fa-check-square-o', uncheck = 'fa-square-o';
     switch (opt = (opt || 4)) {
-      case 1: $(selector).toggleClass(check); break;
-      case 2: $(selector).addClass(check); break;
-      case 3: $(selector).removeClass(check); break;
+      case 1: $(selector).toggleClass(check).toggleClass(uncheck); break;
+      case 2: $(selector).addClass(check).removeClass(uncheck); break;
+      case 3: $(selector).addClass(uncheck).removeClass(check); break;
     }
-    var isActive = $(selector).hasClass(check);
-    if (4 == opt) {
-      return isActive ? 1 : 0;
-    }
-    if (isActive) {
-      $(selector).removeClass(uncheck).addClass(check);
-    } else {
-      $(selector).removeClass(check).addClass(uncheck);
-    }
-
-    return isActive ? 1 : 0;
+    return $(selector).hasClass(check) ? 1 : 0;
   }
 });
 

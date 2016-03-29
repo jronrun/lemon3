@@ -2,8 +2,7 @@
 
 var tree = function(selector, src, options) {
   $.post(src || '/manage/resource', function (data) {
-
-
+    $(selector).html(data);
   });
 };
 

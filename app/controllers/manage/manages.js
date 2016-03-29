@@ -22,7 +22,9 @@ router.get(index.dashboard.do, function (req, res, next) {
 });
 
 router.post(index.resource.do, function (req, res, next) {
-  res.json(getResourceTree());
+  res.render(index.resource, {
+    nodes: getResourceTree()
+  })
 });
 
 router.post(index.resource.power.do, function (req, res, next) {

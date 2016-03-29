@@ -1,0 +1,13 @@
+{{#each nodes}}
+    <li>
+        <label class="item-check">
+            <input type="checkbox" class="checkbox" name="resource" value="{{id}}">
+            <span>{{text}}</span>
+        </label>
+      {{#if nodes}}
+          <ul class="">
+            {{> manage/sourcetree}}
+          </ul>
+      {{/if}}
+    </li>
+{{/each}}

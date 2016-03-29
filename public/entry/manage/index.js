@@ -7,6 +7,9 @@ lemon.register({
   sourcetree: function(selector, src, options) {
     $.post(src || '/manage/resource', function (data) {
       $(selector).html(data);
+      $(selector + ' em[collapsable="1"]').click(function () {
+        $('#child-' + $(this).attr('child')).slideToggle("slow");
+      });
     });
   },
   chkboxval: function(name){

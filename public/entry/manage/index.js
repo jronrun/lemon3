@@ -3,7 +3,23 @@
 require('metisMenu/dist/metisMenu.css');
 var metisMenu = require('metisMenu');
 
-global.tree = require('../../js/manage/sourcetree').sourcetree;
+lemon.register({
+  sourcetree: function(selector, src, options) {
+    $.post(src || '/manage/resource', function (data) {
+      $(selector).html(data);
+    });
+  },
+  chkboxval: function(name){
+    return $("input:checked[name='" + name + "']").map(function(){
+      return $(this).val();
+    }).get();
+  }
+});
+
+$(function () {
+  //test
+  lemon.sourcetree('#thetree');
+});
 
 var manage = {
   sidebar: function() {

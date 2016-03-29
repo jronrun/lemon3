@@ -1,27 +1,27 @@
 {{#each nodes}}
     <li>
       {{#if nodes}}
-        <div class="list-icon">
-          <div class="col-md-3 col-sm-4">
-            <label class="item-check">
-              <input type="checkbox" class="checkbox" name="resource" value="{{id}}">
-              <span><strong>{{text}}</strong></span>
-            </label>
-            <em class="fa fa-caret-down" collapsable="1" child="{{id}}"></em>
+          <div class="list-icon">
+              <div class="col-md-3 col-sm-4">
+                  <label class="item-check">
+                      <input type="checkbox" class="checkbox" name="resource" value="{{id}}">
+                      <span><strong>{{text}}</strong></span>
+                  </label>
+                  <em class="fa fa-caret-down" collapsable="1" child="{{id}}"></em>
+              </div>
           </div>
-        </div>
-        <ul class="" id="child-{{id}}">
-          {{#if nodes}} {{> manage/sourcetree}} {{/if}}
-        </ul>
+          <ul class="" id="child-{{id}}">
+            {{#if nodes}} {{> manage/sourcetree}} {{/if}}
+          </ul>
       {{else}}
-        <div class="list-icon">
-          <div class="col-md-3 col-sm-4">
-            <label class="item-check">
-              <input type="checkbox" class="checkbox" name="resource" value="{{id}}">
-              <span><small>{{text}}</small></span>
-            </label>
+          <div class="list-icon">
+              <div class="col-md-3 col-sm-4">
+                  <label class="item-check">
+                      <input type="checkbox" class="checkbox" name="resource" value="{{id}}">
+                      <span><small>{{text}}</small></span>
+                  </label>
+              </div>
           </div>
-        </div>
       {{/if}}
     </li>
 {{/each}}

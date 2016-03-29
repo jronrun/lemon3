@@ -10,12 +10,41 @@ lemon.register({
       $(selector + ' em[collapsable="1"]').click(function () {
         $('#child-' + $(this).attr('child')).slideToggle("slow");
       });
+      $(selector + ' em[id^="chkall-"]').click(function () {
+        var thisId = $(this).attr('id'), sourceId = thisId.replace('chkall-', '');
+        lemon.check('#' + thisId, 1);
+        lemon.chkboxtgl('#base-' + sourceId + ',#child-' + sourceId + ' input');
+      });
     });
+  },
+  chkboxtgl: function (selector) {
+    var checkBoxes = $(selector);
+    checkBoxes.prop("checked", !checkBoxes.prop("checked"));
   },
   chkboxval: function(name){
     return $("input:checked[name='" + name + "']").map(function(){
       return $(this).val();
     }).get();
+  },
+  check: function(selector, opt) {
+    //opt undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
+    var check = 'fa-check-square-o', uncheck = 'fa-square-o';
+    switch (opt = (opt || 4)) {
+      case 1: $(selector).toggleClass(check); break;
+      case 2: $(selector).addClass(check); break;
+      case 3: $(selector).removeClass(check); break;
+    }
+    var isActive = $(selector).hasClass(check);
+    if (4 == opt) {
+      return isActive ? 1 : 0;
+    }
+    if (isActive) {
+      $(selector).removeClass(uncheck).addClass(check);
+    } else {
+      $(selector).removeClass(check).addClass(uncheck);
+    }
+
+    return isActive ? 1 : 0;
   }
 });
 

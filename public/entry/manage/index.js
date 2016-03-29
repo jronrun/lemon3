@@ -3,6 +3,8 @@
 require('metisMenu/dist/metisMenu.css');
 var metisMenu = require('metisMenu');
 
+global.tree = require('../../js/manage/sourcetree').sourcetree;
+
 var manage = {
   sidebar: function() {
     var $app = $('#app');

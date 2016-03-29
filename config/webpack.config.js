@@ -54,7 +54,7 @@ module.exports = {
 
       {test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery'},
       {test: /\.scss$/, loaders: ['style', 'css', 'sass']},
-      {test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=100000'}
+      {test: /\.(png|woff|woff2|eot|ttf|svg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=100000'}
     ]
   },
   externals: {},
@@ -69,7 +69,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      "window.jQuery": 'jquery'
+      "window.jQuery": 'jquery',
+      "window.Tether": 'tether'
     }),
     new webpack.DefinePlugin({
       VERSION: JSON.stringify("5fa3b9")

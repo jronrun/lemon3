@@ -12,13 +12,18 @@ lemon.register({
       });
       $(selector + ' em[id^="chkall-"]').click(function () {
         var thisId = $(this).attr('id'), sourceId = thisId.replace('chkall-', '');
-        var ctl = lemon.check('#' + thisId, 1);
+        var ctl = lemon.chkboxable('#' + thisId, 1);
         lemon.chkboxtgl('#base-' + sourceId + ',#child-' + sourceId + ' input', ctl == 1 ? 2 : 3);
       });
     });
   },
+  /**
+   * checkbox toggle
+   * @param selector
+   * @param opt   if undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
+   * @returns {number}
+     */
   chkboxtgl: function (selector, opt) {
-    //opt undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
     var checkBoxes = $(selector);
     switch (opt = (opt || 4)) {
       case 1: checkBoxes.prop('checked', !checkBoxes.prop('checked')); break;
@@ -32,9 +37,16 @@ lemon.register({
       return $(this).val();
     }).get();
   },
-  check: function(selector, opt) {
-    //opt undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
-    var check = 'fa-check-square-o', uncheck = 'fa-square-o';
+  /**
+   * checkbox toggle with class
+   * @param selector
+   * @param opt   if undefined get value 1 checked 0 unchecked, 1 toggle, 2 check, 3 uncheck
+   * @param checkClass
+   * @param uncheckClass
+   * @returns {number}
+     */
+  chkboxable: function(selector, opt, checkClass, uncheckClass) {
+    var check = checkClass || 'fa-check-square-o', uncheck = uncheckClass || 'fa-square-o';
     switch (opt = (opt || 4)) {
       case 1: $(selector).toggleClass(check).toggleClass(uncheck); break;
       case 2: $(selector).addClass(check).removeClass(uncheck); break;

@@ -34,7 +34,7 @@ var resource = [
     {id: 30001, name: 'signin', desc: 'Sign In', protect: false},
     {id: 30002, extend: 30001, method: M.POST},
 
-    {id: 30003, name: 'signout', desc: 'Sign Out'},
+    {id: 30003, name: 'signout', desc: 'Sign Out', protect: false},
 
     {id: 30004, name: 'signup', method: M.POST, desc: 'Sign Up', protect: false},
     {id: 30005, extend: 30004, method: M.POST}

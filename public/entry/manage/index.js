@@ -12,14 +12,20 @@ lemon.register({
       });
       $(selector + ' em[id^="chkall-"]').click(function () {
         var thisId = $(this).attr('id'), sourceId = thisId.replace('chkall-', '');
-        lemon.check('#' + thisId, 1);
-        lemon.chkboxtgl('#base-' + sourceId + ',#child-' + sourceId + ' input');
+        var ctl = lemon.check('#' + thisId, 1);
+        lemon.chkboxtgl('#base-' + sourceId + ',#child-' + sourceId + ' input', ctl == 1 ? 2 : 3);
       });
     });
   },
-  chkboxtgl: function (selector) {
+  chkboxtgl: function (selector, opt) {
+    //1 toggle, 2 check, 3 uncheck
     var checkBoxes = $(selector);
-    checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+    switch (opt = (opt || 1)) {
+      case 1: checkBoxes.prop('checked', !checkBoxes.prop('checked')); break;
+      case 2: checkBoxes.prop('checked', true); break;
+      case 3: checkBoxes.prop('checked', false); break;
+    }
+    return checkBoxes.prop('checked') ? 1 : 0;
   },
   chkboxval: function(name){
     return $("input:checked[name='" + name + "']").map(function(){

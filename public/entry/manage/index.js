@@ -56,11 +56,6 @@ lemon.register({
   }
 });
 
-$(function () {
-  //test
-  lemon.sourcetree('#thetree');
-});
-
 var manage = {
   sidebar: function() {
     var $app = $('#app');

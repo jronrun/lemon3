@@ -146,9 +146,13 @@ module.exports = function(app, config, passport) {
       } else if (req.isManage) {
         _.extend(options, {
           layout: (req.isGet ? 'manage/layout' : (options.layout || false)),
-          username: req.user.name,
-          menus: getUserMenu(req.user.resource)
+          username: req.user.name
         });
+        if (req.isGet && !options.menus) {
+          _.extend(options, {
+            menus: getUserMenu(req.user.resource)
+          });
+        }
       }
 
       _.extend(options, req.flash());

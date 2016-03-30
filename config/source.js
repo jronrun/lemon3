@@ -27,47 +27,55 @@ var setting = require('./resource/setting'),
  }
  */
 var resource = [
-  { id: 10, name: 'home', action: '/', desc: 'Home', page: 'index', protect: false },
+  {id: 10, name: 'home', action: '/', desc: 'Home', page: 'index', protect: false},
 
-  { id: 20, name: 'notebook', desc: 'Notebook'},
+  {id: 20, name: 'notebook', desc: 'Notebook'},
 
-  { id: 30, name: 'user', desc: 'User', children: [
-    {id: 30001, name: 'signin', desc: 'Sign In', protect: false},
-    {id: 30002, extend: 30001, method: M.POST},
+  {
+    id: 30, name: 'user', desc: 'User', children: [
+      {id: 30001, name: 'signin', desc: 'Sign In', protect: false},
+      {id: 30002, extend: 30001, method: M.POST},
 
-    {id: 30003, name: 'signout', desc: 'Sign Out', protect: false},
+      {id: 30003, name: 'signout', desc: 'Sign Out', protect: false},
 
-    {id: 30004, name: 'signup', method: M.POST, desc: 'Sign Up', protect: false},
-    {id: 30005, extend: 30004, method: M.POST}
-  ]},
+      {id: 30004, name: 'signup', method: M.POST, desc: 'Sign Up', protect: false},
+      {id: 30005, extend: 30004, method: M.POST}
+    ]
+  },
 
-  { id: 200, name: 'manage', desc: 'Manage', children: [
-    { id: 200000, name: 'dashboard', desc: 'Dashboard', children: [
+  {
+    id: 200, name: 'manage', desc: 'Manage', children: [
+      {
+        id: 200000, name: 'dashboard', desc: 'Dashboard', children: []
+      },
 
-    ]},
+      {
+        id: 200001, name: 'powers', desc: 'Powers', page: P.list, children: [
+          {id: 2000011, name: 'power', action: '/manage/power', page: P.edit, desc: 'Detail'},
+          {id: 2000012, extend: 2000011, method: M.POST, page: P.list, desc: 'Create'},
+          {id: 2000013, name: 'power', action: '/manage/power/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000014, extend: 2000013, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000015, extend: 2000013, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
+      },
 
-    { id: 200001, name: 'powers', desc: 'Powers', page: P.list, children: [
-      { id: 2000011, name: 'power', action: '/manage/power', page: P.edit, desc: 'Detail'},
-      { id: 2000012, extend: 2000011, method: M.POST, page: P.list, desc: 'Create'},
-      { id: 2000013, name: 'power', action: '/manage/power/:id', page: P.edit,desc: 'Retrieve'},
-      { id: 2000014, extend: 2000013, method: M.PUT, page: P.list, desc: 'Update'},
-      { id: 2000015, extend: 2000013, method: M.DELETE, page: P.list, desc: 'Delete'}
-    ]},
+      {
+        id: 200002, name: 'roles', desc: 'Roles', children: []
+      },
 
-    { id: 200002, name: 'roles', desc: 'Roles', children: [
+      {
+        id: 200003, name: 'users', desc: 'Users', children: []
+      },
 
-    ]},
-
-    { id: 200003, name: 'users', desc: 'Users', children: [
-
-    ]},
-
-    { id: 200004, name: 'resource', desc: 'Resource', method: M.POST, children: [
-      { id: 2000041, name: 'power', desc: 'Power Resource', action: '/power/:id', method: M.POST },
-      { id: 2000042, name: 'role', desc: 'Role Resource', action: '/role/:id', method: M.POST },
-      { id: 2000043, name: 'user', desc: 'User Resource', action: '/user/:id', method: M.POST }
-    ]}
-  ]}
+      {
+        id: 200004, name: 'resource', desc: 'Resource', method: M.POST, children: [
+          {id: 2000041, name: 'power', desc: 'Power Resource', action: '/power/:id', method: M.POST},
+          {id: 2000042, name: 'role', desc: 'Role Resource', action: '/role/:id', method: M.POST},
+          {id: 2000043, name: 'user', desc: 'User Resource', action: '/user/:id', method: M.POST}
+        ]
+      }
+    ]
+  }
 ];
 
 /**
@@ -78,14 +86,18 @@ var resource = [
  }
  */
 var menu = [
-  { name: 'Dashboard', sourceId: 200000 },
-  { name: 'Users', children: [
-    { sourceId: 200003 }
-  ]},
-  { name: 'Settings', children: [
-    { sourceId: 200001 },
-    { sourceId: 200002 }
-  ]}
+  {name: 'Dashboard', sourceId: 200000},
+  {
+    name: 'Users', children: [
+      {sourceId: 200003}
+    ]
+  },
+  {
+    name: 'Settings', children: [
+      {sourceId: 200001},
+      {sourceId: 200002}
+    ]
+  }
 ];
 
-module.exports = { type: T, method: M, schema: Schema, items: resource, menu: menu };
+module.exports = {type: T, method: M, schema: Schema, items: resource, menu: menu};

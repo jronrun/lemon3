@@ -1,6 +1,7 @@
 'use strict';
 
-var T = require('./resource/type'),
+var setting = require('./resource/setting'),
+  T = setting.type, P = setting.page,
   M = require('./resource/method'),
   Schema = require('./resource/schema');
 
@@ -44,13 +45,20 @@ var resource = [
     { id: 200000, name: 'dashboard', desc: 'Dashboard', children: [
 
     ]},
-    { id: 200001, name: 'power', desc: 'Power', children: [
+
+    { id: 200001, name: 'powers', desc: 'Powers', page: P.list, children: [
+      { id: 2000011, name: 'power', action: '/manage/power', page: P.edit, desc: 'Detail'},
+      { id: 2000012, extend: 2000011, method: M.POST, page: P.list, desc: 'Create'},
+      { id: 2000013, name: 'power', action: '/manage/power/:id', page: P.edit,desc: 'Retrieve'},
+      { id: 2000014, extend: 2000013, method: M.PUT, page: P.list, desc: 'Update'},
+      { id: 2000015, extend: 2000013, method: M.DELETE, page: P.list, desc: 'Delete'}
+    ]},
+
+    { id: 200002, name: 'roles', desc: 'Roles', children: [
 
     ]},
-    { id: 200002, name: 'role', desc: 'Role', children: [
 
-    ]},
-    { id: 200003, name: 'user', desc: 'User', children: [
+    { id: 200003, name: 'users', desc: 'Users', children: [
 
     ]},
 

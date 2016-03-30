@@ -74,9 +74,12 @@ var analyst = function(item, parent) {
 
   _.each(children, function (child) {
     if (!child.extend) {
-      child.action = child.action || child.name;
-      child.action = _.startsIf(child.action || '/', '/');
-      child.action = (_.endsIf(model.action, '/') + child.action).replace(/\/\//g, '/');
+      if (!child.action) {
+        child.action = child.action || child.name;
+        child.action = _.startsIf(child.action || '/', '/');
+        child.action = (_.endsIf(model.action, '/') + child.action).replace(/\/\//g, '/');
+      }
+
       child.pid = model.id;
       child.base = model.base || model.action;
       child.baseId = model.baseId || model.id;
@@ -181,7 +184,7 @@ _.each(defined.items, function (item) { buildtree(item, tree); });
 
 //log.info(JSON.stringify({items: tree}));
 //log.info(JSON.stringify(resource));
-//log.info(models);
+log.info(models);
 
 uniqueIds = null; uniqueActions = null;
 module.exports = {

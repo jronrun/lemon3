@@ -63,7 +63,7 @@ var manage = {
       activeClass: 'active open'
     });
 
-    $('#sidebar-menu > li > a[data-pjax]').click(function () {
+    $('#sidebar-menu a[data-pjax]').click(function () {
       if ($app.hasClass('sidebar-open')) {
         lemon.delay(function() {
           $app.removeClass("sidebar-open");

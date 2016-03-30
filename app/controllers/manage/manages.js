@@ -21,6 +21,12 @@ router.get(index.dashboard.do, function (req, res, next) {
   res.render(index.dashboard);
 });
 
+router.get(index.powers.do, function (req, res, next) {
+  res.render('manage/item-list', {
+    pagename: 'items-list-page'
+  });
+});
+
 router.post(index.resource.do, function (req, res, next) {
   res.render(index.resource, {
     nodes: getResourceTree()

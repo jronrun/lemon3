@@ -145,11 +145,11 @@ module.exports = function(app, config, passport) {
         options.layout = false;
       } else if (req.isManage) {
         _.extend(options, {
-          layout: (req.isGet ? 'manage/layout' : (options.layout || false)),
-          username: req.user.name
+          layout: (req.isGet ? 'manage/layout' : (options.layout || false))
         });
-        if (req.isGet && !options.menus) {
+        if (req.isGet) {
           _.extend(options, {
+            username: req.user.name,
             menus: getUserMenu(req.user.resource)
           });
         }

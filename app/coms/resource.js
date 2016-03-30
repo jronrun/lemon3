@@ -184,7 +184,7 @@ _.each(defined.items, function (item) { buildtree(item, tree); });
 
 //log.info(JSON.stringify({items: tree}));
 //log.info(JSON.stringify(resource));
-log.info(models);
+//log.info(models);
 
 uniqueIds = null; uniqueActions = null;
 module.exports = {

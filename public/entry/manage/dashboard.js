@@ -1,4 +1,6 @@
 
 $(function () {
-  lemon.sourcetree('#thetree');
+  register(function () {
+    lemon.sourcetree('#thetree');
+  });
 });

@@ -155,7 +155,9 @@ module.exports = function(app, config, passport) {
         }
       }
 
-      _.extend(options, req.flash());
+      _.extend(options, req.flash(), {
+        source: req.resource.id
+      });
       if (app.locals.ENV_DEVELOPMENT) {
         log.debug('render source ' + (req.resource.id || req.originalUrl) + ' with ' + view, options);
         _.extend(options, {

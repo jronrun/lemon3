@@ -4,8 +4,7 @@
 'use strict';
 
 require('../css/style.styl');
-global.$ = $;
-
+var handlePageCall = {};
 
 //Bootstrap tooltips require Tether (http://github.hubspot.com/tether/)
 //global.Tether = require('tether');
@@ -13,6 +12,18 @@ global.lemon = require('lemon/coffee/lemon.coffee');
 lemon.register(require('lz-string'));
 require('../js/store');
 require('jquery-pjax');
+
+//global.$ = $;
+
+global.register = function(call) {
+  var source = $('#page > article').attr('source');
+  if (source) {
+    handlePageCall[source] = call; call();
+    lemon.info('register source ' + source);
+  } else {
+    lemon.info('register source is not defined.');
+  }
+};
 
 $(function () {
 
@@ -22,12 +33,9 @@ $(function () {
 
   $(document).pjax('a[data-pjax]', '#page');
 
-  $(document).on('pjax:popstate', function() {
-    $(document).one('pjax:end', function(event) {
-      $(event.target).find('script').each(function() {
-        $.globalEval(this.text || this.textContent || this.innerHTML || '');
-      })
-    });
+  $(document).on('pjax:end', function(event) {
+    var source = $(event.target).find('article').attr('source');
+    lemon.isFunc(handlePageCall[source]) && handlePageCall[source]();
   });
 
 });

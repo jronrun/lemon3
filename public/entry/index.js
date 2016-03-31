@@ -14,4 +14,20 @@ lemon.register(require('lz-string'));
 require('../js/store');
 require('jquery-pjax');
 
-$(function() { $(document).pjax('a[data-pjax]', '#page'); });
+$(function () {
+
+  $.ajaxSetup({
+    cache: false
+  });
+
+  $(document).pjax('a[data-pjax]', '#page');
+
+  $(document).on('pjax:popstate', function() {
+    $(document).one('pjax:end', function(event) {
+      $(event.target).find('script').each(function() {
+        $.globalEval(this.text || this.textContent || this.innerHTML || '');
+      })
+    });
+  });
+
+});

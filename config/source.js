@@ -51,9 +51,10 @@ var resource = [
 
       {
         id: 200001, name: 'powers', desc: 'Powers', page: P.list, children: [
-          {id: 2000011, name: 'power', action: '/manage/power', page: P.edit, desc: 'Detail'},
+          {id: 2000011, name: 'editor', action: '/manage/power', page: P.edit, desc: 'Editor'},
           {id: 2000012, extend: 2000011, method: M.POST, page: P.list, desc: 'Create'},
-          {id: 2000013, name: 'power', action: '/manage/power/:id', page: P.edit, desc: 'Retrieve'},
+
+          {id: 2000013, name: 'retrieve', action: '/manage/power/:id', page: P.edit, desc: 'Retrieve'},
           {id: 2000014, extend: 2000013, method: M.PUT, page: P.list, desc: 'Update'},
           {id: 2000015, extend: 2000013, method: M.DELETE, page: P.list, desc: 'Delete'}
         ]

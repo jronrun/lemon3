@@ -6,6 +6,6 @@ module.exports.type = {
 };
 
 module.exports.page = {
-  list: 'item-list',
-  edit: 'item-edit'
+  list: 'manage/item-list',
+  edit: 'manage/item-edit'
 };

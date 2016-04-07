@@ -21,7 +21,7 @@ global.register = function(call) {
     handlePageCall[source] = call; call();
     lemon.info('register source ' + source);
   } else {
-    lemon.info('register source is not defined.');
+    lemon.error('register source is not defined.');
   }
 };
 

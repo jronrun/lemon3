@@ -7,7 +7,9 @@ var path = require('path'),
   _ = require('lodash'),
   when = require('when'),
   async = require('async'),
-  revalidator = require('revalidator');
+  revalidator = require('revalidator')
+  //json5s = require('../../public/js/json5s')
+  ;
 
 var extend_lodash = {
   startsIf: function (target, start) {
@@ -49,9 +51,12 @@ module.exports = function(scope, config) {
       properties: target
     };
 
-    return function(object) {
+    var aModel = function(object) {
       return revalidator.validate(object, target);
     };
+
+    aModel.schema = target;
+    return aModel;
   };
 
   scope.app_require = function(moduleName) {
@@ -69,6 +74,7 @@ module.exports = function(scope, config) {
   scope.model_bind = function(modelName, methods, modelSchema) {
     var model = database().bind(modelName);
     model.bind(_.extend(mongo.Base(model, modelName, modelSchema), methods || {}));
+    model.schema = modelSchema ? (modelSchema.schema || {}) : {};
     return model;
   };
 

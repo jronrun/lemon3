@@ -10,6 +10,8 @@ var handlePageCall = {};
 //global.Tether = require('tether');
 global.lemon = require('lemon/coffee/lemon.coffee');
 lemon.register(require('lz-string'));
+lemon.decode = lemon.decompressFromEncodedURIComponent;
+
 require('../js/store');
 require('jquery-pjax');
 

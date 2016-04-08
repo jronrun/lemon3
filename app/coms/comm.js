@@ -7,8 +7,8 @@ var path = require('path'),
   _ = require('lodash'),
   when = require('when'),
   async = require('async'),
-  revalidator = require('revalidator')
-  //json5s = require('../../public/js/json5s')
+  revalidator = require('revalidator'),
+  json5s = require('../../public/js/json5s')
   ;
 
 var extend_lodash = {
@@ -43,6 +43,7 @@ module.exports = function(scope, config) {
   scope._ = _;
   _.extend(_, extend_lodash);
 
+  scope.json5s = json5s;
   scope.crypto = crypto;
   scope.when = when;
   scope.async = async;
@@ -74,7 +75,7 @@ module.exports = function(scope, config) {
   scope.model_bind = function(modelName, methods, modelSchema) {
     var model = database().bind(modelName);
     model.bind(_.extend(mongo.Base(model, modelName, modelSchema), methods || {}));
-    model.schema = modelSchema ? (modelSchema.schema || {}) : {};
+    model.define = modelSchema;
     return model;
   };
 

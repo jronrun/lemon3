@@ -40,13 +40,25 @@ db.bind('counter').bind({
 });
 
 module.exports.db = db;
-module.exports.Base = function(model, modelName, modelSchema) {
+module.exports.Base = function(model, modelName, define) {
   return {
+
+    desc: function(exclude, compress) {
+      exclude = exclude || [];
+      exclude.push('create_time');
+      var target = _.cloneDeep(define.schema.properties);
+      _.each(exclude, function (prop) {
+        delete target[prop];
+      });
+
+      target = JSON.stringify(target);
+      return compress ? crypto.compress(target) : target;
+    },
 
     validate: function(target) {
       var errMsg = modelName + ' model schema is undefined';
-      if (_.isFunction(modelSchema)) {
-        var ret = modelSchema(target);
+      if (_.isFunction(define)) {
+        var ret = define(target);
         if (ret.valid) {
           return { valid: true };
         }

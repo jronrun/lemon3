@@ -116,5 +116,8 @@ module.exports = {
   analyze: jju.analyze,
   format: function (target) {
     return json5format(target);
+  },
+  fmtjson: function(target) {
+    return jju.stringify(target, {mode: "json"});
   }
 };

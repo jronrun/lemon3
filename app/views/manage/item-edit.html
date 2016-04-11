@@ -17,7 +17,7 @@
                     <li class="nav-item">
                         <a href="#item-edit" class="nav-link active" data-target="#item-edit" data-toggle="tab" aria-controls="item-edit" role="tab">Edit</a>
                     </li>
-                    {{#if nodes}}
+                    {{#if res_tab}}
                       <li class="nav-item">
                           <a href="#item-res" class="nav-link" data-target="#item-res" aria-controls="item-res" data-toggle="tab" role="tab">Resource</a>
                       </li>
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                    {{#if nodes}}
+                    {{#if res_tab}}
                       <div class="tab-pane fade" id="item-res">
                           <div id="res-tree"></div>
                       </div>

@@ -47,7 +47,8 @@ router.get(index.powers.editor.do, function (req, res, next) {
   res.render(index.powers.editor.page, {
     pagename: 'item-editor-page',
     schema: Power.desc(['resources'], true),
-    res_tab: 1
+    res_tab: 1,
+    desc: 'Power'
   });
 });
 

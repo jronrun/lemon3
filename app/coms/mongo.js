@@ -46,6 +46,7 @@ module.exports.Base = function(model, modelName, define) {
     desc: function(exclude, compress) {
       exclude = exclude || [];
       exclude.push('create_time');
+      exclude.push('id');
       var target = _.cloneDeep(define.schema.properties);
       _.each(exclude, function (prop) {
         delete target[prop];

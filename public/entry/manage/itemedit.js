@@ -22,6 +22,10 @@ var editor = {
     cm.setJsonVal(editor.getDefault(schema));
     $('#output').val(lemon.fmtjson(schema));
     mirror.showJson('#output');
+
+    if ($('#res-tree').length) {
+      lemon.sourcetree('#res-tree');
+    }
   }
 };
 

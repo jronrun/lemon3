@@ -12,17 +12,21 @@
         <div class="card sameheight-item">
             <div class="card-block">
                 <div class="card-title-block"><h3 class="title"></h3></div>
+
                 <ul class="nav nav-tabs nav-tabs-bordered">
                     <li class="nav-item">
-                        <a href="#item-edit" class="nav-link active" data-target="#item-edit" data-toggle="tab"
-                           aria-controls="home" role="tab">Edit</a>
+                        <a href="#item-edit" class="nav-link active" data-target="#item-edit" data-toggle="tab" aria-controls="item-edit" role="tab">Edit</a>
                     </li>
+                    {{#if nodes}}
+                      <li class="nav-item">
+                          <a href="#item-res" class="nav-link" data-target="#item-res" aria-controls="item-res" data-toggle="tab" role="tab">Resource</a>
+                      </li>
+                    {{/if}}
                     <li class="nav-item">
-                        <a href="#item-desc" class="nav-link" data-target="#item-desc" aria-controls="profile"
-                           data-toggle="tab" role="tab">Schema</a>
+                        <a href="#item-desc" class="nav-link" data-target="#item-desc" aria-controls="item-desc" data-toggle="tab" role="tab">Schema</a>
                     </li>
                 </ul>
-                <!-- Tab panes -->
+
                 <div class="tab-content tabs-bordered">
                     <div class="tab-pane fade in active" id="item-edit">
                         <div class="form-group row">
@@ -48,6 +52,11 @@
                             </div>
                         </div>
                     </div>
+                    {{#if nodes}}
+                      <div class="tab-pane fade" id="item-res">
+                          <div id="res-tree"></div>
+                      </div>
+                    {{/if}}
                     <div class="tab-pane fade" id="item-desc">
                         <div class="form-group row">
                             <pre class="col-sm-10" id="output"></pre>

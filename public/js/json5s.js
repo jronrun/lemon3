@@ -118,6 +118,6 @@ module.exports = {
     return json5format(target);
   },
   fmtjson: function(target) {
-    return jju.stringify(target, {mode: "json"});
+    return JSON.stringify(target, false, 2);
   }
 };

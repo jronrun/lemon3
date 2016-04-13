@@ -37,7 +37,7 @@ var editor = {
       msg.clear();
       lemon.disable(this);
       var method = $(this).attr('m').toLowerCase(),
-        action = $(this).attr('act'), params = {};
+        action = $(this).attr('act'), listAction = $('#item-back').attr('href'), params = {};
       params.item = lemon.enc(cm.target.getValue());
       if (hasResource) {
         params.resource = lemon.chkboxval('resource');
@@ -45,8 +45,7 @@ var editor = {
 
       $[method](action, params).done(function(resp) {
         if (0 == resp.code) {
-          msg.succ('<Strong>' + resp.msg + '</Strong> <a href="'
-            + resp.result.action + '">Back to List</a>', '#item-card');
+          msg.succ('<Strong>' + resp.msg + '</Strong>', '#item-card');
         } else {
           msg.warn(resp.msg, '#item-card');
         }

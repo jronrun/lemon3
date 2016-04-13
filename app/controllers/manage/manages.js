@@ -50,7 +50,8 @@ router.get(index.powers.editor.do, function (req, res, next) {
     res_tab: 1,
     desc: 'Power',
     method: HttpMethod.POST,
-    action: index.powers.editor.action
+    action: index.powers.editor.action,
+    listAction: index.powers.action
   });
 });
 
@@ -93,16 +94,14 @@ router.post(index.powers.editor.do, function (req, res, next) {
         }
 
         if (1 != result.insertedCount) {
-          return res.json(answer.fail('Add new Power fail, Try again?'));
+          return res.json(answer.fail('Create fail, Try again?'));
         }
 
         callback(null, result);
       });
     }
   ], function(err, result) {
-    return res.json(answer.succ({
-      action: index.powers.action
-    }, 'Add success.'));
+    return res.json(answer.succ({}, 'Create success.'));
   });
 });
 

@@ -57,8 +57,37 @@ lemon.register({
       case 3: $(selector).addClass(uncheck).removeClass(check); break;
     }
     return $(selector).hasClass(check) ? 1 : 0;
+  },
+  disable: function(selector) {
+    $(selector).attr({disabled: true});
+  },
+  enable: function(selector) {
+    $(selector).removeAttr('disabled');
   }
 });
+
+var showmsg = function(msg, showTo, type) {
+  var show = lemon.tmpl($('#message-tmpl').html(), {
+    type: type || 'info', msg: msg
+  });
+  if (showTo) {
+    $(showTo).prepend(show);
+  }
+  return show;
+};
+
+global.msg = {};
+lemon.each(['info', 'danger', 'success', 'warning'], function (type) {
+  lemon.methodRegister(msg, type, function (msg, showTo) {
+    return showmsg(msg, showTo, type);
+  });
+});
+msg.succ = msg.success;
+msg.warn = msg.warning;
+msg.error = msg.danger;
+msg.clear = function(showTo) {
+  $((showTo ? (showTo + ' ') : '') + 'div[msg="msg"]').remove();
+};
 
 var manage = {
   sidebar: function() {

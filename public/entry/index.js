@@ -10,10 +10,15 @@ var handlePageCall = {};
 //global.Tether = require('tether');
 global.lemon = require('lemon/coffee/lemon.coffee');
 lemon.register(require('lz-string'));
-lemon.decode = lemon.decompressFromEncodedURIComponent;
+lemon.dec = lemon.decompressFromEncodedURIComponent;
+lemon.enc = lemon.compressToEncodedURIComponent;
 
 require('../js/store');
 require('jquery-pjax');
+
+lemon.href = function (uri) {
+  global.location.href = uri;
+};
 
 //global.$ = $;
 
@@ -25,6 +30,36 @@ global.register = function(call) {
   } else {
     lemon.error('register source is not defined.');
   }
+};
+
+global.rquest = function(action, data, options) {
+  options = options || {};
+  var req = $.ajax(lemon.extend({
+    type: options.type || 'GET',
+    async: true,
+    url: action,
+    data: data || {}
+  }, options));
+
+  return req;
+};
+$.put = function(action, data, options) {
+  return request(action, data, lemon.extend(options || {}, {
+    type: 'PUT'
+  }));
+};
+
+$.delete = function(action, data, options) {
+  return request(action, data, lemon.extend(options || {}, {
+    type: 'DELETE'
+  }));
+};
+
+$.jsonp = function(action, data, options) {
+  return request(action, data, lemon.extend(options || {}, {
+    type: 'GET',
+    dataType: 'jsonp'
+  }));
 };
 
 $(function () {

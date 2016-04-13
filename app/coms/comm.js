@@ -11,6 +11,23 @@ var path = require('path'),
   json5s = require('../../public/js/json5s')
   ;
 
+var answer = {
+  fail: function(msg, result, code) {
+    return {
+      code: code || -1,
+      result: result || {},
+      msg: msg || ''
+    }
+  },
+  succ: function(result, msg) {
+    return {
+      code: 0,
+      result: result || {},
+      msg: msg || ''
+    }
+  }
+};
+
 var extend_lodash = {
   startsIf: function (target, start) {
     return _.startsWith(target, start) ? target : (start + target);
@@ -43,6 +60,7 @@ module.exports = function(scope, config) {
   scope._ = _;
   _.extend(_, extend_lodash);
 
+  scope.answer = answer;
   scope.json5s = json5s;
   scope.crypto = crypto;
   scope.when = when;

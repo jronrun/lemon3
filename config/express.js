@@ -171,7 +171,10 @@ module.exports = function(app, config, passport) {
     next();
   });
 
-  var controllers = glob.sync(config.root + '/app/controllers/**/*.js');
+  var controllerRoot = config.root + '/app/controllers/';
+  var controllers = glob.sync(controllerRoot + '**/*.js', {
+    ignore: controllerRoot + 'manage/inherit/**/*.js'
+  });
   controllers.forEach(function (controller) {
     require(controller)(app, passport);
   });

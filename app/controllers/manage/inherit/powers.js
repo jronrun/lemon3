@@ -1,6 +1,7 @@
 'use strict';
 
 var Power = app_require('models/power'),
+  items = app_require('helpers/items'),
   log = log_from('powers');
 
 module.exports = function (router, index) {
@@ -8,10 +9,40 @@ module.exports = function (router, index) {
    * Power list
    */
   router.get(index.powers.do, function (req, res, next) {
-    res.render(index.powers.page, {
-      pagename: 'items-list-page',
-      pageedit: index.powers.editor.action
+    var defines = [
+      {
+        title: 'Name',
+        prop: function(item) {
+          var html = [
+            '<a href="item-editor.html" class=""><h4 class="item-title">',
+              item.name,
+            '</h4></a>'
+            ];
+          return html.join('');
+        },
+        clazz: 'fixed pull-left item-col-title'
+      },
+      {
+        title: 'Description',
+        prop: 'desc',
+        clazz: 'item-col-sales'
+      },
+      {
+        title: 'Create',
+        prop: 'create_time',
+        clazz: 'item-col-date',
+        type: 'date'
+      }
+    ];
+
+    Power.page(100, 100).toArray(function (err, result) {
+      res.render(index.powers.page, {
+        pagename: 'items-list-page',
+        pageedit: index.powers.editor.action,
+        list: items.asShowData(defines, result)
+      });
     });
+
   });
 
   /**

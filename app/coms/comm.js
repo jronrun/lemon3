@@ -8,7 +8,8 @@ var path = require('path'),
   when = require('when'),
   async = require('async'),
   revalidator = require('revalidator'),
-  json5s = require('../../public/js/json5s')
+  json5s = require('../../public/js/json5s'),
+  moment = require('moment')
   ;
 
 var answer = {
@@ -60,6 +61,7 @@ module.exports = function(scope, config) {
   scope._ = _;
   _.extend(_, extend_lodash);
 
+  scope.moment = moment;
   scope.answer = answer;
   scope.json5s = json5s;
   scope.crypto = crypto;
@@ -95,6 +97,11 @@ module.exports = function(scope, config) {
     model.bind(_.extend(mongo.Base(model, modelName, modelSchema), methods || {}));
     model.define = modelSchema;
     return model;
+  };
+
+  scope.datefmt = function(targetDate, dateStyle) {
+    var mo = targetDate ? moment(targetDate) : moment();
+    return mo.format(dateStyle || 'YYYY-MM-DD HH:mm:ss');
   };
 
   var resource = require('./resource');

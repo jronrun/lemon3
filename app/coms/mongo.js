@@ -43,6 +43,12 @@ module.exports.db = db;
 module.exports.Base = function(model, modelName, define) {
   return {
 
+    page: function(lastId, pageSize, query) {
+      return model.find(_.extend(query || {}, {id : { $lt : lastId }}))
+        .sort({id : -1})
+        .limit(pageSize);
+    },
+
     desc: function(exclude, compress) {
       exclude = exclude || [];
       exclude.push('create_time');
@@ -74,6 +80,25 @@ module.exports.Base = function(model, modelName, define) {
         valid: false,
         msg: errMsg
       }
+    },
+
+    lastId: function(callback) {
+      var deferred = when.defer();
+      db.collection('counter').find({_id: modelName}).limit(1).next(function(err, doc){
+        if (err) {
+          deferred.reject(err);
+        } else {
+          deferred.resolve(doc.seq);
+        }
+      });
+
+      if (_.isFunction(callback)) {
+        deferred.promise.then(function (lastId) {
+          callback(lastId);
+        });
+      }
+
+      return deferred.promise;
     },
 
     nextId: function(callback) {

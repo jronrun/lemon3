@@ -13,3 +13,17 @@ module.exports.register = function (handlebars, options) {
   strings.register(handlebars);
   is.register(handlebars);
 };
+
+/*
+ Handlebars each
+ For arrays:
+
+ {{#each myArray}}
+ Index: {{@index}} Value = {{this}}
+ {{/each}}
+ For objects:
+
+ {{#each myObject}}
+ Key: {{@key}} Value = {{this}}
+ {{/each}}
+ */

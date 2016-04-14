@@ -41,12 +41,116 @@ db.bind('counter').bind({
 
 module.exports.db = db;
 module.exports.Base = function(model, modelName, define) {
-  return {
+  var core = {
 
-    page: function(lastId, pageSize, query) {
-      return model.find(_.extend(query || {}, {id : { $lt : lastId }}))
-        .sort({id : -1})
-        .limit(pageSize);
+    /**
+     * Page Query
+     * @param query
+     * @param page      Page no
+     * @param callback
+     * @param size      Page size
+     * @param options
+     * {
+     *  field: '',      //sort field name
+     *  sort: 1         //sort 1 asc, -1 desc
+     * }
+     *
+     * @returns {Promise}
+     * {
+     *  items: [],
+     *  page: {
+     *    page: 3,      //current page
+     *    size: 2,      //page size
+     *    lastId: 3,    //current page max id
+     *    count: 7,     //total count
+     *    pages: 4,     //total page
+     *    maxId: 10     //current collection max id
+     *   }
+     * }
+       */
+    page: function(query, page, callback, size, options) {
+      var deferred = when.defer();
+      page = page || 1; size = size || 30; options = _.extend({
+        field: 'id',
+        sort: -1
+      }, options || {});
+
+      core.lastId(function (maxId) {
+        var originalQry = _.cloneDeep(query || {}), pageLastId = null;
+        if (-1 == options.sort) {
+          pageLastId = 1 == page ? maxId : (maxId - (page - 1) * size);
+        } else {
+          pageLastId = (page - 1) * size + 1;
+        }
+
+        core.findPage(pageLastId, size, query, options).toArray(function (err, items) {
+          if (err) {
+            deferred.reject(err);
+          } else {
+            var pagination = {
+              page: page,
+              size: size,
+              lastId: pageLastId,
+              maxId: maxId
+            };
+
+            model.count(originalQry, function(err, count) {
+              if (err) {
+                deferred.reject(err);
+              } else {
+                pagination.count = count;
+                var pages = Math.floor(count / size);
+                if (count % size > 0) {
+                  ++pages;
+                }
+                pagination.pages = pages;
+                deferred.resolve({
+                  items: items,
+                  page: pagination
+                });
+              }
+            });
+
+          }
+        });
+      });
+
+      if (_.isFunction(callback)) {
+        deferred.promise.then(function (result) {
+          callback(result);
+        });
+      }
+
+      return deferred.promise;
+    },
+
+    /**
+     * Page Find
+     * @param lastId
+     * @param pageSize
+     * @param query
+     * @param options
+     * {
+     *  field: '',      //sort field name
+     *  sort: 1         //sort 1 asc, -1 desc
+     * }
+     * @returns {*}
+     */
+    findPage: function(lastId, pageSize, query, options) {
+      options = _.extend({
+        field: 'id',
+        sort: -1
+      }, options || {});
+
+      var condition = {}, aSort = {};
+      if (-1 == options.sort) {
+        condition[options.field] = { $lte : lastId };   //{id : { $lte : lastId }}
+      } else {
+        condition[options.field] = { $gte : lastId };   //{id : { $gte : lastId }}
+      }
+      aSort[options.field] = options.sort;            //{id : -1}
+
+      return model.find(_.extend(query || {}, condition)).sort(aSort).limit(pageSize);
     },
 
     desc: function(exclude, compress) {
@@ -112,5 +216,7 @@ module.exports.Base = function(model, modelName, define) {
       return promise;
     }
 
-  }
+  };
+
+  return core;
 };

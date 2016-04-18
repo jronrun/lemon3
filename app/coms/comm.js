@@ -47,7 +47,7 @@ var extend_lodash = {
   },
 
   afterOccur: function(target, delimiter, position) {
-    var tokens = target.split(delimiter).slice(position);
+    var tokens = target.split(delimiter).slice(position || 1);
     return delimiter + tokens.join(delimiter);
   },
 

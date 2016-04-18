@@ -50,7 +50,7 @@ var resource = [
       },
 
       {
-        id: 200001, name: 'powers', desc: 'Powers', page: P.list, children: [
+        id: 200001, name: 'powers', desc: 'Powers', action: '/manage/powers/:page', page: P.list, children: [
           {id: 2000011, name: 'editor', action: '/manage/power', page: P.edit, desc: 'Editor'},
           {id: 2000012, extend: 2000011, method: M.POST, page: P.list, desc: 'Create'},
 
@@ -95,7 +95,7 @@ var menu = [
   },
   {
     name: 'Settings', children: [
-      {sourceId: 200001},
+      {sourceId: 200001, args: [1]},
       {sourceId: 200002}
     ]
   }

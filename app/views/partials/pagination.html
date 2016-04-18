@@ -7,7 +7,7 @@
           </li>
         {{else}}
           <li class="page-item {{#if current}}active{{/if}}">
-              <a class="page-link" data-pjax href="{{action}}?pn={{num}}"> {{text}} </a>
+              <a class="page-link" data-pjax href="{{action}}{{num}}"> {{text}} </a>
           </li>
         {{/is}}
       {{/each}}

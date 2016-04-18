@@ -9,7 +9,7 @@ module.exports = function (router, index) {
    * Power list
    */
   router.get(index.powers.do, function (req, res, next) {
-    var pageNo = req.param('pn') || 1;
+    var pageNo = req.param('page') || 1;
     var defines = [
       {
         title: 'Name',
@@ -42,7 +42,7 @@ module.exports = function (router, index) {
         pageedit: index.powers.editor.action,
         list: items.asShowData(defines, result.items),
         page: result.page,
-        action: index.powers.action
+        action: _.beforeOccur(index.powers.action, ':')
       });
     });
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var log = log_from('powers');
+var log = log_from('items');
 
 var types = {
   date: function(val) {

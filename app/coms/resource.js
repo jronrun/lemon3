@@ -133,7 +133,7 @@ _.each(extend, function (item) {
   }
 });
 
-// { name: '', type: '1 node, 2 menu', action: '', sourceId: '', children: [] }
+// { name: '', type: '1 node, 2 menu', action: '', sourceId: '', children: [], args: [] }
 
 var fillmenu = function (item, parent) {
   var obj = {};
@@ -143,6 +143,10 @@ var fillmenu = function (item, parent) {
     obj.name = item.name || src.desc;
     obj.action = src.action;
     obj.type = 2;
+
+    if (src.action.indexOf(':') != -1) {
+      obj.action = _.beforeOccur(src.action, ':', 1) + (item.args || []).join('/');
+    }
   } else {
     obj.type = 1;
     obj.name = item.name;

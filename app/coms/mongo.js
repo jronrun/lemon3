@@ -39,6 +39,70 @@ db.bind('counter').bind({
   }
 });
 
+var pages = {
+  /**
+   * [{
+   * "text": "",   //text
+   * "current": 1, //current page
+   * "num": 1      //page no, 0 if none page
+   * }]
+   */
+  index: function (num, text, current) {
+    var ret = {text: text || (num + ''), num: num};
+    if (current) {
+      ret.current = current;
+    }
+    return ret;
+  },
+
+  wrap: function (pagination) {
+    var critical = 6, start = 0, end = 0, index = [],
+      pageCount = parseInt(pagination.pages), currentPage = parseInt(pagination.page);
+    if (currentPage < critical) {
+      start = 1;
+      end = critical;
+    } else {
+      start = currentPage - 2;
+      end = currentPage + 2;
+    }
+
+    if (end > pageCount) {
+      end = pageCount;
+    }
+
+    if (currentPage > 1) {
+      index.push(pages.index(currentPage - 1, 'Prev'));
+    }
+
+    if (start > 1) {
+      index.push(pages.index(1));
+      index.push(pages.index(0, '...'));
+    }
+
+    for (var idx = start; idx <= end; idx++) {
+      if (idx == currentPage) {
+        index.push(pages.index(idx, idx + '', idx));
+      } else {
+        index.push(pages.index(idx));
+      }
+    }
+
+    if (end < pageCount) {
+      if (end != pageCount - 1) {
+        index.push(pages.index(0, '...'));
+      }
+      index.push(pages.index(pageCount));
+    }
+
+    if (currentPage < pageCount) {
+      index.push(pages.index(parseInt(currentPage) + 1, 'Next'));
+    }
+
+    pagination.index = index;
+    return pagination;
+  }
+};
+
 module.exports.db = db;
 module.exports.Base = function(model, modelName, define) {
   var core = {
@@ -99,14 +163,15 @@ module.exports.Base = function(model, modelName, define) {
                 deferred.reject(err);
               } else {
                 pagination.count = count;
-                var pages = Math.floor(count / size);
+                var totalPage = Math.floor(count / size);
                 if (count % size > 0) {
-                  ++pages;
+                  ++totalPage;
                 }
-                pagination.pages = pages;
+                pagination.pages = totalPage;
+
                 deferred.resolve({
                   items: items,
-                  page: pagination
+                  page: pages.wrap(pagination)
                 });
               }
             });

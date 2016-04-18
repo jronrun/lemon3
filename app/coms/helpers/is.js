@@ -1,6 +1,28 @@
 'use strict';
 
 //https://github.com/danharper/Handlebars-Helpers
+/*
+ {{#is x y}} ... {{else}} ... {{/is}}
+ {{#is x "==" y}} ... {{else}} ... {{/is}}
+
+ {{#is x "!=" y}} ... {{else}} ... {{/is}}
+ {{#is x "not" y}} ... {{else}} ... {{/is}}
+
+ // Strict equality checking
+ {{#is x "===" y}} ... {{else}} ... {{/is}}
+ {{#is x "!==" y}} ... {{else}} ... {{/is}}
+
+ // Greater/Less Than
+ {{#is x ">" y}} ... {{else}} ... {{/is}}
+ {{#is x ">=" y}} ... {{else}} ... {{/is}}
+
+ {{#is x "<" y}} ... {{else}} ... {{/is}}
+ {{#is x "<=" y}} ... {{else}} ... {{/is}}
+
+ // In comma separated list, or array
+ {{#is x "in" "foo,bar"}} ... {{else}} ... {{/is}}
+ {{#is x "in" anArray}} ... {{else}} ... {{/is}}
+ */
 module.exports.register = function (Handlebars) {
 
   var isArray = function(value) {

@@ -9,6 +9,7 @@ module.exports = function (router, index) {
    * Power list
    */
   router.get(index.powers.do, function (req, res, next) {
+    var pageNo = req.param('pn') || 1;
     var defines = [
       {
         title: 'Name',
@@ -32,20 +33,16 @@ module.exports = function (router, index) {
         prop: 'create_time',
         clazz: 'item-col-date',
         type: 'date'
-      },
-      {
-        title: 'ID',
-        prop: 'id',
-        clazz: 'item-col-sales'
       }
     ];
 
-    Power.page({}, 1, false, 2, {sort: 1}).then(function (result) {
+    Power.page({}, pageNo).then(function (result) {
       res.render(index.powers.page, {
         pagename: 'items-list-page',
         pageedit: index.powers.editor.action,
         list: items.asShowData(defines, result.items),
-        page: result.page
+        page: result.page,
+        action: index.powers.action
       });
     });
 

@@ -147,7 +147,7 @@ var fillmenu = function (item, parent) {
     //if (src.action.indexOf(':') != -1) {
     //  obj.action = _.beforeOccur(src.action, ':', 1) + (item.args || []).join('/');
     //}
-    obj.action = actionWrap(src.action, item.args);
+    obj.action = actionWrap(src.action, item.args).action;
   } else {
     obj.type = 1;
     obj.name = item.name;

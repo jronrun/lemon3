@@ -46,14 +46,6 @@ module.exports = function (router, index) {
       });
     });
 
-    //Power.findPage(100, 100).toArray(function (err, result) {
-    //  res.render(index.powers.page, {
-    //    pagename: 'items-list-page',
-    //    pageedit: index.powers.editor.action,
-    //    list: items.asShowData(defines, result)
-    //  });
-    //});
-
   });
 
   /**

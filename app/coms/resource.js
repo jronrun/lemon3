@@ -144,9 +144,10 @@ var fillmenu = function (item, parent) {
     obj.action = src.action;
     obj.type = 2;
 
-    if (src.action.indexOf(':') != -1) {
-      obj.action = _.beforeOccur(src.action, ':', 1) + (item.args || []).join('/');
-    }
+    //if (src.action.indexOf(':') != -1) {
+    //  obj.action = _.beforeOccur(src.action, ':', 1) + (item.args || []).join('/');
+    //}
+    obj.action = actionWrap(src.action, item.args);
   } else {
     obj.type = 1;
     obj.name = item.name;

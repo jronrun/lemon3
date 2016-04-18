@@ -71,7 +71,7 @@ var pages = {
     }
 
     if (currentPage > 1) {
-      index.push(pages.index(currentPage - 1, 'Prev'));
+      index.push(pages.index(Math.min(currentPage - 1, pageCount), 'Prev'));
     }
 
     if (start > 1) {

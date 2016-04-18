@@ -80,6 +80,16 @@ module.exports = function(scope, config) {
     return aModel;
   };
 
+  scope.actionWrap = function(action, args) {
+    var ret = {}, args = _.isArray(args) ? args : [args];
+    if (action.indexOf(':') != -1) {
+      ret.base = _.beforeOccur(action, ':');
+      action = ret.base + (args || []).join('/');
+    }
+    ret.action = action;
+    return ret;
+  };
+
   scope.app_require = function(moduleName) {
     return require(path.join(config.root, path.sep, 'app', path.sep, moduleName));
   };

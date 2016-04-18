@@ -42,7 +42,7 @@ module.exports = function (router, index) {
         pageedit: index.powers.editor.action,
         list: items.asShowData(defines, result.items),
         page: result.page,
-        action: _.beforeOccur(index.powers.action, ':')
+        action: actionWrap(index.powers.action).base
       });
     });
 
@@ -67,7 +67,7 @@ module.exports = function (router, index) {
       desc: 'Power',
       method: HttpMethod.POST,
       action: index.powers.editor.action,
-      listAction: index.powers.action
+      listAction: actionWrap(index.powers.action, 1).action
     });
   });
 

@@ -17,5 +17,9 @@ $(function () {
       $thisActionList.toggleClass('active');
     });
 
+    lemon.onModalShow('item-rem', function (data, modal) {
+      //modal.title.html(data.bizid);
+    });
+
   });
 });

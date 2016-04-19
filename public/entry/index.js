@@ -4,7 +4,7 @@
 'use strict';
 
 require('../css/style.styl');
-var handlePageCall = {}, handleModalCall = { show: {}, shown: {} };
+var handlePageCall = {}, handleModalCall = { show: {}, shown: {}, confirm: {} };
 
 //Bootstrap tooltips require Tether (http://github.hubspot.com/tether/)
 //global.Tether = require('tether');
@@ -68,17 +68,31 @@ lemon.onModalShow = function(bizType, call) {
 lemon.onModalShown = function(bizType, call) {
   handleModalCall.shown[bizType] = call;
 };
+lemon.onConfirm = function(bizType, yes, no) {
+  handleModalCall.confirm[bizType] = { yes: yes, no: no };
+};
 
 function doModal(handle, modalId, e) {
   var target = e.relatedTarget;
-  if (target.dataset && target.dataset.biztype) {
-    var btype = target.dataset.biztype;
+  $(modalId + ' .modal-footer .btn-primary').data($(target).data());
+
+  if (target.dataset && target.dataset.bizType) {
+    var btype = target.dataset.bizType;
     lemon.isFunc(handle[btype]) && handle[btype](target.dataset, {
       header: $(modalId + ' .modal-header'),
       title: $(modalId + ' .modal-title'),
       body: $(modalId + ' .modal-body'),
       footer: $(modalId + ' .modal-footer')
     });
+  }
+}
+
+function doConfirm(modalId, btn) {
+  var dataset, confirm;
+  if (dataset = $(modalId + ' .modal-footer .btn-primary').data()) {
+    if (confirm = handleModalCall.confirm[dataset.bizType]) {
+      lemon.isFunc(confirm[btn]) && confirm[btn](dataset);
+    }
   }
 }
 
@@ -97,6 +111,10 @@ $(function () {
 
   var modalId = '#confirm-modal';
   if ($(modalId).length) {
+    $(modalId + ' .modal-footer button').click(function () {
+      doConfirm(modalId, $(this).hasClass('btn-primary') ? 'yes' : 'no');
+    });
+
     $(modalId).on('show.bs.modal', function(e) {
       doModal(handleModalCall.show, modalId, e);
     }).on('shown.bs.modal', function(e) {

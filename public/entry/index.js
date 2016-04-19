@@ -74,7 +74,7 @@ lemon.onConfirm = function(bizType, yes, no) {
 
 function doModal(handle, modalId, e) {
   var target = e.relatedTarget;
-  $(modalId + ' .modal-footer .btn-primary').data($(target).data());
+  $(modalId).data($(target).data());
 
   if (target.dataset && target.dataset.bizType) {
     var btype = target.dataset.bizType;
@@ -89,7 +89,7 @@ function doModal(handle, modalId, e) {
 
 function doConfirm(modalId, btn) {
   var dataset, confirm;
-  if (dataset = $(modalId + ' .modal-footer .btn-primary').data()) {
+  if (dataset = $(modalId).data()) {
     if (confirm = handleModalCall.confirm[dataset.bizType]) {
       lemon.isFunc(confirm[btn]) && confirm[btn](dataset);
     }

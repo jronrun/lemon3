@@ -6,9 +6,15 @@
               <a class="page-link" href="javascript:void(0);"> {{text}} </a>
           </li>
         {{else}}
-          <li class="page-item {{#if current}}active{{/if}}">
-              <a class="page-link" data-pjax href="{{action}}{{num}}"> {{text}} </a>
-          </li>
+          {{#is current ">" 0}}
+            <li class="page-item active">
+                <a class="page-link" href="javascript:void(0);"> {{text}} </a>
+            </li>
+          {{else}}
+              <li class="page-item">
+                  <a class="page-link" data-pjax href="{{action}}{{num}}"> {{text}} </a>
+              </li>
+          {{/is}}
         {{/is}}
       {{/each}}
     </ul>

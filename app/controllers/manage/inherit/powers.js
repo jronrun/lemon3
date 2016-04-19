@@ -42,7 +42,8 @@ module.exports = function (router, index) {
         pageedit: index.powers.editor.action,
         list: items.asShowData(defines, result.items),
         page: result.page,
-        action: actionWrap(index.powers.action).base
+        action: actionWrap(index.powers.action).base,
+        retrieveAction: actionWrap(index.powers.retrieve.action).base
       });
     });
 

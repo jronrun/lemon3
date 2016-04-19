@@ -55,10 +55,10 @@
           {{#each list.items}}
               <li class="item">
                   <div class="item-row">
-                    {{#each this}}
+                    {{#each this.row}}
                         <div class="item-col {{clazz}}">
                             <div class="item-heading">{{title}}</div>
-                            <div> {{{value}}} </div>
+                            <div> {{{value}}}</div>
                         </div>
                     {{/each}}
 
@@ -76,7 +76,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="edit" href="item-editor.html"> <i class="fa fa-pencil"></i> </a>
+                                        <a class="edit" data-pjax href="{{../retrieveAction}}{{id}}"> <i class="fa
+                                        fa-pencil"></i> </a>
                                     </li>
                                 </ul>
                             </div>

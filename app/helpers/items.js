@@ -23,14 +23,17 @@ var helper = {
    * {
    *  defines: defines,
    *  items: [
-   *    [
-          {
-            "title": "",
-            "value": "",
-            "clazz": "",
-            "prop": ""
-          }
-   *    ]
+   *    {
+   *      id: 1,
+   *      row: [
+            {
+              "title": "",
+              "value": "",
+              "clazz": "",
+              "prop": ""
+            }
+          ]
+   *    }
    *  ]
    * }
      */
@@ -48,12 +51,14 @@ var helper = {
         row.push({
           title: define.title,
           clazz: define.clazz || '',
-          value: val,
-          id: item.id || item['_id']
+          value: val
         });
       });
 
-      data.push(row);
+      data.push({
+        id: item.id || item['_id'],
+        row: row
+      });
     });
 
     return {

@@ -4,7 +4,7 @@ $(function () {
 
     var $itemActions = $(".item-actions-dropdown");
 
-    $(document).on('click',function(e) {
+    $('article').on('click',function(e) {
       if (!$(e.target).closest('.item-actions-dropdown').length) {
         $itemActions.removeClass('active');
       }

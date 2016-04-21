@@ -138,6 +138,10 @@ module.exports = function (router, index, root) {
         return res.json(answer.fail(err.message));
       }
 
+      if (!result) {
+        return res.json(answer.fail('item not exists.'));
+      }
+
       var check = Power.validate(_.extend(result, item));
       if (!check.valid) {
         return res.json(answer.fail(check.msg));
@@ -172,6 +176,10 @@ module.exports = function (router, index, root) {
         return res.json(answer.fail(err.message));
       }
 
+      if (!result) {
+        return res.json(answer.fail('item not exists.'));
+      }
+
       var schema = Power.desc(['resources']);
       var value = Power.getEditVal(schema, true, result);
 
@@ -196,6 +204,10 @@ module.exports = function (router, index, root) {
     Power.findById(req.params.id, function (err, result) {
       if (err) {
         return res.json(answer.fail(err.message));
+      }
+
+      if (!result) {
+        return res.json(answer.fail('item not exists.'));
       }
 
       Power.removeById(req.params.id, function(err) {

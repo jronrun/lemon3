@@ -22,6 +22,10 @@ module.exports = function (router, index, root) {
         return res.json(answer.fail(err.message));
       }
 
+      if (!result) {
+        return res.json(answer.fail('item not exists.'));
+      }
+
       res.render(index, {
         nodes: getResourceTree(result.resources)
       });

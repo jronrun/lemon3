@@ -123,7 +123,7 @@ module.exports = function(scope, config) {
 
     return menus;
   };
-  scope.getResourceTree = function() {
+  scope.getResourceTree = function(source) {
     var tree = resource.tree;
 
     return tree;

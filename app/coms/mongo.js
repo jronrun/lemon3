@@ -395,6 +395,15 @@ module.exports.Base = function(model, modelName, define) {
       return model.find(_.extend(query || {}, condition)).sort(aSort).limit(pageSize);
     },
 
+    getEditVal: function(schema, compress, item) {
+      var def = {};
+      _.each(schema, function (v, k) {
+        def[k] = item ? item[k] : '';
+      });
+
+      return compress ? crypto.compress(JSON.stringify(def)) : def;
+    },
+
     desc: function(exclude, compress) {
       exclude = exclude || [];
       exclude.push('create_time');
@@ -404,8 +413,7 @@ module.exports.Base = function(model, modelName, define) {
         delete target[prop];
       });
 
-      target = JSON.stringify(target);
-      return compress ? crypto.compress(target) : target;
+      return compress ? crypto.compress(JSON.stringify(target)) : target;
     },
 
     validate: function(target) {

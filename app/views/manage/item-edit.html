@@ -1,4 +1,4 @@
-<article class="content {{pagename}}" source="{{source}}">
+<article class="content {{pagename}}" source="item-edit">
 
 
     <div class="title-block">
@@ -45,12 +45,13 @@
                         }}
                         <div class="form-group">
                             <input type="hidden" id="item-schema" value="{{schema}}"/>
+                            <input type="hidden" id="item-value" value="{{value}}"/>
                             <textarea class="form-control underlined" rows="10" id="item-editor"></textarea>
                         </div>
                     </div>
                     {{#if res_tab}}
                       <div class="tab-pane fade" id="item-res">
-                          <div id="res-tree"></div>
+                          <div id="res-tree" action="{{res_action}}"></div>
                       </div>
                     {{/if}}
                     <div class="tab-pane fade" id="item-desc">

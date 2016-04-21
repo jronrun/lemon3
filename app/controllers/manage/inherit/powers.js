@@ -4,7 +4,7 @@ var Power = app_require('models/power'),
   items = app_require('helpers/items'),
   log = log_from('powers');
 
-module.exports = function (router, index) {
+module.exports = function (router, index, root) {
   /**
    * Power list
    */
@@ -52,10 +52,14 @@ module.exports = function (router, index) {
    * Power editor
    */
   router.get(index.editor.do, function (req, res, next) {
+    var schema = Power.desc(['resources']);
+    var value = Power.getEditVal(schema, true);
     res.render(index.editor.page, {
       pagename: 'item-editor-page',
-      schema: Power.desc(['resources'], true),
+      schema: crypto.compress(schema),
+      value: value,
       res_tab: 1,
+      res_action: root.resource.action,
       desc: 'Power',
       method: HttpMethod.POST,
       action: index.editor.action,
@@ -116,6 +120,36 @@ module.exports = function (router, index) {
     });
   });
 
+  /**
+   * Power retrieve
+   */
+  router.get(index.retrieve.do, function (req, res, next) {
+    var itemId = req.params.id;
+    Power.findById(itemId, function (err, result) {
+      if (err) {
+        return res.json(answer.fail(err.message));
+      }
+
+      var schema = Power.desc(['resources']);
+      var value = Power.getEditVal(schema, true, result);
+
+      res.render(index.retrieve.page, {
+        pagename: 'item-editor-page',
+        schema: crypto.compress(schema),
+        value: value,
+        res_tab: 1,
+        res_action: actionWrap(root.resource.power.action, itemId).action,
+        desc: 'Power',
+        method: HttpMethod.POST,
+        action: index.editor.action,
+        listAction: actionWrap(index.action, 1).action
+      });
+    });
+  });
+
+  /**
+   * Power delete
+   */
   router.delete(index.retrieve.do, function (req, res, next) {
     Power.findById(req.params.id, function (err, result) {
       if (err) {
@@ -131,6 +165,7 @@ module.exports = function (router, index) {
       });
 
     });
-  })
+  });
+
 };
 

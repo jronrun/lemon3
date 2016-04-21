@@ -5,21 +5,14 @@ var mirror = require('../../js/codemirror');
 
 var editor = {
 
-  getSchema: function (selector) {
+  getVal: function (selector) {
     return $.parseJSON(lemon.dec($(selector).val()));
   },
 
-  getDefault: function(schema) {
-    var def = {};
-    lemon.each(schema, function (v, k) {
-      def[k] = '';
-    });
-    return def;
-  },
-
   intlcm: function () {
-    var cm = mirror('#item-editor'), schema = editor.getSchema('#item-schema');
-    cm.setJsonVal(editor.getDefault(schema));
+    var cm = mirror('#item-editor'),
+      schema = editor.getVal('#item-schema'), val = editor.getVal('#item-value');
+    cm.setJsonVal(val);
     $('#output').val(lemon.fmtjson(schema));
     mirror.showJson('#output');
     return cm;
@@ -29,7 +22,8 @@ var editor = {
     var hasResource = $('#res-tree').length, cm = editor.intlcm();
 
     if (hasResource) {
-      lemon.sourcetree('#res-tree');
+      var tree = '#res-tree';
+      lemon.sourcetree(tree, $(tree).attr('action'));
     }
 
     var submitEl = '#item-submit';

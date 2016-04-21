@@ -70,9 +70,9 @@ var resource = [
 
       {
         id: 200004, name: 'resource', desc: 'Resource', method: M.POST, children: [
-          {id: 2000041, name: 'power', desc: 'Power Resource', action: '/power/:id', method: M.POST},
-          {id: 2000042, name: 'role', desc: 'Role Resource', action: '/role/:id', method: M.POST},
-          {id: 2000043, name: 'user', desc: 'User Resource', action: '/user/:id', method: M.POST}
+          {id: 2000041, name: 'power', desc: 'Power Resource', action: '/manage/resource/power/:id', method: M.POST},
+          {id: 2000042, name: 'role', desc: 'Role Resource', action: '/manage/resource/role/:id', method: M.POST},
+          {id: 2000043, name: 'user', desc: 'User Resource', action: '/manage/resource/user/:id', method: M.POST}
         ]
       }
     ]

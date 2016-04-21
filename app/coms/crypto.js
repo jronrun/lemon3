@@ -6,7 +6,8 @@ var crypto = require('crypto'),
   passwd = '6b8a3a41af62181c3c1370f67d96ccfd';
 
 var compress = function(target) {
-  return lzs.compressToEncodedURIComponent(target);
+
+  return lzs.compressToEncodedURIComponent(_.isString(target) ? target : JSON.stringify(target));
 };
 
 var decompress = function(target) {

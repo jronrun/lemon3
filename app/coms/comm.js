@@ -56,6 +56,17 @@ var extend_lodash = {
   }
 };
 
+function checkNode(tree, source) {
+  _.each(tree, function (node) {
+    if (source.indexOf(node.id) != -1) {
+      node.check = 1;
+    }
+    if (node.nodes) {
+      checkNode(node.nodes, source);
+    }
+  });
+}
+
 module.exports = function(scope, config) {
 
   scope._ = _;
@@ -124,8 +135,12 @@ module.exports = function(scope, config) {
     return menus;
   };
   scope.getResourceTree = function(source) {
+    var checkSource = [];
+    _.each(source || [], function (v) {
+      checkSource.push(_.isNumber(v) ? v : parseInt(v));
+    });
     var tree = resource.tree;
-
+    checkNode(tree, checkSource);
     return tree;
   };
 

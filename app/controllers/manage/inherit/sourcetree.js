@@ -23,7 +23,7 @@ module.exports = function (router, index, root) {
       }
 
       res.render(index, {
-        nodes: getResourceTree(result.resource)
+        nodes: getResourceTree(result.resources)
       });
     });
   });

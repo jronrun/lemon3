@@ -4,7 +4,8 @@
           <div class="list-icon">
               <div class="col-md-3 col-sm-4">
                   <label class="item-check">
-                      <input type="checkbox" class="checkbox" id="base-{{id}}" name="resource" value="{{id}}">
+                      <input type="checkbox" {{#if check}}checked="checked"{{/if}} class="checkbox" id="base-{{id}}" name="resource"
+          value="{{id}}">
                       <span><strong>{{text}}</strong></span>
                   </label>
                   <em class="fa fa-caret-down" collapsable="1" child="{{id}}"></em>
@@ -18,7 +19,8 @@
           <div class="list-icon">
               <div class="col-md-3 col-sm-4">
                   <label class="item-check">
-                      <input type="checkbox" class="checkbox" name="resource" value="{{id}}">
+                      <input type="checkbox" {{#if check}}checked="checked"{{/if}} class="checkbox" name="resource"
+                             value="{{id}}">
                       <span><small>{{text}}</small></span>
                   </label>
               </div>

@@ -106,10 +106,10 @@ var pages = {
     return pagination;
   },
 
-  wrapRange: function (pagination) {
+  wrapRange: function (pagination, itemSize) {
     var index = [];
     index.push(pages.index('za' + pagination.headId, 'Prev'));
-    index.push(pages.index(0, Math.min(pagination.count, pagination.size) + ' of ' + pagination.count));
+    index.push(pages.index(0, itemSize + ' of ' + pagination.count));
     index.push(pages.index('az' + pagination.tailId, 'Next'));
     pagination.index = index;
     return pagination;
@@ -323,7 +323,7 @@ module.exports.Base = function(model, modelName, define) {
 
               deferred.resolve({
                 items: items,
-                page: pages.wrapRange(pagination)
+                page: pages.wrapRange(pagination, items.size)
               });
             }
           });

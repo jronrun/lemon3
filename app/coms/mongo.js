@@ -109,7 +109,7 @@ var pages = {
   wrapRange: function (pagination) {
     var index = [];
     index.push(pages.index('za' + pagination.headId, 'Prev'));
-    index.push(pages.index(0, pagination.size + ' of ' + pagination.count));
+    index.push(pages.index(0, Math.min(pagination.count, pagination.size) + ' of ' + pagination.count));
     index.push(pages.index('az' + pagination.tailId, 'Next'));
     pagination.index = index;
     return pagination;

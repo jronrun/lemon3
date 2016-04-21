@@ -18,8 +18,13 @@ $(function () {
     });
 
     lemon.onConfirm('item-rem', function (data) {
-      lemon.delete(data.href).done(function (data) {
-
+      lemon.delete(data.href).done(function(resp) {
+        if (0 == resp.code) {
+          $('#item-' + data.itemId).remove();
+          msg.succ('<Strong>' + resp.msg + '</Strong>', '#items-card');
+        } else {
+          msg.warn(resp.msg, '#items-card');
+        }
       });
     });
 

@@ -56,7 +56,7 @@ var helper = {
       });
 
       data.push({
-        id: item.id || item['_id'],
+        id: item['_id'],
         row: row
       });
     });

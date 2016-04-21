@@ -117,7 +117,20 @@ module.exports = function (router, index) {
   });
 
   router.delete(index.retrieve.do, function (req, res, next) {
-    log.info(req.params.id);
+    Power.findById(req.params.id, function (err, result) {
+      if (err) {
+        return res.json(answer.fail(err.message));
+      }
+
+      Power.removeById(req.params.id, function(err) {
+        if (err) {
+          return res.json(answer.fail(err.message));
+        }
+
+        return res.json(answer.succ(false, 'Remove ' + result.name + ' success.'));
+      });
+
+    });
   })
 };
 

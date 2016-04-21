@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="card items">
+    <div class="card items" id="items-card">
         <ul class="item-list striped">
 
             <li class="item item-list-header hidden-sm-down">
@@ -53,7 +53,7 @@
             </li>
 
           {{#each list.items}}
-              <li class="item">
+              <li class="item" id="item-{{id}}">
                   <div class="item-row">
                     {{#each this.row}}
                         <div class="item-col {{clazz}}">
@@ -72,13 +72,12 @@
                                 <ul class="item-actions-list">
                                     <li>
                                         <a class="remove" href="#" data-toggle="modal" data-target="#confirm-modal"
-                                           data-biz-type="item-rem" data-href="{{../retrieveAction}}{{id}}">
-                                            <i class="fa fa-trash-o "></i>
+                                           data-biz-type="item-rem" data-href="{{../retrieveAction}}{{id}}" data-item-id="{{id}}">
+                                        <i class="fa fa-trash-o "></i>
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="edit" data-pjax href="{{../retrieveAction}}{{id}}"> <i class="fa
-                                        fa-pencil"></i> </a>
+                                        <a class="edit" data-pjax href="{{../retrieveAction}}{{id}}"> <i class="fa fa-pencil"></i> </a>
                                     </li>
                                 </ul>
                             </div>

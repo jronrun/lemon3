@@ -180,7 +180,7 @@ module.exports = function(app, config, passport) {
   });
 
   app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    var err = Error('Not Found');
     err.status = 404;
     next(err);
   });
@@ -188,7 +188,7 @@ module.exports = function(app, config, passport) {
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render(req.isManage ? 'manage/error' : 'error', {
-      message: err.message, error: err
+      message: err.message, error: err, status: err.status || 500
     });
   });
 

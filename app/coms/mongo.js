@@ -1,12 +1,14 @@
 'use strict';
 
-var mongo = require('mongoskin');
+var mongodb = require('mongodb');
+var ObjectID = mongodb.ObjectID;
+var mongoskin = require('mongoskin');
 var config = require('../../config/config');
 
 //http://stackoverflow.com/questions/30389319/mongoskin-and-connection-issue-to-mongodb-replica-cluster
 //'mongodb://username:password@177.77.66.9:27017,88.052.72.91:27017/dbname?replicaSet=yourReplicaCluster';
 
-var db = mongo.db(config.db, {
+var db = mongoskin.db(config.db, {
   w: 0,
   native_parser: (process.env['TEST_NATIVE'] != null),
   auto_reconnect: true,
@@ -40,6 +42,8 @@ db.bind('counter').bind({
 });
 
 var pages = {
+  intl_id: '62959dc68c252b4865db4i8f',
+  default_size: 30,
   /**
    * [{
    * "text": "",   //text
@@ -100,6 +104,15 @@ var pages = {
 
     pagination.index = index;
     return pagination;
+  },
+
+  wrapRange: function (pagination) {
+    var index = [];
+    index.push(pages.index('za' + pagination.headId, 'Prev'));
+    index.push(pages.index(0, pagination.size + ' of ' + pagination.count));
+    index.push(pages.index('az' + pagination.tailId, 'Next'));
+    pagination.index = index;
+    return pagination;
   }
 };
 
@@ -107,8 +120,22 @@ module.exports.db = db;
 module.exports.Base = function(model, modelName, define) {
   var core = {
 
+    toObjectID: function (hex) {
+      if (hex instanceof ObjectID) {
+        return hex;
+      }
+      if (!hex || hex.length !== 24) {
+        return hex;
+      }
+      return ObjectID.createFromHexString(hex);
+    },
+
+    isObjectID: function (idstr) {
+      return ObjectID.isValid(idstr);
+    },
+
     /**
-     * Page Query
+     * Page Query with skip, use small collection
      * @param query
      * @param page      Page no
      * @param callback
@@ -125,59 +152,176 @@ module.exports.Base = function(model, modelName, define) {
      *  page: {
      *    page: 3,      //current page
      *    size: 2,      //page size
-     *    lastId: 3,    //current page max id
      *    count: 7,     //total count
-     *    pages: 4,     //total page
-     *    maxId: 10     //current collection max id
+     *    pages: 4      //total page
      *   }
      * }
-       */
-    page: function(query, page, callback, size, options) {
+     */
+    pageWithSkip: function(query, page, callback, size, options) {
       var deferred = when.defer();
-      page = page || 1; size = size || 30; options = _.extend({
-        field: 'id',
+      page = page || 1; size = size || pages.default_size; options = _.extend({
+        field: '_id',
         sort: -1
       }, options || {});
 
-      core.lastId(function (maxId) {
-        var originalQry = _.cloneDeep(query || {}), pageLastId = null;
-        if (-1 == options.sort) {
-          pageLastId = 1 == page ? maxId : (maxId - (page - 1) * size);
+      var aSort = {}, originalQry = _.extend(query || {});
+      aSort[options.field] = options.sort;
+      model.find(originalQry).sort(aSort).skip((page - 1) * size).limit(size).toArray(function (err, items) {
+        if (err) {
+          deferred.reject(err);
         } else {
-          pageLastId = (page - 1) * size + 1;
-        }
+          var pagination = {
+            page: page,
+            size: size
+          };
 
-        core.findPage(pageLastId, size, query, options).toArray(function (err, items) {
-          if (err) {
-            deferred.reject(err);
-          } else {
-            var pagination = {
-              page: page,
-              size: size,
-              lastId: pageLastId,
-              maxId: maxId
-            };
-
-            model.count(originalQry, function(err, count) {
-              if (err) {
-                deferred.reject(err);
-              } else {
-                pagination.count = count;
-                var totalPage = Math.floor(count / size);
-                if (count % size > 0) {
-                  ++totalPage;
-                }
-                pagination.pages = totalPage;
-
-                deferred.resolve({
-                  items: items,
-                  page: pages.wrap(pagination)
-                });
+          model.count(originalQry, function(err, count) {
+            if (err) {
+              deferred.reject(err);
+            } else {
+              pagination.count = count;
+              var totalPage = Math.floor(count / size);
+              if (count % size > 0) {
+                ++totalPage;
               }
-            });
+              pagination.pages = totalPage;
 
-          }
+              deferred.resolve({
+                items: items,
+                page: pages.wrap(pagination)
+              });
+            }
+          });
+
+        }
+      });
+
+      if (_.isFunction(callback)) {
+        deferred.promise.then(function (result) {
+          callback(result);
         });
+      }
+
+      return deferred.promise;
+    },
+
+    /**
+     * Page Query with range query
+     * @param query
+     * @param param      critical id,
+     *    1. page no
+     *    2. Next: az + pages.intl_id, Prev: za + pages.intl_id
+     *       az62959dc68c252b4865db4i8f,  za62959dc68c252b4865db4i8f
+     * @param callback
+     * @param size            Page size
+     * @param options
+     */
+    page: function(query, param, callback, size, options) {
+      if (/^[1-9]\d{0,5}$/.test(param)) {
+        return core.pageWithSkip(query, parseInt(param), callback, size, options);
+      } else {
+        var order = param.substr(0,2), criticalId = param.substr(2), aSort = {};
+        options = _.extend({
+          field: '_id',
+          sort: -1,
+          order: 'za' == order ? -1 : 1
+        }, options || {});
+
+        if (criticalId == pages.intl_id) {
+          var deferred = when.defer();
+          aSort[options.field] = options.sort;
+          model.find(query).sort(aSort).limit(1).toArray(function (err, items) {
+            if (err) {
+              deferred.reject(err);
+            }
+            criticalId = (items || []).length > 0 ? (items[0][options.field]) : 0;
+            core.pageWithRange(query, criticalId, function(result) {
+              deferred.resolve(result);
+            }, size, options);
+          });
+
+          if (_.isFunction(callback)) {
+            deferred.promise.then(function (result) {
+              callback(result);
+            });
+          }
+
+          return deferred.promise;
+        } else {
+          return core.pageWithRange(query, criticalId, callback, size, options);
+        }
+      }
+    },
+
+    /**
+     * Page Query with range query
+     * @param query
+     * @param criticalId      critical id
+     * @param callback
+     * @param size            Page size
+     * @param options
+     * {
+     *  order: 1,       //page order, 1 next page, -1 prev page
+     *  field: '',      //sort field name
+     *  sort: 1         //sort 1 asc, -1 desc
+     * }
+     *
+     * @returns {Promise}
+     * {
+     *  items: [],
+     *  page: {
+     *    size: 2,      //page size
+     *    headId: '',   //page head id
+     *    tailId: '',   //page tail id
+     *    count: 7,     //total count
+     *    pages: 4      //total page
+     *   }
+     * }
+     */
+    pageWithRange: function(query, criticalId, callback, size, options) {
+      var deferred = when.defer(), originalQry = _.cloneDeep(query || {});
+      size = size || pages.default_size; options = _.extend({
+        field: '_id',
+        sort: -1,
+        order: 1
+      }, options || {});
+
+      core.findPage(criticalId, size, query, options).toArray(function (err, items) {
+        if (err) {
+          deferred.reject(err);
+        } else {
+          var pagination = {
+            size: size
+          };
+
+          if (-1 == options.order) {
+            _.reverse(items);
+            pagination.headId = items.length > 0 ? (items[0][options.field]) : null;
+          } else {
+            pagination.headId = criticalId;
+          }
+
+          pagination.tailId = items.length > 0 ? (items[items.length - 1][options.field]) : null;
+
+          model.count(originalQry, function(err, count) {
+            if (err) {
+              deferred.reject(err);
+            } else {
+              pagination.count = count;
+              var totalPage = Math.floor(count / size);
+              if (count % size > 0) {
+                ++totalPage;
+              }
+              pagination.pages = totalPage;
+
+              deferred.resolve({
+                items: items,
+                page: pages.wrapRange(pagination)
+              });
+            }
+          });
+
+        }
       });
 
       if (_.isFunction(callback)) {
@@ -191,29 +335,49 @@ module.exports.Base = function(model, modelName, define) {
 
     /**
      * Page Find
-     * @param lastId
+     * @param criticalId
      * @param pageSize
      * @param query
      * @param options
      * {
+     *  order: 1,       //page order, 1 next page, -1 prev page, if prev page need _.reverse(items);
      *  field: '',      //sort field name
      *  sort: 1         //sort 1 asc, -1 desc
      * }
      * @returns {*}
      */
-    findPage: function(lastId, pageSize, query, options) {
+    findPage: function(criticalId, pageSize, query, options) {
       options = _.extend({
-        field: 'id',
-        sort: -1
+        field: '_id',
+        sort: -1,
+        order: 1
       }, options || {});
 
       var condition = {}, aSort = {};
-      if (-1 == options.sort) {
-        condition[options.field] = { $lte : lastId };   //{id : { $lte : lastId }}
-      } else {
-        condition[options.field] = { $gte : lastId };   //{id : { $gte : lastId }}
+      var orginal = criticalId;
+      criticalId = core.isObjectID(criticalId) ? core.toObjectID(criticalId) : criticalId;
+
+      //desc, next
+      if (options.sort == -1 && options.order == 1) {
+        condition[options.field] = { $lte : criticalId };
       }
-      aSort[options.field] = options.sort;            //{id : -1}
+      //desc, prev
+      else if (options.sort == -1 && options.order == -1) {
+        options.sort = 1;
+        condition[options.field] = { $gte : criticalId };
+      }
+      //esc, next
+      else if (options.sort == 1 && options.order == 1) {
+        condition[options.field] = { $gte : criticalId };
+      }
+      //esc, prev
+      else if (options.sort == 1 && options.order == -1) {
+        options.sort = -1;
+        condition[options.field] = { $lte : criticalId };
+      }
+
+      //{id : -1}
+      aSort[options.field] = options.sort;
 
       return model.find(_.extend(query || {}, condition)).sort(aSort).limit(pageSize);
     },

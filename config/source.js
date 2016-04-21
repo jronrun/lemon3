@@ -95,7 +95,8 @@ var menu = [
   },
   {
     name: 'Settings', children: [
-      {sourceId: 200001, args: 1},
+      //{sourceId: 200001, args: 'p1'},
+      {sourceId: 200001, args: 'az570f846b6ad9b037095b58b7'},
       {sourceId: 200002}
     ]
   }

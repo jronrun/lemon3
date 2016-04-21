@@ -8,8 +8,7 @@ module.exports = function (router, index) {
   /**
    * Power list
    */
-  router.get(index.powers.do, function (req, res, next) {
-    var pageNo = req.param('page') || 1;
+  router.get(index.do, function (req, res, next) {
     var defines = [
       {
         title: 'Name',
@@ -36,14 +35,14 @@ module.exports = function (router, index) {
       }
     ];
 
-    Power.page({}, pageNo, false, 2).then(function (result) {
-      res.render(index.powers.page, {
+    Power.page({}, req.params.page, false, 2).then(function (result) {
+      res.render(index.page, {
         pagename: 'items-list-page',
-        pageedit: index.powers.editor.action,
+        pageedit: index.editor.action,
         list: items.asShowData(defines, result.items),
         page: result.page,
-        action: actionWrap(index.powers.action).base,
-        retrieveAction: actionWrap(index.powers.retrieve.action).base
+        action: actionWrap(index.action).base,
+        retrieveAction: actionWrap(index.retrieve.action).base
       });
     });
 
@@ -52,22 +51,22 @@ module.exports = function (router, index) {
   /**
    * Power editor
    */
-  router.get(index.powers.editor.do, function (req, res, next) {
-    res.render(index.powers.editor.page, {
+  router.get(index.editor.do, function (req, res, next) {
+    res.render(index.editor.page, {
       pagename: 'item-editor-page',
       schema: Power.desc(['resources'], true),
       res_tab: 1,
       desc: 'Power',
       method: HttpMethod.POST,
-      action: index.powers.editor.action,
-      listAction: actionWrap(index.powers.action, 1).action
+      action: index.editor.action,
+      listAction: actionWrap(index.action, 1).action
     });
   });
 
   /**
    * Power create
    */
-  router.post(index.powers.editor.do, function (req, res, next) {
+  router.post(index.editor.do, function (req, res, next) {
     var item = crypto.decompress(req.body.item);
     try {
       item = JSON.parse(item);
@@ -116,5 +115,9 @@ module.exports = function (router, index) {
       return res.json(answer.succ({}, 'Create success.'));
     });
   });
+
+  router.delete(index.retrieve.do, function (req, res, next) {
+    log.info(req.params.id);
+  })
 };
 

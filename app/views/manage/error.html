@@ -1,11 +1,12 @@
 <section class="section" id="err_able">
     <div class="error-card">
         <div class="error-title-block">
-            <h1 class="error-title">404</h1>
+            <h1 class="error-title">{{status}}</h1>
             <h2 class="error-sub-title">
-                Sorry, page not found
+              {{message}}
             </h2>
         </div>
+        <pre style="display: none;">{{error.stack}}</pre>
         <div class="error-container">
             <a class="btn btn-primary" href="/manage/dashboard"><i class="fa fa-angle-left"></i> Back to Dashboard</a>
         </div>

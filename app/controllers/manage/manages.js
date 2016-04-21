@@ -8,8 +8,8 @@ var express = require('express'),
 module.exports = function (app) {
   app.use(index.action, router);
 
-  require('./inherit/powers')(router, index);
-  require('./inherit/sourcetree')(router, index);
+  require('./inherit/powers')(router, index.powers);
+  require('./inherit/sourcetree')(router, index.resource);
 };
 
 /**

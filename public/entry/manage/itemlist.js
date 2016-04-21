@@ -18,7 +18,9 @@ $(function () {
     });
 
     lemon.onConfirm('item-rem', function (data) {
-      alert(data.href);
+      lemon.delete(data.href).done(function (data) {
+
+      });
     });
 
   });

@@ -32,35 +32,38 @@ global.register = function(call) {
   }
 };
 
-global.rquest = function(action, data, options) {
-  options = options || {};
-  var req = $.ajax(lemon.extend({
-    type: options.type || 'GET',
-    async: true,
-    url: action,
-    data: data || {}
-  }, options));
+lemon.register({
+  request: function(action, data, options) {
+    options = options || {};
+    var req = $.ajax(lemon.extend({
+      type: options.type || 'GET',
+      async: true,
+      url: action,
+      data: data || {}
+    }, options));
 
-  return req;
-};
-$.put = function(action, data, options) {
-  return request(action, data, lemon.extend(options || {}, {
-    type: 'PUT'
-  }));
-};
+    return req;
+  },
 
-$.delete = function(action, data, options) {
-  return request(action, data, lemon.extend(options || {}, {
-    type: 'DELETE'
-  }));
-};
+  put: function (action, data, options) {
+    return lemon.request(action, data, lemon.extend(options || {}, {
+      type: 'PUT'
+    }));
+  },
 
-$.jsonp = function(action, data, options) {
-  return request(action, data, lemon.extend(options || {}, {
-    type: 'GET',
-    dataType: 'jsonp'
-  }));
-};
+  delete: function (action, data, options) {
+    return lemon.request(action, data, lemon.extend(options || {}, {
+      type: 'DELETE'
+    }));
+  },
+
+  jsonp: function (action, data, options) {
+    return lemon.request(action, data, lemon.extend(options || {}, {
+      type: 'GET',
+      dataType: 'jsonp'
+    }));
+  }
+});
 
 lemon.onModalShow = function(bizType, call) {
   handleModalCall.show[bizType] = call;

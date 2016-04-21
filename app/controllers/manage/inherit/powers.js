@@ -35,7 +35,7 @@ module.exports = function (router, index) {
       }
     ];
 
-    Power.page({}, req.params.page, false, 2).then(function (result) {
+    Power.page({}, req.params.page).then(function (result) {
       res.render(index.page, {
         pagename: 'items-list-page',
         pageedit: index.editor.action,

@@ -215,6 +215,12 @@ module.exports.Base = function(model, modelName, define) {
      * @param callback
      * @param size            Page size
      * @param options
+     * {
+     *  order: 1,       //page order, 1 next page, -1 prev page
+     *  field: '',      //sort field name
+     *  sort: 1,        //sort 1 asc, -1 desc,
+     *  format: function(fieldVal){}    //format param field value
+     * }
      */
     page: function(query, param, callback, size, options) {
       if (/^[1-9]\d{0,5}$/.test(param)) {
@@ -263,7 +269,8 @@ module.exports.Base = function(model, modelName, define) {
      * {
      *  order: 1,       //page order, 1 next page, -1 prev page
      *  field: '',      //sort field name
-     *  sort: 1         //sort 1 asc, -1 desc
+     *  sort: 1,        //sort 1 asc, -1 desc,
+     *  format: function(fieldVal){}    //format param field value
      * }
      *
      * @returns {Promise}
@@ -342,7 +349,8 @@ module.exports.Base = function(model, modelName, define) {
      * {
      *  order: 1,       //page order, 1 next page, -1 prev page, if prev page need _.reverse(items);
      *  field: '',      //sort field name
-     *  sort: 1         //sort 1 asc, -1 desc
+     *  sort: 1,        //sort 1 asc, -1 desc,
+     *  format: function(fieldVal){}    //format param field value
      * }
      * @returns {*}
      */
@@ -355,7 +363,12 @@ module.exports.Base = function(model, modelName, define) {
 
       var condition = {}, aSort = {};
       var orginal = criticalId;
-      criticalId = core.isObjectID(criticalId) ? core.toObjectID(criticalId) : criticalId;
+
+      if (core.isObjectID(criticalId)) {
+        criticalId = core.toObjectID(criticalId);
+      } else if (options.format && _.isFunction(options.format)) {
+        criticalId = options.format(criticalId);
+      }
 
       //desc, next
       if (options.sort == -1 && options.order == 1) {

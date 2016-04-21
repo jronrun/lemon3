@@ -121,6 +121,48 @@ module.exports = function (router, index, root) {
   });
 
   /**
+   * Power update
+   */
+  router.put(index.retrieve.do, function (req, res, next) {
+    var itemId = req.params.id;
+    var item = crypto.decompress(req.body.item);
+    try {
+      item = JSON.parse(item);
+    } catch (e) {
+      return res.json(answer.fail('invalid item: ' + e.message));
+    }
+    item.resources = req.body.resource || [];
+
+    Power.findById(itemId, function (err, result) {
+      if (err) {
+        return res.json(answer.fail(err.message));
+      }
+
+      var check = Power.validate(_.extend(result, item));
+      if (!check.valid) {
+        return res.json(answer.fail(check.msg));
+      }
+
+      Power.find({
+        name: item.name,
+        _id: {$ne: Power.toObjectID(itemId)}
+        }).limit(1).next(function(err, exists){
+        if (exists) {
+          return res.json(answer.fail('The name ' + power.name + ' already exist.'));
+        }
+
+        Power.updateById(itemId, {$set: item}, function (err) {
+          if (err) {
+            return res.json(answer.fail(err.message));
+          }
+
+          return res.json(answer.succ({}, 'Update success.'));
+        });
+      });
+    });
+  });
+
+  /**
    * Power retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
@@ -140,8 +182,8 @@ module.exports = function (router, index, root) {
         res_tab: 1,
         res_action: actionWrap(root.resource.power.action, itemId).action,
         desc: 'Power',
-        method: HttpMethod.POST,
-        action: index.editor.action,
+        method: HttpMethod.PUT,
+        action: actionWrap(index.retrieve.action, itemId).action,
         listAction: actionWrap(index.action, 1).action
       });
     });

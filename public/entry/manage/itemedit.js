@@ -26,18 +26,17 @@ var editor = {
       lemon.sourcetree(tree, $(tree).attr('action'));
     }
 
-    var submitEl = '#item-submit';
+    var submitEl = '#item-submit', dataset = $(submitEl).data();
     $(submitEl).click(function () {
       msg.clear();
       lemon.disable(this);
-      var method = $(this).attr('m').toLowerCase(),
-        action = $(this).attr('act'), listAction = $('#item-back').attr('href'), params = {};
+      var method = dataset.method.toLowerCase(), action = dataset.action, params = {};
       params.item = lemon.enc(cm.target.getValue());
       if (hasResource) {
         params.resource = lemon.chkboxval('resource');
       }
 
-      $[method](action, params).done(function(resp) {
+      ($[method] || lemon[method])(action, params).done(function(resp) {
         if (0 == resp.code) {
           msg.succ('<Strong>' + resp.msg + '</Strong>', '#item-card');
         } else {

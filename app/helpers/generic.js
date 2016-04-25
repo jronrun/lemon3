@@ -283,12 +283,12 @@ module.exports = function(model, index) {
     /**
      * delete
      * options: {
-     *  descField: 'name'
+     *  descField: ''
      * }
      */
     delete: function(options, req, res, next) {
       options = _.extend({
-        descField: 'name'
+        descField: ''
       }, options || {});
 
       model.findById(req.params.id, function (err, result) {
@@ -305,7 +305,8 @@ module.exports = function(model, index) {
             return res.json(answer.fail(err.message));
           }
 
-          return res.json(answer.succ(false, 'Remove ' + result[options.descField] + ' success.'));
+          var desc = options.descField ? result[options.descField] : '';
+          return res.json(answer.succ(false, 'Remove ' + desc + ' success.'));
         });
 
       });

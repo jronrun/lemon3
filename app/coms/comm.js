@@ -140,7 +140,7 @@ module.exports = function(scope, config) {
     _.each(source || [], function (v) {
       checkSource.push(_.isNumber(v) ? v : parseInt(v));
     });
-    var tree = resource.tree;
+    var tree = _.cloneDeep(resource.tree);
     checkNode(tree, checkSource);
     return tree;
   };

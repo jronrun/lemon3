@@ -1,9 +1,7 @@
 'use strict';
 
-var setting = require('./resource/setting'),
-  T = setting.type, P = setting.page,
-  M = require('./resource/method'),
-  Schema = require('./resource/schema');
+var setting = require('./resource/setting'), T = setting.type, P = setting.page,
+  M = require('./resource/method'), Schema = require('./resource/schema');
 
 /**
  {
@@ -61,7 +59,14 @@ var resource = [
       },
 
       {
-        id: 200002, name: 'roles', desc: 'Roles', children: []
+        id: 200002, name: 'roles', desc: 'Roles', action: '/manage/roles/:page', page: P.list, children: [
+          {id: 2000021, name: 'editor', action: '/manage/role', page: P.edit, desc: 'Editor'},
+          {id: 2000022, extend: 2000021, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000023, name: 'retrieve', action: '/manage/role/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000024, extend: 2000023, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000025, extend: 2000023, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
       },
 
       {
@@ -96,7 +101,7 @@ var menu = [
   {
     name: 'Settings', children: [
       {sourceId: 200001, args: '1'},
-      {sourceId: 200002}
+      {sourceId: 200002, args: '1'}
     ]
   }
 ];

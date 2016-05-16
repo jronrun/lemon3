@@ -43,6 +43,17 @@ module.exports = function(model, index) {
      *  resourceAction: '',   //resource load action
      *  modelName: '',        //model name
      *  listHomePageArg: 1,   //list home pagination arg
+     *  selectTabs: [
+     *    {
+     *      tabName: '',
+     *      inputName: '',    //checkbox name
+     *      data: [{
+     *        name: '',       //show text
+     *        value: '',      //select value
+     *        selected: 0     //0|1, 1 selected
+     *        }]
+     *    }
+     *  ],
      * }
      */
     editor: function(options, req, res, next) {
@@ -51,7 +62,8 @@ module.exports = function(model, index) {
         resourceTab: 0,
         resourceAction: '',
         modelName: model.modelName,
-        listHomePageArg: 1
+        listHomePageArg: 1,
+        selectTabs: []
       }, options || {});
 
       var schema = model.desc(options.schemaExclude);
@@ -65,7 +77,8 @@ module.exports = function(model, index) {
         desc: options.modelName,
         method: HttpMethod.POST,
         action: index.editor.action,
-        listAction: actionWrap(index.action, options.listHomePageArg).action
+        listAction: actionWrap(index.action, options.listHomePageArg).action,
+        sel_tabs: options.selectTabs
       });
     },
 

@@ -18,6 +18,11 @@
                     <li class="nav-item">
                         <a href="#item-edit" class="nav-link active" data-target="#item-edit" data-toggle="tab" aria-controls="item-edit" role="tab">Edit</a>
                     </li>
+                    {{#each sel_tabs}}
+                        <li class="nav-item">
+                            <a href="#item-sel-{{tabName}}" class="nav-link" data-target="#item-sel-{{tabName}}" aria-controls="item-sel-{{tabName}}" data-toggle="tab" role="tab">{{tabName}}</a>
+                        </li>
+                    {{/each}}
                     {{#if res_tab}}
                       <li class="nav-item">
                           <a href="#item-res" class="nav-link" data-target="#item-res" aria-controls="item-res" data-toggle="tab" role="tab">Resource</a>
@@ -49,6 +54,24 @@
                             <textarea class="form-control underlined" rows="10" id="item-editor"></textarea>
                         </div>
                     </div>
+                    {{#each sel_tabs}}
+                        <div class="tab-pane fade" id="item-sel-{{tabName}}">
+                            <ul style="padding-left: 0px;">
+                              {{#each data}}
+                                  <li>
+                                      <div class="list-icon">
+                                          <div class="col-md-3 col-sm-4">
+                                              <label class="item-check">
+                                                  <input type="checkbox" {{#if selected}}checked="checked"{{/if}} class="checkbox" name="{{inputName}}" value="{{value}}">
+                                                  <span><small>{{name}}</small></span>
+                                              </label>
+                                          </div>
+                                      </div>
+                                  </li>
+                              {{/each}}
+                            </ul>
+                        </div>
+                    {{/each}}
                     {{#if res_tab}}
                       <div class="tab-pane fade" id="item-res">
                           <div id="res-tree" action="{{res_action}}"></div>

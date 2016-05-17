@@ -13,9 +13,7 @@ module.exports = function (passport) {
     User.findById(id, function (err, user) {
       delete user.passwd;
       user.id = user._id.toString();
-      user.roles = user.roles || [];
-      user.powers = user.powers || [];
-      user.resource = user.resource || [];
+      user.isAdmin = (user.roles || []).indexOf(0) != -1;
       done(err, user);
     });
   });

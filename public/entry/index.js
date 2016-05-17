@@ -28,7 +28,10 @@ global.$ = $;
 global.register = function(call) {
   var source = $('#page > article').attr('source');
   if (source) {
-    handlePageCall[source] = call; call();
+    if (!handlePageCall[source]) {
+      handlePageCall[source] = call;
+    }
+    call();
     lemon.info('register source ' + source);
   } else {
     lemon.error('register source is not defined.');

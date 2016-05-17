@@ -20,6 +20,9 @@ var hbs = require('hbs'),
   registrar = app_require('coms/helpers/registrar'),
   log = log_from('express');
 
+var User = app_require('models/user');
+var authWarnMsg = 'you do not have permission to access the requested resource.';
+
 module.exports = function(app, config, passport) {
   var env = process.env.NODE_ENV || 'development';
   var secret = config.app.name + 'kfvahtmgt';
@@ -84,6 +87,7 @@ module.exports = function(app, config, passport) {
     req.resource = getResource(req.requri, req.method);
     req.isManage = _.startsWith(req.resource.action, '/manage');
     req.isGet = HttpMethod.GET == req.resource.method;
+    req.isAjax = !_.isUndefined(req.header('X-Requested-With'));
 
     res.info = function(msg, source, options, fn) {
       req.flash('info', msg);
@@ -115,13 +119,37 @@ module.exports = function(app, config, passport) {
 
   app.use(function (req, res, next) {
     if (req.resource.protect) {
+      if (req.user.isAdmin) {
+        next();
+        return;
+      }
+
       if (!req.isAuthenticated()) {
         req.session.returnTo = req.isGet ? req.originalUrl : routes.home.action;
         res.redirect(routes.user.signin.action);
         return;
       }
 
-      //powers
+      User.getResource(req.user.id).then(function (userResource) {
+        req.user.resource = userResource;
+        //has power
+        if (userResource.indexOf(req.resource.id) != -1) {
+          next();
+        }
+        //no power
+        else {
+          if (req.isAjax) {
+            return res.json(answer.fail(authWarnMsg));
+          } else {
+            var err = Error(authWarnMsg);
+            err.status = 401;
+            next(err);
+            return;
+          }
+        }
+      });
+
+      return;
     }
 
     next();

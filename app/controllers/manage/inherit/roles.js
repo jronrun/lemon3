@@ -2,7 +2,6 @@
 
 var Role = app_require('models/role'),
   Power = app_require('models/power'),
-  items = app_require('helpers/items'),
   log = log_from('roles');
 
 module.exports = function (router, index, root) {

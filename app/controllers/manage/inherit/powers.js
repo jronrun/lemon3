@@ -1,7 +1,6 @@
 'use strict';
 
 var Power = app_require('models/power'),
-  items = app_require('helpers/items'),
   log = log_from('powers');
 
 module.exports = function (router, index, root) {

@@ -55,14 +55,14 @@
                         </div>
                     </div>
                     {{#each sel_tabs}}
-                        <div class="tab-pane fade" id="item-sel-{{tabName}}">
+                        <div class="tab-pane fade" id="item-sel-{{tabName}}" data-checkname="{{inputName}}">
                             <ul style="padding-left: 0px;">
                               {{#each data}}
                                   <li>
                                       <div class="list-icon">
                                           <div class="col-md-3 col-sm-4">
                                               <label class="item-check">
-                                                  <input type="checkbox" {{#if selected}}checked="checked"{{/if}} class="checkbox" name="{{inputName}}" value="{{value}}">
+                                                  <input type="checkbox" {{#if selected}}checked="checked"{{/if}} class="checkbox" name="{{../inputName}}" value="{{value}}">
                                                   <span><small>{{name}}</small></span>
                                               </label>
                                           </div>
@@ -74,7 +74,7 @@
                     {{/each}}
                     {{#if res_tab}}
                       <div class="tab-pane fade" id="item-res">
-                          <div id="res-tree" action="{{res_action}}"></div>
+                          <div id="res-tree" action="{{res_action}}" showopt="{{res_tab}}"></div>
                       </div>
                     {{/if}}
                     <div class="tab-pane fade" id="item-desc">

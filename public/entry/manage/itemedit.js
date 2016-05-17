@@ -19,11 +19,11 @@ var editor = {
   },
 
   initialize: function() {
-    var hasResource = $('#res-tree').length, cm = editor.intlcm();
-
+    var hasResource = $('#res-tree').length, cm = editor.intlcm(), tree = '#res-tree';;
     if (hasResource) {
-      var tree = '#res-tree';
-      lemon.sourcetree(tree, $(tree).attr('action'));
+      lemon.sourcetree(tree, $(tree).attr('action'), {
+        showopt: $(tree).attr('showopt')
+      });
     }
 
     var submitEl = '#item-submit', dataset = $(submitEl).data();
@@ -36,9 +36,20 @@ var editor = {
         params.resource = lemon.chkboxval('resource');
       }
 
+      $('div[id^=item-sel-]').each(function() {
+        var ds = $(this).data();
+        params[ds.checkname] = lemon.chkboxval(ds.checkname);
+      });
+
       ($[method] || lemon[method])(action, params).done(function(resp) {
         if (0 == resp.code) {
           msg.succ('<Strong>' + resp.msg + '</Strong>', '#item-card');
+
+          if (resp.result.resourceUpdate) {
+            lemon.sourcetree(tree, $(tree).attr('action'), {
+              showopt: resp.result.res_tab || 1
+            });
+          }
         } else {
           msg.warn(resp.msg, '#item-card');
         }

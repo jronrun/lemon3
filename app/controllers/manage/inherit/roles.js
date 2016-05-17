@@ -72,9 +72,11 @@ module.exports = function (router, index, root) {
    */
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
-      resourceTab: 1,
       sequenceId: 1,
-      checkExistsField: 'name'
+      checkExistsField: 'name',
+      paramHandle: function(item) {
+        item.powers = req.body.powers || [];
+      }
     }, req, res, next);
   });
 
@@ -83,8 +85,12 @@ module.exports = function (router, index, root) {
    */
   router.put(index.retrieve.do, function (req, res, next) {
     generic.update({
-      resourceTab: 1,
-      checkExistsField: 'name'
+      checkExistsField: 'name',
+      resourceUpdate: 1,
+      resourceTab: 2,
+      paramHandle: function(item) {
+        item.powers = req.body.powers || [];
+      }
     }, req, res, next);
   });
 
@@ -92,11 +98,30 @@ module.exports = function (router, index, root) {
    * Role retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
-    generic.retrieve({
-      schemaExclude: ['resources', 'powers'],
-      resourceTab: 1,
-      resourceAction: actionWrap(root.resource.role.action, req.params.id).action
-    }, req, res, next);
+    var roleId = req.params.id;
+    Power.find({}).sort({_id: -1}).toArray(function (err, items) {
+      var roleData = [];
+
+      Role.findById(roleId, function(err, doc) {
+        var thePowers = doc.powers || [];
+
+        _.each(items, function (item) {
+          roleData.push({
+            name: item.name,
+            value: item.id,
+            selected: thePowers.indexOf(String(item.id)) != -1 ? 1 : 0
+          });
+        });
+
+        generic.retrieve({
+          schemaExclude: ['resources', 'powers'],
+          selectTabs: [{tabName: 'Power', inputName: 'powers', data: roleData }],
+          resourceTab: 2,
+          resourceAction: actionWrap(root.resource.role.action, roleId).action
+        }, req, res, next);
+      });
+
+    });
   });
 
   /**

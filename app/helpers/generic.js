@@ -39,7 +39,7 @@ module.exports = function(model, index) {
      * editor
      * options : {
      *  schemaExclude: [],    //exclude schema field
-     *  resourceTab: 0,       //show resource tab, 1 show
+     *  resourceTab: 0,       //show resource tab, 1 show, 2 show readonly
      *  resourceAction: '',   //resource load action
      *  modelName: '',        //model name
      *  listHomePageArg: 1,   //list home pagination arg
@@ -85,16 +85,18 @@ module.exports = function(model, index) {
     /**
      * create
      * options: {
-     *  resourceTab: 0,       //has resource tab, 1 has
+     *  resourceTab: 0,       //has resource tab, 1 has, 2 show readonly
      *  sequenceId: 0,        //need auto increment sequence id, 1 yes
      *  checkExistsField: '', //check field value exists if not empty
+     *  paramHandle: function(item){}     //param pre handle
      * }
      */
     create: function(options, req, res, next) {
       options = _.extend({
         resourceTab: 0,
         sequenceId: 0,
-        checkExistsField: ''
+        checkExistsField: '',
+        paramHandle: false
       }, options || {});
 
       var item = crypto.decompress(req.body.item);
@@ -108,6 +110,7 @@ module.exports = function(model, index) {
         item.resources = req.body.resource || [];
       }
       item.create_time = new Date();
+      _.isFunction(options.paramHandle) && options.paramHandle(item);
 
       async.waterfall([
         function(callback) {
@@ -164,21 +167,27 @@ module.exports = function(model, index) {
           });
         }
       ], function(err, result) {
-        return res.json(answer.succ({}, 'Create success.'));
+        return res.json(answer.succ({
+          res_tab: options.resourceTab
+        }, 'Create success.'));
       });
     },
 
     /**
      * update
      * options: {
-     *  resourceTab: 0,       //has resource tab, 1 has
+     *  resourceTab: 0,       //has resource tab, 1 has, 2 show readonly
      *  checkExistsField: '', //check field value exists if not empty
+     *  resourceUpdate: 0,    //update resource tab, 1 yes
+     *  paramHandle: function(item){}     //param pre handle
      * }
      */
     update: function(options, req, res, next) {
       options = _.extend({
         resourceTab: 0,
-        checkExistsField: ''
+        resourceUpdate: 0,
+        checkExistsField: '',
+        paramHandle: false
       }, options || {});
 
       var itemId = req.params.id;
@@ -192,6 +201,7 @@ module.exports = function(model, index) {
       if (options.resourceTab) {
         item.resources = req.body.resource || [];
       }
+      _.isFunction(options.paramHandle) && options.paramHandle(item);
 
       async.waterfall([
         function(callback) {
@@ -243,7 +253,10 @@ module.exports = function(model, index) {
           });
         }
       ], function (err, result) {
-        return res.json(answer.succ({}, 'Update success.'));
+        return res.json(answer.succ({
+          resourceUpdate: options.resourceUpdate,
+          res_tab: options.resourceTab
+        }, 'Update success.'));
       });
     },
 
@@ -251,10 +264,21 @@ module.exports = function(model, index) {
      * retrieve
      * options : {
      *  schemaExclude: [],    //exclude schema field
-     *  resourceTab: 0,       //show resource tab, 1 show
+     *  resourceTab: 0,       //show resource tab, 1 show, 2 show readonly
      *  resourceAction: '',   //resource load action
      *  modelName: '',        //model name
      *  listHomePageArg: 1,   //list home pagination arg
+     *  selectTabs: [
+     *    {
+     *      tabName: '',
+     *      inputName: '',    //checkbox name
+     *      data: [{
+     *        name: '',       //show text
+     *        value: '',      //select value
+     *        selected: 0     //0|1, 1 selected
+     *        }]
+     *    }
+     *  ],
      * }
      */
     retrieve: function(options, req, res, next) {
@@ -263,7 +287,8 @@ module.exports = function(model, index) {
         resourceTab: 0,
         resourceAction: '',
         modelName: model.modelName,
-        listHomePageArg: 1
+        listHomePageArg: 1,
+        selectTabs: []
       }, options || {});
 
       var itemId = req.params.id;
@@ -288,7 +313,8 @@ module.exports = function(model, index) {
           desc: options.modelName,
           method: HttpMethod.PUT,
           action: actionWrap(index.retrieve.action, itemId).action,
-          listAction: actionWrap(index.action, options.listHomePageArg).action
+          listAction: actionWrap(index.action, options.listHomePageArg).action,
+          sel_tabs: options.selectTabs
         });
       });
     },

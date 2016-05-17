@@ -16,6 +16,9 @@ lemon.enc = lemon.compressToEncodedURIComponent;
 require('../js/store');
 require('jquery-pjax');
 
+//require('Progress.js/src/progressjs.css');
+//var progressJs = require('Progress.js/src/progress').progressJs;
+
 lemon.href = function (uri) {
   global.location.href = uri;
 };
@@ -33,6 +36,40 @@ global.register = function(call) {
 };
 
 lemon.register({
+  /*
+  disableEl: function(selector) {
+    return progressJs(selector).setOptions({
+      theme: 'blueOverlayRadiusHalfOpacity',
+      overlayMode: true
+    }).start().set(0);
+  },
+  enableEl: function(selector) {
+    progressJs(selector).end();
+  },
+  progress: function(options) {
+    options = lemon.extend({
+      selector: null,
+      start: 1,
+      auto: {
+        ms: 1000,
+        step: 1
+      },
+      set: 0,
+      cfg: {
+        theme: 'blueOverlayRadiusHalfOpacity',
+        overlayMode: true
+      }
+    }, options || {});
+    var pg = progressJs(options.selector).setOptions(options.cfg).set(options.set);
+    if (options.start) {
+      pg.start();
+    }
+    if (options.auto) {
+      pg.autoIncrease(options.auto.step, options.auto.ms);
+    }
+    return pg;
+  },
+  */
   request: function(action, data, options) {
     options = options || {};
     var req = $.ajax(lemon.extend({

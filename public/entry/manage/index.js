@@ -9,16 +9,26 @@ var metisMenu = require('metisMenu/dist/metisMenu');
 
 lemon.register({
   sourcetree: function(selector, src, options) {
+    options = lemon.extend({
+      showopt: 1
+    }, options || {});
+
     $.post(src || '/manage/resource', function (data) {
       $(selector).html(data);
-      $(selector + ' em[collapsable="1"]').click(function () {
-        $('#child-' + $(this).attr('child')).slideToggle("slow");
-      });
-      $(selector + ' em[id^="chkall-"]').click(function () {
-        var thisId = $(this).attr('id'), sourceId = thisId.replace('chkall-', '');
-        var ctl = lemon.chkboxable('#' + thisId, 1);
-        lemon.chkboxtgl('#base-' + sourceId + ',#child-' + sourceId + ' input', ctl == 1 ? 2 : 3);
-      });
+
+      if (options.showopt == 2) {
+        $(selector + ' input').prop('disabled',true);
+        $(selector + ' .fa-caret-down,' + selector + ' .fa-square-o').remove();
+      } else if (options.showopt == 1) {
+        $(selector + ' em[collapsable="1"]').click(function () {
+          $('#child-' + $(this).attr('child')).slideToggle("slow");
+        });
+        $(selector + ' em[id^="chkall-"]').click(function () {
+          var thisId = $(this).attr('id'), sourceId = thisId.replace('chkall-', '');
+          var ctl = lemon.chkboxable('#' + thisId, 1);
+          lemon.chkboxtgl('#base-' + sourceId + ',#child-' + sourceId + ' input', ctl == 1 ? 2 : 3);
+        });
+      }
     });
   },
   /**

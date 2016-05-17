@@ -10,9 +10,7 @@ var model = schema({
   create_time: { type: 'date', required: true }
 });
 
-var power = model_bind('power', {
-
-}, model);
+var power = model_bind('power', model);
 
 module.exports = power;
 

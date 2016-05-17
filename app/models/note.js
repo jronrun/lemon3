@@ -9,10 +9,7 @@ var model = schema({
   create_time: { type: 'date', required: true }
 });
 
-var note = model_bind('note', {
-
-}, model);
-
+var note = model_bind('note', model);
 
 module.exports = note;
 

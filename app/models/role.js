@@ -11,11 +11,7 @@ var model = schema({
   create_time: { type: 'date', required: true }
 });
 
-
-var role = model_bind('role', {
-
-}, model);
-
+var role = model_bind('role', model);
 
 module.exports = role;
 

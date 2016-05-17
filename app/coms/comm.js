@@ -113,7 +113,7 @@ module.exports = function(scope, config) {
     return mongo.db;
   };
 
-  scope.model_bind = function(modelName, methods, modelSchema) {
+  scope.model_bind = function(modelName, modelSchema, methods) {
     var model = database().bind(modelName);
     model.bind(_.extend(mongo.Base(model, modelName, modelSchema), methods || {}));
     model.define = modelSchema;

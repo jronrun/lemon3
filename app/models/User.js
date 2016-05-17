@@ -11,9 +11,7 @@ var model = schema({
   create_time: { type: 'date', required: true }
 });
 
-var user = model_bind('user', {
-
-}, model);
+var user = model_bind('user', model);
 
 module.exports = user;
 

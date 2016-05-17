@@ -9,7 +9,8 @@ var path = require('path'),
   async = require('async'),
   revalidator = require('revalidator'),
   json5s = require('../../public/js/json5s'),
-  moment = require('moment')
+  moment = require('moment'),
+  LRU = require("lru-cache")
   ;
 
 var answer = {
@@ -78,6 +79,11 @@ module.exports = function(scope, config) {
   scope.crypto = crypto;
   scope.when = when;
   scope.async = async;
+  scope.LRU = LRU;
+  scope.userReourceCache = LRU({
+    max: 100,
+    maxAge: 1000 * 60 * 5
+  });
   scope.schema = function(target) {
     target = target.properties ? target : {
       properties: target

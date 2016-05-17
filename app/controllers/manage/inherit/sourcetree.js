@@ -76,51 +76,10 @@ module.exports = function (router, index, root) {
    * User resource tree
    */
   router.post(index.user.do, function (req, res, next) {
-    User.findById(req.params.id, function (err, result) {
-      if (err) {
-        return res.json(answer.fail(err.message));
-      }
-
-      if (!result) {
-        return res.json(answer.fail('item not exists.'));
-      }
-
-      var theRoles = [];
-      _.each(result.roles || [], function (aPower) {
-        theRoles.push(parseInt(aPower));
+    User.loadResource(req.params.id).then(function (userResource) {
+      res.render(index, {
+        nodes: getResourceTree(userResource)
       });
-
-      Role.find({id: {$in: theRoles}}).toArray(function (error, theRoles) {
-        if (error) {
-          return res.json(answer.fail(error.message));
-        }
-
-        var thePowers = [];
-        _.each(theRoles || [], function (aRole) {
-          _.each(aRole.powers, function (aPower) {
-            thePowers.push(parseInt(aPower));
-          });
-        });
-
-        Power.find({id: {$in: thePowers}}).toArray(function (error, items) {
-          if (error) {
-            return res.json(answer.fail(error.message));
-          }
-
-          var theResources = [];
-          _.each(items || [], function (item) {
-            _.each(item.resources, function (aSource) {
-              theResources.push(parseInt(aSource));
-            });
-          });
-
-          res.render(index, {
-            nodes: getResourceTree(theResources)
-          });
-        });
-
-      });
-
     });
   });
 };

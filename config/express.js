@@ -181,7 +181,7 @@ module.exports = function(app, config, passport) {
         if (req.isGet) {
           _.extend(options, {
             username: req.user.name,
-            menus: getUserMenu(req.user.resource)
+            menus: getUserMenu(req.user.resource, req.user.isAdmin)
           });
         }
       }

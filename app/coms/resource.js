@@ -143,6 +143,7 @@ var fillmenu = function (item, parent) {
     obj.name = item.name || src.desc;
     obj.action = src.action;
     obj.type = 2;
+    obj.id = item.sourceId;
 
     //if (src.action.indexOf(':') != -1) {
     //  obj.action = _.beforeOccur(src.action, ':', 1) + (item.args || []).join('/');

@@ -68,6 +68,23 @@ function checkNode(tree, source) {
   });
 }
 
+function checkMenu(menus, source, target) {
+  _.each(menus, function (menu) {
+    if (1 == menu.type) {
+      var child = [];
+      checkMenu(menu.children, source, child);
+      if (child.length > 0) {
+        menu.children = child;
+        target.push(menu);
+      }
+    } else if (2 == menu.type) {
+      if (source.indexOf(menu.id) != -1) {
+        target.push(menu);
+      }
+    }
+  });
+}
+
 module.exports = function(scope, config) {
 
   scope._ = _;
@@ -139,9 +156,13 @@ module.exports = function(scope, config) {
   scope.getResource = resource.getResource;
   scope.routes = resource.resource;
   scope.HttpMethod = resource.methods;
-  scope.getUserMenu = function(source) {
-    var menus = resource.menus;
+  scope.getUserMenu = function(source, isAdmin) {
+    if (isAdmin) {
+      return resource.menus;
+    }
 
+    var menus = [];
+    checkMenu(_.cloneDeep(resource.menus), source, menus);
     return menus;
   };
   scope.getResourceTree = function(source) {

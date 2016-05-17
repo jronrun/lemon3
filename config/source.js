@@ -70,7 +70,14 @@ var resource = [
       },
 
       {
-        id: 200003, name: 'users', desc: 'Users', children: []
+        id: 200003, name: 'users', desc: 'Users', action: '/manage/users/:page', page: P.list, children: [
+        {id: 2000031, name: 'editor', action: '/manage/user', page: P.edit, desc: 'Editor'},
+        {id: 2000032, extend: 2000031, method: M.POST, page: P.list, desc: 'Create'},
+
+        {id: 2000033, name: 'retrieve', action: '/manage/user/:id', page: P.edit, desc: 'Retrieve'},
+        {id: 2000034, extend: 2000033, method: M.PUT, page: P.list, desc: 'Update'},
+        {id: 2000035, extend: 2000033, method: M.DELETE, page: P.list, desc: 'Delete'}
+      ]
       },
 
       {
@@ -95,7 +102,7 @@ var menu = [
   {name: 'Dashboard', sourceId: 200000},
   {
     name: 'Users', children: [
-      {sourceId: 200003}
+      {sourceId: 200003, args: '1'}
     ]
   },
   {

@@ -15,8 +15,8 @@ var helper = {
    * [{
           "title": "",
           "clazz": "",
-          "prop": "",
-          "type": ""
+          "prop": "",       //model field name or function(item) {}
+          "type": ""        //pre defined type
       }]
    * @param items
    * @returns

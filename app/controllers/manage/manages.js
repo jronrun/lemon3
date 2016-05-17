@@ -8,6 +8,7 @@ var express = require('express'),
 module.exports = function (app) {
   app.use(index.action, router);
 
+  require('./inherit/musers')(router, index.users, index);
   require('./inherit/powers')(router, index.powers, index);
   require('./inherit/roles')(router, index.roles, index);
   require('./inherit/sourcetree')(router, index.resource, index);

@@ -88,6 +88,7 @@ module.exports = function(model, index) {
      *  resourceTab: 0,       //has resource tab, 1 has, 2 show readonly
      *  sequenceId: 0,        //need auto increment sequence id, 1 yes
      *  checkExistsField: '', //check field value exists if not empty
+     *  checkExistsField2: '', //check field value exists if not empty
      *  paramHandle: function(item){}     //param pre handle
      * }
      */
@@ -96,6 +97,7 @@ module.exports = function(model, index) {
         resourceTab: 0,
         sequenceId: 0,
         checkExistsField: '',
+        checkExistsField2: '',
         paramHandle: false
       }, options || {});
 
@@ -154,6 +156,22 @@ module.exports = function(model, index) {
           }
         },
         function(target, callback) {
+          var field = options.checkExistsField2;
+          if (field.length > 0) {
+            var qry = {};
+            //{name: target.name}
+            qry[field] = target[field];
+            model.find(qry).limit(1).next(function(err, exists){
+              if (exists) {
+                return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
+              }
+              callback(null, item);
+            });
+          } else {
+            callback(null, item);
+          }
+        },
+        function(target, callback) {
           model.insertOne(target, function(err, result) {
             if (err) {
               return res.json(answer.fail(err.message));
@@ -178,6 +196,7 @@ module.exports = function(model, index) {
      * options: {
      *  resourceTab: 0,       //has resource tab, 1 has, 2 show readonly
      *  checkExistsField: '', //check field value exists if not empty
+     *  checkExistsField2: '', //check field value exists if not empty
      *  resourceUpdate: 0,    //update resource tab, 1 yes
      *  paramHandle: function(item){}     //param pre handle
      * }
@@ -187,6 +206,7 @@ module.exports = function(model, index) {
         resourceTab: 0,
         resourceUpdate: 0,
         checkExistsField: '',
+        checkExistsField2: '',
         paramHandle: false
       }, options || {});
 
@@ -224,6 +244,26 @@ module.exports = function(model, index) {
         },
         function(target, callback) {
           var field = options.checkExistsField;
+          if (field.length > 0) {
+            var qry = {
+              $ne: model.toObjectID(itemId)
+            };
+
+            //{name: target.name}
+            qry[field] = target[field];
+            model.find(qry).limit(1).next(function(err, exists){
+              if (exists) {
+                return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
+              }
+
+              callback(null, target);
+            });
+          } else {
+            callback(null, target);
+          }
+        },
+        function(target, callback) {
+          var field = options.checkExistsField2;
           if (field.length > 0) {
             var qry = {
               $ne: model.toObjectID(itemId)
@@ -314,7 +354,8 @@ module.exports = function(model, index) {
           method: HttpMethod.PUT,
           action: actionWrap(index.retrieve.action, itemId).action,
           listAction: actionWrap(index.action, options.listHomePageArg).action,
-          sel_tabs: options.selectTabs
+          sel_tabs: options.selectTabs,
+          update: 1
         });
       });
     },

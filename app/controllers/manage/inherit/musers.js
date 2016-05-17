@@ -1,15 +1,16 @@
 'use strict';
 
-var Role = app_require('models/role'),
+var User = app_require('models/user'),
+  Role = app_require('models/role'),
   Power = app_require('models/power'),
-  log = log_from('roles');
+  log = log_from('musers');
 
 module.exports = function (router, index, root) {
 
-  var generic = app_require('helpers/generic')(Role, index);
+  var generic = app_require('helpers/generic')(User, index);
 
   /**
-   * Role list
+   * User list
    */
   router.get(index.do, function (req, res, next) {
     var defines = [
@@ -26,9 +27,23 @@ module.exports = function (router, index, root) {
         clazz: 'fixed pull-left item-col-title'
       },
       {
-        title: 'Description',
-        prop: 'desc',
+        title: 'Email',
+        prop: 'email',
         clazz: 'item-col-sales'
+      },
+      {
+        title: 'State',
+        clazz: 'item-col-stats',
+        prop: function(item) {
+          switch (parseInt(item.state)) {
+            case 0:
+              return 'Normal';
+            case 1:
+              return 'Frozen';
+            case 9:
+              return 'Deleted';
+          }
+        }
       },
       {
         title: 'Create',
@@ -45,14 +60,14 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Role editor
+   * User editor
    */
   router.get(index.editor.do, function (req, res, next) {
-    Power.find({}).sort({_id: -1}).toArray(function (err, items) {
-      var powerData = [];
+    Role.find({}).sort({_id: -1}).toArray(function (err, items) {
+      var roleData = [];
 
       _.each(items, function (item) {
-        powerData.push({
+        roleData.push({
           name: item.name,
           value: item.id,
           selected: 0
@@ -60,66 +75,73 @@ module.exports = function (router, index, root) {
       });
 
       generic.editor({
-        schemaExclude: ['resources', 'powers'],
-        selectTabs: [{tabName: 'Power', inputName: 'powers', data: powerData }]
+        schemaExclude: ['roles', 'state'],
+        selectTabs: [{tabName: 'Role', inputName: 'roles', data: roleData }]
       }, req, res, next);
     });
   });
 
   /**
-   * Role create
+   * User create
    */
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
-      sequenceId: 1,
       checkExistsField: 'name',
+      checkExistsField2: 'email',
       paramHandle: function(item) {
-        item.powers = req.body.powers || [];
+        item.roles = req.body.roles || [];
+        item.passwd = crypto.encrypt(item.passwd);
+        item.state = 0;
       }
     }, req, res, next);
   });
 
   /**
-   * Role update
+   * User update
    */
   router.put(index.retrieve.do, function (req, res, next) {
     generic.update({
       checkExistsField: 'name',
+      checkExistsField2: 'email',
       resourceUpdate: 1,
       resourceTab: 2,
       paramHandle: function(item) {
-        item.powers = req.body.powers || [];
+        item.roles = req.body.roles || [];
         if (item.resources) {
           delete item.resources;
+        }
+        //cannot modify email
+        if (item.email) {
+          delete item.email;
         }
       }
     }, req, res, next);
   });
 
   /**
-   * Role retrieve
+   * User retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
-    var roleId = req.params.id;
-    Power.find({}).sort({_id: -1}).toArray(function (err, items) {
-      var powerData = [];
+    var userId = req.params.id;
+    Role.find({}).sort({_id: -1}).toArray(function (err, items) {
+      var roleData = [];
 
-      Role.findById(roleId, function(err, doc) {
-        var thePowers = doc.powers || [];
+      User.findById(userId, function(err, doc) {
+        var theRoles = doc.roles || [];
 
         _.each(items, function (item) {
-          powerData.push({
+          roleData.push({
             name: item.name,
             value: item.id,
-            selected: thePowers.indexOf(String(item.id)) != -1 ? 1 : 0
+            selected: theRoles.indexOf(String(item.id)) != -1 ? 1 : 0
           });
         });
 
         generic.retrieve({
-          schemaExclude: ['resources', 'powers'],
-          selectTabs: [{tabName: 'Power', inputName: 'powers', data: powerData }],
+          schemaExclude: ['passwd', 'roles'],
+          selectTabs: [{tabName: 'Role', inputName: 'roles', data: roleData }],
           resourceTab: 2,
-          resourceAction: actionWrap(root.resource.role.action, roleId).action
+          resourceAction: actionWrap(root.resource.user.action, userId).action
         }, req, res, next);
       });
 
@@ -127,7 +149,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Role delete
+   * User delete
    */
   router.delete(index.retrieve.do, function (req, res, next) {
     generic.delete({

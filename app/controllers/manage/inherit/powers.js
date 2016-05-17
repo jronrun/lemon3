@@ -69,6 +69,7 @@ module.exports = function (router, index, root) {
    * Power update
    */
   router.put(index.retrieve.do, function (req, res, next) {
+    userReourceCacheReset();
     generic.update({
       resourceTab: 1,
       checkExistsField: 'name'

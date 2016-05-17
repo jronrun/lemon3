@@ -88,6 +88,7 @@ module.exports = function(app, config, passport) {
     req.isManage = _.startsWith(req.resource.action, '/manage');
     req.isGet = HttpMethod.GET == req.resource.method;
     req.isAjax = !_.isUndefined(req.header('X-Requested-With'));
+    req.isPjax = !_.isUndefined(req.headers['x-pjax']);
 
     res.info = function(msg, source, options, fn) {
       req.flash('info', msg);
@@ -119,37 +120,39 @@ module.exports = function(app, config, passport) {
 
   app.use(function (req, res, next) {
     if (req.resource.protect) {
-      if (req.user.isAdmin) {
-        next();
-        return;
-      }
-
       if (!req.isAuthenticated()) {
         req.session.returnTo = req.isGet ? req.originalUrl : routes.home.action;
         res.redirect(routes.user.signin.action);
         return;
       }
 
-      User.getResource(req.user.id).then(function (userResource) {
-        req.user.resource = userResource;
-        //has power
-        if (userResource.indexOf(req.resource.id) != -1) {
-          next();
-        }
-        //no power
-        else {
-          if (req.isAjax) {
-            return res.json(answer.fail(authWarnMsg));
-          } else {
-            var err = Error(authWarnMsg);
-            err.status = 401;
+      if (req.user.isAdmin) {
+        next();
+        return;
+      }
+
+      //has power
+      if (req.user.resource.indexOf(req.resource.id) != -1) {
+        next();
+        return;
+      }
+      //no power
+      else {
+        var err = Error(authWarnMsg);
+        err.status = 401;
+
+        if (req.isAjax) {
+          if (req.isPjax) {
             next(err);
             return;
           }
-        }
-      });
 
-      return;
+          return res.json(answer.fail(authWarnMsg));
+        } else {
+          next(err);
+          return;
+        }
+      }
     }
 
     next();
@@ -169,7 +172,7 @@ module.exports = function(app, config, passport) {
         }, options);
       }
 
-      if (req.headers['x-pjax']) {
+      if (req.isPjax) {
         options.layout = false;
       } else if (req.isManage) {
         _.extend(options, {

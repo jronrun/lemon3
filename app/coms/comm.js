@@ -84,6 +84,9 @@ module.exports = function(scope, config) {
     max: 100,
     maxAge: 1000 * 60 * 5
   });
+  scope.userReourceCacheReset = function() {
+    userReourceCache.reset();
+  };
   scope.schema = function(target) {
     target = target.properties ? target : {
       properties: target

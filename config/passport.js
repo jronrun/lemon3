@@ -14,7 +14,11 @@ module.exports = function (passport) {
       delete user.passwd;
       user.id = user._id.toString();
       user.isAdmin = (user.roles || []).indexOf(0) != -1;
-      done(err, user);
+
+      User.getResource(user.id).then(function (userResource) {
+        user.resource = userResource;
+        done(err, user);
+      });
     });
   });
 

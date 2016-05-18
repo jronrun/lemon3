@@ -15,12 +15,14 @@ module.exports = function(model, index) {
      *    "clazz": "",
      *    "prop": "",
      *    "type": ""
-     *  }]
+     *  }],
+     * listName: '',        //list name
      * }
      */
     list: function(options, req, res, next) {
       options = _.extend({
-        defines: []
+        defines: [],
+        listName: index.desc
       }, options || {});
 
       model.page({}, req.params.page).then(function (result) {
@@ -30,7 +32,8 @@ module.exports = function(model, index) {
           list: items.asShowData(options.defines, result.items),
           page: result.page,
           action: actionWrap(index.action).base,
-          retrieveAction: actionWrap(index.retrieve.action).base
+          retrieveAction: actionWrap(index.retrieve.action).base,
+          desc: options.listName
         });
       });
     },

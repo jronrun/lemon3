@@ -60,7 +60,7 @@ module.exports = function (router, index, root) {
                 roleName.push(generic.info(getAction(root.roles.retrieve, aRole._id), aRole.name));
               }
             });
-            return roleName.join(',');
+            return roleName.join('</br>');
           }
         },
         {

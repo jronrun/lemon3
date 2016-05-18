@@ -11,6 +11,10 @@ module.exports = function (passport) {
 
   passport.deserializeUser(function(id, done) {
     User.findById(id, function (err, user) {
+      if (!user || 0 !== user.state) {
+        return done(Error('Account has issues ' + id));
+      }
+
       delete user.passwd;
       user.id = user._id.toString();
       user.isAdmin = (user.roles || []).indexOf(ADMIN_ROLE) != -1;

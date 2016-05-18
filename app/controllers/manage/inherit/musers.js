@@ -39,11 +39,11 @@ module.exports = function (router, index, root) {
           prop: function(item) {
             switch (parseInt(item.state)) {
               case 0:
-                return 'Normal';
+                return '<span class="text-success"><em class="fa fa-check"></em> ' + 'Normal</span>';
               case 1:
-                return 'Frozen';
+                return '<span class="text-warning"><em class="fa fa-frown-o"></em> ' + 'Frozen</span>';
               case 9:
-                return 'Deleted';
+                return '<span class="text-muted"><em class="fa fa-remove"></em> ' + 'Deleted</span>';
             }
           }
         },

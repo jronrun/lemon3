@@ -11,11 +11,33 @@ module.exports = new LocalStrategy(
         return done(err);
       }
       if (!user) {
-        return done(null, false);
+        return done(null, false, {
+          message: 'Invalid email or password, Try again?'
+        });
       }
 
       if (user.passwd != crypto.encrypt(password)) {
-        return done(null, false);
+        return done(null, false, {
+          message: 'Invalid email or password, Try again?'
+        });
+      }
+
+      if (1 === user.state) {
+        return done(null, false, {
+          message: 'Oops! Your account has been frozen. Please contact us for help.'
+        });
+      }
+
+      if (9 === user.state) {
+        return done(null, false, {
+          message: 'Oops! Your account has been permanently disabled.'
+        });
+      }
+
+      if (0 !== user.state) {
+        return done(null, false, {
+          message: 'Oops! Your account has issues. Please contact us for help.'
+        });
       }
 
       return done(null, user);

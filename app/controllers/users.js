@@ -11,7 +11,8 @@ module.exports = function (app, passport) {
 
   router.post(index.signin.do, passport.authenticate('local', {
       failureRedirect: index.signin.action,
-      failureFlash: 'Invalid email or password, Try again?'
+      failureFlash: true
+      //failureFlash: 'Invalid email or password, Try again?'
     }), function (req, res, next) {
 
     var redirectTo = req.session.returnTo ? req.session.returnTo : routes.home.action;

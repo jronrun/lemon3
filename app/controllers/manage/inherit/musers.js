@@ -2,7 +2,6 @@
 
 var User = app_require('models/user'),
   Role = app_require('models/role'),
-  Power = app_require('models/power'),
   log = log_from('musers');
 
 module.exports = function (router, index, root) {
@@ -13,50 +12,70 @@ module.exports = function (router, index, root) {
    * User list
    */
   router.get(index.do, function (req, res, next) {
-    var defines = [
-      {
-        title: 'Name',
-        prop: function(item) {
-          var html = [
-            '<a href="item-editor.html" class=""><h4 class="item-title">',
+    Role.find({}).sort({_id: -1}).toArray(function (err, items) {
+      var roleData = {
+        0: 'administrator'
+      };
+
+      _.each(items, function (item) {
+        roleData[item.id] = item.name;
+      });
+
+      var defines = [
+        {
+          title: 'Name',
+          prop: function(item) {
+            var html = [
+              '<a href="item-editor.html" class=""><h4 class="item-title">',
               item.name,
-            '</h4></a>'
+              '</h4></a>'
             ];
-          return html.join('');
+            return html.join('');
+          },
+          clazz: 'fixed pull-left item-col-title'
         },
-        clazz: 'fixed pull-left item-col-title'
-      },
-      {
-        title: 'Email',
-        prop: 'email',
-        clazz: 'item-col-sales'
-      },
-      {
-        title: 'State',
-        clazz: 'item-col-stats',
-        prop: function(item) {
-          switch (parseInt(item.state)) {
-            case 0:
-              return 'Normal';
-            case 1:
-              return 'Frozen';
-            case 9:
-              return 'Deleted';
+        {
+          title: 'Email',
+          prop: 'email',
+          clazz: 'item-col-sales'
+        },
+        {
+          title: 'State',
+          clazz: 'item-col-stats',
+          prop: function(item) {
+            switch (parseInt(item.state)) {
+              case 0:
+                return 'Normal';
+              case 1:
+                return 'Frozen';
+              case 9:
+                return 'Deleted';
+            }
           }
+        },
+        {
+          title: 'Role',
+          clazz: 'item-col-stats',
+          prop: function(item) {
+            var roleName = [];
+            _.each(item.roles, function (roleId) {
+              roleName.push(roleData[roleId]);
+            });
+            return roleName.join(',');
+          }
+        },
+        {
+          title: 'Create',
+          prop: 'create_time',
+          clazz: 'item-col-date',
+          type: 'date'
         }
-      },
-      {
-        title: 'Create',
-        prop: 'create_time',
-        clazz: 'item-col-date',
-        type: 'date'
-      }
-    ];
+      ];
 
-    generic.list({
-      defines: defines
-    }, req, res, next);
-
+      generic.list({
+        defines: defines
+      }, req, res, next);
+    });
   });
 
   /**

@@ -53,6 +53,7 @@ module.exports = function(model, index) {
      *      data: [{
      *        name: '',       //show text
      *        value: '',      //select value
+     *        desc: '',     //optional, description
      *        selected: 0     //0|1, 1 selected
      *        }]
      *    }
@@ -318,6 +319,7 @@ module.exports = function(model, index) {
      *      data: [{
      *        name: '',       //show text
      *        value: '',      //select value
+     *        desc: '',       //optional, description
      *        selected: 0     //0|1, 1 selected
      *        }]
      *    }

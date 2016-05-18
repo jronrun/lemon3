@@ -4,7 +4,7 @@
     <div class="title-block">
         <h3 class="title">
           {{#if update}}Edit {{else}}Create new {{/if}}{{desc}} <span class="sparkline bar" data-type="bar"></span>
-            <a class="btn btn-secondary-outline" id="item-back" data-pjax href="{{listAction}}" role="button">Back to List</a>
+             <a class="btn btn-secondary-outline" id="item-back" data-pjax href="{{listAction}}" role="button">Back to List</a>
         </h3>
     </div>
 
@@ -64,6 +64,7 @@
                                               <label class="item-check">
                                                   <input type="checkbox" {{#if selected}}checked="checked"{{/if}} class="checkbox" name="{{../inputName}}" value="{{value}}">
                                                   <span><small>{{name}}</small></span>
+                                                  {{#if desc}}{{{desc}}}{{/if}}
                                               </label>
                                           </div>
                                       </div>

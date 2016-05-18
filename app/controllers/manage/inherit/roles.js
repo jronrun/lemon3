@@ -50,12 +50,14 @@ module.exports = function (router, index, root) {
   router.get(index.editor.do, function (req, res, next) {
     Power.find({}).sort({_id: -1}).toArray(function (err, items) {
       var powerData = [];
+      var powerHref = '<a href="%s" data-pjax><em class="fa fa-info-circle"></em></a>';
 
       _.each(items, function (item) {
         powerData.push({
           name: item.name,
           value: item.id,
-          selected: 0
+          selected: 0,
+          desc: format(powerHref, actionWrap(root.powers.retrieve.action, item._id).action)
         });
       });
 
@@ -104,6 +106,7 @@ module.exports = function (router, index, root) {
     var roleId = req.params.id;
     Power.find({}).sort({_id: -1}).toArray(function (err, items) {
       var powerData = [];
+      var powerHref = '<a href="%s" data-pjax><em class="fa fa-info-circle"></em></a>';
 
       Role.findById(roleId, function(err, doc) {
         var thePowers = doc.powers || [];
@@ -112,7 +115,8 @@ module.exports = function (router, index, root) {
           powerData.push({
             name: item.name,
             value: item.id,
-            selected: thePowers.indexOf(String(item.id)) != -1 ? 1 : 0
+            selected: thePowers.indexOf(String(item.id)) != -1 ? 1 : 0,
+            desc: format(powerHref, actionWrap(root.powers.retrieve.action, item._id).action)
           });
         });
 

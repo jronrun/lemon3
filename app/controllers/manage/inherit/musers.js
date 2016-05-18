@@ -31,7 +31,7 @@ module.exports = function (router, index, root) {
         {
           title: 'Email',
           prop: 'email',
-          clazz: 'item-col-sales'
+          clazz: 'item-col-author'
         },
         {
           title: 'State',
@@ -49,15 +49,17 @@ module.exports = function (router, index, root) {
         },
         {
           title: 'Role',
-          clazz: 'item-col-stats',
+          clazz: 'item-col-author',
           prop: function(item) {
             var roleName = [];
             _.each(item.roles, function (roleId) {
               var aRole = roleData[roleId];
-              if (ADMIN_ROLE == roleId) {
-                roleName.push('<em class="fa fa-thumbs-up"></em> ' + aRole);
-              } else {
-                roleName.push(generic.info(getAction(root.roles.retrieve, aRole._id), aRole.name));
+              if (aRole) {
+                if (ADMIN_ROLE == roleId) {
+                  roleName.push('<em class="fa fa-thumbs-up"></em> ' + aRole);
+                } else {
+                  roleName.push(generic.info(getAction(root.roles.retrieve, aRole._id), aRole.name));
+                }
               }
             });
             return roleName.join('</br>');
@@ -172,9 +174,7 @@ module.exports = function (router, index, root) {
    * User delete
    */
   router.delete(index.retrieve.do, function (req, res, next) {
-    generic.delete({
-      descField: 'name'
-    }, req, res, next);
+    generic.delete({}, req, res, next);
   });
 
 };

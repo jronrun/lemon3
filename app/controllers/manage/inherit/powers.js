@@ -22,7 +22,7 @@ module.exports = function (router, index, root) {
       {
         title: 'Description',
         prop: 'desc',
-        clazz: 'item-col-sales'
+        clazz: 'item-col-author'
       },
       {
         title: 'Create',
@@ -86,9 +86,7 @@ module.exports = function (router, index, root) {
    * Power delete
    */
   router.delete(index.retrieve.do, function (req, res, next) {
-    generic.delete({
-      descField: 'name'
-    }, req, res, next);
+    generic.delete({}, req, res, next);
   });
 
 };

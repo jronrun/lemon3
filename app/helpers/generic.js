@@ -384,7 +384,7 @@ module.exports = function(model, index) {
      */
     delete: function(options, req, res, next) {
       options = _.extend({
-        descField: ''
+        descField: 'name'
       }, options || {});
 
       model.findById(req.params.id, function (err, result) {

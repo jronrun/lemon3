@@ -30,7 +30,7 @@ module.exports = function (router, index, root) {
         {
           title: 'Description',
           prop: 'desc',
-          clazz: 'item-col-sales'
+          clazz: 'item-col-author'
         },
         {
           title: 'Power',
@@ -38,11 +38,13 @@ module.exports = function (router, index, root) {
             var powerName = [];
             _.each(item.powers, function (powerId) {
               var aPower = powerData[powerId];
-              powerName.push(generic.info(getAction(root.powers.retrieve, aPower._id), aPower.name));
+              if (aPower) {
+                powerName.push(generic.info(getAction(root.powers.retrieve, aPower._id), aPower.name));
+              }
             });
             return powerName.join('</br>');
           },
-          clazz: 'item-col-sales'
+          clazz: 'item-col-author'
         },
         {
           title: 'Create',
@@ -148,9 +150,7 @@ module.exports = function (router, index, root) {
    * Role delete
    */
   router.delete(index.retrieve.do, function (req, res, next) {
-    generic.delete({
-      descField: 'name'
-    }, req, res, next);
+    generic.delete({}, req, res, next);
   });
 
 };

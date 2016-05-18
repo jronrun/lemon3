@@ -133,6 +133,9 @@ module.exports = function(scope, config) {
     ret.action = action;
     return ret;
   };
+  scope.getAction = function(resource, args) {
+    return actionWrap(resource.action, args).action;
+  };
 
   scope.app_require = function(moduleName) {
     return require(path.join(config.root, path.sep, 'app', path.sep, moduleName));

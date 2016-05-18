@@ -20,17 +20,11 @@ module.exports = function (router, index, root) {
         roleData[item.id] = item;
       });
 
-      var roleHref = '<a href="%s" data-pjax><em class="fa fa-info-circle"></em> %s</a>';
       var defines = [
         {
           title: 'Name',
           prop: function(item) {
-            var html = [
-              '<a href="item-editor.html" class=""><h4 class="item-title">',
-              item.name,
-              '</h4></a>'
-            ];
-            return html.join('');
+            return generic.title(item.name, getAction(root.users.retrieve, item._id));
           },
           clazz: 'fixed pull-left item-col-title'
         },
@@ -63,7 +57,7 @@ module.exports = function (router, index, root) {
               if (ADMIN_ROLE == roleId) {
                 roleName.push('<em class="fa fa-thumbs-up"></em> ' + aRole);
               } else {
-                roleName.push(format(roleHref, actionWrap(root.roles.retrieve.action, aRole._id).action, aRole.name));
+                roleName.push(generic.info(getAction(root.roles.retrieve, aRole._id), aRole.name));
               }
             });
             return roleName.join(',');
@@ -89,14 +83,13 @@ module.exports = function (router, index, root) {
   router.get(index.editor.do, function (req, res, next) {
     Role.find({}).sort({_id: -1}).toArray(function (err, items) {
       var roleData = [];
-      var roleHref = '<a href="%s" data-pjax><em class="fa fa-info-circle"></em></a>';
 
       _.each(items, function (item) {
         roleData.push({
           name: item.name,
           value: item.id,
           selected: 0,
-          desc: format(roleHref, actionWrap(root.roles.retrieve.action, item._id).action)
+          desc: generic.info(getAction(root.roles.retrieve, item._id))
         });
       });
 
@@ -151,7 +144,6 @@ module.exports = function (router, index, root) {
     var userId = req.params.id;
     Role.find({}).sort({_id: -1}).toArray(function (err, items) {
       var roleData = [];
-      var roleHref = '<a href="%s" data-pjax><em class="fa fa-info-circle"></em></a>';
 
       User.findById(userId, function(err, doc) {
         var theRoles = doc.roles || [];
@@ -161,7 +153,7 @@ module.exports = function (router, index, root) {
             name: item.name,
             value: item.id,
             selected: theRoles.indexOf(String(item.id)) != -1 ? 1 : 0,
-            desc: format(roleHref, actionWrap(root.roles.retrieve.action, item._id).action)
+            desc: generic.info(getAction(root.roles.retrieve, item._id))
           });
         });
 

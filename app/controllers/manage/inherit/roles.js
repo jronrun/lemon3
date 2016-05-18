@@ -12,35 +12,50 @@ module.exports = function (router, index, root) {
    * Role list
    */
   router.get(index.do, function (req, res, next) {
-    var defines = [
-      {
-        title: 'Name',
-        prop: function(item) {
-          var html = [
-            '<a href="item-editor.html" class=""><h4 class="item-title">',
-              item.name,
-            '</h4></a>'
-            ];
-          return html.join('');
-        },
-        clazz: 'fixed pull-left item-col-title'
-      },
-      {
-        title: 'Description',
-        prop: 'desc',
-        clazz: 'item-col-sales'
-      },
-      {
-        title: 'Create',
-        prop: 'create_time',
-        clazz: 'item-col-date',
-        type: 'date'
-      }
-    ];
+    Power.find({}).sort({_id: -1}).toArray(function (err, items) {
+      var powerData = {};
 
-    generic.list({
-      defines: defines
-    }, req, res, next);
+      _.each(items, function (item) {
+        powerData[item.id] = item;
+      });
+
+      var defines = [
+        {
+          title: 'Name',
+          prop: function(item) {
+            return generic.title(item.name, getAction(root.roles.retrieve, item._id));
+          },
+          clazz: 'fixed pull-left item-col-title'
+        },
+        {
+          title: 'Description',
+          prop: 'desc',
+          clazz: 'item-col-sales'
+        },
+        {
+          title: 'Power',
+          prop: function(item) {
+            var powerName = [];
+            _.each(item.powers, function (powerId) {
+              var aPower = powerData[powerId];
+              powerName.push(generic.info(getAction(root.powers.retrieve, aPower._id), aPower.name));
+            });
+            return powerName.join('</br>');
+          },
+          clazz: 'item-col-sales'
+        },
+        {
+          title: 'Create',
+          prop: 'create_time',
+          clazz: 'item-col-date',
+          type: 'date'
+        }
+      ];
+
+      generic.list({
+        defines: defines
+      }, req, res, next);
+    });
 
   });
 
@@ -50,14 +65,13 @@ module.exports = function (router, index, root) {
   router.get(index.editor.do, function (req, res, next) {
     Power.find({}).sort({_id: -1}).toArray(function (err, items) {
       var powerData = [];
-      var powerHref = '<a href="%s" data-pjax><em class="fa fa-info-circle"></em></a>';
 
       _.each(items, function (item) {
         powerData.push({
           name: item.name,
           value: item.id,
           selected: 0,
-          desc: format(powerHref, actionWrap(root.powers.retrieve.action, item._id).action)
+          desc: generic.info(getAction(root.powers.retrieve, item._id))
         });
       });
 
@@ -106,7 +120,6 @@ module.exports = function (router, index, root) {
     var roleId = req.params.id;
     Power.find({}).sort({_id: -1}).toArray(function (err, items) {
       var powerData = [];
-      var powerHref = '<a href="%s" data-pjax><em class="fa fa-info-circle"></em></a>';
 
       Role.findById(roleId, function(err, doc) {
         var thePowers = doc.powers || [];
@@ -116,7 +129,7 @@ module.exports = function (router, index, root) {
             name: item.name,
             value: item.id,
             selected: thePowers.indexOf(String(item.id)) != -1 ? 1 : 0,
-            desc: format(powerHref, actionWrap(root.powers.retrieve.action, item._id).action)
+            desc: generic.info(getAction(root.powers.retrieve, item._id))
           });
         });
 

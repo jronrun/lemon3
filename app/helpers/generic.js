@@ -7,6 +7,17 @@ module.exports = function(model, index) {
 
   var generic = {
 
+    title: function(title, href) {
+      return format(
+        '<a href="%s" data-pjax><h4 class="item-title"><em class="fa fa-edit"></em>&nbsp;%s</h4></a>',
+        href, title
+      );
+    },
+
+    info: function(href, text) {
+      return format('<a href="%s" data-pjax><em class="fa fa-info-circle"></em> %s</a>', href, text || '');
+    },
+
     /**
      * list
      * options: {

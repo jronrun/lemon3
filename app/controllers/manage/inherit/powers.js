@@ -15,12 +15,7 @@ module.exports = function (router, index, root) {
       {
         title: 'Name',
         prop: function(item) {
-          var html = [
-            '<a href="item-editor.html" class=""><h4 class="item-title">',
-              item.name,
-            '</h4></a>'
-            ];
-          return html.join('');
+          return generic.title(item.name, getAction(root.powers.retrieve, item._id));
         },
         clazz: 'fixed pull-left item-col-title'
       },

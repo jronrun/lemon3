@@ -13,14 +13,14 @@ module.exports = function (router, index, root) {
    */
   router.get(index.do, function (req, res, next) {
     Role.find({}).sort({_id: -1}).toArray(function (err, items) {
-      var roleData = {
-        0: 'administrator'
-      };
+      var roleData = {};
+      roleData[ADMIN_ROLE] = 'administrator';
 
       _.each(items, function (item) {
-        roleData[item.id] = item.name;
+        roleData[item.id] = item;
       });
 
+      var roleHref = '<a href="%s" data-pjax>%s</a>';
       var defines = [
         {
           title: 'Name',
@@ -59,7 +59,12 @@ module.exports = function (router, index, root) {
           prop: function(item) {
             var roleName = [];
             _.each(item.roles, function (roleId) {
-              roleName.push(roleData[roleId]);
+              var aRole = roleData[roleId];
+              if (ADMIN_ROLE == roleId) {
+                roleName.push(aRole);
+              } else {
+                roleName.push(format(roleHref, actionWrap(root.roles.retrieve.action, aRole._id).action, aRole.name));
+              }
             });
             return roleName.join(',');
           }

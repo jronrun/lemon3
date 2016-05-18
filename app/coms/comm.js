@@ -10,8 +10,13 @@ var path = require('path'),
   revalidator = require('revalidator'),
   json5s = require('../../public/js/json5s'),
   moment = require('moment'),
-  LRU = require("lru-cache")
+  LRU = require("lru-cache"),
+  format = require('util').format
   ;
+
+var CONSTANT = {
+  ADMIN_ROLE: 0
+};
 
 var answer = {
   fail: function(msg, result, code) {
@@ -89,6 +94,7 @@ module.exports = function(scope, config) {
 
   scope._ = _;
   _.extend(_, extend_lodash);
+  _.extend(scope, CONSTANT);
 
   scope.moment = moment;
   scope.answer = answer;
@@ -96,6 +102,7 @@ module.exports = function(scope, config) {
   scope.crypto = crypto;
   scope.when = when;
   scope.async = async;
+  scope.format = format;
   scope.LRU = LRU;
   scope.userReourceCache = LRU({
     max: 100,

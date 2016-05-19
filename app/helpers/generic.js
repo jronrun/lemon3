@@ -18,25 +18,83 @@ module.exports = function(model, index) {
       return format('<a href="%s" data-pjax><em class="fa fa-info-circle"></em> %s</a>', href, text || '');
     },
 
+    searchInput: function(name, placeholder) {
+      return {
+        type: 1,
+        tip: placeholder,
+        name: name
+      };
+    },
+
+    searchSelect: function(name, defaultSelect, selectOptions) {
+      return {
+        type: 2,
+        tip: defaultSelect,
+        name: name,
+        options: selectOptions
+      };
+    },
+
     /**
      * list
      * options: {
-     * defines: [{
+     *  defines: [{
      *    "title": "",
      *    "clazz": "",
      *    "prop": "",
      *    "type": ""
      *  }],
-     * listName: '',        //list name
+     *  search: [
+     *    {
+     *      type: 1,    //element type, 1 input, 2 select
+     *      tip: '',    //element tip, placeholder if input, default option if select
+     *      name: '',   //element name
+     *      options: [  //select options
+     *        {
+     *          val: '',  //option value
+     *          text: '', //option text
+     *        }
+     *      ]
+     *    }
+     *  ]
+     *  listName: '',                     //list name
+     *  queryHandle: function(query) {},  //query param pre handle
+     *
+     *  pageCallback: false,          //model.page parameter callback
+     *  pageSize: DEFAULT_PAGESIZE,   //model.page parameter size
+     *  pageOptions: {},              //model.page parameter options,
      * }
      */
     list: function(options, req, res, next) {
       options = _.extend({
         defines: [],
+        search: [],
+        pageCallback: false,
+        pageSize: DEFAULT_PAGESIZE,
+        pageOptions: {},
+        queryHandle: false,
         listName: index.desc
       }, options || {});
 
-      model.page({}, req.params.page).then(function (result) {
+      var queryStr = req.header('query') || '', query = {}, realQuery = {};
+      if (queryStr.length > 0) {
+        var query = crypto.decompress(queryStr);
+        try {
+          query = JSON.parse(query);
+        } catch (e) {
+          throw Error('invalid query parameters: ' + e.message);
+        }
+
+        _.each(query, function (v, k) {
+          if (v.length > 0) {
+            realQuery[k] = new RegExp(v, 'i');
+          }
+        });
+      }
+
+      _.isFunction(options.queryHandle) && options.queryHandle(realQuery);
+
+      model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
         res.render(index.page, {
           pagename: 'items-list-page',
           pageedit: index.editor.action,
@@ -44,7 +102,10 @@ module.exports = function(model, index) {
           page: result.page,
           action: actionWrap(index.action).base,
           retrieveAction: actionWrap(index.retrieve.action).base,
-          desc: options.listName
+          desc: options.listName,
+          search: options.search,
+          searchLastEl: options.search.length - 1,
+          queryStr: queryStr
         });
       });
     },

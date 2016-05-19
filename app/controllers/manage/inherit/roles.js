@@ -54,8 +54,13 @@ module.exports = function (router, index, root) {
         }
       ];
 
+      var search = [
+        generic.searchInput('name', 'search role...')
+      ];
+
       generic.list({
-        defines: defines
+        defines: defines,
+        search: search
       }, req, res, next);
     });
 

@@ -147,6 +147,17 @@ $(function () {
 
   $(document).pjax('a[data-pjax]', '#page');
 
+  $(document).on('pjax:beforeSend', function(event, xhr, options) {
+    var target = event.relatedTarget, ds = target.dataset || {};
+    if (ds.query && ds.query.length) {
+      var qryData = lemon.getParam(ds.query);
+      if (!lemon.isBlank(qryData)) {
+        xhr.setRequestHeader('query', lemon.enc(JSON.stringify(qryData)));
+      }
+    }
+    return true;
+  });
+
   $(document).on('pjax:end', function(event) {
     var source = $(event.target).find('article').attr('source');
     lemon.isFunc(handlePageCall[source]) && handlePageCall[source]();

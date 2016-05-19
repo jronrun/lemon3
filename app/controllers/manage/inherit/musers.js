@@ -73,8 +73,14 @@ module.exports = function (router, index, root) {
         }
       ];
 
+      var search = [
+        generic.searchInput('name', 'search user name...'),
+        generic.searchInput('email', 'search email...')
+      ];
+
       generic.list({
-        defines: defines
+        defines: defines,
+        search: search
       }, req, res, next);
     });
   });

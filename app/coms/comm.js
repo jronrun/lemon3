@@ -15,7 +15,8 @@ var path = require('path'),
   ;
 
 var CONSTANT = {
-  ADMIN_ROLE: 0
+  ADMIN_ROLE: 0,
+  DEFAULT_PAGESIZE: 30
 };
 
 var answer = {

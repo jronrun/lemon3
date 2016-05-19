@@ -28,5 +28,23 @@ $(function () {
       });
     });
 
+    var queryStr = $('#items-search').data('query');
+    if (queryStr.length > 0) {
+      try {
+        query = JSON.parse(lemon.dec(queryStr));
+        lemon.fillParam('#items-search', query);
+      } catch (e) {
+        lemon.error('(set)invalid query parameters: ' + e.message);
+      }
+    }
+
+    $('#item-search-undo').click(function () {
+      var data = lemon.getParam('#items-search'), fillData = {};
+      lemon.each(data, function (v, k) {
+        fillData[k] = '';
+      });
+      lemon.fillParam('#items-search', fillData);
+    });
+
   });
 });

@@ -8,7 +8,7 @@ var express = require('express'),
 var favicon = require('serve-favicon'),
   morgan = require('morgan'),
   cookieParser = require('cookie-parser'),
-  cookieSession = require('cookie-session'),
+  //cookieSession = require('cookie-session'),
   bodyParser = require('body-parser'),
   compression = require('compression'),
   methodOverride = require('method-override'),
@@ -63,7 +63,7 @@ module.exports = function(app, config, passport) {
   }));
 
   app.use(cookieParser());
-  app.use(cookieSession({ secret: secret }));
+  //app.use(cookieSession({ secret: secret }));
   app.use(session({
     resave: true,
     saveUninitialized: true,

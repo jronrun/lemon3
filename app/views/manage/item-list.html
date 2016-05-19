@@ -57,11 +57,11 @@
                     {{#each search}}
                       {{#is 1 "==" type}}
                           <div class="form-group">
-                              <input type="text" class="form-control" name="{{name}}" placeholder="{{tip}}">
+                              <input type="text" class="form-control" style="border: 0px;" name="{{name}}" placeholder="{{tip}}">
                           </div>
                       {{else}}
                           <div class="form-group">
-                              <select class="form-control" name="{{name}}" style="height: 38px;">
+                              <select class="form-control" name="{{name}}" style="height: 38px;border: 0px;">
                                   <option value="">{{tip}}</option>
                                 {{#each options}}
                                     <option value="{{val}}">{{text}}</option>

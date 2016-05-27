@@ -1,6 +1,9 @@
+{{#is form.layout.formEl "==" 1}}
 <form role="form"
       class="{{form.layout.attrs.class}}"
       {{#each form.layout.attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}>
+{{/is}}
+
   {{#each form.items}}
     {{#is el "==" "input"}}
       {{#is attrs.type "in" "radio,checkbox"}}
@@ -114,4 +117,7 @@
       {{/each}}>{{desc}}</{{el}}>
     {{/each}}
 </div>
+
+{{#is form.layout.formEl "==" 1}}
 </form>
+{{/is}}

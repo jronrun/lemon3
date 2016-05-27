@@ -295,6 +295,7 @@ function buttonField(fieldName, define, elLayout) {
  * @param options     {@link formElement}
  * @param formOptions   form options
  * {
+ *  formEl: 1,  //form tag, 0 none form element tag, 1 output form tag, default is 1
  *  buttons: [ {formElement} ],
  *  attrs: {}   //html form element attributes or any custom attributes
  * }
@@ -313,6 +314,9 @@ var schemaForm = function(schema, options, formOptions, excludeField) {
   }
   if (!formOptions.buttons) {
     formOptions.buttons = [];
+  }
+  if (!formOptions.formEl) {
+    formOptions.formEl = 1;
   }
 
   if ((excludeField || []).length < 1) {

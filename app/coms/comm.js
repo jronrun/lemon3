@@ -114,6 +114,7 @@ module.exports = function(scope, config) {
   };
   scope.schema = function(target) {
     target = target.properties ? target : {
+      type: 'object',
       properties: target
     };
 

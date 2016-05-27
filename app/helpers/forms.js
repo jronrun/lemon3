@@ -411,7 +411,7 @@ module.exports = {
    * @param elementType html element type
    * @returns {@link formElement}
    */
-  element: function(name, options, elementType) {
+  element: function(elementType, options, name) {
     return getEl(name, false, options, elementType);
   },
 

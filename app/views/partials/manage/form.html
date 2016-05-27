@@ -76,7 +76,7 @@
         {{/is}}
       {{else}}
         <div class="form-group">
-            {{#if label}} <label class="control-label">{{label}}</label> {{/if}}
+            {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}}</label> {{/if}}
             <input class="form-control underlined {{attrs.class}}"
               {{#each attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}
               {{#if value}}value="{{value}}"{{/if}}>
@@ -87,7 +87,7 @@
 
     {{#is el "==" "select"}}
         <div class="form-group">
-            {{#if label}} <label class="control-label">{{label}}</label> {{/if}}
+            {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}}</label> {{/if}}
             <select class="form-control {{attrs.class}}" style="height: 37px;{{attrs.style}}"
               {{#each attrs}} {{#is @key "in" "class,style"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}>
               {{#each options}}
@@ -100,7 +100,7 @@
 
     {{#is el "==" "textarea"}}
         <div class="form-group">
-            {{#if label}} <label class="control-label">{{label}}</label> {{/if}}
+            {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}}</label> {{/if}}
             <textarea class="form-control underlined {{attrs.class}}"
               {{#each attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}>{{#if value}}{{value}}{{/if}}</textarea>
             {{#if desc}}<small class="text-muted">{{desc}}</small>{{/if}}

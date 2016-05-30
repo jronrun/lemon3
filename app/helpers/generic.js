@@ -1,9 +1,15 @@
 'use strict';
 
 var log = log_from('generic'),
-  items = require('./items');
+  items = require('./items'),
+  forms = require('./forms');
 
-module.exports = function(model, index) {
+module.exports = function(model, index, defineForm) {
+
+  defineForm = _.extend({
+    form: {},     //@see forms.schemaForm.formOptions
+    element: {}   //@see forms.schemaForm.options
+  }, defineForm || {});
 
   var generic = {
 
@@ -34,6 +40,16 @@ module.exports = function(model, index) {
         options: selectOptions
       };
     },
+
+    jsonForm: forms.fromJSON,
+    schemaForm: forms.fromSchema,
+    element: forms.element,
+    buttonEl: forms.buttonEl,
+    textareaEl: forms.textareaEl,
+    checkboxEl: forms.checkboxEl,
+    radioEl: forms.radioEl,
+    selectEl: forms.selectEl,
+    inputEl: forms.inputEl,
 
     /**
      * list
@@ -118,16 +134,14 @@ module.exports = function(model, index) {
      *  resourceAction: '',   //resource load action
      *  modelName: '',        //model name
      *  listHomePageArg: 1,   //list home pagination arg
-     *  selectTabs: [
+     *  masterFormType: 1,    //master form show type, 1 html form, 2 codemirror
+     *  formElHandle: function(query) {},  //form element pre handle
+     *  defineForm: {},       //@see forms.schemaForm.formOptions
+     *  defineElement: {},    //@see forms.schemaForm.options
+     *  tabs: [
      *    {
-     *      tabName: '',
-     *      inputName: '',    //checkbox name
-     *      data: [{
-     *        name: '',       //show text
-     *        value: '',      //select value
-     *        desc: '',     //optional, description
-     *        selected: 0     //0|1, 1 selected
-     *        }]
+     *      tabName: '',                  //tab name
+     *      form: [{forms.formElement}]   //form data
      *    }
      *  ],
      * }
@@ -139,8 +153,20 @@ module.exports = function(model, index) {
         resourceAction: '',
         modelName: model.modelName,
         listHomePageArg: 1,
-        selectTabs: []
+        masterFormType: 1,
+        formElHandle: false,
+        defineForm: {},
+        defineElement: {},
+        tabs: []
       }, options || {});
+
+      var formEls = {};
+      if (1 == options.masterFormType) {
+        formEls = forms.fromSchema(model.define.schema,
+          _.extend({}, defineForm.element, options.defineElement),
+          _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
+        _.isFunction(options.formElHandle) && options.formElHandle(formEls);
+      }
 
       var schema = model.desc(options.schemaExclude);
       var value = model.getEditVal(schema, true);
@@ -154,7 +180,82 @@ module.exports = function(model, index) {
         method: HttpMethod.POST,
         action: index.editor.action,
         listAction: actionWrap(index.action, options.listHomePageArg).action,
-        sel_tabs: options.selectTabs
+        tabs: options.tabs,
+        form: formEls,
+        form_type: options.masterFormType
+      });
+    },
+
+    /**
+     * retrieve
+     * options : {
+     *  schemaExclude: [],    //exclude schema field
+     *  resourceTab: 0,       //show resource tab, 1 show, 2 show readonly
+     *  resourceAction: '',   //resource load action
+     *  modelName: '',        //model name
+     *  listHomePageArg: 1,   //list home pagination arg
+     *  masterFormType: 1,    //master form show type, 1 html form, 2 codemirror
+     *  formElHandle: function(query) {},  //form element pre handle
+     *  defineForm: {},       //@see forms.schemaForm.formOptions
+     *  defineElement: {},    //@see forms.schemaForm.options
+     *  tabs: [
+     *    {
+     *      tabName: '',                  //tab name
+     *      form: [{forms.formElement}]   //form data
+     *    }
+     *  ],
+     * }
+     */
+    retrieve: function(options, req, res, next) {
+      options = _.extend({
+        schemaExclude: [],
+        resourceTab: 0,
+        resourceAction: '',
+        modelName: model.modelName,
+        listHomePageArg: 1,
+        masterFormType: 1,
+        formElHandle: false,
+        defineForm: {},
+        defineElement: {},
+        tabs: []
+      }, options || {});
+
+      var formEls = {};
+      if (1 == options.masterFormType) {
+        formEls = forms.fromSchema(model.define.schema,
+          _.extend({}, defineForm.element, options.defineElement),
+          _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
+        _.isFunction(options.formElHandle) && options.formElHandle(formEls);
+      }
+
+      var itemId = req.params.id;
+      model.findById(itemId, function (err, result) {
+        if (err) {
+          return res.json(answer.fail(err.message));
+        }
+
+        if (!result) {
+          return res.json(answer.fail('item not exists.'));
+        }
+
+        var schema = model.desc(options.schemaExclude);
+        var value = model.getEditVal(schema, true, result);
+
+        res.render(index.retrieve.page, {
+          pagename: 'item-editor-page',
+          schema: crypto.compress(schema),
+          value: value,
+          res_tab: options.resourceTab,
+          res_action: options.resourceAction,
+          desc: options.modelName,
+          method: HttpMethod.PUT,
+          action: actionWrap(index.retrieve.action, itemId).action,
+          listAction: actionWrap(index.action, options.listHomePageArg).action,
+          tabs: options.tabs,
+          update: 1,
+          form: formEls,
+          form_type: options.masterFormType
+        });
       });
     },
 
@@ -184,9 +285,13 @@ module.exports = function(model, index) {
         return res.json(answer.fail('invalid item: ' + e.message));
       }
 
-      if (options.resourceTab) {
+      if (1 == options.resourceTab) {
         item.resources = req.body.resource || [];
+      } else {
+        delete item.resources;
+        delete item.resource;
       }
+
       item.create_time = new Date();
       _.isFunction(options.paramHandle) && options.paramHandle(item);
 
@@ -294,8 +399,11 @@ module.exports = function(model, index) {
         return res.json(answer.fail('invalid item: ' + e.message));
       }
 
-      if (options.resourceTab) {
+      if (1 == options.resourceTab) {
         item.resources = req.body.resource || [];
+      } else {
+        delete item.resources;
+        delete item.resource;
       }
       _.isFunction(options.paramHandle) && options.paramHandle(item);
 
@@ -373,67 +481,6 @@ module.exports = function(model, index) {
           resourceUpdate: options.resourceUpdate,
           res_tab: options.resourceTab
         }, 'Update success.'));
-      });
-    },
-
-    /**
-     * retrieve
-     * options : {
-     *  schemaExclude: [],    //exclude schema field
-     *  resourceTab: 0,       //show resource tab, 1 show, 2 show readonly
-     *  resourceAction: '',   //resource load action
-     *  modelName: '',        //model name
-     *  listHomePageArg: 1,   //list home pagination arg
-     *  selectTabs: [
-     *    {
-     *      tabName: '',
-     *      inputName: '',    //checkbox name
-     *      data: [{
-     *        name: '',       //show text
-     *        value: '',      //select value
-     *        desc: '',       //optional, description
-     *        selected: 0     //0|1, 1 selected
-     *        }]
-     *    }
-     *  ],
-     * }
-     */
-    retrieve: function(options, req, res, next) {
-      options = _.extend({
-        schemaExclude: [],
-        resourceTab: 0,
-        resourceAction: '',
-        modelName: model.modelName,
-        listHomePageArg: 1,
-        selectTabs: []
-      }, options || {});
-
-      var itemId = req.params.id;
-      model.findById(itemId, function (err, result) {
-        if (err) {
-          return res.json(answer.fail(err.message));
-        }
-
-        if (!result) {
-          return res.json(answer.fail('item not exists.'));
-        }
-
-        var schema = model.desc(options.schemaExclude);
-        var value = model.getEditVal(schema, true, result);
-
-        res.render(index.retrieve.page, {
-          pagename: 'item-editor-page',
-          schema: crypto.compress(schema),
-          value: value,
-          res_tab: options.resourceTab,
-          res_action: options.resourceAction,
-          desc: options.modelName,
-          method: HttpMethod.PUT,
-          action: actionWrap(index.retrieve.action, itemId).action,
-          listAction: actionWrap(index.action, options.listHomePageArg).action,
-          sel_tabs: options.selectTabs,
-          update: 1
-        });
       });
     },
 

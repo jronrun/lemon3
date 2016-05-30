@@ -10,29 +10,53 @@ var editor = {
   },
 
   intlcm: function () {
-    var cm = mirror('#item-editor'),
-      schema = editor.getVal('#item-schema'), val = editor.getVal('#item-value');
+    var cm = mirror('#item-editor'), val = editor.getVal('#item-value');
     cm.setJsonVal(val);
-    $('#output').val(lemon.fmtjson(schema));
-    mirror.showJson('#output');
     return cm;
   },
 
+  intlschema: function() {
+    var schema = editor.getVal('#item-schema');
+    $('#output').val(lemon.fmtjson(schema));
+    mirror.showJson('#output');
+  },
+
   initialize: function() {
-    var hasResource = $('#res-tree').length, cm = editor.intlcm(), tree = '#res-tree';;
+    var submitEl = '#item-submit', dataset = $(submitEl).data(), cm;
+    switch (dataset.form) {
+      //html form
+      case 1:
+        lemon.fillParam('#item-card', editor.getVal('#item-value'));
+        break;
+      //codemirror
+      case 2:
+        editor.intlschema();
+        cm = editor.intlcm();
+        break;
+      default:
+        lemon.warn('Unrecognized form type: ' + dataset.form);
+        return;
+    }
+
+    var hasResource = $('#res-tree').length, tree = '#res-tree';;
     if (hasResource) {
       lemon.sourcetree(tree, $(tree).attr('action'), {
         showopt: $(tree).attr('showopt')
       });
     }
 
-    var submitEl = '#item-submit', dataset = $(submitEl).data();
     $(submitEl).click(function () {
       msg.clear();
       lemon.disable(this);
       var method = dataset.method.toLowerCase(), action = dataset.action, params = {};
-      params.item = lemon.enc(cm.target.getValue());
-      if (hasResource) {
+      if (1 == dataset.form) {
+        var reqData = lemon.getParam('#item-card');
+        delete reqData.resource;
+        params.item = lemon.enc(JSON.stringify(reqData));
+      } else if (2 == dataset.form) {
+        params.item = lemon.enc(cm.target.getValue());
+      }
+      if (hasResource && 1 == $(tree).attr('showopt')) {
         params.resource = lemon.chkboxval('resource');
       }
 

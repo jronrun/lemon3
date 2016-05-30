@@ -6,7 +6,14 @@ var User = app_require('models/user'),
 
 module.exports = function (router, index, root) {
 
-  var generic = app_require('helpers/generic')(User, index);
+  var generic = app_require('helpers/generic')(User, index, {
+    form: {
+
+    },
+    element: {
+
+    }
+  });
 
   /**
    * User list
@@ -94,8 +101,8 @@ module.exports = function (router, index, root) {
 
       _.each(items, function (item) {
         roleData.push({
-          name: item.name,
-          value: item.id,
+          tip: item.name,
+          val: item.id,
           selected: 0,
           desc: generic.info(getAction(root.roles.retrieve, item._id))
         });
@@ -103,7 +110,18 @@ module.exports = function (router, index, root) {
 
       generic.editor({
         schemaExclude: ['roles', 'state'],
-        selectTabs: [{tabName: 'Role', inputName: 'roles', data: roleData }]
+        defineElement: {
+          passwd: {
+            attrs: {
+              type: 'password'
+            }
+          }
+        },
+        formElHandle: function(form) {
+          form.items.push(generic.checkboxEl('roles', {
+            options: roleData
+          }));
+        }
       }, req, res, next);
     });
   });
@@ -116,7 +134,6 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       checkExistsField2: 'email',
       paramHandle: function(item) {
-        item.roles = req.body.roles || [];
         item.passwd = crypto.encrypt(item.passwd);
         item.state = 0;
       }
@@ -133,7 +150,7 @@ module.exports = function (router, index, root) {
       resourceUpdate: 1,
       resourceTab: 2,
       paramHandle: function(item) {
-        item.roles = req.body.roles || [];
+        item.state = parseInt(item.state);
         if (item.resources) {
           delete item.resources;
         }
@@ -158,8 +175,8 @@ module.exports = function (router, index, root) {
 
         _.each(items, function (item) {
           roleData.push({
-            name: item.name,
-            value: item.id,
+            tip: item.name,
+            val: item.id,
             selected: theRoles.indexOf(String(item.id)) != -1 ? 1 : 0,
             desc: generic.info(getAction(root.roles.retrieve, item._id))
           });
@@ -167,7 +184,18 @@ module.exports = function (router, index, root) {
 
         generic.retrieve({
           schemaExclude: ['passwd', 'roles'],
-          selectTabs: [{tabName: 'Role', inputName: 'roles', data: roleData }],
+          formElHandle: function(form) {
+            form.items.push(generic.checkboxEl('roles', {
+              options: roleData
+            }));
+          },
+          defineElement: {
+            email: {
+              attrs: {
+                readonly: 'readonly'
+              }
+            }
+          },
           resourceTab: 2,
           resourceAction: actionWrap(root.resource.user.action, userId).action
         }, req, res, next);

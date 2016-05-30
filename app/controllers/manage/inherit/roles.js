@@ -75,8 +75,8 @@ module.exports = function (router, index, root) {
 
       _.each(items, function (item) {
         powerData.push({
-          name: item.name,
-          value: item.id,
+          tip: item.name,
+          val: item.id,
           selected: 0,
           desc: generic.info(getAction(root.powers.retrieve, item._id))
         });
@@ -84,7 +84,11 @@ module.exports = function (router, index, root) {
 
       generic.editor({
         schemaExclude: ['resources', 'powers'],
-        selectTabs: [{tabName: 'Power', inputName: 'powers', data: powerData }]
+        formElHandle: function(form) {
+          form.items.push(generic.checkboxEl('powers', {
+            options: powerData
+          }));
+        }
       }, req, res, next);
     });
   });
@@ -97,7 +101,6 @@ module.exports = function (router, index, root) {
       sequenceId: 1,
       checkExistsField: 'name',
       paramHandle: function(item) {
-        item.powers = req.body.powers || [];
       }
     }, req, res, next);
   });
@@ -112,7 +115,6 @@ module.exports = function (router, index, root) {
       resourceUpdate: 1,
       resourceTab: 2,
       paramHandle: function(item) {
-        item.powers = req.body.powers || [];
         if (item.resources) {
           delete item.resources;
         }
@@ -133,8 +135,8 @@ module.exports = function (router, index, root) {
 
         _.each(items, function (item) {
           powerData.push({
-            name: item.name,
-            value: item.id,
+            tip: item.name,
+            val: item.id,
             selected: thePowers.indexOf(String(item.id)) != -1 ? 1 : 0,
             desc: generic.info(getAction(root.powers.retrieve, item._id))
           });
@@ -142,7 +144,11 @@ module.exports = function (router, index, root) {
 
         generic.retrieve({
           schemaExclude: ['resources', 'powers'],
-          selectTabs: [{tabName: 'Power', inputName: 'powers', data: powerData }],
+          formElHandle: function(form) {
+            form.items.push(generic.checkboxEl('powers', {
+              options: powerData
+            }));
+          },
           resourceTab: 2,
           resourceAction: actionWrap(root.resource.role.action, roleId).action
         }, req, res, next);

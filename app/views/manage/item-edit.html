@@ -18,7 +18,7 @@
                     <li class="nav-item">
                         <a href="#item-edit" class="nav-link active" data-target="#item-edit" data-toggle="tab" aria-controls="item-edit" role="tab">Edit</a>
                     </li>
-                    {{#each sel_tabs}}
+                    {{#each tabs}}
                         <li class="nav-item">
                             <a href="#item-sel-{{tabName}}" class="nav-link" data-target="#item-sel-{{tabName}}" aria-controls="item-sel-{{tabName}}" data-toggle="tab" role="tab">{{tabName}}</a>
                         </li>
@@ -28,49 +28,28 @@
                           <a href="#item-res" class="nav-link" data-target="#item-res" aria-controls="item-res" data-toggle="tab" role="tab">Resource</a>
                       </li>
                     {{/if}}
-                    <li class="nav-item">
-                        <a href="#item-desc" class="nav-link" data-target="#item-desc" aria-controls="item-desc" data-toggle="tab" role="tab">Schema</a>
-                    </li>
+                    {{#is form_type "==" 2}}
+                      <li class="nav-item">
+                          <a href="#item-desc" class="nav-link" data-target="#item-desc" aria-controls="item-desc" data-toggle="tab" role="tab">Schema</a>
+                      </li>
+                    {{/is}}
                 </ul>
 
                 <div class="tab-content tabs-bordered">
                     <div class="tab-pane fade in active" id="item-edit">
-                        {{!
-                        <div class="form-group row">
-                            <label class="col-sm-2 form-control-label text-xs-right">
-                                Category:
-                            </label>
-                            <div class="col-sm-10"><select class="c-select form-control boxed">
-                                <option selected>Select Category</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select></div>
-                        </div>
-                        }}
                         <div class="form-group">
                             <input type="hidden" id="item-schema" value="{{schema}}"/>
                             <input type="hidden" id="item-value" value="{{value}}"/>
-                            <textarea class="form-control underlined" rows="10" id="item-editor"></textarea>
+                            {{#is form_type "==" 2}}
+                              <textarea class="form-control underlined" rows="10" id="item-editor"></textarea>
+                            {{else}}
+                              {{> manage/form}}
+                            {{/is}}
                         </div>
                     </div>
-                    {{#each sel_tabs}}
+                    {{#each tabs}}
                         <div class="tab-pane fade" id="item-sel-{{tabName}}" data-checkname="{{inputName}}">
-                            <ul style="padding-left: 0px;">
-                              {{#each data}}
-                                  <li>
-                                      <div class="list-icon">
-                                          <div class="col-md-3 col-sm-4">
-                                              <label class="item-check">
-                                                  <input type="checkbox" {{#if selected}}checked="checked"{{/if}} class="checkbox" name="{{../inputName}}" value="{{value}}">
-                                                  <span><small>{{name}}</small></span>
-                                                  {{#if desc}}{{{desc}}}{{/if}}
-                                              </label>
-                                          </div>
-                                      </div>
-                                  </li>
-                              {{/each}}
-                            </ul>
+                          {{> manage/form}}
                         </div>
                     {{/each}}
                     {{#if res_tab}}
@@ -78,17 +57,19 @@
                           <div id="res-tree" action="{{res_action}}" showopt="{{res_tab}}"></div>
                       </div>
                     {{/if}}
-                    <div class="tab-pane fade" id="item-desc">
-                        <div class="form-group row">
-                            <pre class="col-sm-10" id="output"></pre>
-                        </div>
-                    </div>
+                    {{#is form_type "==" 2}}
+                      <div class="tab-pane fade" id="item-desc">
+                          <div class="form-group row">
+                              <pre class="col-sm-10" id="output"></pre>
+                          </div>
+                      </div>
+                    {{/is}}
                 </div>
             </div>
             <div class="card-footer">
                 <div class="form-group row">
                     <div class="col-sm-10 col-sm-offset-2">
-                        <button type="button" id="item-submit" class="btn btn-primary" data-method="{{method}}" data-action="{{action}}">
+                        <button type="button" id="item-submit" class="btn btn-primary" data-form="{{form_type}}" data-method="{{method}}" data-action="{{action}}">
                         Submit
                         </button>
                     </div>

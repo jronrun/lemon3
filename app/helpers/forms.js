@@ -22,6 +22,7 @@ var formElement = {
     {
       tip: '',        //option show text
       val: '',        //option value
+      desc: '',       //option desc
       selected: 0     //0|1, 1 selected
     }
   ],
@@ -327,6 +328,7 @@ var schemaForm = function(schema, options, formOptions, excludeField) {
   }
 
   var filter = [];
+  excludeField.push('id');
   _.each(els, function (el) {
     if (excludeField.indexOf(el.attrs.name) == -1) {
       filter.push(el);

@@ -1,0 +1,38 @@
+{{#content "head" mode="append"}}
+    <script src="/dist/api.js"></script>
+    <style>
+        body { min-height: 40rem; padding-top: 4.5rem; }
+        {{! .maxh { height: 588px; max-height: 588px; overflow-y: scroll; } }}
+        .minh { min-height: 588px; border-color: #d9edf7; }
+    </style>
+{{/content}}
+
+<div class="pos-f-t">
+    <div class="collapse" id="navbar-header">
+        <div class="container-fluid bg-inverse p-a-1">
+            <h3>Collapsed content</h3>
+            <p>Toggleable via the navbar brand.</p>
+        </div>
+    </div>
+    <div class="navbar navbar-light bg-faded navbar-static-top">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header">
+            &#9776;
+        </button>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card card-block minh">
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="card card-block minh">
+            </div>
+        </div>
+    </div>
+
+</div>

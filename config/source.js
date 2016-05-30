@@ -41,6 +41,8 @@ var resource = [
     ]
   },
 
+  {id: 50, name: 'api', desc: 'Manual API', protect: false},
+
   {
     id: 200, name: 'manage', desc: 'Manage', children: [
       {

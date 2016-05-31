@@ -3,34 +3,59 @@
     <style>
         body { min-height: 40rem; padding-top: 4.5rem; }
         {{! .maxh { height: 588px; max-height: 588px; overflow-y: scroll; } }}
-        .minh { min-height: 588px; border-color: #d9edf7; }
+        .minh { min-height: 522px; border-color: #d9edf7; }
     </style>
 {{/content}}
 
 <div class="pos-f-t">
     <div class="collapse" id="navbar-header">
         <div class="container-fluid bg-inverse p-a-1">
-            <h3>Collapsed content</h3>
-            <p>Toggleable via the navbar brand.</p>
         </div>
     </div>
     <div class="navbar navbar-light bg-faded navbar-static-top">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header">
-            &#9776;
-        </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header"> &#9776; </button>
     </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
+
+    <div id="message">
+        <div class="alert alert-danger" role="alert" >Product Environment  Manager API - controller 51.nb&nbsp;&nbsp;&nbsp;&nbsp;<strong>Danger !!!</strong></div>
+    </div>
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card card-block minh">
+                <form>
+                    <div class="form-group">
+                        <button class="btn btn-sm btn-success-outline" type="submit">Request</button>
+                        <div class="btn-group btn-group-sm pull-xs-right" role="group">
+                            <button type="button" class="btn btn-secondary">Left</button>
+                            <button type="button" class="btn btn-secondary">Middle</button>
+                            <button type="button" class="btn btn-secondary">Right</button>
+                        </div>
+                    </div>
+                    <fieldset class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                        <small class="text-muted">We'll never share your email with anyone else.</small>
+                    </fieldset>
+                </form>
             </div>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card card-block minh">
+                <form>
+                    <div class="form-group">
+                        <button class="btn btn-sm btn-success-outline" type="submit">Response</button>
+                        <div class="btn-group btn-group-sm pull-xs-right" role="group">
+                            <button type="button" class="btn btn-secondary">Left</button>
+                            <button type="button" class="btn btn-secondary">Middle</button>
+                            <button type="button" class="btn btn-secondary">Right</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

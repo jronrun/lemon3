@@ -13,7 +13,9 @@
         </div>
     </div>
     <div class="navbar navbar-light bg-faded navbar-static-top">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header"> &#9776; </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" title="Manual API">
+          {{> logo}}
+        </button>
     </div>
 </div>
 
@@ -31,15 +33,10 @@
                         <button class="btn btn-sm btn-success-outline" style="border: 0px;" type="button"><strong>Request</strong> </button>
                         <div class="btn-group btn-group-sm pull-xs-right" role="group">
                             <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
-                                <em class="fa fa-question-circle" title="Set Request Default Value"></em>
+                                <em class="fa fa-question-circle" title="API Help"></em>
                             </button>
                         </div>
                     </div>
-                    <fieldset class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                        <small class="text-muted">We'll never share your email with anyone else.</small>
-                    </fieldset>
                 </form>
             </div>
         </div>
@@ -51,7 +48,13 @@
                         <button class="btn btn-sm btn-success-outline" style="border: 0px;" type="button"><strong>Response</strong> </button>
                         <div class="btn-group btn-group-sm pull-xs-right" role="group">
                             <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
-                                <em class="fa fa-info-circle" title="Set Request Default Value"></em>
+                                <em class="fa fa-chevron-left" title="Previous History"></em>
+                            </button>
+                            <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
+                                <em class="fa fa-chevron-right" title="Next History"></em>
+                            </button>
+                            <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
+                                <em class="fa fa-info-circle" title="Previews"></em>
                             </button>
                         </div>
                     </div>

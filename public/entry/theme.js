@@ -1,7 +1,6 @@
 'use strict';
 
 require('animate.css');
-require('font-awesome/css/font-awesome.css');
 
 lemon.register({
   css: function(style, styleId) {

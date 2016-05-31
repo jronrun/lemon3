@@ -15,6 +15,7 @@ lemon.enc = lemon.compressToEncodedURIComponent;
 
 require('../js/store');
 require('jquery-pjax');
+require('font-awesome/css/font-awesome.css');
 
 //require('Progress.js/src/progressjs.css');
 //var progressJs = require('Progress.js/src/progress').progressJs;

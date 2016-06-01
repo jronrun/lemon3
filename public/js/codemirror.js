@@ -23,11 +23,10 @@ var helper = function(cm) {
     mapkey: function (keymap) {
       cm.setOption("extraKeys", lemon.extend(cm.getOption('extraKeys'), keymap || {}));
     },
-    toLastLine: function (cm) {
+    toLastLine: function () {
       cm.scrollIntoView({line: cm.lastLine()})
     },
     fullscreenTgl: function (full) {
-      var fullBefore = {};
       if (!cm.getOption('fullScreen')) {
         helper.fullBefore = {
           lineNumbers: cm.getOption('lineNumbers'),
@@ -45,13 +44,9 @@ var helper = function(cm) {
         });
       }
     },
-    fmt: function (cm) {
+    format: function () {
       var cursor = cm.getCursor();
-      try {
-        cm.setValue(json5s.fmtjson(cm.getValue()));
-      } catch (e) {
-        lemon.warn(e, 'format error.');
-      }
+      cm.setValue(lemon.fmtjson(cm.getValue()));
       cm.setCursor(cursor);
     },
     chgFontSize: function (size) {
@@ -65,11 +60,31 @@ var helper = function(cm) {
       });
       cm.refresh();
     },
-    setJsonVal: function(target) {
-      cm.setValue(lemon.fmtjson(target));
-    },
     setSize: function(width, height) {
       cm.setSize(width, height);
+    },
+    val: function(data) {
+      if (lemon.isUndefined(data)) {
+        return cm.getValue();
+      }
+
+      cm.setValue(lemon.isNull(data) ? '' : data);
+      return data;
+    },
+    isJson: function() {
+      try {
+        $.parseJSON(cm.getValue());
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
+    json: function(data) {
+      if (lemon.isUndefined(data)) {
+        return $.parseJSON(cm.getValue());
+      }
+
+      cm.setValue(lemon.fmtjson(lemon.isNull(data) ? {} : data));
     }
   };
 };

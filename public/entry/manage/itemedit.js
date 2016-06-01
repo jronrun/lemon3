@@ -11,7 +11,7 @@ var editor = {
 
   intlcm: function () {
     var cm = mirror('#item-editor'), val = editor.getVal('#item-value');
-    cm.setJsonVal(val);
+    cm.json(val);
     return cm;
   },
 

@@ -6,9 +6,8 @@ var mirror = require('../js/codemirror');
 var mapi = {
   requ: null,
   resp: null,
-
-  mirror: function(elId, sizeElId) {
-    var instance = mirror(elId);
+  mirror: function(elId, sizeElId, options) {
+    var instance = mirror(elId, options);
     instance.setSize($(sizeElId).width(), $(sizeElId).height() - 46);
     return instance;
   },
@@ -19,9 +18,14 @@ var mapi = {
 
     $('#btn-tgl-form').click(function () {
       if (lemon.buttonTgl(this)) {
-        lemon.progress(requTool);
-        lemon.tabShow('#tab-tri-form');
-        lemon.progressEnd(requTool);
+
+        if (mapi.requ.isJson()) {
+          lemon.progress(requTool);
+          lemon.tabShow('#tab-tri-form');
+          lemon.progressEnd(requTool);
+        } else {
+          alert('not json');
+        }
       } else {
         lemon.tabShow('#tab-tri-mirror');
       }

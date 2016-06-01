@@ -10,7 +10,7 @@ var setting = require('./resource/setting'), T = setting.type, P = setting.page,
   desc: 'desc',           // require string, Resource Description
   pid: 0,                 // [optional] default 0 or top level resource unique id, parent resource unique id
   action: '/',            // [optional] default is same as name, resource URI
-  type: T.page,        // [optional] default T.page, resource type
+  type: T.page,           // [optional] default T.page, resource type
   method: Method.GET      // [optional] default is Method.GET, HTTP Method
   children: [],           // [optional] default is null, children resource
   extend: 0,              // [optional] Extend Resource,
@@ -41,7 +41,12 @@ var resource = [
     ]
   },
 
-  {id: 50, name: 'api', desc: 'Manual API', protect: false},
+  {id: 50, name: 'api', desc: 'Manual API', protect: false, children: [] },
+
+  {id: 60, name: 'general', desc: 'General', protect: false, children: [
+      {id: 60001, name: 'form', desc: 'Form', protect: false}
+    ]
+  },
 
   {
     id: 200, name: 'manage', desc: 'Manage', children: [

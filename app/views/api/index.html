@@ -27,14 +27,36 @@
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card card-block minh">
+            <div class="card card-block minh" id="requ-card">
                 <form>
                     <div class="form-group">
-                        <button class="btn btn-sm btn-success-outline" style="border: 0px;" type="button"><strong>Request</strong> </button>
+                        <button class="btn btn-sm btn-secondary-outline" style="border: 0px;" type="button"><span class="text-muted">Request</span> </button>
                         <div class="btn-group btn-group-sm pull-xs-right" role="group">
+                            <button type="button" id="btn-tgl-form" class="btn btn-secondary-outline icondh" style="border: 0px;">
+                            <em class="fa fa-coffee" title="Toggle Form or JSON"></em>
+                            </button>
                             <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
                                 <em class="fa fa-question-circle" title="API Help"></em>
                             </button>
+                        </div>
+                    </div>
+                    <div>
+                        <ul class="nav nav-tabs" style="display: none;" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="tab-tri-mirror" data-toggle="tab" href="#tab-mirror" role="tab">MIRROR</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-tri-form" data-toggle="tab" href="#tab-form" role="tab">FORM</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab-mirror" role="tabpanel">
+                                <textarea class="form-control" rows="17" style="border:0px;" id="request"></textarea>
+                            </div>
+                            <div class="tab-pane" id="tab-form" role="tabpanel">
+                                form
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -42,10 +64,10 @@
         </div>
 
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card card-block minh">
+            <div class="card card-block minh" id="resp-card">
                 <form>
                     <div class="form-group">
-                        <button class="btn btn-sm btn-success-outline" style="border: 0px;" type="button"><strong>Response</strong> </button>
+                        <button class="btn btn-sm btn-secondary-outline" style="border: 0px;" type="button"><span class="text-muted">Response</span> </button>
                         <div class="btn-group btn-group-sm pull-xs-right" role="group">
                             <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
                                 <em class="fa fa-chevron-left" title="Previous History"></em>
@@ -56,6 +78,19 @@
                             <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
                                 <em class="fa fa-info-circle" title="Previews"></em>
                             </button>
+                        </div>
+                    </div>
+                    <div>
+                        <ul class="nav nav-tabs" style="display: none;" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="tab-resp-tri-mirror" data-toggle="tab" href="#tab-resp-mirror" role="tab">MIRROR</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab-resp-mirror" role="tabpanel">
+                                <textarea class="form-control" rows="17" style="border:0px;" id="response"></textarea>
+                            </div>
                         </div>
                     </div>
                 </form>

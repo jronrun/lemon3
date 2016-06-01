@@ -103,6 +103,43 @@ lemon.register({
       type: 'GET',
       dataType: 'jsonp'
     }));
+  },
+
+  /**
+   * Detect and return the current active responsive breakpoint in Bootstrap
+   * http://stackoverflow.com/questions/18575582/how-to-detect-responsive-breakpoints-of-twitter-bootstrap-3-using-javascript/37141090#37141090
+   * @returns {string}
+   */
+  detect: function () {
+    var envs = ["xs", "sm", "md", "lg"];
+    var env = "";
+
+    var $el = $("<div>");
+    $el.appendTo($("body"));
+
+    for (var i = envs.length - 1; i >= 0; i--) {
+      env = envs[i];
+      $el.addClass("hidden-" + env + "-up");
+      if ($el.is(":hidden")) {
+        break; // env detected
+      }
+    }
+    $el.remove();
+    return env;
+  }
+});
+
+//bootstrap
+lemon.register({
+  buttonTgl: function(selector) {
+    $(selector).button('toggle');
+    if ($(selector).hasClass('active')) {
+      return true;
+    }
+    return false;
+  },
+  tabShow: function(selector) {
+    $(selector).tab('show');
   }
 });
 

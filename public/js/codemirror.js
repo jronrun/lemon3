@@ -67,6 +67,9 @@ var helper = function(cm) {
     },
     setJsonVal: function(target) {
       cm.setValue(lemon.fmtjson(target));
+    },
+    setSize: function(width, height) {
+      cm.setSize(width, height);
     }
   };
 };

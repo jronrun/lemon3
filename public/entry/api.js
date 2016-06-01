@@ -13,18 +13,23 @@ var mapi = {
     return instance;
   },
   intlRequ: function() {
-    mapi.requ = mapi.mirror('#request', '#requ-card');
+    var requCardEl = '#requ-card', requTool = '#requ-tool';
+    mapi.requ = mapi.mirror('#request', requCardEl);
+    $('#tab-form').css({width: $(requCardEl).width()});
 
     $('#btn-tgl-form').click(function () {
       if (lemon.buttonTgl(this)) {
+        lemon.progress(requTool);
         lemon.tabShow('#tab-tri-form');
+        lemon.progressEnd(requTool);
       } else {
         lemon.tabShow('#tab-tri-mirror');
       }
     });
   },
   intlResp: function () {
-    mapi.resp = mapi.mirror('#response', '#resp-card');
+    var respCardEl = '#resp-card', respTool = '#resp-tool';
+    mapi.resp = mapi.mirror('#response', respCardEl);
   },
   initialize: function() {
     mapi.intlRequ();

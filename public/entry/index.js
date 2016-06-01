@@ -4,7 +4,7 @@
 'use strict';
 
 require('../css/style.styl');
-var handlePageCall = {}, handleModalCall = { show: {}, shown: {}, confirm: {} };
+var handlePageCall = {}, handleModalCall = { show: {}, shown: {}, confirm: {} }, handleTab = {};
 
 //Bootstrap tooltips require Tether (http://github.hubspot.com/tether/)
 //global.Tether = require('tether');
@@ -17,8 +17,8 @@ require('../js/store');
 require('jquery-pjax');
 require('font-awesome/css/font-awesome.css');
 
-//require('Progress.js/src/progressjs.css');
-//var progressJs = require('Progress.js/src/progress').progressJs;
+require('Progress.js/src/progressjs.css');
+var progressJs = require('Progress.js/src/progress').progressJs;
 
 lemon.href = function (uri) {
   global.location.href = uri;
@@ -40,7 +40,6 @@ global.register = function(call) {
 };
 
 lemon.register({
-  /*
   disableEl: function(selector) {
     return progressJs(selector).setOptions({
       theme: 'blueOverlayRadiusHalfOpacity',
@@ -51,11 +50,16 @@ lemon.register({
     progressJs(selector).end();
   },
   progress: function(options) {
+    if (lemon.isString(options)) {
+      options = {
+        selector: options
+      };
+    }
     options = lemon.extend({
       selector: null,
       start: 1,
       auto: {
-        ms: 1000,
+        ms: 100,
         step: 1
       },
       set: 0,
@@ -73,7 +77,10 @@ lemon.register({
     }
     return pg;
   },
-  */
+  progressEnd: function(selector) {
+    progressJs(selector).end();
+  },
+
   request: function(action, data, options) {
     options = options || {};
     var req = $.ajax(lemon.extend({
@@ -138,6 +145,20 @@ lemon.register({
     }
     return false;
   },
+  /**
+   *
+   * @param selector
+   * @param options
+   * {
+   *  show: function(current, previous) {},   //show.bs.tab event
+   *  shown: function(current, previous) {},  //shown.bs.tab event
+   *  hide: function(current, soonToBeActive) {},   //hide.bs.tab event
+   *  hidden: function(current, soonToBeActive) {}, //hidden.bs.tab	event
+   * }
+   */
+  tabEvent: function(selector, options) {
+    handleTab[selector] = options || {};
+  },
   tabShow: function(selector) {
     $(selector).tab('show');
   }
@@ -177,6 +198,16 @@ function doConfirm(modalId, btn) {
   }
 }
 
+function doTabHandle(e, type) {
+  // newly activated tab
+  var cur = e.target;
+  // previous active tab
+  var prev = e.relatedTarget;
+
+  var handle = handleTab['#' + $(cur).attr('id')];
+  handle && lemon.isFunc(handle[type]) && handle[type](cur, prev);
+}
+
 $(function () {
 
   $.ajaxSetup({
@@ -213,5 +244,15 @@ $(function () {
       doModal(handleModalCall.shown, modalId, e);
     });
   }
+
+  $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+    doTabHandle(e, 'show');
+  }).on('shown.bs.tab', function (e) {
+    doTabHandle(e, 'shown');
+  }).on('hide.bs.tab', function (e) {
+    doTabHandle(e, 'hide');
+  }).on('hidden.bs.tab', function (e) {
+    doTabHandle(e, 'hidden');
+  });
 
 });

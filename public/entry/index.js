@@ -11,7 +11,12 @@ var handlePageCall = {}, handleModalCall = { show: {}, shown: {}, confirm: {} },
 global.lemon = require('lemon/coffee/lemon.coffee');
 lemon.register(require('lz-string'));
 lemon.dec = lemon.decompressFromEncodedURIComponent;
-lemon.enc = lemon.compressToEncodedURIComponent;
+lemon.enc = function(target) {
+  if (!lemon.isString(target)) {
+    target = JSON.stringify(target);
+  }
+  return lemon.compressToEncodedURIComponent(target);
+};
 
 require('../js/store');
 require('jquery-pjax');
@@ -133,6 +138,10 @@ lemon.register({
     }
     $el.remove();
     return env;
+  },
+  isView: function (target) {
+    target = lemon.isArray(target) ? target : [target];
+    return target.indexOf(lemon.detect()) != -1;
   }
 });
 

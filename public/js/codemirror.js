@@ -75,6 +75,7 @@ var helper = function(cm) {
       try {
         $.parseJSON(cm.getValue());
       } catch (e) {
+        lemon.warn('invalid JSON: ' + e.message);
         return false;
       }
       return true;

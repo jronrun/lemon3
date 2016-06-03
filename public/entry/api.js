@@ -14,16 +14,29 @@ var mapi = {
   intlRequ: function() {
     var requCardEl = '#requ-card', requTool = '#requ-tool';
     mapi.requ = mapi.mirror('#request', requCardEl);
-    $('#tab-form').css({width: $(requCardEl).width()});
+
+    if (lemon.isView(['md','lg'])) {
+      var fromH = $(requCardEl).height() - 46;
+      $('#tab-form').css({
+        width: $(requCardEl).width(),
+        height: fromH,
+        'max-height': fromH,
+        'overflow-y': 'scroll'
+      });
+    }
 
     $('#btn-tgl-form').click(function () {
       if (lemon.buttonTgl(this)) {
 
         if (mapi.requ.isJson()) {
           lemon.progress(requTool);
-          lemon.tabShow('#tab-tri-form');
-          lemon.progressEnd(requTool);
+          $.post('/general/form', {data: lemon.enc(mapi.requ.json())}).done(function (resp) {
+            $('#tab-form').html(resp);
+            lemon.tabShow('#tab-tri-form');
+            lemon.progressEnd(requTool);
+          });
         } else {
+          lemon.buttonTgl(this);
           alert('not json');
         }
       } else {

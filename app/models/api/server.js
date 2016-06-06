@@ -18,7 +18,8 @@ var model = schema({
       //Interface name property in request data
       interf_prop: { type: 'string', allowEmpty: false, description: 'Interface name property' },
       //Add to request data every time
-      add_params: { type: 'object' }
+      add_params: { type: 'object' },
+      data_type: { type: 'integer', enum: [0, 1], required: true, const: { 0: 'JSON', 1: 'XML'} }
     }
   },
   create_by: {

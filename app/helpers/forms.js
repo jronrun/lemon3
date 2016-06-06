@@ -178,6 +178,10 @@ function getElement(fieldName, define, options, values, path) {
 
       break;
     case 'object':
+      if (!define.properties && !values) {
+        return;
+      }
+
       if (fieldName) {
         if ('' == path) {
           path = fieldName;

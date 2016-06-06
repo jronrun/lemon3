@@ -26,20 +26,23 @@ mapi = {
     }
 
     $('#btn-tgl-form').click(function () {
-      if (lemon.buttonTgl(this)) {
+      if (!mapi.requ.isJson()) {
+        alert('not json');
+        return;
+      }
 
-        if (mapi.requ.isJson()) {
-          lemon.progress(requTool);
-          $.post('/general/form', {data: lemon.enc(mapi.requ.json())}).done(function (resp) {
-            $('#tab-form').html(resp);
-            lemon.tabShow('#tab-tri-form');
-            lemon.progressEnd(requTool);
-          });
-        } else {
-          lemon.buttonTgl(this);
-          alert('not json');
-        }
-      } else {
+      //-> form
+      if (lemon.buttonTgl(this)) {
+        lemon.progress(requTool);
+        $.post('/general/form', {data: lemon.enc(mapi.requ.json())}).done(function (resp) {
+          $('#tab-form').html(resp);
+          lemon.tabShow('#tab-tri-form');
+          lemon.progressEnd(requTool);
+        });
+
+      }
+      //-> json
+      else {
         lemon.progress(requTool);
         var aData = lemon.getParam('#tab-form');
         $.post('/general/convert', {data: lemon.enc(aData)}).done(function (resp) {
@@ -51,7 +54,6 @@ mapi = {
           }
           lemon.progressEnd(requTool);
         });
-
       }
     });
   },

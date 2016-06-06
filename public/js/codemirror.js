@@ -18,7 +18,7 @@ require('codemirror/addon/runmode/runmode');
 require('codemirror/mode/javascript/javascript');
 
 var helper = function(cm) {
-  return {
+  var tools = {
     target: cm,
     mapkey: function (keymap) {
       cm.setOption("extraKeys", lemon.extend(cm.getOption('extraKeys'), keymap || {}));
@@ -28,7 +28,7 @@ var helper = function(cm) {
     },
     fullscreenTgl: function (full) {
       if (!cm.getOption('fullScreen')) {
-        helper.fullBefore = {
+        tools.fullBefore = {
           lineNumbers: cm.getOption('lineNumbers'),
           styleActiveLine: cm.getOption('styleActiveLine')
         };
@@ -39,7 +39,7 @@ var helper = function(cm) {
         cm.setOption('lineNumbers', true);
         cm.setOption('styleActiveLine', true);
       } else {
-        lemon.each(helper.fullBefore, function (v, k) {
+        lemon.each(tools.fullBefore, function (v, k) {
           cm.setOption(k, v);
         });
       }
@@ -48,9 +48,10 @@ var helper = function(cm) {
       var cursor = cm.getCursor();
       cm.setValue(lemon.fmtjson(cm.getValue()));
       cm.setCursor(cursor);
+      tools.refreshDelay();
     },
     chgFontSize: function (size) {
-      helper.chgStyle({
+      tools.chgStyle({
         'font-size': size + 'px'
       });
     },
@@ -58,7 +59,7 @@ var helper = function(cm) {
       lemon.each(styles || {}, function (v, k) {
         cm.getWrapperElement().style[k] = v;
       });
-      cm.refresh();
+      tools.refreshDelay();
     },
     setSize: function(width, height) {
       cm.setSize(width, height);
@@ -69,6 +70,7 @@ var helper = function(cm) {
       }
 
       cm.setValue(lemon.isNull(data) ? '' : data);
+      tools.refreshDelay();
       return data;
     },
     isJson: function() {
@@ -80,14 +82,22 @@ var helper = function(cm) {
       }
       return true;
     },
+    refreshDelay: function(delay) {
+      lemon.delay(function () {
+        cm.refresh();
+      }, delay || 100);
+    },
     json: function(data) {
       if (lemon.isUndefined(data)) {
         return $.parseJSON(cm.getValue());
       }
 
       cm.setValue(lemon.fmtjson(lemon.isNull(data) ? {} : data));
+      tools.refreshDelay();
     }
   };
+
+  return tools;
 };
 
 var mirror = function (elId, options) {

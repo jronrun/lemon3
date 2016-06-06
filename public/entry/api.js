@@ -3,7 +3,7 @@
  */
 var mirror = require('../js/codemirror');
 
-var mapi = {
+mapi = {
   requ: null,
   resp: null,
   mirror: function(elId, sizeElId, options) {
@@ -40,7 +40,18 @@ var mapi = {
           alert('not json');
         }
       } else {
-        lemon.tabShow('#tab-tri-mirror');
+        lemon.progress(requTool);
+        var aData = lemon.getParam('#tab-form');
+        $.post('/general/convert', {data: lemon.enc(aData)}).done(function (resp) {
+          if (0 == resp.code) {
+            mapi.requ.json(lemon.dec(resp.result.data));
+            lemon.tabShow('#tab-tri-mirror');
+          } else {
+            alert(resp.msg);
+          }
+          lemon.progressEnd(requTool);
+        });
+
       }
     });
   },

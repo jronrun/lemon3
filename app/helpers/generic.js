@@ -228,6 +228,58 @@ module.exports = function(model, index, defineForm) {
         _.isFunction(options.formElHandle) && options.formElHandle(formEls);
       }
 
+      var json = {
+        "cmd": "M000930",
+        "userId": "0",
+        "token": "asdfasdfjal;dsfjka;lsdjf",
+        "version": "1.0.0",
+        "data": {
+          "calltype": "2",
+          "nest": {
+            "nest1": 'test',
+            child: {
+              "nest2": 'test2',
+              child: {
+                "nest3": 'test3',
+                "nest3b": "nest3b"
+              }
+            }
+          },
+          "maintain": {
+            "test": [
+              "abc",
+              "efg"
+            ],
+            "title": [
+              1,
+              2,
+              3
+            ],
+            "notice": [
+              false,
+              true
+            ],
+            "items": [
+              {
+                "type": "3",
+                "start": "2015-12-13 00:00:00",
+                "end": "2016-12-13 10:10:00",
+                "title": "test aa",
+                "notice": "weihu lalal"
+              },
+              {
+                "type": "44",
+                "start": "2014-12-13 00:00:00",
+                "end": "2016-14-13 10:10:00",
+                "title": "test 444aa",
+                "notice": "weihu 444lalal"
+              }
+            ]
+          }
+        }
+      };
+      formEls= generic.jsonForm(json);
+
       var itemId = req.params.id;
       model.findById(itemId, function (err, result) {
         if (err) {

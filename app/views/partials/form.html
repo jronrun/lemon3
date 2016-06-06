@@ -10,7 +10,7 @@
       {{#is attrs.type "==" "checkbox"}}
         {{#is inline "==" 1}}
             <div class="form-group">
-              {{#if label}} <label class="control-label">{{label}} {{#if parent}}<small class="text-muted">{{parent}}</small>{{/if}}</label> {{/if}}
+              {{#if label}} <label class="control-label">{{label}}</label> {{/if}}
               {{#each options}}
                   <label class="checkbox-inline">
                       <input class="{{../attrs.class}}"
@@ -25,7 +25,7 @@
             </div>
         {{else}}
             <div class="form-group">
-              {{#if label}} <label class="control-label">{{label}} {{#if parent}}<small class="text-muted">{{parent}}</small>{{/if}}</label> {{/if}}
+              {{#if label}} <label class="control-label">{{label}}</label> {{/if}}
               {{#each options}}
                   <div class="checkbox">
                       <label>
@@ -45,7 +45,7 @@
       {{#is attrs.type "==" "radio"}}
         {{#is inline "==" 1}}
             <div class="form-group">
-              {{#if label}} <label class="control-label">{{label}} {{#if parent}}<small class="text-muted">{{parent}}</small>{{/if}}</label> {{/if}}
+              {{#if label}} <label class="control-label">{{label}}</label> {{/if}}
               {{#each options}}
                   <label class="radio-inline">
                       <input class="{{../attrs.class}}"
@@ -60,7 +60,7 @@
             </div>
         {{else}}
             <div class="form-group">
-              {{#if label}} <label class="control-label">{{label}} {{#if parent}}<small class="text-muted">{{parent}}</small>{{/if}}</label> {{/if}}
+              {{#if label}} <label class="control-label">{{label}}</label> {{/if}}
               {{#if desc}}<small class="text-muted">{{desc}}</small>{{/if}}
               {{#each options}}
                   <div class="radio">
@@ -79,7 +79,7 @@
       {{/is}}
     {{else}}
         <fieldset class="form-group">
-          {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}} {{#if parent}}<small class="text-muted">{{parent}}</small>{{/if}} </label> {{/if}}
+          {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}} </label> {{/if}}
             <input class="form-control {{attrs.class}}"
           {{#each attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}
           {{#if value}}value="{{value}}"{{/if}}>
@@ -90,7 +90,7 @@
 
   {{#is el "==" "select"}}
       <fieldset class="form-group">
-        {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}} {{#if parent}}<small class="text-muted">{{parent}}</small>{{/if}}</label> {{/if}}
+        {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}}</label> {{/if}}
           <select class="form-control {{attrs.class}}" style="height: 37px;{{attrs.style}}"
         {{#each attrs}} {{#is @key "in" "class,style"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}>
         {{#each options}}
@@ -103,12 +103,24 @@
 
   {{#is el "==" "textarea"}}
       <fieldset class="form-group">
-        {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}} {{#if parent}}<small class="text-muted">{{parent}}</small>{{/if}}</label> {{/if}}
+        {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}}</label> {{/if}}
           <textarea class="form-control {{attrs.class}}"
         {{#each attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}>{{#if value}}{{value}}{{/if}}</textarea>
         {{#if desc}}<small class="text-muted">{{desc}}</small>{{/if}}
       </fieldset>
   {{/is}}
+
+  {{#is el "==" "fieldset"}}
+    {{#is parent "==" ""}}
+      {{> form form=child}}
+    {{else}}
+        <fieldset class="form-group subform">
+            {{#if parent}}<legend class="text-muted"><small>{{parent}}</small></legend>{{/if}}
+            {{> form form=child}}
+        </fieldset>
+    {{/is}}
+  {{/is}}
+
 {{/each}}
 
 <div class="form-group">

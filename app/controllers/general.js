@@ -40,7 +40,8 @@ router.post(index.form.do, function (req, res, next) {
         child: {
           "nest2": 'test2',
           child: {
-            "nest3": 'test3'
+            "nest3": 'test3',
+            "nest3b": "nest3b"
           }
         }
       },
@@ -78,6 +79,7 @@ router.post(index.form.do, function (req, res, next) {
     }
   };
 
+  log.info('forms.fromJSON(json)', JSON.stringify(forms.fromJSON(json)));
   res.render(index.form, {
     layout: false,
     form: forms.fromJSON(json)

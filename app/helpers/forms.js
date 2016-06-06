@@ -3,11 +3,18 @@
 var log = log_from('forms'),
   GenerateSchema = require('generate-schema');
 
+var formOptions = {
+  formEl: 1,                  //form tag, 0 none form element tag, 1 output form tag, default is 1
+  buttons: [],                //{formElement}
+  attrs: {}                   //html form element attributes or any custom attributes
+};
+
 var formElement = {
   el: 'input',      //html element type, input|fieldset|button|select|textarea|radio|checkbox
   attrs: {          //html element attributes or any custom attributes
-    id: '',
-    name: '',
+    id: '',         //eg: a-b-c0-test
+    name: '',       //eg: a.b.c[0].test
+    shortname: '',  //test
     type: '',       //eg: input type, hidden|text
     placeholder: '',
     required: 'required',
@@ -16,7 +23,10 @@ var formElement = {
     disabled: 'disabled'
   },
 
-  child: [ '{element}' ],   //form fieldset if el is fieldset, {element} array
+  child: {          //form fieldset if el is fieldset
+    layout: {},     //{formOptions}
+    items: []       //{formElement} array
+  },
 
   options: [      //options if select, checkbox, radios
     {
@@ -29,7 +39,7 @@ var formElement = {
   selected: '',  //value|array, default selected if select, checkbox, radios
   inline: 0,     //is inline show if element is (radio,checkbox) , 0 false, 1 true
 
-  parent: '',    //parent field name if defind type is 'object' or 'array'
+  parent: '',     //parent field name if defind type is 'object' or 'array'
   label: '',      //html element label
   value: '',      //html element value if element is not (select, checkbox, radios)
   desc: ''        //html element description
@@ -130,6 +140,7 @@ function getElement(fieldName, define, options, values, path) {
             path = path + '.' + fieldName;
           }
         }
+
         if ('object' == define.items.type) {
           if (values) {
             _.each(_.get(values, path), function (v, idx) {
@@ -142,6 +153,14 @@ function getElement(fieldName, define, options, values, path) {
           } else {
             els = getElement(false, define.items, options, values, path);
           }
+
+          element = fieldsetField(fieldName, define, elLayout);
+          element.parent = path;
+          _.each(els || [], function (aEl) {
+            element.child.items.push(aEl);
+          });
+
+          elements.push(element);
         } else {
           if (values) {
             _.each(_.get(values, path), function (v) {
@@ -151,14 +170,12 @@ function getElement(fieldName, define, options, values, path) {
 
           var theEl = selectGroup(fieldName, define.items, elLayout, selOpts);
           if (fieldName) {
-            theEl.parent = path;
+            theEl.parent = path.substr(0, path.lastIndexOf('.'));
           }
-          els.push(theEl);
+          elements.push(theEl);
         }
       }
-      _.each(els || [], function (aEl) {
-        elements.push(aEl);
-      });
+
       break;
     case 'object':
       if (fieldName) {
@@ -168,12 +185,18 @@ function getElement(fieldName, define, options, values, path) {
           path = path + '.' + fieldName;
         }
       }
+
+      element = fieldsetField(fieldName, define, elLayout);
+      element.parent = path;
+
       _.each(define.properties || {}, function (v, fieldN) {
         var els = getElement(fieldN, v, options, values, path);
         _.each(els || [], function (aEl) {
-          elements.push(aEl);
+          element.child.items.push(aEl);
         });
       });
+
+      elements.push(element);
       break;
   }
 
@@ -310,6 +333,39 @@ function getMultiOptions(elLayout, selectOptions) {
   return selOpts;
 }
 
+function fieldsetField(fieldName, define, elLayout) {
+  var element = getEl(fieldName, define, elLayout, 'fieldset');
+  element.attrs = _.extend({
+
+  }, element.attrs);
+
+  var child = {
+    layout: {
+      formEl: 0,
+      buttons: [],
+      attrs: {}
+    },
+    items: []
+  };
+
+  if (elLayout.child) {
+    var cust = elLayout.child, custLayout = cust.layout || {};
+    child.layout.formEl = custLayout.formEl || 0;
+    _.each(custLayout.buttons || [], function (v) {
+      child.layout.buttons.push(v);
+    });
+    _.extend(child.layout.attrs, custLayout.attrs || {});
+
+    _.each(cust.items || [], function (v) {
+      child.items.push(v);
+    });
+  }
+
+  element.child = child;
+
+  return element;
+}
+
 function inputField(fieldName, define, elLayout, inputType) {
   var element = getEl(fieldName, define, elLayout, 'input');
   element.attrs = _.extend({
@@ -349,16 +405,37 @@ function buttonField(fieldName, define, elLayout) {
   return element;
 }
 
+function filterExclude(els, excludeField, filter) {
+  _.each(els, function (el) {
+    if ('fieldset' == el.el) {
+      if (excludeField.indexOf(el.parent) == -1) {
+        var aFilter = [];
+        filterExclude(el.child.items, excludeField, aFilter);
+        el.child.items = aFilter;
+        filter.push(el);
+      }
+    } else {
+      el.parent = el.parent || '';
+      el.attrs.shortname = el.attrs.name;
+      if ('' != el.parent) {
+        el.attrs.name = el.parent + '.' + el.attrs.name;
+        el.attrs.id = el.attrs.name.replace(/\./g, '-');
+        el.attrs.id = el.attrs.id.replace(/\[/g, '');
+        el.attrs.id = el.attrs.id.replace(/\]/g, '');
+      }
+
+      if (excludeField.indexOf(el.attrs.name) == -1) {
+        filter.push(el);
+      }
+    }
+  });
+}
+
 /**
  * Generate form element from schema
  * @param schema      json schema
  * @param options     {@link formElement}
- * @param formOptions   form options
- * {
- *  formEl: 1,  //form tag, 0 none form element tag, 1 output form tag, default is 1
- *  buttons: [ {formElement} ],
- *  attrs: {}   //html form element attributes or any custom attributes
- * }
+ * @param formOptions  {@link formOptions}
  * @param excludeField  //exclude unnecessary field
  * @param values        //json value
  * @see formElement
@@ -370,6 +447,7 @@ function buttonField(fieldName, define, elLayout) {
 var schemaForm = function(schema, options, formOptions, excludeField, values) {
   var els = getElement(false, schema, options, values, '');
   formOptions = formOptions || {};
+  excludeField = excludeField || [];
   if (!formOptions.attrs) {
     formOptions.attrs = {};
   }
@@ -380,20 +458,9 @@ var schemaForm = function(schema, options, formOptions, excludeField, values) {
     formOptions.formEl = 1;
   }
 
-  if ((excludeField || []).length < 1) {
-    return {
-      layout: formOptions,
-      items: els
-    };
-  }
-
   var filter = [];
   excludeField.push('id');
-  _.each(els, function (el) {
-    if (excludeField.indexOf(el.attrs.name) == -1) {
-      filter.push(el);
-    }
-  });
+  filterExclude(els, excludeField, filter);
 
   return {
     layout: formOptions,

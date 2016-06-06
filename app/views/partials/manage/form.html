@@ -113,6 +113,18 @@
             {{#if desc}}<small class="text-muted">{{desc}}</small>{{/if}}
         </div>
     {{/is}}
+
+    {{#is el "==" "fieldset"}}
+      {{#is parent "==" ""}}
+        {{> manage/form form=child}}
+      {{else}}
+          <fieldset class="form-group subform">
+            {{#if label}}<legend class="text-muted"><small>{{label}}</small></legend>{{/if}}
+            {{> manage/form form=child}}
+          </fieldset>
+      {{/is}}
+    {{/is}}
+
   {{/each}}
 
 <div class="form-group">

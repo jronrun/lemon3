@@ -14,8 +14,8 @@ var model = schema({
     type: 'object',
     required: true,
     properties: {
-      user_id: { type: 'string', required: true },
-      user_name: { type: 'string', required: true }
+      id: { type: 'string', required: true },
+      name: { type: 'string', required: true }
     }
   },
   last_modify_time: { type: 'date', required: true },

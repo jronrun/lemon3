@@ -14,6 +14,7 @@ module.exports = function (app) {
   require('./inherit/sourcetree')(router, index.resource, index);
 
   require('./inherit/envs')(router, index.env, index);
+  require('./inherit/groups')(router, index.group, index);
 };
 
 /**

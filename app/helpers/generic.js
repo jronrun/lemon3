@@ -13,6 +13,23 @@ module.exports = function(model, index, defineForm) {
 
   var generic = {
 
+    ownerQuery: function(req) {
+      var aUser = req.user || {};
+      if (aUser.isAdmin) {
+        return {};
+      }
+
+      return {
+        $or:[
+          { owner: 1},
+          {
+            "create_by.id": aUser.id,
+            owner: 2
+          }
+        ]
+      };
+    },
+
     title: function(title, href) {
       return format(
         '<a href="%s" data-pjax><h4 class="item-title"><em class="fa fa-edit"></em>&nbsp;%s</h4></a>',
@@ -165,7 +182,7 @@ module.exports = function(model, index, defineForm) {
         formEls = forms.fromSchema(model.define.schema,
           _.extend({}, defineForm.element, options.defineElement),
           _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
-        _.isFunction(options.formElHandle) && options.formElHandle(formEls);
+        _.isFunction(options.formElHandle) && options.formElHandle(forms.helper(formEls));
       }
 
       var schema = model.desc(options.schemaExclude);
@@ -225,7 +242,7 @@ module.exports = function(model, index, defineForm) {
         formEls = forms.fromSchema(model.define.schema,
           _.extend({}, defineForm.element, options.defineElement),
           _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
-        _.isFunction(options.formElHandle) && options.formElHandle(formEls);
+        _.isFunction(options.formElHandle) && options.formElHandle(forms.helper(formEls));
       }
 
       var itemId = req.params.id;

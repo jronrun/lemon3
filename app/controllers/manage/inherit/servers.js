@@ -1,6 +1,8 @@
 'use strict';
 
 var Server = app_require('models/api/server'),
+  Environment = app_require('models/api/env'),
+  Group = app_require('models/api/group'),
   log = log_from('servers');
 
 module.exports = function (router, index, root) {
@@ -84,16 +86,67 @@ module.exports = function (router, index, root) {
    * Server editor
    */
   router.get(index.editor.do, function (req, res, next) {
-    generic.editor({
-      schemaExclude: ['create_by','env_id','group_id'],
-      defineElement: {
-        owner: {
-          selected: 1,
-          el: 'radio',
-          inline: 1
-        }
+    var ownerQry = generic.ownerQuery(req);
+
+    async.waterfall([
+      function (callback) {
+        Environment.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+          var envData = [];
+          _.each(items, function (item) {
+            envData.push({
+              tip: item.name,
+              val: item.id,
+              selected: 0,
+              desc: generic.info(getAction(root.env.retrieve, item._id))
+            });
+          });
+
+          callback(null, envData);
+        });
+      },
+      function(envData, callback) {
+        Group.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+          var groupData = [];
+          _.each(items, function (item) {
+            groupData.push({
+              tip: item.name,
+              val: item.id,
+              selected: 0,
+              desc: generic.info(getAction(root.group.retrieve, item._id))
+            });
+          });
+
+          callback(null, {
+            env: envData,
+            group: groupData
+          });
+        });
       }
-    }, req, res, next);
+    ], function(err, result) {
+      generic.editor({
+        schemaExclude: ['create_by','env_id','group_id'],
+        defineElement: {
+          owner: {
+            selected: 1,
+            el: 'radio',
+            inline: 1
+          }
+        },
+        formElHandle: function(form) {
+          var theEnv = generic.selectEl('env_id', {
+            label: 'Environment',
+            options: result.env
+          });
+          var theGroup = generic.selectEl('group_id', {
+            label: 'Group',
+            options: result.group
+          });
+
+          form.afterEl('desc', theEnv);
+          form.afterEl('env_id', theGroup);
+        }
+      }, req, res, next);
+    });
   });
 
   /**

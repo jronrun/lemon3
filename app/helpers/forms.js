@@ -436,6 +436,30 @@ function filterExclude(els, excludeField, filter) {
   });
 }
 
+//pos 1 before, 2 after
+function addEl(newItems, els, name, newEl, pos) {
+  _.each(els, function (el) {
+    if ('fieldset' == el.el) {
+      var arr = [];
+      addEl(arr, el.child.items, name, newEl, pos);
+      el.child.items = arr;
+      newItems.push(el);
+    } else {
+      if (el.attrs.name == name) {
+        if (1 == pos) {
+          newItems.push(newEl);
+          newItems.push(el);
+        } else if (2 == pos) {
+          newItems.push(el);
+          newItems.push(newEl);
+        }
+      } else {
+        newItems.push(el);
+      }
+    }
+  });
+}
+
 /**
  * Generate form element from schema
  * @param schema      json schema
@@ -569,5 +593,26 @@ module.exports = {
   /**
    * @see schemaForm
    */
-  fromSchema: schemaForm
+  fromSchema: schemaForm,
+
+  helper: function (formObject) {
+    var aHelper = {
+        target: formObject,
+        beforeEl: function(elName, newEl) {
+          var items = [];
+          addEl(items, formObject.items, elName, newEl, 1);
+          formObject.items = items;
+        },
+        afterEl: function(elName, newEl) {
+          var items = [];
+          addEl(items, formObject.items, elName, newEl, 2);
+          formObject.items = items;
+        },
+        push: function(newEl) {
+          formObject.items.push(newEl);
+        }
+    };
+
+    return aHelper;
+  }
 };

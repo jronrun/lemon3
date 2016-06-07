@@ -91,7 +91,7 @@ module.exports = function (router, index, root) {
       generic.editor({
         schemaExclude: ['resources', 'powers'],
         formElHandle: function(form) {
-          form.items.push(generic.checkboxEl('powers', {
+          form.push(generic.checkboxEl('powers', {
             options: powerData
           }));
         }
@@ -151,7 +151,7 @@ module.exports = function (router, index, root) {
         generic.retrieve({
           schemaExclude: ['resources', 'powers'],
           formElHandle: function(form) {
-            form.items.push(generic.checkboxEl('powers', {
+            form.push(generic.checkboxEl('powers', {
               options: powerData
             }));
           },

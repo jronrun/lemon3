@@ -118,7 +118,7 @@ module.exports = function (router, index, root) {
           }
         },
         formElHandle: function(form) {
-          form.items.push(generic.checkboxEl('roles', {
+          form.push(generic.checkboxEl('roles', {
             options: roleData
           }));
         }
@@ -185,7 +185,7 @@ module.exports = function (router, index, root) {
         generic.retrieve({
           schemaExclude: ['passwd', 'roles'],
           formElHandle: function(form) {
-            form.items.push(generic.checkboxEl('roles', {
+            form.afterEl('email', generic.checkboxEl('roles', {
               options: roleData
             }));
           },

@@ -79,13 +79,13 @@ var resource = [
 
       {
         id: 200003, name: 'users', desc: 'Users', action: '/manage/users/:page', page: P.list, children: [
-        {id: 2000031, name: 'editor', action: '/manage/user', page: P.edit, desc: 'Editor'},
-        {id: 2000032, extend: 2000031, method: M.POST, page: P.list, desc: 'Create'},
+          {id: 2000031, name: 'editor', action: '/manage/user', page: P.edit, desc: 'Editor'},
+          {id: 2000032, extend: 2000031, method: M.POST, page: P.list, desc: 'Create'},
 
-        {id: 2000033, name: 'retrieve', action: '/manage/user/:id', page: P.edit, desc: 'Retrieve'},
-        {id: 2000034, extend: 2000033, method: M.PUT, page: P.list, desc: 'Update'},
-        {id: 2000035, extend: 2000033, method: M.DELETE, page: P.list, desc: 'Delete'}
-      ]
+          {id: 2000033, name: 'retrieve', action: '/manage/user/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000034, extend: 2000033, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000035, extend: 2000033, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
       },
 
       {
@@ -93,6 +93,56 @@ var resource = [
           {id: 2000041, name: 'power', desc: 'Power Resource', action: '/manage/resource/power/:id', method: M.POST},
           {id: 2000042, name: 'role', desc: 'Role Resource', action: '/manage/resource/role/:id', method: M.POST},
           {id: 2000043, name: 'user', desc: 'User Resource', action: '/manage/resource/user/:id', method: M.POST}
+        ]
+      },
+
+      {
+        id: 200005, name: 'group', desc: 'Interface Group', action: '/manage/groups/:page', page: P.list, children: [
+          {id: 2000051, name: 'editor', action: '/manage/group', page: P.edit, desc: 'Editor'},
+          {id: 2000052, extend: 2000051, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000053, name: 'retrieve', action: '/manage/group/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000054, extend: 2000053, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000055, extend: 2000053, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
+      },
+
+      {
+        id: 200006, name: 'interface', desc: 'Interface', action: '/manage/interfaces/:page', page: P.list, children: [
+          {id: 2000061, name: 'editor', action: '/manage/interface', page: P.edit, desc: 'Editor'},
+          {id: 2000062, extend: 2000061, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000063, name: 'retrieve', action: '/manage/interface/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000064, extend: 2000063, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000065, extend: 2000063, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
+      },
+
+      {
+        id: 200007, name: 'server', desc: 'Server', action: '/manage/servers/:page', page: P.list, children: [
+          {id: 2000071, name: 'editor', action: '/manage/server', page: P.edit, desc: 'Editor'},
+          {id: 2000072, extend: 2000071, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000073, name: 'retrieve', action: '/manage/server/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000074, extend: 2000073, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000075, extend: 2000073, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
+      },
+
+      {
+        id: 200008, name: 'history', desc: 'History', action: '/manage/histories/:page', page: P.list, children: [
+          {id: 2000081, name: 'retrieve', action: '/manage/history/:id', page: P.edit, desc: 'Retrieve'}
+        ]
+      },
+
+      {
+        id: 200009, name: 'env', desc: 'Environment', action: '/manage/envs/:page', page: P.list, children: [
+          {id: 2000091, name: 'editor', action: '/manage/env', page: P.edit, desc: 'Editor'},
+          {id: 2000092, extend: 2000091, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000093, name: 'retrieve', action: '/manage/env/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000094, extend: 2000093, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000095, extend: 2000093, method: M.DELETE, page: P.list, desc: 'Delete'}
         ]
       }
     ]
@@ -118,6 +168,15 @@ var menu = [
       {sourceId: 200001, args: '1'},
       {sourceId: 200002, args: '1'}
     ]
+  },
+  {
+    name: 'Manual API', children: [
+    {sourceId: 200009, args: '1'},
+    {sourceId: 200005, args: '1'},
+    {sourceId: 200007, args: '1'},
+    {sourceId: 200006, args: '1'},
+    {sourceId: 200008, args: '1'}
+  ]
   }
 ];
 

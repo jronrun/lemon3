@@ -25,6 +25,18 @@ module.exports = function (router, index, root) {
         clazz: 'item-col-author'
       },
       {
+        title: 'Owner',
+        prop: function(item) {
+          switch (parseInt(item.owner)) {
+            case 1:
+              return '<span class="text-success"><em class="fa fa-users"></em> ' + 'Public</span>';
+            case 2:
+              return '<span class="text-warning"><em class="fa fa-shield"></em> ' + 'Private</span>';
+          }
+        },
+        clazz: 'item-col-author'
+      },
+      {
         title: 'Create By',
         prop: function(item) {
           var aUser = item.create_by;

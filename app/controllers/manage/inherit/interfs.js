@@ -106,7 +106,6 @@ module.exports = function (router, index, root) {
    * Interface update
    */
   router.put(index.retrieve.do, function (req, res, next) {
-    userReourceCacheReset();
     generic.update({
       checkExistsField: 'name',
       paramHandle: function(item) {

@@ -8,15 +8,16 @@ var model = schema({
   group_id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
   desc: { type: 'string', allowEmpty: false },
+  url: { type: 'string', required: true, allowEmpty: false, format: 'url' },
   owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   request: {
     type: 'object',
     properties: {
       type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Single interface', 2: 'Multi-interface'} },
       //Parameter name when request, need if multi_interface is true
-      param_name: { type: 'string', allowEmpty: false, description: 'Parameter name when request, need if Multi-interface' },
+      param_name: { type: 'string', description: 'Parameter name when request, need if Multi-interface' },
       //Interface name property in request data
-      interf_prop: { type: 'string', allowEmpty: false, description: 'Interface name property in request data' },
+      interf_prop: { type: 'string', description: 'Interface name property in request data' },
       //Add to request data every time
       add_params: { type: 'object' },
       data_type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'JSON', 2: 'XML'} }

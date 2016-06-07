@@ -4,6 +4,8 @@ var log = log_from('generic'),
   items = require('./items'),
   forms = require('./forms');
 
+var BREAK = -1;
+
 module.exports = function(model, index, defineForm) {
 
   defineForm = _.extend({
@@ -12,7 +14,7 @@ module.exports = function(model, index, defineForm) {
   }, defineForm || {});
 
   var generic = {
-
+    BREAK: BREAK,
     ownerQuery: function(req) {
       var aUser = req.user || {};
       if (aUser.isAdmin) {
@@ -125,7 +127,11 @@ module.exports = function(model, index, defineForm) {
         });
       }
 
-      _.isFunction(options.queryHandle) && options.queryHandle(realQuery);
+      if (_.isFunction(options.queryHandle)) {
+        if (BREAK == options.queryHandle(realQuery)) {
+          return;
+        }
+      }
 
       model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
         res.render(index.page, {
@@ -182,7 +188,12 @@ module.exports = function(model, index, defineForm) {
         formEls = forms.fromSchema(model.define.schema,
           _.extend({}, defineForm.element, options.defineElement),
           _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
-        _.isFunction(options.formElHandle) && options.formElHandle(forms.helper(formEls));
+
+        if (_.isFunction(options.formElHandle)) {
+          if (BREAK == options.formElHandle(forms.helper(formEls))) {
+            return;
+          }
+        }
       }
 
       var schema = model.desc(options.schemaExclude);
@@ -242,7 +253,12 @@ module.exports = function(model, index, defineForm) {
         formEls = forms.fromSchema(model.define.schema,
           _.extend({}, defineForm.element, options.defineElement),
           _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
-        _.isFunction(options.formElHandle) && options.formElHandle(forms.helper(formEls));
+
+        if (_.isFunction(options.formElHandle)) {
+          if (BREAK == options.formElHandle(forms.helper(formEls))) {
+            return;
+          }
+        }
       }
 
       var itemId = req.params.id;
@@ -256,7 +272,7 @@ module.exports = function(model, index, defineForm) {
         }
 
         var schema = model.desc(options.schemaExclude);
-        var value = model.getEditVal(schema, true, result);
+        var value = model.getEditVal(schema, true, result, true);
 
         res.render(index.retrieve.page, {
           pagename: 'item-editor-page',
@@ -311,7 +327,14 @@ module.exports = function(model, index, defineForm) {
 
       item.create_time = new Date();
       item.last_modify_time = new Date();
-      _.isFunction(options.paramHandle) && options.paramHandle(item);
+
+      if (_.isFunction(options.paramHandle)) {
+        if (BREAK == options.paramHandle(item)) {
+          return;
+        }
+      }
+
+      console.log('========================');
 
       async.waterfall([
         function(callback) {
@@ -424,7 +447,12 @@ module.exports = function(model, index, defineForm) {
         delete item.resource;
       }
       item.last_modify_time = new Date();
-      _.isFunction(options.paramHandle) && options.paramHandle(item);
+
+      if (_.isFunction(options.paramHandle)) {
+        if (BREAK == options.paramHandle(item)) {
+          return;
+        }
+      }
 
       async.waterfall([
         function(callback) {

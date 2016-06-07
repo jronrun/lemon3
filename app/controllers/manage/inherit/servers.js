@@ -142,7 +142,7 @@ module.exports = function (router, index, root) {
             options: result.group
           });
 
-          form.afterEl('desc', theEnv);
+          form.afterEl('url', theEnv);
           form.afterEl('env_id', theGroup);
         }
       }, req, res, next);
@@ -158,9 +158,17 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.request.type = parseInt(item.request.type);
+        item.request.data_type = parseInt(item.request.data_type);
+        item.env_id = parseInt(item.env_id);
+        item.group_id = parseInt(item.group_id);
         item.create_by = {
           id: req.user.id,
           name: req.user.name
+        };
+        if (2 == item.request.type && '' == item.request.param_name) {
+          res.json(answer.fail('Parameter name must provide if Multi-interface'));
+          return generic.BREAK;
         }
       }
     }, req, res, next);
@@ -170,11 +178,22 @@ module.exports = function (router, index, root) {
    * Server update
    */
   router.put(index.retrieve.do, function (req, res, next) {
-    userReourceCacheReset();
     generic.update({
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.request.type = parseInt(item.request.type);
+        item.request.data_type = parseInt(item.request.data_type);
+        item.env_id = parseInt(item.env_id);
+        item.group_id = parseInt(item.group_id);
+        item.create_by = {
+          id: req.user.id,
+          name: req.user.name
+        };
+        if (2 == item.request.type && '' == item.request.param_name) {
+          res.json(answer.fail('Parameter name must provide if Multi-interface'));
+          return generic.BREAK;
+        }
       }
     }, req, res, next);
   });
@@ -183,15 +202,67 @@ module.exports = function (router, index, root) {
    * Server retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
-    generic.retrieve({
-      schemaExclude: ['create_by','env_id','group_id'],
-      defineElement: {
-        owner: {
-          el: 'radio',
-          inline: 1
-        }
+    var ownerQry = generic.ownerQuery(req);
+
+    async.waterfall([
+      function (callback) {
+        Environment.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+          var envData = [];
+          _.each(items, function (item) {
+            envData.push({
+              tip: item.name,
+              val: item.id,
+              selected: 0,
+              desc: generic.info(getAction(root.env.retrieve, item._id))
+            });
+          });
+
+          callback(null, envData);
+        });
+      },
+      function(envData, callback) {
+        Group.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+          var groupData = [];
+          _.each(items, function (item) {
+            groupData.push({
+              tip: item.name,
+              val: item.id,
+              selected: 0,
+              desc: generic.info(getAction(root.group.retrieve, item._id))
+            });
+          });
+
+          callback(null, {
+            env: envData,
+            group: groupData
+          });
+        });
       }
-    }, req, res, next);
+    ], function(err, result) {
+      generic.retrieve({
+        schemaExclude: ['create_by','env_id','group_id'],
+        defineElement: {
+          owner: {
+            el: 'radio',
+            inline: 1
+          }
+        },
+        formElHandle: function(form) {
+          var theEnv = generic.selectEl('env_id', {
+            label: 'Environment',
+            options: result.env
+          });
+          var theGroup = generic.selectEl('group_id', {
+            label: 'Group',
+            options: result.group
+          });
+
+          form.afterEl('url', theEnv);
+          form.afterEl('env_id', theGroup);
+        }
+      }, req, res, next);
+    });
+
   });
 
   /**

@@ -144,6 +144,7 @@ module.exports = function (router, index, root) {
    * User update
    */
   router.put(index.retrieve.do, function (req, res, next) {
+    userReourceCacheReset();
     generic.update({
       checkExistsField: 'name',
       checkExistsField2: 'email',

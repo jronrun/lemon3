@@ -395,12 +395,15 @@ module.exports.Base = function(model, modelName, define) {
       return model.find(_.extend(query || {}, condition)).sort(aSort).limit(pageSize);
     },
 
-    getEditVal: function(schema, compress, item) {
+    getEditVal: function(schema, compress, item, reverse) {
       var def = {};
       _.each(schema, function (v, k) {
         def[k] = item ? item[k] : '';
       });
 
+      if (reverse) {
+        def = reverseData(def);
+      }
       return compress ? crypto.compress(JSON.stringify(def)) : def;
     },
 

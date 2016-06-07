@@ -91,6 +91,20 @@ function checkMenu(menus, source, target) {
   });
 }
 
+function reverseObj(target, theRef, path) {
+  _.each(target, function (v, k) {
+    if (_.isArray(v)) {
+      _.each(v, function (item, idx) {
+        reverseObj(item, theRef, k + '[' + idx + ']');
+      });
+    } else if (_.isObject(v)) {
+      reverseObj(v, theRef, k);
+    } else {
+      theRef['' == path ? k : (path + '.' + k)] = v;
+    }
+  });
+}
+
 module.exports = function(scope, config) {
 
   scope._ = _;
@@ -172,6 +186,15 @@ module.exports = function(scope, config) {
     _.each(target, function (v, k) {
       _.set(afterTrans, k, v);
     });
+    return afterTrans;
+  };
+
+  /**
+   * Data reverse {a: {b: {c: 3}}} -> {"a.b.c": 3}
+   */
+  scope.reverseData = function(target) {
+    var afterTrans = {};
+    reverseObj(target, afterTrans, '');
     return afterTrans;
   };
 

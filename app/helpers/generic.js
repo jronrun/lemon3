@@ -293,6 +293,7 @@ module.exports = function(model, index, defineForm) {
       }
 
       item.create_time = new Date();
+      item.last_modify_time = new Date();
       _.isFunction(options.paramHandle) && options.paramHandle(item);
 
       async.waterfall([
@@ -405,6 +406,7 @@ module.exports = function(model, index, defineForm) {
         delete item.resources;
         delete item.resource;
       }
+      item.last_modify_time = new Date();
       _.isFunction(options.paramHandle) && options.paramHandle(item);
 
       async.waterfall([

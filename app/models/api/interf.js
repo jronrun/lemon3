@@ -9,7 +9,7 @@ var model = schema({
   desc: { type: 'string', allowEmpty: false },
   request: { type: 'object' },
   response: { type: 'object' },
-  owner: { type: 'integer', enum: [0, 1], required: true, const: { 0: 'Public', 1: 'Private'} },
+  owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   create_by: {
     type: 'object',
     required: true,

@@ -8,7 +8,7 @@ var model = schema({
   group_id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
   desc: { type: 'string', allowEmpty: false },
-  owner: { type: 'integer', enum: [0, 1], required: true, const: { 0: 'Public', 1: 'Private'} },
+  owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   request: {
     type: 'object',
     properties: {
@@ -19,7 +19,7 @@ var model = schema({
       interf_prop: { type: 'string', allowEmpty: false, description: 'Interface name property' },
       //Add to request data every time
       add_params: { type: 'object' },
-      data_type: { type: 'integer', enum: [0, 1], required: true, const: { 0: 'JSON', 1: 'XML'} }
+      data_type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'JSON', 2: 'XML'} }
     }
   },
   create_by: {

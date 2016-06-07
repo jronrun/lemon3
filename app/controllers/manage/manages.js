@@ -12,6 +12,8 @@ module.exports = function (app) {
   require('./inherit/powers')(router, index.powers, index);
   require('./inherit/roles')(router, index.roles, index);
   require('./inherit/sourcetree')(router, index.resource, index);
+
+  require('./inherit/envs')(router, index.env, index);
 };
 
 /**

@@ -323,7 +323,7 @@ function getMultiOptions(elLayout, selectOptions) {
     selOpts.push(v);
   });
 
-  if (elLayout.selected) {
+  if (_.has(elLayout, 'selected')) {
     var checks = _.isArray(elLayout.selected) ? elLayout.selected : [elLayout.selected];
     var isNumber = _.isNumber(checks[0]);
 

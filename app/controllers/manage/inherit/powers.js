@@ -5,7 +5,13 @@ var Power = app_require('models/power'),
 
 module.exports = function (router, index, root) {
 
-  var generic = app_require('helpers/generic')(Power, index);
+  var generic = app_require('helpers/generic')(Power, index, {
+    element: {
+      desc: {
+        label: 'Description'
+      }
+    }
+  });
 
   /**
    * Power list

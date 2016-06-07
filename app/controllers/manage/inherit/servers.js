@@ -1,12 +1,21 @@
 'use strict';
 
-var Environment = app_require('models/api/env'),
-  log = log_from('envs');
+var Server = app_require('models/api/server'),
+  log = log_from('servers');
 
 module.exports = function (router, index, root) {
 
-  var generic = app_require('helpers/generic')(Environment, index, {
+  var generic = app_require('helpers/generic')(Server, index, {
     element: {
+      param_name: {
+        label: 'Parameter Name'
+      },
+      interf_prop: {
+        label: 'Interface Property'
+      },
+      data_type: {
+        label: 'Data Type'
+      },
       desc: {
         label: 'Description'
       }
@@ -14,14 +23,14 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment list
+   * Server list
    */
   router.get(index.do, function (req, res, next) {
     var defines = [
       {
         title: 'Name',
         prop: function(item) {
-          return generic.title(item.name, getAction(root.env.retrieve, item._id));
+          return generic.title(item.name, getAction(root.server.retrieve, item._id));
         },
         clazz: 'fixed pull-left item-col-title'
       },
@@ -59,7 +68,7 @@ module.exports = function (router, index, root) {
     ];
 
     var search = [
-      generic.searchInput('name', 'search environment...')
+      generic.searchInput('name', 'search server...')
     ];
 
     generic.list({
@@ -70,11 +79,11 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment editor
+   * Server editor
    */
   router.get(index.editor.do, function (req, res, next) {
     generic.editor({
-      schemaExclude: ['create_by'],
+      schemaExclude: ['create_by','env_id','group_id'],
       defineElement: {
         owner: {
           selected: 1,
@@ -86,7 +95,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment create
+   * Server create
    */
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
@@ -103,7 +112,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment update
+   * Server update
    */
   router.put(index.retrieve.do, function (req, res, next) {
     userReourceCacheReset();
@@ -116,11 +125,11 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment retrieve
+   * Server retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
-      schemaExclude: ['create_by'],
+      schemaExclude: ['create_by','env_id','group_id'],
       defineElement: {
         owner: {
           el: 'radio',
@@ -131,7 +140,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment delete
+   * Server delete
    */
   router.delete(index.retrieve.do, function (req, res, next) {
     generic.delete({}, req, res, next);

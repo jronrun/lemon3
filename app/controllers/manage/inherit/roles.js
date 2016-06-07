@@ -6,7 +6,13 @@ var Role = app_require('models/role'),
 
 module.exports = function (router, index, root) {
 
-  var generic = app_require('helpers/generic')(Role, index);
+  var generic = app_require('helpers/generic')(Role, index, {
+    element: {
+      desc: {
+        label: 'Description'
+      }
+    }
+  });
 
   /**
    * Role list

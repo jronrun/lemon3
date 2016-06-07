@@ -5,7 +5,13 @@ var Group = app_require('models/api/group'),
 
 module.exports = function (router, index, root) {
 
-  var generic = app_require('helpers/generic')(Group, index);
+  var generic = app_require('helpers/generic')(Group, index, {
+    element: {
+      desc: {
+        label: 'Description'
+      }
+    }
+  });
 
   /**
    * Group list

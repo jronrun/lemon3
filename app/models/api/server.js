@@ -16,7 +16,7 @@ var model = schema({
       //Parameter name when request, need if multi_interface is true
       param_name: { type: 'string', allowEmpty: false, description: 'Parameter name when request, need if Multi-interface' },
       //Interface name property in request data
-      interf_prop: { type: 'string', allowEmpty: false, description: 'Interface name property' },
+      interf_prop: { type: 'string', allowEmpty: false, description: 'Interface name property in request data' },
       //Add to request data every time
       add_params: { type: 'object' },
       data_type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'JSON', 2: 'XML'} }

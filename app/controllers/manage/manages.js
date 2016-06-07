@@ -15,6 +15,8 @@ module.exports = function (app) {
 
   require('./inherit/envs')(router, index.env, index);
   require('./inherit/groups')(router, index.group, index);
+  require('./inherit/servers')(router, index.server, index);
+  require('./inherit/interfs')(router, index.interface, index);
 };
 
 /**

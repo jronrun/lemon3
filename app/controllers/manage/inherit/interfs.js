@@ -1,11 +1,11 @@
 'use strict';
 
-var Environment = app_require('models/api/env'),
-  log = log_from('envs');
+var Interface = app_require('models/api/interf'),
+  log = log_from('interfs');
 
 module.exports = function (router, index, root) {
 
-  var generic = app_require('helpers/generic')(Environment, index, {
+  var generic = app_require('helpers/generic')(Interface, index, {
     element: {
       desc: {
         label: 'Description'
@@ -14,14 +14,14 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment list
+   * Interface list
    */
   router.get(index.do, function (req, res, next) {
     var defines = [
       {
         title: 'Name',
         prop: function(item) {
-          return generic.title(item.name, getAction(root.env.retrieve, item._id));
+          return generic.title(item.name, getAction(root.interface.retrieve, item._id));
         },
         clazz: 'fixed pull-left item-col-title'
       },
@@ -59,7 +59,7 @@ module.exports = function (router, index, root) {
     ];
 
     var search = [
-      generic.searchInput('name', 'search environment...')
+      generic.searchInput('name', 'search interface...')
     ];
 
     generic.list({
@@ -70,7 +70,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment editor
+   * Interface editor
    */
   router.get(index.editor.do, function (req, res, next) {
     generic.editor({
@@ -86,7 +86,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment create
+   * Interface create
    */
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
@@ -103,7 +103,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment update
+   * Interface update
    */
   router.put(index.retrieve.do, function (req, res, next) {
     userReourceCacheReset();
@@ -116,7 +116,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment retrieve
+   * Interface retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
@@ -131,7 +131,7 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Environment delete
+   * Interface delete
    */
   router.delete(index.retrieve.do, function (req, res, next) {
     generic.delete({}, req, res, next);

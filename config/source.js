@@ -97,7 +97,7 @@ var resource = [
       },
 
       {
-        id: 200005, name: 'group', desc: 'Interface Group', action: '/manage/groups/:page', page: P.list, children: [
+        id: 200005, name: 'group', desc: 'Group', action: '/manage/groups/:page', page: P.list, children: [
           {id: 2000051, name: 'editor', action: '/manage/group', page: P.edit, desc: 'Editor'},
           {id: 2000052, extend: 2000051, method: M.POST, page: P.list, desc: 'Create'},
 

@@ -7,14 +7,16 @@ module.exports = function (router, index, root) {
 
   var generic = app_require('helpers/generic')(Server, index, {
     element: {
-      param_name: {
-        label: 'Parameter Name'
-      },
-      interf_prop: {
-        label: 'Interface Property'
-      },
-      data_type: {
-        label: 'Data Type'
+      request: {
+        param_name: {
+          label: 'Parameter Name'
+        },
+        interf_prop: {
+          label: 'Interface Property'
+        },
+        data_type: {
+          label: 'Data Type'
+        }
       },
       desc: {
         label: 'Description'

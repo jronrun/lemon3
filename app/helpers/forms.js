@@ -49,7 +49,8 @@ var formElement = {
  * @returns [ {@link formElement} ]
  */
 function getElement(fieldName, define, options, values, path) {
-  var element = {}, options = options || {}, elLayout = options[fieldName] || {};
+  var element = {}, options = options || {},
+    elLayout = _.get(options, '' == path ? fieldName : (path + '.' + fieldName)) || {};
   var selOpts = [], elements = [];
 
   switch (define.type) {

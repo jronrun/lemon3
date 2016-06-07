@@ -164,6 +164,17 @@ module.exports = function(scope, config) {
     return mo.format(dateStyle || 'YYYY-MM-DD HH:mm:ss');
   };
 
+  /**
+   * Data convert {"a.b.c": 3} -> {a: {b: {c: 3}}}
+   */
+  scope.convertData = function(target) {
+    var afterTrans = {};
+    _.each(target, function (v, k) {
+      _.set(afterTrans, k, v);
+    });
+    return afterTrans;
+  };
+
   var resource = require('./resource');
   scope.getResource = resource.getResource;
   scope.routes = resource.resource;

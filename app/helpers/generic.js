@@ -96,7 +96,7 @@ module.exports = function(model, index, defineForm) {
       if (queryStr.length > 0) {
         var query = crypto.decompress(queryStr);
         try {
-          query = JSON.parse(query);
+          query = convertData(JSON.parse(query));
         } catch (e) {
           throw Error('invalid query parameters: ' + e.message);
         }
@@ -280,7 +280,7 @@ module.exports = function(model, index, defineForm) {
 
       var item = crypto.decompress(req.body.item);
       try {
-        item = JSON.parse(item);
+        item = convertData(JSON.parse(item));
       } catch (e) {
         return res.json(answer.fail('invalid item: ' + e.message));
       }
@@ -395,7 +395,7 @@ module.exports = function(model, index, defineForm) {
       var itemId = req.params.id;
       var item = crypto.decompress(req.body.item);
       try {
-        item = JSON.parse(item);
+        item = convertData(JSON.parse(item));
       } catch (e) {
         return res.json(answer.fail('invalid item: ' + e.message));
       }

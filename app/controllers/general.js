@@ -29,13 +29,8 @@ router.post(index.convert.do, function (req, res, next) {
     return res.json(answer.fail('invalid JSON target: ' + e.message));
   }
 
-  var afterTrans = {};
-  _.each(target, function (v, k) {
-    _.set(afterTrans, k, v);
-  });
-
   return res.json(answer.succ({
-    data: crypto.compress(afterTrans)
+    data: crypto.compress(convertData(target))
   }));
 });
 

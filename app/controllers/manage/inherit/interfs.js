@@ -1,6 +1,7 @@
 'use strict';
 
 var Interface = app_require('models/api/interf'),
+  Group = app_require('models/api/group'),
   log = log_from('interfs');
 
 module.exports = function (router, index, root) {
@@ -73,16 +74,54 @@ module.exports = function (router, index, root) {
    * Interface editor
    */
   router.get(index.editor.do, function (req, res, next) {
-    generic.editor({
-      schemaExclude: ['create_by'],
-      defineElement: {
-        owner: {
-          selected: 1,
-          el: 'radio',
-          inline: 1
+    Group.find(generic.ownerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
+      var groupData = [];
+      _.each(items, function (item) {
+        groupData.push({
+          tip: item.name,
+          val: item.id,
+          selected: 0,
+          desc: generic.info(getAction(root.group.retrieve, item._id))
+        });
+      });
+
+      var requestEl = generic.codemirrorEl('request', {
+        label: ''
+      });
+      var responseEl = generic.codemirrorEl('response', {
+        label: ''
+      });
+
+      generic.editor({
+        schemaExclude: ['create_by', 'group_id'],
+        modelName: 'interface',
+        defineElement: {
+          owner: {
+            selected: 1,
+            el: 'radio',
+            inline: 1
+          }
+        },
+        tabs: [
+          {
+            tabName: 'Request',
+            form: generic.formEl(requestEl)
+          },
+          {
+            tabName: 'Response',
+            form: generic.formEl(responseEl)
+          }
+        ],
+        formElHandle: function(form) {
+          var theGroup = generic.selectEl('group_id', {
+            label: 'Group',
+            options: groupData
+          });
+
+          form.afterEl('desc', theGroup);
         }
-      }
-    }, req, res, next);
+      }, req, res, next);
+    });
   });
 
   /**

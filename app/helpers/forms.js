@@ -405,6 +405,14 @@ function textareaField(fieldName, define, elLayout) {
   return element;
 }
 
+function codemirrorField(fieldName, define, elLayout) {
+  var element = getEl(fieldName, define, elLayout, 'codemirror');
+  element.attrs = _.extend({
+    codemirror: 1
+  }, element.attrs);
+  return element;
+}
+
 function buttonField(fieldName, define, elLayout) {
   var element = getEl(fieldName, define, elLayout, 'button');
   return element;
@@ -460,6 +468,30 @@ function addEl(newItems, els, name, newEl, pos) {
   });
 }
 
+function form(elements, formOptions, excludeField) {
+  elements = _.isArray(elements) ? elements : [elements];
+  formOptions = formOptions || {};
+  excludeField = excludeField || [];
+  if (!formOptions.attrs) {
+    formOptions.attrs = {};
+  }
+  if (!formOptions.buttons) {
+    formOptions.buttons = [];
+  }
+  if (!formOptions.formEl) {
+    formOptions.formEl = 1;
+  }
+
+  var filter = [];
+  excludeField.push('id');
+  filterExclude(elements, excludeField, filter);
+
+  return {
+    layout: formOptions,
+    items: filter
+  };
+}
+
 /**
  * Generate form element from schema
  * @param schema      json schema
@@ -475,26 +507,7 @@ function addEl(newItems, els, name, newEl, pos) {
  */
 var schemaForm = function(schema, options, formOptions, excludeField, values) {
   var els = getElement(false, schema, options, values, '');
-  formOptions = formOptions || {};
-  excludeField = excludeField || [];
-  if (!formOptions.attrs) {
-    formOptions.attrs = {};
-  }
-  if (!formOptions.buttons) {
-    formOptions.buttons = [];
-  }
-  if (!formOptions.formEl) {
-    formOptions.formEl = 1;
-  }
-
-  var filter = [];
-  excludeField.push('id');
-  filterExclude(els, excludeField, filter);
-
-  return {
-    layout: formOptions,
-    items: filter
-  };
+  return form(els, formOptions, excludeField);
 };
 
 module.exports = {
@@ -552,6 +565,14 @@ module.exports = {
    */
   textareaEl: function(name, options) {
     return textareaField(name, false, options);
+  },
+
+  codemirrorEl: function(name, options) {
+    return codemirrorField(name, false, options);
+  },
+
+  formEl: function(elements, formOptions, excludeField) {
+    return form(elements, formOptions, excludeField);
   },
 
   /**

@@ -23,14 +23,25 @@ router.get(index.do, function (req, res, next) {
  */
 router.post(index.convert.do, function (req, res, next) {
   var target = crypto.decompress(req.body.data);
+
   try {
-    target = JSON.parse(target);
+    target = convertData(json5s.parse(target));
   } catch (e) {
     return res.json(answer.fail('invalid JSON target: ' + e.message));
   }
 
+  if (req.body.original) {
+    var originalJSON5 = crypto.decompress(req.body.original);
+    try {
+      json5s.parse(originalJSON5);
+
+      target = json5update(originalJSON5, target);
+    } catch (e) {
+    }
+  }
+
   return res.json(answer.succ({
-    data: crypto.compress(convertData(target))
+    data: crypto.compress(target)
   }));
 });
 
@@ -40,7 +51,7 @@ router.post(index.convert.do, function (req, res, next) {
 router.post(index.form.do, function (req, res, next) {
   var target = crypto.decompress(req.body.data);
   try {
-    target = JSON.parse(target);
+    target = json5s.parse(target);
   } catch (e) {
     return res.json(answer.fail('invalid JSON target: ' + e.message));
   }

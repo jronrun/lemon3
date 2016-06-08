@@ -45,7 +45,10 @@ mapi = {
       else {
         lemon.progress(requTool);
         var aData = lemon.getParam('#tab-form');
-        $.post('/general/convert', {data: lemon.enc(aData)}).done(function (resp) {
+        $.post('/general/convert', {
+          data: lemon.enc(aData),
+          original: lemon.enc(mapi.requ.val())
+        }).done(function (resp) {
           if (0 == resp.code) {
             mapi.requ.json(lemon.dec(resp.result.data));
             lemon.tabShow('#tab-tri-mirror');

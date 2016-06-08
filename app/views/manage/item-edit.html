@@ -4,7 +4,12 @@
     <div class="title-block">
         <h3 class="title">
           {{#if update}}Edit {{else}}Create new {{/if}}{{desc}} <span class="sparkline bar" data-type="bar"></span>
-             <a class="btn btn-secondary-outline" id="item-back" data-pjax href="{{listAction}}" role="button">Back to List</a>
+            <a class="btn btn-secondary-outline icondh" onclick="javascript:history.back(-1);" role="button">
+                <em class="fa fa-arrow-left"></em>
+            </a>
+            <a class="btn btn-secondary-outline icondh" id="item-back" data-pjax href="{{listAction}}" role="button">
+                <em class="fa fa-th-list"></em>
+            </a>
         </h3>
     </div>
 

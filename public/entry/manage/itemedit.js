@@ -4,7 +4,7 @@
 var mirror = require('../../js/codemirror');
 
 var editor = {
-
+  ctx: {},
   getVal: function (selector) {
     return $.parseJSON(lemon.dec($(selector).val()));
   },
@@ -19,6 +19,13 @@ var editor = {
     var schema = editor.getVal('#item-schema');
     $('#output').val(lemon.fmtjson(schema));
     mirror.showJson('#output');
+  },
+
+  asCodemirror: function() {
+    $('#item-card textarea[codemirror="1"]').each(function () {
+      var id = $(this).attr('id'), name = $(this).attr('name');
+      editor.ctx[name] = editor.ctx[name] || mirror('#' + id);
+    });
   },
 
   initialize: function() {
@@ -45,9 +52,11 @@ var editor = {
       });
     }
 
+    editor.asCodemirror();
+
     $(submitEl).click(function () {
-      msg.clear();
       lemon.disable(this);
+      msg.clear();
       var method = dataset.method.toLowerCase(), action = dataset.action, params = {};
       if (1 == dataset.form) {
         var reqData = lemon.getParam('#item-card');

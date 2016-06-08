@@ -125,6 +125,15 @@
       {{/is}}
     {{/is}}
 
+    {{#is el "==" "codemirror"}}
+        <div class="form-group">
+          {{#if label}} <label class="control-label" for="{{attrs.id}}">{{label}}</label> {{/if}}
+            <textarea class="form-control underlined {{attrs.class}}"
+          {{#each attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}>{{#if value}}{{value}}{{/if}}</textarea>
+          {{#if desc}}<small class="text-muted">{{desc}}</small>{{/if}}
+        </div>
+    {{/is}}
+
   {{/each}}
 
 <div class="form-group">

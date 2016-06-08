@@ -5,12 +5,11 @@ require('codemirror/lib/codemirror.css');
 
 var CodeMirror = require('codemirror/lib/codemirror'),
   json5s = require('./json5s');
+global._ = {};  //for json5s
+_.each = lemon.each;
 
 lemon.fmtjson = function(target) {
-  if (lemon.isString(target)) {
-    target = json5s.parse(target);
-  }
-  return json5s.fmtjson(target);
+  return json5s.format(target);
 };
 
 require('codemirror/addon/runmode/runmode');
@@ -75,7 +74,7 @@ var helper = function(cm) {
     },
     isJson: function() {
       try {
-        $.parseJSON(cm.getValue());
+        json5s.parse(cm.getValue());
       } catch (e) {
         lemon.warn('invalid JSON: ' + e.message);
         return false;
@@ -89,7 +88,7 @@ var helper = function(cm) {
     },
     json: function(data) {
       if (lemon.isUndefined(data)) {
-        return $.parseJSON(cm.getValue());
+        return json5s.parse(cm.getValue());
       }
 
       cm.setValue(lemon.fmtjson(lemon.isNull(data) ? {} : data));

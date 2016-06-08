@@ -224,6 +224,7 @@ module.exports = function(model, index, defineForm) {
      *  listHomePageArg: 1,   //list home pagination arg
      *  masterFormType: 1,    //master form show type, 1 html form, 2 codemirror
      *  formElHandle: function(query) {},  //form element pre handle
+     *  resultHandle: function(result,respdata) {},  //form element pre handle
      *  defineForm: {},       //@see forms.schemaForm.formOptions
      *  defineElement: {},    //@see forms.schemaForm.options
      *  tabs: [
@@ -243,6 +244,7 @@ module.exports = function(model, index, defineForm) {
         listHomePageArg: 1,
         masterFormType: 1,
         formElHandle: false,
+        resultHandle: false,
         defineForm: {},
         defineElement: {},
         tabs: []
@@ -272,7 +274,7 @@ module.exports = function(model, index, defineForm) {
         }
 
         var schema = model.desc(options.schemaExclude);
-        var value = model.getEditVal(schema, true, result, true);
+        var value = model.getEditVal(schema, true, result, true, options.resultHandle);
 
         res.render(index.retrieve.page, {
           pagename: 'item-editor-page',

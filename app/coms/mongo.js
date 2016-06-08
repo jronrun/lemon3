@@ -395,11 +395,15 @@ module.exports.Base = function(model, modelName, define) {
       return model.find(_.extend(query || {}, condition)).sort(aSort).limit(pageSize);
     },
 
-    getEditVal: function(schema, compress, item, reverse) {
+    getEditVal: function(schema, compress, item, reverse, handle) {
       var def = {};
       _.each(schema, function (v, k) {
         def[k] = item ? item[k] : '';
       });
+
+      if (_.isFunction(handle)) {
+        handle(item, def);
+      }
 
       if (reverse) {
         def = reverseData(def);

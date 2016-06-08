@@ -247,6 +247,10 @@ module.exports = function (router, index, root) {
             inline: 1
           }
         },
+        resultHandle: function(result, respdata) {
+          respdata.env_id = result.env_id;
+          respdata.group_id = result.group_id;
+        },
         formElHandle: function(form) {
           var theEnv = generic.selectEl('env_id', {
             label: 'Environment',

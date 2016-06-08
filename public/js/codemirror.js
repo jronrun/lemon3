@@ -76,7 +76,7 @@ var helper = function(cm) {
       try {
         json5s.parse(cm.getValue());
       } catch (e) {
-        lemon.warn('invalid JSON: ' + e.message);
+        lemon.warn('codemirror.isJson: ' + e.message);
         return false;
       }
       return true;

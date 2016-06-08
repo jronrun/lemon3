@@ -104,14 +104,17 @@ module.exports = function (router, index, root) {
       });
 
       var requestEl = generic.codemirrorEl('request', {
-        label: ''
+        label: '',
+        attrs: {
+          required: 'required'
+        }
       });
       var responseEl = generic.codemirrorEl('response', {
         label: ''
       });
 
       generic.editor({
-        schemaExclude: ['create_by', 'group_id'],
+        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc'],
         modelName: 'interface',
         defineElement: {
           owner: {
@@ -151,9 +154,30 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.group_id = parseInt(item.group_id);
         item.create_by = {
           id: req.user.id,
           name: req.user.name
+        };
+
+        item.request_doc = req.body.request;
+        var dec = crypto.decompress(req.body.request);
+        try {
+          item.request = json5s.parse(dec);
+        } catch(e) {
+          res.json(answer.fail('Request is not a valid JSON5'));
+          return generic.BREAK;
+        }
+
+        if (req.body.response) {
+          item.response_doc = req.body.response;
+          var dec = crypto.decompress(req.body.response);
+          try {
+            item.response = json5s.parse(dec);
+          } catch(e) {
+            res.json(answer.fail('Response is not a valid JSON5'));
+            return generic.BREAK;
+          }
         }
       }
     }, req, res, next);
@@ -167,6 +191,7 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.group_id = parseInt(item.group_id);
       }
     }, req, res, next);
   });
@@ -175,15 +200,61 @@ module.exports = function (router, index, root) {
    * Interface retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
-    generic.retrieve({
-      schemaExclude: ['create_by'],
-      defineElement: {
-        owner: {
-          el: 'radio',
-          inline: 1
+    Group.find(generic.ownerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
+      var groupData = [];
+      _.each(items, function (item) {
+        groupData.push({
+          tip: item.name,
+          val: item.id,
+          selected: 0,
+          desc: generic.info(getAction(root.group.retrieve, item._id))
+        });
+      });
+
+      var requestEl = generic.codemirrorEl('request', {
+        label: '',
+        attrs: {
+          required: 'required'
         }
-      }
-    }, req, res, next);
+      });
+      var responseEl = generic.codemirrorEl('response', {
+        label: ''
+      });
+
+      generic.retrieve({
+        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc'],
+        modelName: 'interface',
+        defineElement: {
+          owner: {
+            el: 'radio',
+            inline: 1
+          }
+        },
+        tabs: [
+          {
+            tabName: 'Request',
+            form: generic.formEl(requestEl)
+          },
+          {
+            tabName: 'Response',
+            form: generic.formEl(responseEl)
+          }
+        ],
+        formElHandle: function(form) {
+          var theGroup = generic.selectEl('group_id', {
+            label: 'Group',
+            options: groupData
+          });
+
+          form.afterEl('desc', theGroup);
+        },
+        resultHandle: function(item, respdata) {
+          respdata.group_id = item.group_id;
+          respdata.request_doc = item.request_doc;
+          respdata.response_doc = item.response_doc;
+        }
+      }, req, res, next);
+    });
   });
 
   /**

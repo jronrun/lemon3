@@ -69,6 +69,26 @@ var editor = {
         params.resource = lemon.chkboxval('resource');
       }
 
+      var isValidJSON5 = true;
+      $('#item-card textarea[codemirror="1"]').each(function () {
+        var required = $(this).attr('required'), name = $(this).attr('name');
+        var theCM = editor.ctx[name];
+        if (theCM.isJson()) {
+          var val = theCM.val();
+          params[name] = lemon.enc(val);
+        } else {
+          if ('required' == required) {
+            isValidJSON5 = false;
+            msg.warn(name + ' is not valid JSON5.', '#item-card');
+          }
+        }
+      });
+
+      if (!isValidJSON5) {
+        lemon.enable(submitEl);
+        return;
+      }
+
       $('div[id^=item-sel-]').each(function() {
         var ds = $(this).data();
         params[ds.checkname] = lemon.chkboxval(ds.checkname);

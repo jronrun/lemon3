@@ -453,7 +453,7 @@ function addEl(newItems, els, name, newEl, pos) {
       el.child.items = arr;
       newItems.push(el);
     } else {
-      if (el.attrs.name == name) {
+      if (el.attrs && el.attrs.name == name) {
         if (1 == pos) {
           newItems.push(newEl);
           newItems.push(el);
@@ -466,6 +466,28 @@ function addEl(newItems, els, name, newEl, pos) {
       }
     }
   });
+}
+
+function getFormEl(els, name, value) {
+  var target = null;
+  _.each(els, function (el) {
+    if ('fieldset' == el.el) {
+      target = getFormEl(el.child.items, name, value);
+      if (null != target) {
+        return false;
+      }
+    } else {
+      if (el.attrs && el.attrs.name == name) {
+        target = el;
+        if (value) {
+          el.value = value;
+        }
+        return false;
+      }
+    }
+  });
+
+  return target;
 }
 
 function form(elements, formOptions, excludeField) {
@@ -616,8 +638,9 @@ module.exports = {
    */
   fromSchema: schemaForm,
 
-  helper: function (formObject) {
+  helper: function (formObject, item) {
     var aHelper = {
+        item: item,
         target: formObject,
         beforeEl: function(elName, newEl) {
           var items = [];
@@ -631,6 +654,15 @@ module.exports = {
         },
         push: function(newEl) {
           formObject.items.push(newEl);
+        },
+        get: function(name) {
+          return getFormEl(formObject.items, name);
+        },
+        set: function(name, value) {
+          if (value) {
+            _.set(item || {}, name, value);
+          }
+          return getFormEl(formObject.items, name, value || _.get(item || {}, name));
         }
     };
 

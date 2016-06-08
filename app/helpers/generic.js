@@ -266,19 +266,6 @@ module.exports = function(model, index, defineForm) {
         tabs: []
       }, options || {});
 
-      var formEls = {};
-      if (1 == options.masterFormType) {
-        formEls = forms.fromSchema(model.define.schema,
-          _.extend({}, defineForm.element, options.defineElement),
-          _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
-
-        if (_.isFunction(options.formElHandle)) {
-          if (BREAK == options.formElHandle(forms.helper(formEls))) {
-            return;
-          }
-        }
-      }
-
       var itemId = req.params.id;
       model.findById(itemId, function (err, result) {
         if (err) {
@@ -287,6 +274,19 @@ module.exports = function(model, index, defineForm) {
 
         if (!result) {
           return res.json(answer.fail('item not exists.'));
+        }
+
+        var formEls = {};
+        if (1 == options.masterFormType) {
+          formEls = forms.fromSchema(model.define.schema,
+            _.extend({}, defineForm.element, options.defineElement),
+            _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
+
+          if (_.isFunction(options.formElHandle)) {
+            if (BREAK == options.formElHandle(forms.helper(formEls, result))) {
+              return;
+            }
+          }
         }
 
         var schema = model.desc(options.schemaExclude);

@@ -241,6 +241,7 @@ module.exports = function(model, index, defineForm) {
      *  masterFormType: 1,    //master form show type, 1 html form, 2 codemirror
      *  formElHandle: function(query) {},  //form element pre handle
      *  resultHandle: function(result,respdata) {},  //form element pre handle
+     *  additionHandle: function(result, addition) {},      //addition data response pre handle
      *  defineForm: {},       //@see forms.schemaForm.formOptions
      *  defineElement: {},    //@see forms.schemaForm.options
      *  tabs: [
@@ -261,6 +262,7 @@ module.exports = function(model, index, defineForm) {
         masterFormType: 1,
         formElHandle: false,
         resultHandle: false,
+        additionHandle: false,
         defineForm: {},
         defineElement: {},
         tabs: []
@@ -276,7 +278,7 @@ module.exports = function(model, index, defineForm) {
           return res.json(answer.fail('item not exists.'));
         }
 
-        var formEls = {};
+        var formEls = {}, addition = {};
         if (1 == options.masterFormType) {
           formEls = forms.fromSchema(model.define.schema,
             _.extend({}, defineForm.element, options.defineElement),
@@ -292,6 +294,12 @@ module.exports = function(model, index, defineForm) {
         var schema = model.desc(options.schemaExclude);
         var value = model.getEditVal(schema, true, result, true, options.resultHandle);
 
+        if (_.isFunction(options.additionHandle)) {
+          if (BREAK == options.additionHandle(result, addition)) {
+            return;
+          }
+        }
+
         res.render(index.retrieve.page, {
           pagename: 'item-editor-page',
           schema: crypto.compress(schema),
@@ -305,7 +313,8 @@ module.exports = function(model, index, defineForm) {
           tabs: options.tabs,
           update: 1,
           form: formEls,
-          form_type: options.masterFormType
+          form_type: options.masterFormType,
+          addition: crypto.compress(addition)
         });
       });
     },

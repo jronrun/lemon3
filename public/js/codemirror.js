@@ -9,6 +9,9 @@ global._ = {};  //for json5s
 _.each = lemon.each;
 
 lemon.fmtjson = function(target) {
+  if (!lemon.isString(target)) {
+    target = json5s.stringify(target);
+  }
   return json5s.format(target);
 };
 

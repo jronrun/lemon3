@@ -22,13 +22,20 @@ var editor = {
   },
 
   asCodemirror: function() {
-    $('#item-card textarea[codemirror="1"]').each(function () {
+    var addition = editor.getVal('#item-addition') || {};
+    $('#item-card').find('textarea[codemirror="1"]').each(function () {
       var id = $(this).attr('id'), name = $(this).attr('name');
       editor.ctx[name] = editor.ctx[name] || mirror('#' + id);
+
+      var theVal = addition[name];
+      if (theVal) {
+        editor.ctx[name].val(lemon.fmtjson(lemon.dec(theVal)));
+      }
     });
   },
 
   initialize: function() {
+    lemon.info('TODO call twice');
     var submitEl = '#item-submit', dataset = $(submitEl).data(), cm;
     switch (dataset.form) {
       //html form
@@ -45,7 +52,7 @@ var editor = {
         return;
     }
 
-    var hasResource = $('#res-tree').length, tree = '#res-tree';;
+    var hasResource = $('#res-tree').length, tree = '#res-tree';
     if (hasResource) {
       lemon.sourcetree(tree, $(tree).attr('action'), {
         showopt: $(tree).attr('showopt')
@@ -55,6 +62,9 @@ var editor = {
     editor.asCodemirror();
 
     $(submitEl).click(function () {
+      if (lemon.isDisable(this)) {
+        return;
+      }
       lemon.disable(this);
       msg.clear();
       var method = dataset.method.toLowerCase(), action = dataset.action, params = {};
@@ -70,14 +80,14 @@ var editor = {
       }
 
       var isValidJSON5 = true;
-      $('#item-card textarea[codemirror="1"]').each(function () {
+      $('#item-card').find('textarea[codemirror="1"]').each(function () {
         var required = $(this).attr('required'), name = $(this).attr('name');
         var theCM = editor.ctx[name];
+        var val = theCM.val();
         if (theCM.isJson()) {
-          var val = theCM.val();
           params[name] = lemon.enc(val);
         } else {
-          if ('required' == required) {
+          if ('required' == required || '' != val) {
             isValidJSON5 = false;
             msg.warn(name + ' is not valid JSON5.', '#item-card');
           }
@@ -116,6 +126,7 @@ var editor = {
         }
       );
     });
+
   }
 };
 

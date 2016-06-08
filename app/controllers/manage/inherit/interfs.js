@@ -192,6 +192,30 @@ module.exports = function (router, index, root) {
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
         item.group_id = parseInt(item.group_id);
+        item.create_by = {
+          id: req.user.id,
+          name: req.user.name
+        };
+
+        item.request_doc = req.body.request;
+        var dec = crypto.decompress(req.body.request);
+        try {
+          item.request = json5s.parse(dec);
+        } catch(e) {
+          res.json(answer.fail('Request is not a valid JSON5'));
+          return generic.BREAK;
+        }
+
+        if (req.body.response) {
+          item.response_doc = req.body.response;
+          var dec = crypto.decompress(req.body.response);
+          try {
+            item.response = json5s.parse(dec);
+          } catch(e) {
+            res.json(answer.fail('Response is not a valid JSON5'));
+            return generic.BREAK;
+          }
+        }
       }
     }, req, res, next);
   });
@@ -222,7 +246,10 @@ module.exports = function (router, index, root) {
       });
 
       generic.retrieve({
-        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc'],
+        schemaExclude: [
+          'create_by', 'group_id', 'request_doc',
+          'response_doc', 'request', 'response'
+        ],
         modelName: 'interface',
         defineElement: {
           owner: {
@@ -250,8 +277,12 @@ module.exports = function (router, index, root) {
         },
         resultHandle: function(item, respdata) {
           respdata.group_id = item.group_id;
-          respdata.request_doc = item.request_doc;
-          respdata.response_doc = item.response_doc;
+        },
+        additionHandle: function(item, addition) {
+          addition.request = item.request_doc;
+          if (item.response_doc) {
+            addition.response = item.response_doc;
+          }
         }
       }, req, res, next);
     });

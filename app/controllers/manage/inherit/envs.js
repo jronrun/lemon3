@@ -35,9 +35,9 @@ module.exports = function (router, index, root) {
         prop: function(item) {
           switch (parseInt(item.owner)) {
             case 1:
-              return '<span class="text-success"><em class="fa fa-users"></em> ' + 'Public</span>';
+              return generic.ownerPublic();
             case 2:
-              return '<span class="text-warning"><em class="fa fa-shield"></em> ' + 'Private</span>';
+              return generic.ownerPrivate();
           }
         },
         clazz: 'item-col-author'
@@ -63,6 +63,7 @@ module.exports = function (router, index, root) {
     ];
 
     generic.list({
+      ownerQuery: 1,
       defines: defines,
       search: search
     }, req, res, next);

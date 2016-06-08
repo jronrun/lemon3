@@ -39,6 +39,14 @@ module.exports = function(model, index, defineForm) {
       );
     },
 
+    ownerPublic: function(text) {
+      return '<span class="text-success"><em class="fa fa-users"></em> ' + (text || 'Public') + '</span>';
+    },
+
+    ownerPrivate: function(text) {
+      return '<span class="text-warning"><em class="fa fa-shield"></em> ' + (text || 'Private') + '</span>';
+    },
+
     info: function(href, text) {
       return format('<a href="%s" data-pjax><em class="fa fa-info-circle"></em> %s</a>', href, text || '');
     },
@@ -96,6 +104,7 @@ module.exports = function(model, index, defineForm) {
      *  ]
      *  listName: '',                     //list name
      *  queryHandle: function(query) {},  //query param pre handle
+     *  ownerQuery: 0,                    //is owner query, 1 yes
      *
      *  pageCallback: false,          //model.page parameter callback
      *  pageSize: DEFAULT_PAGESIZE,   //model.page parameter size
@@ -109,6 +118,7 @@ module.exports = function(model, index, defineForm) {
         pageCallback: false,
         pageSize: DEFAULT_PAGESIZE,
         pageOptions: {},
+        ownerQuery: 0,
         queryHandle: false,
         listName: index.desc
       }, options || {});
@@ -133,6 +143,10 @@ module.exports = function(model, index, defineForm) {
         if (BREAK == options.queryHandle(realQuery)) {
           return;
         }
+      }
+
+      if (1 == options.ownerQuery) {
+        realQuery = _.extend(realQuery, generic.ownerQuery(req));
       }
 
       model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
@@ -337,8 +351,6 @@ module.exports = function(model, index, defineForm) {
           return;
         }
       }
-
-      console.log('========================');
 
       async.waterfall([
         function(callback) {

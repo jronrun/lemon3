@@ -30,56 +30,105 @@ module.exports = function (router, index, root) {
    * Server list
    */
   router.get(index.do, function (req, res, next) {
-    var defines = [
-      {
-        title: 'Name',
-        prop: function(item) {
-          return generic.title(item.name, getAction(root.server.retrieve, item._id));
-        },
-        clazz: 'fixed pull-left item-col-title'
+    var ownerQry = generic.ownerQuery(req);
+    async.waterfall([
+      function (callback) {
+        Environment.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+          var envData = {};
+          _.each(items, function (item) {
+            envData[item.id] = item;
+          });
+
+          callback(null, envData);
+        });
       },
-      {
-        title: 'Description',
-        prop: 'desc',
-        clazz: 'item-col-author'
-      },
-      {
-        title: 'Owner',
-        prop: function(item) {
-          switch (parseInt(item.owner)) {
-            case 1:
-              return '<span class="text-success"><em class="fa fa-users"></em> ' + 'Public</span>';
-            case 2:
-              return '<span class="text-warning"><em class="fa fa-shield"></em> ' + 'Private</span>';
-          }
-        },
-        clazz: 'item-col-author'
-      },
-      {
-        title: 'Create By',
-        prop: function(item) {
-          var aUser = item.create_by;
-          return generic.info(getAction(root.users.retrieve, aUser.id), aUser.name);
-        },
-        clazz: 'item-col-author'
-      },
-      {
-        title: 'Create',
-        prop: 'create_time',
-        clazz: 'item-col-date',
-        type: 'date'
+      function(envData, callback) {
+        Group.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+          var groupData = {};
+          _.each(items, function (item) {
+            groupData[item.id] = item;
+          });
+
+          callback(null, {
+            env: envData,
+            group: groupData
+          });
+        });
       }
-    ];
+    ], function(err, result) {
+      var defines = [
+        {
+          title: 'Name',
+          prop: function(item) {
+            return generic.title(item.name, getAction(root.server.retrieve, item._id));
+          },
+          clazz: 'fixed pull-left item-col-title'
+        },
+        {
+          title: 'Description',
+          prop: 'desc',
+          clazz: 'item-col-author'
+        },
+        {
+          title: 'Environment',
+          prop: function(item) {
+            var aEnv = result.env[item.env_id];
+            if (!aEnv) {
+              return generic.ownerPrivate();
+            }
+            return generic.info(getAction(root.env.retrieve, aEnv._id), aEnv.name);
+          },
+          clazz: 'item-col-author'
+        },
+        {
+          title: 'Group',
+          prop: function(item) {
+            var aGroup = result.group[item.group_id];
+            if (!aGroup) {
+              return generic.ownerPrivate();
+            }
+            return generic.info(getAction(root.group.retrieve, aGroup._id), aGroup.name);
+          },
+          clazz: 'item-col-author'
+        },
+        {
+          title: 'Owner',
+          prop: function(item) {
+            switch (parseInt(item.owner)) {
+              case 1:
+                return generic.ownerPublic();
+              case 2:
+                return generic.ownerPrivate();
+            }
+          },
+          clazz: 'item-col-author'
+        },
+        {
+          title: 'Create By',
+          prop: function(item) {
+            var aUser = item.create_by;
+            return generic.info(getAction(root.users.retrieve, aUser.id), aUser.name);
+          },
+          clazz: 'item-col-author'
+        },
+        {
+          title: 'Create',
+          prop: 'create_time',
+          clazz: 'item-col-date',
+          type: 'date'
+        }
+      ];
 
-    var search = [
-      generic.searchInput('name', 'search server...')
-    ];
+      var search = [
+        generic.searchInput('name', 'search server...')
+      ];
 
-    generic.list({
-      defines: defines,
-      search: search
-    }, req, res, next);
-
+      generic.list({
+        ownerQuery: 1,
+        defines: defines,
+        search: search
+      }, req, res, next);
+    });
   });
 
   /**

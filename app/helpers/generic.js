@@ -152,7 +152,7 @@ module.exports = function(model, index, defineForm) {
       model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
         res.render(index.page, {
           pagename: 'items-list-page',
-          pageedit: index.editor.action,
+          pageedit: index.editor ? index.editor.action : '',
           list: items.asShowData(options.defines, result.items),
           page: result.page,
           action: actionWrap(index.action).base,
@@ -172,6 +172,7 @@ module.exports = function(model, index, defineForm) {
      *  resourceTab: 0,       //show resource tab, 1 show, 2 show readonly
      *  resourceAction: '',   //resource load action
      *  modelName: '',        //model name
+     *  hasButtons: 1,        //edit button 0 hide, 1 show
      *  listHomePageArg: 1,   //list home pagination arg
      *  masterFormType: 1,    //master form show type, 1 html form, 2 codemirror
      *  formElHandle: function(query) {},  //form element pre handle
@@ -191,6 +192,7 @@ module.exports = function(model, index, defineForm) {
         resourceTab: 0,
         resourceAction: '',
         modelName: model.modelName,
+        hasButtons: 1,
         listHomePageArg: 1,
         masterFormType: 1,
         formElHandle: false,
@@ -221,6 +223,7 @@ module.exports = function(model, index, defineForm) {
         res_tab: options.resourceTab,
         res_action: options.resourceAction,
         desc: options.modelName,
+        hasButtons: options.hasButtons,
         method: HttpMethod.POST,
         action: index.editor.action,
         listAction: actionWrap(index.action, options.listHomePageArg).action,
@@ -237,6 +240,7 @@ module.exports = function(model, index, defineForm) {
      *  resourceTab: 0,       //show resource tab, 1 show, 2 show readonly
      *  resourceAction: '',   //resource load action
      *  modelName: '',        //model name
+     *  hasButtons: 1,        //edit button 0 hide, 1 show
      *  listHomePageArg: 1,   //list home pagination arg
      *  masterFormType: 1,    //master form show type, 1 html form, 2 codemirror
      *  formElHandle: function(query) {},  //form element pre handle
@@ -258,6 +262,7 @@ module.exports = function(model, index, defineForm) {
         resourceTab: 0,
         resourceAction: '',
         modelName: model.modelName,
+        hasButtons: 1,
         listHomePageArg: 1,
         masterFormType: 1,
         formElHandle: false,
@@ -312,6 +317,7 @@ module.exports = function(model, index, defineForm) {
           res_tab: options.resourceTab,
           res_action: options.resourceAction,
           desc: options.modelName,
+          hasButtons: options.hasButtons,
           method: HttpMethod.PUT,
           action: actionWrap(index.retrieve.action, itemId).action,
           listAction: actionWrap(index.action, options.listHomePageArg).action,

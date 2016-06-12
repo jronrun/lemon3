@@ -5,9 +5,11 @@
                 <div class="col-md-6">
                     <h3 class="title">
                         {{desc}}
-                        <a href="{{pageedit}}" data-pjax class="btn btn-primary btn-sm rounded-s">
-                            Create New
-                        </a>
+                        {{#if pageedit}}
+                          <a href="{{pageedit}}" data-pjax class="btn btn-primary btn-sm rounded-s">
+                              Create New
+                          </a>
+                        {{/if}}
                       {{!
                       <div class="action dropdown">
                           <button class="btn  btn-sm rounded-s btn-secondary dropdown-toggle" type="button"

@@ -67,6 +67,11 @@ var editor = {
 
     editor.asCodemirror();
 
+    if (1 != dataset.buttons) {
+      $(submitEl).remove();
+      return;
+    }
+
     $(submitEl).click(function () {
       if (lemon.isDisable(this)) {
         return;

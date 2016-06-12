@@ -29,7 +29,21 @@ lemon.href = function (uri) {
   global.location.href = uri;
 };
 
-global.$ = $;
+//global.$ = $;
+
+var initlock = {};
+function callinit(source) {
+  source = source + '';
+  if (!initlock[source]) {
+    initlock[source] = 1;
+    lemon.delay(function () {
+      $(function () {
+        lemon.isFunc(handlePageCall[source]) && handlePageCall[source]();
+        delete initlock[source];
+      });
+    }, 500);
+  }
+}
 
 global.register = function(call) {
   var source = $('#page > article').attr('source');
@@ -37,7 +51,7 @@ global.register = function(call) {
     if (!handlePageCall[source]) {
       handlePageCall[source] = call;
     }
-    call();
+    callinit(source);
     lemon.info('register source ' + source);
   } else {
     lemon.error('register source is not defined.');
@@ -238,7 +252,8 @@ $(function () {
 
   $(document).on('pjax:end', function(event) {
     var source = $(event.target).find('article').attr('source');
-    lemon.isFunc(handlePageCall[source]) && handlePageCall[source]();
+    //lemon.isFunc(handlePageCall[source]) && handlePageCall[source]();
+    callinit(source);
   });
 
   var modalId = '#confirm-modal';

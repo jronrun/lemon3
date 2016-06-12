@@ -25,7 +25,7 @@ var editor = {
     var addition = editor.getVal('#item-addition') || {};
     $('#item-card').find('textarea[codemirror="1"]').each(function () {
       var id = $(this).attr('id'), name = $(this).attr('name');
-      editor.ctx[name] = editor.ctx[name] || mirror('#' + id);
+      editor.ctx[name] = mirror('#' + id);
 
       var theVal = addition[name];
       if (theVal) {
@@ -35,7 +35,6 @@ var editor = {
   },
 
   initialize: function() {
-    lemon.info('TODO call twice');
     var submitEl = '#item-submit', dataset = $(submitEl).data(), cm;
     switch (dataset.form) {
       //html form

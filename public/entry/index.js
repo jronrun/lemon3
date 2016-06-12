@@ -184,6 +184,17 @@ lemon.register({
   },
   tabShow: function(selector) {
     $(selector).tab('show');
+  },
+  tabEventListen: function() {
+    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+      doTabHandle(e, 'show');
+    }).on('shown.bs.tab', function (e) {
+      doTabHandle(e, 'shown');
+    }).on('hide.bs.tab', function (e) {
+      doTabHandle(e, 'hide');
+    }).on('hidden.bs.tab', function (e) {
+      doTabHandle(e, 'hidden');
+    });
   }
 });
 
@@ -269,14 +280,6 @@ $(function () {
     });
   }
 
-  $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-    doTabHandle(e, 'show');
-  }).on('shown.bs.tab', function (e) {
-    doTabHandle(e, 'shown');
-  }).on('hide.bs.tab', function (e) {
-    doTabHandle(e, 'hide');
-  }).on('hidden.bs.tab', function (e) {
-    doTabHandle(e, 'hidden');
-  });
+  lemon.tabEventListen();
 
 });

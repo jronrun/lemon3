@@ -139,5 +139,6 @@ var editor = {
 $(function () {
   register(function () {
     editor.initialize();
+    lemon.tabEventListen();
   });
 });

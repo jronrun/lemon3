@@ -10,6 +10,7 @@ module.exports = function (app) {
 
   require('./inherit/musers')(router, index.users, index);
   require('./inherit/powers')(router, index.powers, index);
+  require('./inherit/api_powers')(router, index['api-power'], index);
   require('./inherit/roles')(router, index.roles, index);
   require('./inherit/sourcetree')(router, index.resource, index);
 

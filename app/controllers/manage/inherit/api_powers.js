@@ -1,7 +1,7 @@
 'use strict';
 
 var Power = app_require('models/power'),
-  log = log_from('powers');
+  log = log_from('api-powers');
 
 module.exports = function (router, index, root) {
 
@@ -14,14 +14,14 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Power list
+   * API Power list
    */
   router.get(index.do, function (req, res, next) {
     var defines = [
       {
         title: 'Name',
         prop: function(item) {
-          return generic.title(item.name, getAction(root.powers.retrieve, item._id));
+          return generic.title(item.name, getAction(root['api-power'].retrieve, item._id));
         },
         clazz: 'fixed pull-left item-col-title'
       },
@@ -39,7 +39,7 @@ module.exports = function (router, index, root) {
     ];
 
     var search = [
-      generic.searchInput('name', 'search power...')
+      generic.searchInput('name', 'search API power...')
     ];
 
     generic.list({
@@ -47,7 +47,7 @@ module.exports = function (router, index, root) {
       search: search,
       queryHandle: function(query) {
         _.extend(query, {
-          type: 1
+          type: 2
         })
       }
     }, req, res, next);
@@ -55,57 +55,51 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * Power editor
+   * API Power editor
    */
   router.get(index.editor.do, function (req, res, next) {
     generic.editor({
-      schemaExclude: ['resources', 'type'],
-      resourceTab: 1,
-      resourceAction: root.resource.action
+      schemaExclude: ['resources', 'type']
     }, req, res, next);
   });
 
   /**
-   * Power create
+   * API Power create
    */
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
-      resourceTab: 1,
       sequenceId: 1,
       checkExistsField: 'name',
       paramHandle: function(item) {
-        item.type = 1;
+        item.type = 2;
       }
     }, req, res, next);
   });
 
   /**
-   * Power update
+   * API Power update
    */
   router.put(index.retrieve.do, function (req, res, next) {
     userReourceCacheReset();
     generic.update({
-      resourceTab: 1,
       checkExistsField: 'name',
       paramHandle: function(item) {
-        item.type = 1;
+        item.type = 2;
       }
     }, req, res, next);
   });
 
   /**
-   * Power retrieve
+   * API Power retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
-      schemaExclude: ['resources', 'type'],
-      resourceTab: 1,
-      resourceAction: actionWrap(root.resource.power.action, req.params.id).action
+      schemaExclude: ['resources', 'type']
     }, req, res, next);
   });
 
   /**
-   * Power delete
+   * API Power delete
    */
   router.delete(index.retrieve.do, function (req, res, next) {
     generic.delete({}, req, res, next);

@@ -144,7 +144,19 @@ var resource = [
           {id: 2000094, extend: 2000093, method: M.PUT, page: P.list, desc: 'Update'},
           {id: 2000095, extend: 2000093, method: M.DELETE, page: P.list, desc: 'Delete'}
         ]
+      },
+
+      {
+        id: 200010, name: 'api-power', desc: 'API Powers', action: '/manage/api-powers/:page', page: P.list, children: [
+          {id: 2000101, name: 'editor', action: '/manage/api-power', page: P.edit, desc: 'Editor'},
+          {id: 2000102, extend: 2000101, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000103, name: 'retrieve', action: '/manage/api-power/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000104, extend: 2000103, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000105, extend: 2000103, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
       }
+
     ]
   }
 ];
@@ -166,6 +178,7 @@ var menu = [
   {
     name: 'Settings', children: [
       {sourceId: 200001, args: '1'},
+      {sourceId: 200010, args: '1'},
       {sourceId: 200002, args: '1'}
     ]
   },

@@ -24,8 +24,15 @@ var editor = {
   asCodemirror: function() {
     var addition = editor.getVal('#item-addition') || {};
     $('#item-card').find('textarea[codemirror="1"]').each(function () {
-      var id = $(this).attr('id'), name = $(this).attr('name');
-      editor.ctx[name] = mirror('#' + id);
+      var id = '#' + $(this).attr('id'), name = $(this).attr('name');
+      editor.ctx[name] = mirror(id);
+
+      var tabId = '#' + $(id).parentsUntil('.tab-content', '[id^="item-sel-"]').attr('id');
+      lemon.tabEvent(tabId, {
+        shown: function (current, previous) {
+          editor.ctx[name].refreshDelay();
+        }
+      });
 
       var theVal = addition[name];
       if (theVal) {

@@ -22,7 +22,7 @@
                     </li>
                     {{#each tabs}}
                         <li class="nav-item">
-                            <a href="#item-sel-{{tabName}}" class="nav-link" data-target="#item-sel-{{tabName}}" aria-controls="item-sel-{{tabName}}" data-toggle="tab" role="tab">{{tabName}}</a>
+                            <a href="#item-sel-{{tabId}}" class="nav-link" data-target="#item-sel-{{tabId}}" aria-controls="item-sel-{{tabId}}" data-toggle="tab" role="tab">{{tabName}}</a>
                         </li>
                     {{/each}}
                     {{#if res_tab}}
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     {{#each tabs}}
-                        <div class="tab-pane fade" id="item-sel-{{tabName}}" data-checkname="{{inputName}}">
+                        <div class="tab-pane fade" id="item-sel-{{tabId}}" data-checkname="{{inputName}}">
                           {{> manage/form}}
                         </div>
                     {{/each}}

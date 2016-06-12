@@ -300,6 +300,11 @@ module.exports = function(model, index, defineForm) {
           }
         }
 
+        _.each(options.tabs, function (aTab) {
+          aTab.tabId = aTab.tabName;
+          aTab.tabId = aTab.tabId.replace(/\s/g,'-');
+        });
+
         res.render(index.retrieve.page, {
           pagename: 'item-editor-page',
           schema: crypto.compress(schema),

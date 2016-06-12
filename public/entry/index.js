@@ -227,7 +227,7 @@ function doTabHandle(e, type) {
   // previous active tab
   var prev = e.relatedTarget;
 
-  var handle = handleTab['#' + $(cur).attr('id')];
+  var handle = handleTab[$(cur).data('target')];
   handle && lemon.isFunc(handle[type]) && handle[type](cur, prev);
 }
 

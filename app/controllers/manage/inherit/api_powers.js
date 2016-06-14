@@ -67,41 +67,130 @@ module.exports = function (router, index, root) {
    * API Power list
    */
   router.get(index.do, function (req, res, next) {
-    var defines = [
-      {
-        title: 'Name',
-        prop: function(item) {
-          return generic.title(item.name, getAction(root['api-power'].retrieve, item._id));
+    async.waterfall([
+      function (callback) {
+        Environment.find({}).sort({_id: -1}).toArray(function (err, items) {
+          var envData = {};
+          _.each(items, function (item) {
+            envData[item.id] = item;
+          });
+
+          callback(null, envData);
+        });
+      },
+      function(envData, callback) {
+        Group.find({}).sort({_id: -1}).toArray(function (err, items) {
+          var groupData = {};
+          _.each(items, function (item) {
+            groupData[item.id] = item;
+          });
+
+          callback(null, {
+            env: envData,
+            group: groupData
+          });
+        });
+      }
+    ], function(err, result) {
+      var defines = [
+        {
+          title: 'Name',
+          prop: function(item) {
+            return generic.title(item.name, getAction(root['api-power'].retrieve, item._id));
+          },
+          clazz: 'fixed pull-left item-col-title'
         },
-        clazz: 'fixed pull-left item-col-title'
-      },
-      {
-        title: 'Description',
-        prop: 'desc',
-        clazz: 'item-col-author'
-      },
-      {
-        title: 'Create',
-        prop: 'create_time',
-        clazz: 'item-col-date',
-        type: 'date'
-      }
-    ];
+        {
+          title: 'Description',
+          prop: 'desc',
+          clazz: 'item-col-author'
+        },
+        {
+          title: 'Environment',
+          clazz: 'item-col-author',
+          prop: function(item) {
+            var env = [];
+            _.each(item.env, function (envId) {
+              var aEnv = result.env[envId];
+              if (aEnv) {
+                env.push(generic.info(getAction(root.env.retrieve, aEnv._id), aEnv.name));
+              }
+            });
+            return env.join('</br>');
+          }
+        },
+        {
+          title: 'Group',
+          clazz: 'item-col-author',
+          prop: function(item) {
+            var group = [];
+            _.each(item.group, function (groupId) {
+              var aGroup = result.group[groupId];
+              if (aGroup) {
+                group.push(generic.info(getAction(root.group.retrieve, aGroup._id), aGroup.name));
+              }
+            });
+            return group.join('</br>');
+          }
+        },
+        {
+          title: 'Server',
+          clazz: 'item-col-author',
+          prop: function(item) {
+            var scope = item.server.scope,
+              text = generic.getSchema('server.properties.scope.const')[item.server.scope];
+            switch (scope) {
+              case 1:
+              case 3:
+                return generic.em('circle-o', text);
+              case 2:
+              case 4:
+                return generic.em('circle-o-notch', text);
+              default:
+                return '';
+            }
+          }
+        },
+        {
+          title: 'Interface',
+          clazz: 'item-col-author',
+          prop: function(item) {
+            var scope = item.interface.scope,
+              text = generic.getSchema('interface.properties.scope.const')[item.interface.scope];
+            switch (scope) {
+              case 1:
+              case 3:
+                return generic.em('circle-o', text);
+              case 2:
+              case 4:
+                return generic.em('circle-o-notch', text);
+              default:
+                return '';
+            }
+          }
+        },
+        {
+          title: 'Create',
+          prop: 'create_time',
+          clazz: 'item-col-date',
+          type: 'date'
+        }
+      ];
 
-    var search = [
-      generic.searchInput('name', 'search API power...')
-    ];
+      var search = [
+        generic.searchInput('name', 'search API power...')
+      ];
 
-    generic.list({
-      defines: defines,
-      search: search,
-      queryHandle: function(query) {
-        _.extend(query, {
-          type: 2
-        })
-      }
-    }, req, res, next);
-
+      generic.list({
+        defines: defines,
+        search: search,
+        queryHandle: function(query) {
+          _.extend(query, {
+            type: 2
+          })
+        }
+      }, req, res, next);
+    });
   });
 
   /**

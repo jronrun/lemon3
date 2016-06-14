@@ -80,7 +80,7 @@ var editor = {
       msg.clear();
       var method = dataset.method.toLowerCase(), action = dataset.action, params = {};
       if (1 == dataset.form) {
-        var reqData = lemon.getParam('#item-card');
+        var reqData = lemon.getParam('#item-card', 'textarea');
         delete reqData.resource;
         params.item = lemon.enc(JSON.stringify(reqData));
       } else if (2 == dataset.form) {

@@ -17,6 +17,52 @@ module.exports = function (router, index, root) {
     }
   });
 
+  function paramHandleCU(item) {
+    item.type = 2;
+    item.env = item.env || [];
+    item.group = item.group || [];
+
+    item.server.scope = parseInt(item.server.scope);
+    var serverDefine = [];
+    _.each((item.server.define || '').split(','), function (v) {
+      if (v && v.length > 0) {
+        serverDefine.push(v);
+      }
+    });
+    item.server.define = serverDefine;
+
+    item.interface.scope = parseInt(item.interface.scope);
+    var interfaceDefine = [];
+    _.each((item.interface.define || '').split(','), function (v) {
+      if (v && v.length > 0) {
+        interfaceDefine.push(v);
+      }
+    });
+    item.interface.define = interfaceDefine;
+  }
+
+  var serverEls = generic.schemaEl('server.scope',
+    generic.getSchema('server.properties.scope'), {
+      label: 'Scope'
+    });
+  serverEls.push(
+    generic.textareaEl('server.define', {
+      label: 'Define',
+      desc: 'Server ID, Multiple separated by commas'
+    })
+  );
+
+  var interfaceEls = generic.schemaEl('interface.scope',
+    generic.getSchema('interface.properties.scope'), {
+      label: 'Scope'
+    });
+  interfaceEls.push(
+    generic.textareaEl('interface.define', {
+      label: 'Define',
+      desc: 'Interface ID, Multiple separated by commas'
+    })
+  );
+
   /**
    * API Power list
    */
@@ -112,28 +158,6 @@ module.exports = function (router, index, root) {
         })
       ];
 
-      var serverEls = generic.schemaEl('server.scope',
-        generic.getSchema('server.properties.scope'), {
-          label: 'Scope'
-        });
-      serverEls.push(
-        generic.textareaEl('server.define', {
-          label: 'Define',
-          desc: 'Server ID, Multiple separated by commas'
-        })
-      );
-
-      var interfaceEls = generic.schemaEl('interface.scope',
-        generic.getSchema('interface.properties.scope'), {
-          label: 'Scope'
-        });
-      interfaceEls.push(
-        generic.textareaEl('interface.define', {
-          label: 'Define',
-          desc: 'Interface ID, Multiple separated by commas'
-        })
-      );
-
       generic.editor({
         schemaExclude: ['resources', 'type', 'env', 'group', 'server', 'interface'],
         modelName: 'api-power',
@@ -167,9 +191,7 @@ module.exports = function (router, index, root) {
     generic.create({
       sequenceId: 1,
       checkExistsField: 'name',
-      paramHandle: function(item) {
-        item.type = 2;
-      }
+      paramHandle: paramHandleCU
     }, req, res, next);
   });
 
@@ -180,9 +202,7 @@ module.exports = function (router, index, root) {
     userReourceCacheReset();
     generic.update({
       checkExistsField: 'name',
-      paramHandle: function(item) {
-        item.type = 2;
-      }
+      paramHandle: paramHandleCU
     }, req, res, next);
   });
 
@@ -190,10 +210,105 @@ module.exports = function (router, index, root) {
    * API Power retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
-    generic.retrieve({
-      schemaExclude: ['resources', 'type', 'env', 'group', 'server', 'interface'],
-      modelName: 'api-power'
-    }, req, res, next);
+    async.waterfall([
+      function (callback) {
+        Power.findById(req.params.id, function (err, result) {
+            if (err) {
+              return res.json(answer.fail(err.message));
+            }
+
+            if (!result) {
+              return res.json(answer.fail('item not exists.'));
+            }
+
+            callback(null, result);
+        });
+      },
+      function (apiPower, callback) {
+        Environment.find({owner: 1}).sort({_id: -1}).toArray(function (err, items) {
+          var envData = [];
+          _.each(items, function (item) {
+            envData.push({
+              tip: item.name,
+              val: item.id,
+              selected: (apiPower.env || []).indexOf(String(item.id)) != -1 ? 1 : 0,
+              desc: generic.info(getAction(root.env.retrieve, item._id))
+            });
+          });
+
+          callback(null, apiPower, envData);
+        });
+      },
+      function(apiPower, envData, callback) {
+        Group.find({owner: 1}).sort({_id: -1}).toArray(function (err, items) {
+          var groupData = [];
+          _.each(items, function (item) {
+            groupData.push({
+              tip: item.name,
+              val: item.id,
+              selected: (apiPower.group || []).indexOf(String(item.id)) != -1 ? 1 : 0,
+              desc: generic.info(getAction(root.group.retrieve, item._id))
+            });
+          });
+
+          callback(null, {
+            env: envData,
+            group: groupData
+          });
+        });
+      }
+    ], function(err, result) {
+
+      var envEls = [
+        generic.checkboxEl('env', {
+          label: '',
+          options: result.env
+        })
+      ];
+
+      var groupEls = [
+        generic.checkboxEl('group', {
+          label: '',
+          options: result.group
+        })
+      ];
+
+      generic.retrieve({
+        schemaExclude: ['resources', 'type', 'env', 'group', 'server', 'interface'],
+        modelName: 'api-power',
+        resultHandle: function(result,  respdata) {
+          respdata.server = {
+            scope: result.server.scope,
+            define: _.join(result.server.define || [], ',')
+          };
+
+          respdata.interface = {
+            scope: result.interface.scope,
+            define: _.join(result.interface.define || [], ',')
+          }
+        },
+        tabs: [
+          {
+            tabName: 'Environment',
+            form: generic.formEl(envEls)
+          },
+          {
+            tabName: 'Group',
+            form: generic.formEl(groupEls)
+          },
+          {
+            tabName: 'Server',
+            form: generic.formEl(serverEls)
+          },
+          {
+            tabName: 'Interface',
+            form: generic.formEl(interfaceEls)
+          }
+        ]
+      }, req, res, next);
+
+    });
+
   });
 
   /**

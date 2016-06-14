@@ -41,6 +41,20 @@ module.exports = function (router, index, root) {
     item.interface.define = interfaceDefine;
   }
 
+  function scopeDesc(field, scopeVal) {
+    var text = generic.getSchema(field + '.properties.scope.const')[scopeVal];
+    switch (scopeVal) {
+      case 1:
+      case 3:
+        return generic.em('circle-o', text);
+      case 2:
+      case 4:
+        return generic.em('circle-o-notch', text);
+      default:
+        return '';
+    }
+  }
+
   var serverEls = generic.schemaEl('server.scope',
     generic.getSchema('server.properties.scope'), {
       label: 'Scope'
@@ -137,36 +151,14 @@ module.exports = function (router, index, root) {
           title: 'Server',
           clazz: 'item-col-author',
           prop: function(item) {
-            var scope = item.server.scope,
-              text = generic.getSchema('server.properties.scope.const')[item.server.scope];
-            switch (scope) {
-              case 1:
-              case 3:
-                return generic.em('circle-o', text);
-              case 2:
-              case 4:
-                return generic.em('circle-o-notch', text);
-              default:
-                return '';
-            }
+            return scopeDesc('server', item.server.scope);
           }
         },
         {
           title: 'Interface',
           clazz: 'item-col-author',
           prop: function(item) {
-            var scope = item.interface.scope,
-              text = generic.getSchema('interface.properties.scope.const')[item.interface.scope];
-            switch (scope) {
-              case 1:
-              case 3:
-                return generic.em('circle-o', text);
-              case 2:
-              case 4:
-                return generic.em('circle-o-notch', text);
-              default:
-                return '';
-            }
+              return scopeDesc('interface', item.interface.scope);
           }
         },
         {

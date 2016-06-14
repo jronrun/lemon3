@@ -231,7 +231,7 @@ function inputGroup(fieldName, define, elLayout, inputType, groupType) {
 }
 
 function getEl(fieldName, define, elLayout, formElType) {
-  define = define || {};
+  define = define || {}; elLayout = elLayout || {};
   var layoutAttrs = elLayout.attrs || {};
   fieldName = fieldName || define.name || layoutAttrs.name;
 
@@ -618,6 +618,14 @@ module.exports = {
    */
   element: function(elementType, options, name) {
     return getEl(name, false, options, elementType);
+  },
+
+  schemaEl: function(name, define, options, values, path) {
+    var opts = {};
+    if (options) {
+      opts[name] = options;
+    }
+    return getElement(name, define, opts, values, path || '');
   },
 
   /**

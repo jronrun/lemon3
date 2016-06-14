@@ -59,7 +59,7 @@ module.exports = function (router, index, root) {
    */
   router.get(index.editor.do, function (req, res, next) {
     generic.editor({
-      schemaExclude: ['resources', 'type'],
+      schemaExclude: ['resources', 'type', 'env', 'group', 'server', 'interface'],
       resourceTab: 1,
       resourceAction: root.resource.action
     }, req, res, next);
@@ -98,7 +98,7 @@ module.exports = function (router, index, root) {
    */
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
-      schemaExclude: ['resources', 'type'],
+      schemaExclude: ['resources', 'type', 'env', 'group', 'server', 'interface'],
       resourceTab: 1,
       resourceAction: actionWrap(root.resource.power.action, req.params.id).action
     }, req, res, next);

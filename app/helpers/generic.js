@@ -79,6 +79,15 @@ module.exports = function(model, index, defineForm) {
     inputEl: forms.inputEl,
     codemirrorEl: forms.codemirrorEl,
     formEl: forms.formEl,
+    schemaEl: forms.schemaEl,
+
+    getSchema: function(field) {
+      if (field) {
+        return _.get(model.define.schema.properties, field);
+      }
+
+      return model.define.schema;
+    },
 
     /**
      * list
@@ -213,6 +222,11 @@ module.exports = function(model, index, defineForm) {
           }
         }
       }
+
+      _.each(options.tabs, function (aTab) {
+        aTab.tabId = aTab.tabName;
+        aTab.tabId = aTab.tabId.replace(/\s/g,'-');
+      });
 
       var schema = model.desc(options.schemaExclude);
       var value = model.getEditVal(schema, true);

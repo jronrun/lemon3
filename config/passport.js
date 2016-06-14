@@ -17,7 +17,7 @@ module.exports = function (passport) {
 
       delete user.passwd;
       user.id = user._id.toString();
-      user.isAdmin = (user.roles || []).indexOf(ADMIN_ROLE) != -1;
+      user.isAdmin = isAdminUser(user);
 
       User.getResource(user.id).then(function (userResource) {
         user.resource = userResource.resource;

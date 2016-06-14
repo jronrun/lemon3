@@ -63,7 +63,7 @@ module.exports = function (router, index, root) {
               var aRole = roleData[roleId];
               if (aRole) {
                 if (ADMIN_ROLE == roleId) {
-                  roleName.push('<em class="fa fa-thumbs-up"></em> ' + aRole);
+                  roleName.push(generic.em('thumbs-up', aRole));
                 } else {
                   roleName.push(generic.info(getAction(root.roles.retrieve, aRole._id), aRole.name));
                 }
@@ -169,37 +169,46 @@ module.exports = function (router, index, root) {
   router.get(index.retrieve.do, function (req, res, next) {
     var userId = req.params.id;
     Role.find({}).sort({_id: -1}).toArray(function (err, items) {
-      var roleData = [];
-
       User.findById(userId, function(err, doc) {
-        var theRoles = doc.roles || [];
-
-        _.each(items, function (item) {
-          roleData.push({
-            tip: item.name,
-            val: item.id,
-            selected: theRoles.indexOf(String(item.id)) != -1 ? 1 : 0,
-            desc: generic.info(getAction(root.roles.retrieve, item._id))
-          });
-        });
-
-        generic.retrieve({
+        var options = {
           schemaExclude: ['passwd', 'roles'],
-          formElHandle: function(form) {
-            form.afterEl('email', generic.checkboxEl('roles', {
-              options: roleData
-            }));
-          },
           defineElement: {
             email: {
               attrs: {
                 readonly: 'readonly'
               }
             }
-          },
-          resourceTab: 2,
-          resourceAction: actionWrap(root.resource.user.action, userId).action
-        }, req, res, next);
+          }
+        };
+
+        if (isAdminUser(doc)) {
+          options.defineElement.name = {
+            label: generic.em('thumbs-up', 'Administrator Name')
+          };
+        } else {
+          var theRoles = doc.roles || [], roleData = [];
+
+          _.each(items, function (item) {
+            roleData.push({
+              tip: item.name,
+              val: item.id,
+              selected: theRoles.indexOf(String(item.id)) != -1 ? 1 : 0,
+              desc: generic.info(getAction(root.roles.retrieve, item._id))
+            });
+          });
+
+          _.extend(options, {
+            formElHandle: function(form) {
+              form.afterEl('email', generic.checkboxEl('roles', {
+                options: roleData
+              }));
+            },
+            resourceTab: 2,
+            resourceAction: actionWrap(root.resource.user.action, userId).action
+          });
+        }
+
+        generic.retrieve(options, req, res, next);
       });
 
     });

@@ -128,6 +128,9 @@ module.exports = function(scope, config) {
   scope.userReourceCacheReset = function() {
     userReourceCache.reset();
   };
+  scope.isAdminUser = function(user) {
+    return (user.roles || []).indexOf(ADMIN_ROLE) != -1;
+  };
   scope.schema = function(target) {
     target = target.properties ? target : {
       type: 'object',

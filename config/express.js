@@ -89,6 +89,7 @@ module.exports = function(app, config, passport) {
     req.isGet = HttpMethod.GET == req.resource.method;
     req.isAjax = !_.isUndefined(req.header('X-Requested-With'));
     req.isPjax = !_.isUndefined(req.headers['x-pjax']);
+    req.reference = req.headers['referer-source'] || '';
 
     res.info = function(msg, source, options, fn) {
       req.flash('info', msg);
@@ -187,7 +188,8 @@ module.exports = function(app, config, passport) {
       }
 
       _.extend(options, req.flash(), {
-        source: req.resource.id
+        source: req.resource.id,
+        reference: req.reference
       });
       if (app.locals.ENV_DEVELOPMENT) {
         log.debug('render source ' + (req.resource.id || req.originalUrl) + ' with ' + view, options);

@@ -258,6 +258,8 @@ $(function () {
         xhr.setRequestHeader('query', lemon.enc(JSON.stringify(qryData)));
       }
     }
+
+    xhr.setRequestHeader('Referer-Source', location.href.replace(location.origin, ''));
     return true;
   });
 

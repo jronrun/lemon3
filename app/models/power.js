@@ -2,6 +2,7 @@
 
 var log = log_from('power');
 
+// Exclude > Include if contain both in same time
 var sourceDefineConst = {
   1: 'Include All',
   2: 'Include only in Define',

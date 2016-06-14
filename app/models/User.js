@@ -16,7 +16,81 @@ var model = schema({
 var user = model_bind('user', model);
 
  /**
+  * Exclude > Include if contain both in same time
+  * 1: 'Include All',
+  * 2: 'Include only in Define',
+  * 3: 'Exclude All',
+  * 4: 'Exclude only in Define'
+  *
+  * @see power.sourceDefineConst
+  * @param scopes
+  * @param excludeDefine
+  * @param includeDefine
+  * @returns {{}}
+  */
+ function scopeMerge(scopes, excludeDefine, includeDefine) {
+   var mergeResult = {};
+   //1. Exclude All
+   if (scopes.indexOf(3) != -1) {
+     mergeResult = {
+       scope: 3,
+       define: []
+     };
+   }
+   //2. Exclude Define && Include All
+   else if (scopes.indexOf(4) != -1 && scopes.indexOf(1) != -1) {
+     mergeResult = {
+       scope: 4,
+       define: excludeDefine
+     };
+   }
+   //3. Exclude Define && Include Define
+   else if (scopes.indexOf(4) != -1 && scopes.indexOf(2) != -1) {
+     var mergerDefine = [];
+     _.each(includeDefine, function (v) {
+       if (excludeDefine.indexOf(v) == -1) {
+         mergerDefine.push(v);
+       }
+     });
+     mergeResult = {
+       scope: 2,
+       define: mergerDefine
+     };
+   }
+   //4. Include All
+   else if (scopes.indexOf(1) != -1) {
+     mergeResult = {
+       scope: 1,
+       define: []
+     };
+   }
+   //5. Include Define
+   else if (scopes.indexOf(2) != -1) {
+     mergeResult = {
+       scope: 2,
+       define: includeDefine
+     };
+   }
+
+   return mergeResult;
+ }
+
+ /**
   * Get user resource with cache
+  * Resource: {
+  *   resource: [],
+  *   env: [],
+  *   group: [],
+  *   server: {
+  *       scope: 1,
+  *       define: []
+  *     },
+  *   interface: {
+  *       scope: 1,
+  *       define: []
+  *     }
+  * }
+  * @see power.sourceDefineConst
   * @param userId
   * @param callback
   * @returns {Promise}
@@ -52,15 +126,87 @@ var user = model_bind('user', model);
               if (error3) {
                 deferred.reject(error3);
               } else {
-                var theResources = [];
+                var theResources = [], theEnv = [], theGroup = [];
+                var serverScope = [], serverIncludeDefine = [], serverExcludeDefine = [];
+                var interfaceScope = [], interfaceIncludeDefine = [], interfaceExcludeDefine = [];
+
                 _.each(items || [], function (item) {
-                  _.each(item.resources, function (aSource) {
+                  //resource
+                  _.each(item.resources || [], function (aSource) {
                     theResources.push(parseInt(aSource));
                   });
+
+                  //env
+                  _.each(item.env || [], function (aEnv) {
+                    theEnv.push(parseInt(aEnv));
+                  });
+
+                  //group
+                  _.each(item.group || [], function (aGroup) {
+                    theGroup.push(parseInt(aGroup));
+                  });
+
+                  if (_.has(item, 'server') && _.has(item.server, 'scope')) {
+                    if (item.server.scope && serverScope.indexOf(item.server.scope) == -1) {
+                      serverScope.push(item.server.scope);
+                    }
+
+                    if (2 == item.server.scope) {
+                      _.each(item.server.define || [], function (v) {
+                        var aDefine = parseInt(v);
+                        if (serverIncludeDefine.indexOf(aDefine) == -1) {
+                          serverIncludeDefine.push(aDefine);
+                        }
+                      });
+                    }
+
+                    if (4 == item.server.scope) {
+                      _.each(item.server.define || [], function (v) {
+                        var aDefine = parseInt(v);
+                        if (serverExcludeDefine.indexOf(aDefine) == -1) {
+                          serverExcludeDefine.push(aDefine);
+                        }
+                      });
+                    }
+                  }
+
+                  if (_.has(item, 'interface') && _.has(item.interface, 'scope')) {
+                    if (item.interface.scope && interfaceScope.indexOf(item.interface.scope) == -1) {
+                      interfaceScope.push(item.interface.scope);
+                    }
+
+                    if (2 == item.server.scope) {
+                      _.each(item.server.define || [], function (v) {
+                        var aDefine = parseInt(v);
+                        if (interfaceIncludeDefine.indexOf(aDefine) == -1) {
+                          interfaceIncludeDefine.push(aDefine);
+                        }
+                      });
+                    }
+
+                    if (4 == item.server.scope) {
+                      _.each(item.interface.define || [], function (v) {
+                        var aDefine = parseInt(v);
+                        if (interfaceExcludeDefine.indexOf(aDefine) == -1) {
+                          interfaceExcludeDefine.push(aDefine);
+                        }
+                      });
+                    }
+                  }
                 });
 
-                userReourceCache.set(userId, theResources);
-                deferred.resolve(theResources);
+                var theServer = scopeMerge(serverScope, serverExcludeDefine, serverIncludeDefine);
+                var theInterface = scopeMerge(interfaceScope, interfaceExcludeDefine, interfaceIncludeDefine);
+
+                var theSource = {
+                  resource: theResources,
+                  env: theEnv,
+                  group: theGroup,
+                  server: theServer,
+                  interface: theInterface
+                };
+                userReourceCache.set(userId, theSource);
+                deferred.resolve(theSource);
               }
             });
           }

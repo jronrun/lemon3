@@ -78,7 +78,7 @@ module.exports = function (router, index, root) {
   router.post(index.user.do, function (req, res, next) {
     User.loadResource(req.params.id).then(function (userResource) {
       res.render(index, {
-        nodes: getResourceTree(userResource)
+        nodes: getResourceTree(userResource.resource)
       });
     });
   });

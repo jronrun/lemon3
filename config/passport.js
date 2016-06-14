@@ -20,7 +20,12 @@ module.exports = function (passport) {
       user.isAdmin = (user.roles || []).indexOf(ADMIN_ROLE) != -1;
 
       User.getResource(user.id).then(function (userResource) {
-        user.resource = userResource;
+        user.resource = userResource.resource;
+        user.env = userResource.env;
+        user.group = userResource.group;
+        user.server = userResource.server;
+        user.interface = userResource.interface;
+
         done(err, user);
       });
     });

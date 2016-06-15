@@ -4,7 +4,10 @@
 'use strict';
 
 require('../css/style.styl');
-var handlePageCall = {}, handleModalCall = { show: {}, shown: {}, confirm: {} }, handleTab = {};
+var handlePageCall = {},
+  handleModalCall = { show: {}, shown: {}, confirm: {} },
+  handleTab = {},
+  handlePjax = {};
 
 //Bootstrap tooltips require Tether (http://github.hubspot.com/tether/)
 //global.Tether = require('tether');
@@ -131,6 +134,28 @@ lemon.register({
     }));
   },
 
+  pjax: function(url, container) {
+    $.pjax({url: url, container: container || '#page'});
+  },
+
+  pjaxBeforeSend: function(url, callback) {
+    lemon.pjaxEvent(url, {
+      beforeSend: callback
+    })
+  },
+
+  /**
+   *
+   * @param callId
+   * @param options {
+   * beforeSend: function(event, xhr, options) {}
+   * end: function(event) {}
+   * }
+   */
+  pjaxEvent: function(url, options) {
+    handlePjax[url] = options || {};
+  },
+
   /**
    * Detect and return the current active responsive breakpoint in Bootstrap
    * http://stackoverflow.com/questions/18575582/how-to-detect-responsive-breakpoints-of-twitter-bootstrap-3-using-javascript/37141090#37141090
@@ -251,7 +276,7 @@ $(function () {
   $(document).pjax('a[data-pjax]', '#page');
 
   $(document).on('pjax:beforeSend', function(event, xhr, options) {
-    var target = event.relatedTarget, ds = target.dataset || {};
+    var target = event.relatedTarget, ds = target ? (target.dataset || {}) : {};
     if (ds.query && ds.query.length) {
       var qryData = lemon.getParam(ds.query);
       if (!lemon.isBlank(qryData)) {
@@ -259,7 +284,16 @@ $(function () {
       }
     }
 
-    xhr.setRequestHeader('Referer-Source', location.href.replace(location.origin, ''));
+    var origin = location.origin;
+    xhr.setRequestHeader('Referer-Source', location.href.replace(origin, ''));
+
+    if (options && options.url) {
+      var theURL = options.url.replace(origin, '');
+      theURL = theURL.substr(0, theURL.indexOf('?'));
+      var registerCall = handlePjax[theURL] || {};
+      lemon.isFunc(registerCall.beforeSend) && registerCall.beforeSend(event, xhr, options);
+    }
+
     return true;
   });
 

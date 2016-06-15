@@ -60,7 +60,7 @@ module.exports = function (router, index, root) {
         {
           title: 'Name',
           prop: function(item) {
-            return generic.title(item.name, getAction(root.server.retrieve, item._id));
+            return generic.title(item.name, getAction(root.server.retrieve, item._id), item.id);
           },
           clazz: 'fixed pull-left item-col-title'
         },
@@ -120,6 +120,7 @@ module.exports = function (router, index, root) {
       ];
 
       var search = [
+        generic.searchInput('id', 'search id...'),
         generic.searchInput('name', 'search server...')
       ];
 

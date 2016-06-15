@@ -32,10 +32,14 @@ module.exports = function(model, index, defineForm) {
       };
     },
 
-    title: function(title, href) {
+    title: function(title, href, itemId) {
+      var theId = '';
+      if (itemId) {
+        theId = generic.em('sort-numeric-desc text-muted', itemId) + '&nbsp;&nbsp;&nbsp;&nbsp;';
+      }
       return format(
-        '<a href="%s" data-pjax><h4 class="item-title"><em class="fa fa-edit"></em>&nbsp;%s</h4></a>',
-        href, title
+        '<a href="%s" data-pjax><h4 class="item-title">%s<em class="fa fa-edit text-muted"></em>&nbsp;%s</h4></a>',
+        href, theId, title
       );
     },
 
@@ -163,7 +167,7 @@ module.exports = function(model, index, defineForm) {
 
       var queryStr = req.header('query') || '', query = {}, realQuery = {};
       if (queryStr.length > 0) {
-        var query = crypto.decompress(queryStr);
+        query = crypto.decompress(queryStr);
         try {
           query = convertData(json5s.parse(query));
         } catch (e) {
@@ -172,7 +176,9 @@ module.exports = function(model, index, defineForm) {
 
         _.each(query, function (v, k) {
           if (v.length > 0) {
-            realQuery[k] = new RegExp(v, 'i');
+            if ('id' != k) {
+              realQuery[k] = new RegExp(v, 'i');
+            }
           }
         });
       }
@@ -187,6 +193,17 @@ module.exports = function(model, index, defineForm) {
         }
 
         //TODO
+      }
+
+      if (_.has(query, 'id') && query.id.length > 0) {
+        var ids = [];
+        _.each(query.id.split(','), function (v) {
+          if (v && v.length > 0) {
+            ids.push(parseInt(v));
+          }
+        });
+
+        _.extend(realQuery, {id: {$in: ids}});
       }
 
       if (_.isFunction(options.queryHandle)) {

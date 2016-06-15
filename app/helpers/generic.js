@@ -177,7 +177,17 @@ module.exports = function(model, index, defineForm) {
         });
       }
 
-      log.info('listchoose', crypto.decompress(req.header('listchoose')));
+      var listchooseStr = req.header('listchoose') || '';
+      if (listchooseStr.length > 0) {
+        var listchoose = crypto.decompress(listchooseStr);
+        try {
+          listchoose = convertData(json5s.parse(listchoose));
+        } catch (e) {
+          throw Error('invalid listchoose parameters: ' + e.message);
+        }
+
+        //TODO
+      }
 
       if (_.isFunction(options.queryHandle)) {
         if (BREAK == options.queryHandle(realQuery)) {

@@ -55,6 +55,11 @@ module.exports = function(model, index, defineForm) {
       return '<em class="fa fa-' + icon + '"></em> ' + (text || '');
     },
 
+    infoButton: function(em, text) {
+      return format('<button type="button" style="border: 0px;" ' +
+        'class="btn btn-primary-outline btn-sm icondh"><em class="fa fa-%s"></em> %s</button>', em, text);
+    },
+
     searchInput: function(name, placeholder) {
       return {
         type: 1,

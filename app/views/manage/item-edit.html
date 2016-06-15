@@ -4,11 +4,11 @@
     <div class="title-block">
         <h3 class="title">
           {{#if update}}Edit {{else}}Create new {{/if}}{{desc}} <span class="sparkline bar" data-type="bar"></span>
-            <a class="btn btn-secondary-outline icondh" data-pjax href="{{listAction}}" role="button">
+            <a class="btn btn-pill-left btn-primary btn-sm icondh" data-pjax href="{{listAction}}" role="button">
                 <em class="fa fa-th-list"></em>
             </a>
             {{#if reference}}
-                <a class="btn btn-secondary-outline icondh" data-pjax href="{{reference}}" role="button">
+                <a class="btn btn-pill-right btn-primary btn-sm icondh" data-pjax href="{{reference}}" role="button">
                     <em class="fa fa-chevron-left"></em>
                 </a>
             {{/if}}

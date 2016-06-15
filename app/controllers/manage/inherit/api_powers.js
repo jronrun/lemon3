@@ -61,7 +61,7 @@ module.exports = function (router, index, root) {
     });
   serverEls.push(
     generic.textareaEl('server.define', {
-      label: 'Define',
+      label: 'Define ' + generic.infoButton('plus', 'Add') + ' ' + generic.infoButton('eye', 'View'),
       desc: 'Server ID, Multiple separated by commas'
     })
   );
@@ -72,7 +72,7 @@ module.exports = function (router, index, root) {
     });
   interfaceEls.push(
     generic.textareaEl('interface.define', {
-      label: 'Define',
+      label: 'Define ' + generic.infoButton('plus', 'Add') + ' ' + generic.infoButton('eye', 'View'),
       desc: 'Interface ID, Multiple separated by commas'
     })
   );

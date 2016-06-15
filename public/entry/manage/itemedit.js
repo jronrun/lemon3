@@ -41,6 +41,16 @@ var editor = {
     });
   },
 
+  listChooseBtn: function() {
+    $('#item-card').find('button[listchoose="1"]').click(function () {
+      var ds = $(this).data();
+      lemon.pjaxBeforeSend(ds.to, function (evt, xhr) {
+        xhr.setRequestHeader('listchoose', lemon.enc(ds));
+      }, 1);
+      lemon.pjax(ds.to);
+    });
+  },
+
   initialize: function() {
     var submitEl = '#item-submit', dataset = $(submitEl).data(), cm;
     switch (dataset.form) {
@@ -66,6 +76,7 @@ var editor = {
     }
 
     editor.asCodemirror();
+    editor.listChooseBtn();
 
     if (1 != dataset.buttons) {
       $(submitEl).remove();

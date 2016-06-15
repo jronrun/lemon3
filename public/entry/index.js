@@ -141,7 +141,7 @@ lemon.register({
   /**
    *
    * @param url
-   * @param callback
+   * @param callback  function(event, xhr, options) {}
    * @param once    is call once, 1 true 0 false
      */
   pjaxBeforeSend: function(url, callback, once) {

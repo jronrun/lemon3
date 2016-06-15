@@ -55,9 +55,22 @@ module.exports = function(model, index, defineForm) {
       return '<em class="fa fa-' + icon + '"></em> ' + (text || '');
     },
 
-    infoButton: function(em, text) {
+    //action 1 add, 2 view
+    toListWithActBtn: function(em, text, href, action) {
+      return generic.primaryBtn(em, text, {
+        'data-to': href,
+        'data-do': action,
+        listchoose: 1
+      });
+    },
+
+    primaryBtn: function(em, text, attrs) {
+      var props = [];
+      _.each(attrs || {}, function (v, k) {
+        props.push(k + '="' + v + '"');
+      });
       return format('<button type="button" style="border: 0px;" ' +
-        'class="btn btn-primary-outline btn-sm icondh"><em class="fa fa-%s"></em> %s</button>', em, text);
+        'class="btn btn-primary-outline btn-sm icondh" %s><em class="fa fa-%s"></em> %s</button>', props.join(' '), em, text);
     },
 
     searchInput: function(name, placeholder) {
@@ -156,6 +169,8 @@ module.exports = function(model, index, defineForm) {
           }
         });
       }
+
+      log.info('listchoose', crypto.decompress(req.header('listchoose')));
 
       if (_.isFunction(options.queryHandle)) {
         if (BREAK == options.queryHandle(realQuery)) {

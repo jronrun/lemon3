@@ -138,8 +138,15 @@ lemon.register({
     $.pjax({url: url, container: container || '#page'});
   },
 
-  pjaxBeforeSend: function(url, callback) {
+  /**
+   *
+   * @param url
+   * @param callback
+   * @param once    is call once, 1 true 0 false
+     */
+  pjaxBeforeSend: function(url, callback, once) {
     lemon.pjaxEvent(url, {
+      once: once || 0,
       beforeSend: callback
     })
   },
@@ -290,8 +297,14 @@ $(function () {
     if (options && options.url) {
       var theURL = options.url.replace(origin, '');
       theURL = theURL.substr(0, theURL.indexOf('?'));
-      var registerCall = handlePjax[theURL] || {};
-      lemon.isFunc(registerCall.beforeSend) && registerCall.beforeSend(event, xhr, options);
+      var registerOptions = handlePjax[theURL] || {};
+
+      if (lemon.isFunc(registerOptions.beforeSend)) {
+        registerOptions.beforeSend(event, xhr, options);
+        if (1 == registerOptions.once) {
+          delete handlePjax[theURL]
+        }
+      }
     }
 
     return true;

@@ -55,8 +55,15 @@ module.exports = function(model, index, defineForm) {
       return '<em class="fa fa-' + icon + '"></em> ' + (text || '');
     },
 
-    //action 1 add, 2 view
-    toListWithActBtn: function(em, text, href, action) {
+    /**
+     *
+     * @param em
+     * @param text
+     * @param href
+     * @param action 1 list choose add, 2 list choose view
+       * @returns {*}
+       */
+    listChooseBtn: function(em, text, href, action) {
       return generic.primaryBtn(em, text, {
         'data-to': href,
         'data-do': action,

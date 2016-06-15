@@ -57,8 +57,8 @@ module.exports = function (router, index, root) {
 
   var serverLabel = [
     'Define',
-    generic.toListWithActBtn('plus', 'Add', getAction(root.server, 1), 1),
-    generic.toListWithActBtn('eye', 'View', getAction(root.server, 1), 2)
+    generic.listChooseBtn('plus', 'Add', getAction(root.server, 1), 1),
+    generic.listChooseBtn('eye', 'View', getAction(root.server, 1), 2)
   ].join(' ');
   var serverEls = generic.schemaEl('server.scope',
     generic.getSchema('server.properties.scope'), {
@@ -73,8 +73,8 @@ module.exports = function (router, index, root) {
 
   var interfaceLabel = [
     'Define',
-    generic.toListWithActBtn('plus', 'Add', getAction(root.interface, 1), 1),
-    generic.toListWithActBtn('eye', 'View', getAction(root.interface, 1), 2)
+    generic.listChooseBtn('plus', 'Add', getAction(root.interface, 1), 1),
+    generic.listChooseBtn('eye', 'View', getAction(root.interface, 1), 2)
   ].join(' ');
   var interfaceEls = generic.schemaEl('interface.scope',
     generic.getSchema('interface.properties.scope'), {

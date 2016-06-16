@@ -67,10 +67,11 @@ module.exports = function(model, index, defineForm) {
      * @param action 1 list choose add, 2 list choose view
        * @returns {*}
        */
-    listChooseBtn: function(em, text, href, action) {
+    listChooseBtn: function(em, text, href, action, field) {
       return generic.primaryBtn(em, text, {
         'data-to': href,
         'data-do': action,
+        'data-field': field,
         listchoose: 1
       });
     },
@@ -192,7 +193,32 @@ module.exports = function(model, index, defineForm) {
           throw Error('invalid listchoose parameters: ' + e.message);
         }
 
-        //TODO
+        var origin = listchoose.params || {};
+        try {
+          origin = crypto.decompress(origin.item);
+          origin = convertData(json5s.parse(origin));
+        } catch (e) {
+          return res.json(answer.fail('invalid listchoose item: ' + e.message));
+        }
+
+        //do 1 list choose add, 2 list choose view
+        //1 list choose add
+        if (1 == listchoose.do) {
+
+        }
+        //2 list choose view
+        else if (2 == listchoose.do) {
+          var fieldIds = _.get(origin, listchoose.field);
+          if (fieldIds) {
+            _.extend(query, {id: fieldIds});
+            if (queryStr.length > 0) {
+              queryStr = crypto.compress(query);
+            } else {
+              queryStr = crypto.compress({id: fieldIds});
+            }
+          }
+        }
+
       }
 
       if (_.has(query, 'id') && query.id.length > 0) {

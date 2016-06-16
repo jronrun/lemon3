@@ -45,10 +45,56 @@ var editor = {
     $('#item-card').find('button[listchoose="1"]').click(function () {
       var ds = $(this).data();
       lemon.pjaxBeforeSend(ds.to, function (evt, xhr) {
+        ds.params = editor.getParams();
         xhr.setRequestHeader('listchoose', lemon.enc(ds));
       }, 1);
       lemon.pjax(ds.to);
     });
+  },
+
+  getParams: function() {
+    var params = {}, tree = '#res-tree',
+      hasResource = $(tree).length, dataset = $('#item-submit').data();
+
+    if (1 == dataset.form) {
+      var reqData = lemon.getParam('#item-card', 'textarea');
+      delete reqData.resource;
+      params.item = lemon.enc(JSON.stringify(reqData));
+    } else if (2 == dataset.form) {
+      params.item = lemon.enc(cm.target.getValue());
+    }
+
+    if (hasResource && 1 == $(tree).attr('showopt')) {
+      params.resource = lemon.chkboxval('resource');
+    }
+
+    var isValidJSON5 = true;
+    $('#item-card').find('textarea[codemirror="1"]').each(function () {
+      var required = $(this).attr('required'), name = $(this).attr('name');
+      var theCM = editor.ctx[name];
+      var val = theCM.val();
+      if (theCM.isJson()) {
+        params[name] = lemon.enc(val);
+      } else {
+        if ('required' == required || '' != val) {
+          isValidJSON5 = false;
+          msg.warn(name + ' is not valid JSON5.', '#item-card');
+        }
+      }
+    });
+
+    if (!isValidJSON5) {
+      return -1;
+    }
+
+    $('div[id^=item-sel-]').each(function() {
+      var ds = $(this).data();
+      if (ds.checkname.length) {
+        params[ds.checkname] = lemon.chkboxval(ds.checkname);
+      }
+    });
+
+    return params;
   },
 
   initialize: function() {
@@ -68,7 +114,7 @@ var editor = {
         return;
     }
 
-    var hasResource = $('#res-tree').length, tree = '#res-tree';
+    var tree = '#res-tree', hasResource = $(tree).length;
     if (hasResource) {
       lemon.sourcetree(tree, $(tree).attr('action'), {
         showopt: $(tree).attr('showopt')
@@ -89,42 +135,15 @@ var editor = {
       }
       lemon.disable(this);
       msg.clear();
-      var method = dataset.method.toLowerCase(), action = dataset.action, params = {};
-      if (1 == dataset.form) {
-        var reqData = lemon.getParam('#item-card', 'textarea');
-        delete reqData.resource;
-        params.item = lemon.enc(JSON.stringify(reqData));
-      } else if (2 == dataset.form) {
-        params.item = lemon.enc(cm.target.getValue());
-      }
-      if (hasResource && 1 == $(tree).attr('showopt')) {
-        params.resource = lemon.chkboxval('resource');
-      }
 
-      var isValidJSON5 = true;
-      $('#item-card').find('textarea[codemirror="1"]').each(function () {
-        var required = $(this).attr('required'), name = $(this).attr('name');
-        var theCM = editor.ctx[name];
-        var val = theCM.val();
-        if (theCM.isJson()) {
-          params[name] = lemon.enc(val);
-        } else {
-          if ('required' == required || '' != val) {
-            isValidJSON5 = false;
-            msg.warn(name + ' is not valid JSON5.', '#item-card');
-          }
-        }
-      });
+      var method = dataset.method.toLowerCase(),
+        action = dataset.action,
+        params = editor.getParams();
 
-      if (!isValidJSON5) {
+      if (-1 == params) {
         lemon.enable(submitEl);
         return;
       }
-
-      $('div[id^=item-sel-]').each(function() {
-        var ds = $(this).data();
-        params[ds.checkname] = lemon.chkboxval(ds.checkname);
-      });
 
       ($[method] || lemon[method])(action, params).done(function(resp) {
         if (0 == resp.code) {

@@ -179,6 +179,8 @@ module.exports = function (router, index, root) {
             res.json(answer.fail('Response is not a valid JSON5'));
             return generic.BREAK;
           }
+        } else {
+          item.response = {};
         }
       }
     }, req, res, next);
@@ -216,6 +218,8 @@ module.exports = function (router, index, root) {
             res.json(answer.fail('Response is not a valid JSON5'));
             return generic.BREAK;
           }
+        } else {
+          item.response = {};
         }
       }
     }, req, res, next);

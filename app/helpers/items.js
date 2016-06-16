@@ -57,6 +57,7 @@ var helper = {
 
       data.push({
         id: item['_id'],
+        numId: item.id || 0,
         row: row
       });
     });

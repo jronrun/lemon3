@@ -108,7 +108,14 @@
                         </div>
                     {{/each}}
 
-                    <div class="item-col fixed item-col-actions-dropdown">
+                    <div class="item-col fixed item-col-actions-dropdown" id="list-tool-{{numId}}">
+                        {{!--
+                        {{#is ../listchoose.has "==" 1}}
+                            <p class="text-primary icondh">
+                            <em class="fa {{#is numId "in" ../listchoose.ids}}fa-check-square-o{{else}}fa-square-o{{/is}}" id="listchoose-chk-{{numId}}"></em>
+                            </p>
+                        {{/is}}
+                        --}}
                         <div class="item-actions-dropdown">
                             <a class="item-actions-toggle-btn">
                                 <span class="inactive"> <i class="fa fa-cog"></i> </span>
@@ -135,6 +142,10 @@
 
         </ul>
     </div>
+    {{#is listchoose.has "==" 1}}
+        <input type="hidden" id="listchoose-option" data-body="{{listchoose.body}}" data-ids="{{listchoose.ids}}"/>
+    {{/is}}
+    <input type="hidden" id="action-base" value="{{action}}"/>
 
     {{> pagination}}
 

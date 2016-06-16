@@ -32,7 +32,7 @@ lemon.href = function (uri) {
   global.location.href = uri;
 };
 
-//global.$ = $;
+global.$ = $;
 
 var initlock = {};
 function callinit(source) {

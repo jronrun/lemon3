@@ -67,9 +67,11 @@ module.exports = function(model, index, defineForm) {
      * @param action 1 list choose add, 2 list choose view
        * @returns {*}
        */
-    listChooseBtn: function(em, text, href, action, field) {
+    listChooseBtn: function(em, text, source, action, field) {
+      var act = actionWrap(source.action, 1);
       return generic.primaryBtn(em, text, {
-        'data-to': href,
+        'data-to': act.action,
+        'data-base': act.base,
         'data-do': action,
         'data-field': field,
         listchoose: 1
@@ -163,7 +165,14 @@ module.exports = function(model, index, defineForm) {
         pageOptions: {},
         ownerQuery: 0,
         queryHandle: false,
-        listName: index.desc
+        listName: index.desc,
+
+        //inner use
+        listchoose: {
+          has: 0,
+          ids: '',
+          body: ''
+        }
       }, options || {});
 
       var queryStr = req.header('query') || '', query = {}, realQuery = {};
@@ -201,6 +210,7 @@ module.exports = function(model, index, defineForm) {
           return res.json(answer.fail('invalid listchoose item: ' + e.message));
         }
 
+        var fieldIds = _.get(origin, listchoose.field);
         //do 1 list choose add, 2 list choose view
         //1 list choose add
         if (1 == listchoose.do) {
@@ -208,7 +218,6 @@ module.exports = function(model, index, defineForm) {
         }
         //2 list choose view
         else if (2 == listchoose.do) {
-          var fieldIds = _.get(origin, listchoose.field);
           if (fieldIds) {
             _.extend(query, {id: fieldIds});
             if (queryStr.length > 0) {
@@ -218,6 +227,19 @@ module.exports = function(model, index, defineForm) {
             }
           }
         }
+
+        var listchooseIds = [];
+        _.each(fieldIds.split(','), function (v) {
+          if (v && v.length > 0) {
+            listchooseIds.push(parseInt(v));
+          }
+        });
+
+        options.listchoose = {
+          has: 1,
+          ids: crypto.compress(listchooseIds),
+          body: crypto.compress(listchoose)
+        };
 
       }
 
@@ -253,7 +275,8 @@ module.exports = function(model, index, defineForm) {
           desc: options.listName,
           search: options.search,
           searchLastEl: options.search.length - 1,
-          queryStr: queryStr
+          queryStr: queryStr,
+          listchoose: options.listchoose
         });
       });
     },

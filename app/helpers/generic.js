@@ -202,6 +202,7 @@ module.exports = function(model, index, defineForm) {
           throw Error('invalid listchoose parameters: ' + e.message);
         }
 
+        listchoose.from = req.reference;
         var origin = listchoose.params || {};
         try {
           origin = crypto.decompress(origin.item);

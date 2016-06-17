@@ -57,8 +57,22 @@ module.exports = function (router, index, root) {
 
   var serverLabel = [
     'Define',
-    generic.listChooseBtn('check-circle-o', 'Choose', root.server, 1, 'server.define'),
-    generic.listChooseBtn('eye', 'View', root.server, 2, 'server.define')
+    generic.listChooseBtn({
+      buttonEm: 'check-circle-o',
+      buttonText: 'Choose',
+      source: root.server,
+      field: 'server.define',
+      chooseAction: 1,
+      listCardTitle: 'Choose Server for API Power'
+    }),
+    generic.listChooseBtn({
+      buttonEm: 'eye',
+      buttonText: 'View',
+      source: root.server,
+      field: 'server.define',
+      chooseAction: 2,
+      listCardTitle: 'Choose Server for API Power'
+    })
   ].join(' ');
   var serverEls = generic.schemaEl('server.scope',
     generic.getSchema('server.properties.scope'), {
@@ -73,8 +87,22 @@ module.exports = function (router, index, root) {
 
   var interfaceLabel = [
     'Define',
-    generic.listChooseBtn('check-circle-o', 'Choose', root.interface, 1, 'interface.define'),
-    generic.listChooseBtn('eye', 'View', root.interface, 2, 'interface.define')
+    generic.listChooseBtn({
+      buttonEm: 'check-circle-o',
+      buttonText: 'Choose',
+      source: root.interface,
+      field: 'interface.define',
+      chooseAction: 1,
+      listCardTitle: 'Choose Interface for API Power'
+    }),
+    generic.listChooseBtn({
+      buttonEm: 'eye',
+      buttonText: 'View',
+      source: root.interface,
+      field: 'interface.define',
+      chooseAction: 2,
+      listCardTitle: 'Choose Interface for API Power'
+    })
   ].join(' ');
   var interfaceEls = generic.schemaEl('interface.scope',
     generic.getSchema('interface.properties.scope'), {

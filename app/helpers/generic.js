@@ -59,21 +59,23 @@ module.exports = function(model, index, defineForm) {
       return '<em class="fa fa-' + icon + '"></em> ' + (text || '');
     },
 
-    /**
-     *
-     * @param em
-     * @param text
-     * @param href
-     * @param action 1 list choose add, 2 list choose view
-       * @returns {*}
-       */
-    listChooseBtn: function(em, text, source, action, field) {
-      var act = actionWrap(source.action, 1);
-      return generic.primaryBtn(em, text, {
+    listChooseBtn: function(options) {
+      options = _.extend({
+        buttonEm: '',
+        buttonText: '',
+        source: {},
+        field: '',
+        chooseAction: null,  //1 list choose add, 2 list choose view
+        listCardTitle: ''
+      }, options);
+
+      var act = actionWrap(options.source.action, 1);
+      return generic.primaryBtn(options.buttonEm, options.buttonText, {
         'data-to': act.action,
         'data-base': act.base,
-        'data-do': action,
-        'data-field': field,
+        'data-do': options.chooseAction,
+        'data-field': options.field,
+        'data-title': options.listCardTitle,
         listchoose: 1
       });
     },

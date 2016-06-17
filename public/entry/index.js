@@ -138,6 +138,10 @@ lemon.register({
     $.pjax({url: url, container: container || '#page'});
   },
 
+  pjaxReload: function(container) {
+    lemon.pjax(lemon.getURI(), container);
+  },
+
   /**
    *
    * @param url
@@ -188,6 +192,20 @@ lemon.register({
   isView: function (target) {
     target = lemon.isArray(target) ? target : [target];
     return target.indexOf(lemon.detect()) != -1;
+  },
+
+  hasEvent: function(selector, type) {
+    var data = ($._data($(selector)[0], 'events') || {})[type];
+
+    if (data === undefined || data.length === 0) {
+      return false;
+    }
+
+    return true;
+  },
+
+  getURI: function() {
+    return location.href.replace(location.origin, '');
   }
 });
 

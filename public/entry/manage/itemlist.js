@@ -58,7 +58,7 @@ $(function () {
     }
 
     var actionBase = $('#action-base').val(), theChoose = lemon.store(actionBase) || null;
-    if (null != theChoose) {
+    if (null != theChoose && !$('#lc-card-ids').length) {
       $('[id^="list-tool-"]').each(function () {
         var id = $(this).attr('id'), itemId = parseInt(id.replace('list-tool-', ''));
 
@@ -72,25 +72,56 @@ $(function () {
         $(this).prepend(lemon.format(el, clazz, itemId));
       });
 
-      $('[id^="listchoose-chk-"]').click(function() {
-        var id = $(this).attr('id'), itemId = parseInt(id.replace('listchoose-chk-', ''));
+      var cardBody = [
+        '<div class="card-header"><div class="header-block"><p class="title">{0}</p></div></div>',
+        '<div class="card-block">',
+        '<p id="lc-card-ids">&nbsp;</p>',
+        '</div>',
+        '<div class="card-footer">',
+        '<section class="section">',
+        '<button type="button" class="btn btn-primary-outline" data-from="{1}" id="lc-card-choose">Choose</button>&nbsp;&nbsp;',
+        '<button type="button" class="btn btn-secondary-outline" data-base="{2}" id="lc-card-cancel">Cancel</button>',
+        '</section>',
+        '</div>'
+      ];
+      $('#listchoose-card').html(lemon.format(cardBody.join(''), theChoose.choose.title, theChoose.choose.from, actionBase));
+      $('#lc-card-ids').text(theChoose.ids.join(','));
+      if (2 == theChoose.choose.do) {
+        $('input[name="id"]').val(theChoose.ids.join(','));
+      }
 
-        var ids = theChoose.ids || [];
-        if (lemon.chkboxable('#' + id, 1)) {
-          ids.push(itemId);
-        } else {
-          ids = lemon.rmByVal(ids, itemId);
-        }
+    }
 
-        theChoose.ids = ids;
-        lemon.store(actionBase, theChoose);
+    $('[id^="listchoose-chk-"]').each(function () {
+      if (!lemon.hasEvent(this, 'click')) {
+        $(this).click(function() {
+          var id = $(this).attr('id'), itemId = parseInt(id.replace('listchoose-chk-', ''));
 
-        if (1 == theChoose.choose.do) {
+          var ids = theChoose.ids || [];
+          if (lemon.chkboxable('#' + id, 1)) {
+            ids.push(itemId);
+          } else {
+            ids = lemon.rmByVal(ids, itemId);
+          }
 
-        } else if (2 == theChoose.choose.do) {
-          $('input[name="id"]').val(ids.join(','));
-        }
+          theChoose.ids = ids;
+          lemon.store(actionBase, theChoose);
 
+          $('#lc-card-ids').text(ids.join(','));
+          if (1 == theChoose.choose.do) {
+
+          } else if (2 == theChoose.choose.do) {
+            $('input[name="id"]').val(ids.join(','));
+          }
+
+        });
+      }
+    });
+
+    if (!lemon.hasEvent('#lc-card-cancel', 'click')) {
+      $('#lc-card-cancel').click(function () {
+        lemon.store(actionBase, null);
+        lemon.pjaxReload();
       });
     }
 

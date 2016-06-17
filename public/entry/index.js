@@ -195,7 +195,13 @@ lemon.register({
   },
 
   hasEvent: function(selector, type) {
-    var data = ($._data($(selector)[0], 'events') || {})[type];
+    var data = undefined;
+
+    try {
+      data = ($._data($(selector)[0], 'events') || {})[type];
+    } catch (e) {
+
+    }
 
     if (data === undefined || data.length === 0) {
       return false;

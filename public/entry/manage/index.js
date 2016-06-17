@@ -46,6 +46,11 @@ lemon.register({
     }
     return checkBoxes.prop('checked') ? 1 : 0;
   },
+  chkboxReset: function(selector) {
+    $((selector || '') + ' input[type="checkbox"]').each(function() {
+      lemon.chkboxtgl(this, 3);
+    });
+  },
   chkboxval: function(name){
     return $("input:checked[name='" + name + "']").map(function(){
       return $(this).val();

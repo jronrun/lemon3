@@ -132,7 +132,6 @@ $(function () {
     if (!lemon.hasEvent('#lc-card-cancel', 'click')) {
       $('#lc-card-cancel').click(function () {
         lemon.store($(this).data('base'), null);
-        lemon.store($(this).data('from'), null);
         lemon.pjaxReload();
       });
     }

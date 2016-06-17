@@ -60,6 +60,7 @@ var editor = {
       if (null != backdata) {
         var original = $.parseJSON(lemon.dec(backdata.choose.params.item));
         original[backdata.choose.field] = (backdata.ids || []).join(',');
+        lemon.chkboxReset('#item-card');
         lemon.fillParam('#item-card', original);
       }
     }

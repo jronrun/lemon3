@@ -79,8 +79,8 @@ $(function () {
         '</div>',
         '<div class="card-footer">',
         '<section class="section">',
-        '<button type="button" class="btn btn-primary-outline" data-from="{1}" id="lc-card-choose">Choose</button>&nbsp;&nbsp;',
-        '<button type="button" class="btn btn-secondary-outline" data-base="{2}" id="lc-card-cancel">Cancel</button>',
+        '<button type="button" class="btn btn-primary-outline" data-from="{1}" data-base="{2}" id="lc-card-choose">Choose</button>&nbsp;&nbsp;',
+        '<button type="button" class="btn btn-secondary-outline" data-from="{1}" data-base="{2}" id="lc-card-cancel">Cancel</button>',
         '</section>',
         '</div>'
       ];
@@ -118,9 +118,21 @@ $(function () {
       }
     });
 
+    if (!lemon.hasEvent('#lc-card-choose', 'click')) {
+      $('#lc-card-choose').click(function() {
+        var ds = $(this).data();
+        lemon.pjaxBeforeSend(ds.from, function (evt, xhr) {
+          xhr.setRequestHeader('listchooseback', lemon.enc(ds));
+        }, 1);
+
+        lemon.pjax(ds.from);
+      });
+    }
+
     if (!lemon.hasEvent('#lc-card-cancel', 'click')) {
       $('#lc-card-cancel').click(function () {
-        lemon.store(actionBase, null);
+        lemon.store($(this).data('base'), null);
+        lemon.store($(this).data('from'), null);
         lemon.pjaxReload();
       });
     }

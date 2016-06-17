@@ -317,7 +317,13 @@ module.exports = function(model, index, defineForm) {
         formElHandle: false,
         defineForm: {},
         defineElement: {},
-        tabs: []
+        tabs: [],
+
+        //inner
+        listchooseback: {
+          has: 0,
+          body: ''
+        }
       }, options || {});
 
       var formEls = {};
@@ -330,6 +336,21 @@ module.exports = function(model, index, defineForm) {
           if (BREAK == options.formElHandle(forms.helper(formEls))) {
             return;
           }
+        }
+      }
+
+      var listchoosebackStr = req.header('listchooseback') || '';
+      if (listchoosebackStr.length > 0) {
+        //var lcback = crypto.decompress(listchoosebackStr);
+        //try {
+        //  lcback = convertData(json5s.parse(lcback));
+        //} catch (e) {
+        //  throw Error('invalid listchooseback parameters: ' + e.message);
+        //}
+
+        options.listchooseback = {
+          has: 1,
+          body: listchoosebackStr
         }
       }
 
@@ -353,7 +374,8 @@ module.exports = function(model, index, defineForm) {
         listAction: actionWrap(index.action, options.listHomePageArg).action,
         tabs: options.tabs,
         form: formEls,
-        form_type: options.masterFormType
+        form_type: options.masterFormType,
+        listchooseback: options.listchooseback
       });
     },
 
@@ -394,7 +416,13 @@ module.exports = function(model, index, defineForm) {
         additionHandle: false,
         defineForm: {},
         defineElement: {},
-        tabs: []
+        tabs: [],
+
+        //inner
+        listchooseback: {
+          has: 0,
+          body: ''
+        }
       }, options || {});
 
       var itemId = req.params.id;
@@ -429,6 +457,14 @@ module.exports = function(model, index, defineForm) {
           }
         }
 
+        var listchoosebackStr = req.header('listchooseback') || '';
+        if (listchoosebackStr.length > 0) {
+          options.listchooseback = {
+            has: 1,
+            body: listchoosebackStr
+          }
+        }
+
         _.each(options.tabs, function (aTab) {
           aTab.tabId = aTab.tabName;
           aTab.tabId = aTab.tabId.replace(/\s/g,'-');
@@ -449,7 +485,8 @@ module.exports = function(model, index, defineForm) {
           update: 1,
           form: formEls,
           form_type: options.masterFormType,
-          addition: crypto.compress(addition)
+          addition: crypto.compress(addition),
+          listchooseback: options.listchooseback
         });
       });
     },

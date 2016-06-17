@@ -52,6 +52,19 @@ var editor = {
     });
   },
 
+  listChooseBack: function(dataset) {
+    var lcoption = '#listchooseback-option';
+    if (1 == dataset.lcback && $(lcoption).length) {
+      var chooseback = $.parseJSON(lemon.dec($(lcoption).data('body')));
+      var backdata = lemon.store(chooseback.base) || null;
+      if (null != backdata) {
+        var original = $.parseJSON(lemon.dec(backdata.choose.params.item));
+        original[backdata.choose.field] = (backdata.ids || []).join(',');
+        lemon.fillParam('#item-card', original);
+      }
+    }
+  },
+
   getParams: function() {
     var params = {}, tree = '#res-tree',
       hasResource = $(tree).length, dataset = $('#item-submit').data();
@@ -123,6 +136,7 @@ var editor = {
 
     editor.asCodemirror();
     editor.listChooseBtn();
+    editor.listChooseBack(dataset);
 
     if (1 != dataset.buttons) {
       $(submitEl).remove();

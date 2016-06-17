@@ -77,7 +77,8 @@
             <div class="card-footer">
                 <div class="form-group row">
                     <div class="col-sm-10 col-sm-offset-2">
-                        <button type="button" id="item-submit" class="btn btn-primary" data-form="{{form_type}}" data-method="{{method}}" data-action="{{action}}" data-buttons="{{hasButtons}}">
+                        <button type="button" id="item-submit" class="btn btn-primary" data-lcback="{{listchooseback.has}}"
+                                data-form="{{form_type}}" data-method="{{method}}" data-action="{{action}}" data-buttons="{{hasButtons}}">
                         Submit
                         </button>
                     </div>
@@ -86,5 +87,10 @@
         </div>
 
     </form>
+
+    {{#is listchooseback.has "==" 1}}
+        <input type="hidden" id="listchooseback-option" data-body="{{listchooseback.body}}"/>
+    {{/is}}
+
     <script src="/dist/manage/itemedit.js" data-pjax></script>
 </article>

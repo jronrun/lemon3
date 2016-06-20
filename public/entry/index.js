@@ -215,8 +215,56 @@ lemon.register({
   }
 });
 
+var holdMsgId = {};
 //bootstrap
 lemon.register({
+  msg: function(text, options) {
+    options = lemon.extend({
+      level: 'warning',
+      delay: 3000,
+      //1 auto: disappear when options.delay millesecond, 2 manual: manual close, 3 forever
+      close: 1,
+      containerId: '#message',
+      permanentId: '#permanent_id'
+    }, options || {});
+
+    var msgId = '#msg_id_' + lemon.uniqueId(), cid = options.containerId;
+    var msg = $(document.createElement('div')).attr({
+      class: 'alert alert-' + options.level,
+      role: 'alert',
+      id: lemon.ltrim(msgId, '#'),
+      style: 'display:none'
+    }).html(text);
+
+    $(cid).append(msg);
+    holdMsgId[cid] = holdMsgId[cid] || [];
+    holdMsgId[cid].push(msgId);
+
+    if (options.close == 2) {
+      msg.append([
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">',
+        '<span aria-hidden="true">&times;</span></button>'
+      ].join(''));
+    } else if (options.close == 1) {
+      if (holdMsgId[cid].length <= 1) {
+        $(options.permanentId).slideToggle();
+      }
+      lemon.delay(function() {
+        lemon.rmByVal(holdMsgId[cid], msgId);
+        $(msgId).slideToggle(function() {
+          $(msgId).remove();
+        });
+
+        if (!holdMsgId[cid].length && !$(options.permanentId + ':visible').length) {
+          $(options.permanentId).slideToggle();
+        }
+      }, options.delay);
+    } else if (options.close == 3) {
+
+    }
+    $(msgId).slideToggle();
+    return msgId;
+  },
   buttonTgl: function(selector) {
     $(selector).button('toggle');
     if ($(selector).hasClass('active')) {

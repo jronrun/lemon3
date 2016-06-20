@@ -44,13 +44,14 @@ module.exports = function (router, index, root) {
             var powerName = [];
             _.each(item.powers, function (powerId) {
               var aPower = powerData[powerId], aType = '';
-              if (1 == aPower.type) {
-                aType = generic.label('URL');
-              } else if (2 == aPower.type) {
-                aType = generic.label('API');
-              }
               if (aPower) {
-                powerName.push(generic.info(getAction(root.powers.retrieve, aPower._id), aPower.name) + aType);
+                if (1 == aPower.type) {
+                  aType = generic.label('URL');
+                  powerName.push(generic.info(getAction(root.powers.retrieve, aPower._id), aPower.name) + aType);
+                } else if (2 == aPower.type) {
+                  aType = generic.label('API');
+                  powerName.push(generic.info(getAction(root['api-power'].retrieve, aPower._id), aPower.name) + aType);
+                }
               }
             });
             return powerName.join('</br>');

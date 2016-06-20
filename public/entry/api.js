@@ -27,7 +27,7 @@ mapi = {
 
     $('#btn-tgl-form').click(function () {
       if (!mapi.requ.isJson()) {
-        lemon.msg('The request data is not valid JSON.');
+        lemon.msg('The request data is not valid JSON or JSON5.');
         return;
       }
 

@@ -56,7 +56,8 @@ module.exports = function(model, index, defineForm) {
     },
 
     label: function(text, clazz) {
-      return format('<span class="label %s" style="font-size:60%;">%s</span>', clazz || 'label-primary pull-right', text);
+      //style="font-size:60%;"
+      return format('<span class="label %s"><small>%s</small></span>', clazz || 'label-default pull-right', text);
     },
 
     em: function(icon, text) {

@@ -55,6 +55,10 @@ module.exports = function(model, index, defineForm) {
       return format('<a href="%s" data-pjax><em class="fa fa-info-circle"></em> %s</a>', href, text || '');
     },
 
+    label: function(text, clazz) {
+      return format('<span class="label %s" style="font-size:60%;">%s</span>', clazz || 'label-default pull-right', text);
+    },
+
     em: function(icon, text) {
       return '<em class="fa fa-' + icon + '"></em> ' + (text || '');
     },

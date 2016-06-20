@@ -27,7 +27,7 @@ mapi = {
 
     $('#btn-tgl-form').click(function () {
       if (!mapi.requ.isJson()) {
-        alert('not json');
+        lemon.msg('The request data is not valid JSON.');
         return;
       }
 
@@ -53,7 +53,7 @@ mapi = {
             mapi.requ.json(lemon.dec(resp.result.data));
             lemon.tabShow('#tab-tri-mirror');
           } else {
-            alert(resp.msg);
+            lemon.msg(resp.msg);
           }
           lemon.progressEnd(requTool);
         });

@@ -220,6 +220,7 @@ var holdMsgId = {};
 lemon.register({
   msg: function(text, options) {
     options = lemon.extend({
+      msgId: '',
       level: 'warning',
       delay: 3000,
       //1 auto: disappear when options.delay millesecond, 2 manual: manual close, 3 forever
@@ -228,7 +229,7 @@ lemon.register({
       permanentId: '#permanent_id'
     }, options || {});
 
-    var msgId = '#msg_id_' + lemon.uniqueId(), cid = options.containerId;
+    var msgId = options.msgId || ('#msg_id_' + lemon.uniqueId()), cid = options.containerId;
     var msg = $(document.createElement('div')).attr({
       class: 'alert alert-' + options.level,
       role: 'alert',

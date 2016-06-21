@@ -143,7 +143,8 @@ module.exports.Base = function(model, modelName, define) {
      * @param options
      * {
      *  field: '',      //sort field name
-     *  sort: 1         //sort 1 asc, -1 desc
+     *  sort: 1,        //sort 1 asc, -1 desc
+     *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
      * }
      *
      * @returns {Promise}
@@ -161,11 +162,17 @@ module.exports.Base = function(model, modelName, define) {
       var deferred = when.defer();
       page = page || 1; size = size || pages.default_size; options = _.extend({
         field: '_id',
-        sort: -1
+        sort: -1,
+        sorts: false
       }, options || {});
 
       var aSort = {}, originalQry = _.extend(query || {});
-      aSort[options.field] = options.sort;
+      if (options.sorts) {
+        aSort = options.sorts;
+      } else {
+        aSort[options.field] = options.sort;
+      }
+
       model.find(originalQry).sort(aSort).skip((page - 1) * size).limit(size).toArray(function (err, items) {
         if (err) {
           deferred.reject(err);
@@ -219,6 +226,7 @@ module.exports.Base = function(model, modelName, define) {
      *  order: 1,       //page order, 1 next page, -1 prev page
      *  field: '',      //sort field name
      *  sort: 1,        //sort 1 asc, -1 desc,
+     *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
      *  format: function(fieldVal){}    //format param field value
      * }
      */
@@ -230,12 +238,19 @@ module.exports.Base = function(model, modelName, define) {
         options = _.extend({
           field: '_id',
           sort: -1,
+          sorts: false,
           order: 'za' == order ? -1 : 1
         }, options || {});
 
         if (criticalId == pages.intl_id) {
           var deferred = when.defer();
-          aSort[options.field] = options.sort;
+
+          if (options.sorts) {
+            aSort = options.sorts;
+          } else {
+            aSort[options.field] = options.sort;
+          }
+
           model.find(query).sort(aSort).limit(1).toArray(function (err, items) {
             if (err) {
               deferred.reject(err);
@@ -270,6 +285,7 @@ module.exports.Base = function(model, modelName, define) {
      *  order: 1,       //page order, 1 next page, -1 prev page
      *  field: '',      //sort field name
      *  sort: 1,        //sort 1 asc, -1 desc,
+     *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
      *  format: function(fieldVal){}    //format param field value
      * }
      *
@@ -290,6 +306,7 @@ module.exports.Base = function(model, modelName, define) {
       size = size || pages.default_size; options = _.extend({
         field: '_id',
         sort: -1,
+        sorts: false,
         order: 1
       }, options || {});
 
@@ -350,6 +367,7 @@ module.exports.Base = function(model, modelName, define) {
      *  order: 1,       //page order, 1 next page, -1 prev page, if prev page need _.reverse(items);
      *  field: '',      //sort field name
      *  sort: 1,        //sort 1 asc, -1 desc,
+     *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
      *  format: function(fieldVal){}    //format param field value
      * }
      * @returns {*}
@@ -358,6 +376,7 @@ module.exports.Base = function(model, modelName, define) {
       options = _.extend({
         field: '_id',
         sort: -1,
+        sorts: false,
         order: 1
       }, options || {});
 
@@ -390,7 +409,11 @@ module.exports.Base = function(model, modelName, define) {
       }
 
       //{id : -1}
-      aSort[options.field] = options.sort;
+      if (options.sorts) {
+        aSort = options.sorts;
+      } else {
+        aSort[options.field] = options.sort;
+      }
 
       return model.find(_.extend(query || {}, condition)).sort(aSort).limit(pageSize);
     },

@@ -62,6 +62,7 @@ var editor = {
         original[backdata.choose.field] = (backdata.ids || []).join(',');
         lemon.chkboxReset('#item-card');
         lemon.fillParam('#item-card', original);
+        lemon.store(chooseback.base, null);
       }
     }
   },

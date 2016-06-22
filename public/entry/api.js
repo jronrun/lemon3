@@ -67,6 +67,10 @@ mapi = {
   initialize: function() {
     mapi.intlRequ();
     mapi.intlResp();
+
+    if (lemon.isView('xs', 'sm')) {
+      $('head').append('<style>li.nav-item { margin:0 0 5px 0; }</style>');
+    }
   }
 };
 

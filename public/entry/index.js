@@ -222,7 +222,7 @@ lemon.register({
     options = lemon.extend({
       msgId: '',
       level: 'warning',
-      delay: 3000,
+      delay: 5000,
       //1 auto: disappear when options.delay millesecond, 2 manual: manual close, 3 forever
       close: 1,
       containerId: '#message',

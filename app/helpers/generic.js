@@ -15,6 +15,68 @@ module.exports = function(model, index, defineForm) {
 
   var generic = {
     BREAK: BREAK,
+
+    /**
+     *  defined: {
+     *     scope: 1
+     *     define: []
+     *  }
+     * @see power.sourceDefineConst
+     * @param req
+     * @param defined
+     * @returns {{}}
+       */
+    scopeOwnerQuery: function(req, defined) {
+      var aUser = req.user || {};
+      if (aUser.isAdmin) {
+        return {};
+      }
+
+      //1: 'Include All'
+      if (1 == defined.scope) {
+        return {};
+      }
+
+      //2: 'Include only in Define'
+      if (2 == defined.scope) {
+        return {
+          $or:[
+            { id: {$in: (defined.define || []) }},
+            { "create_by.id": aUser.id, owner: 2 }
+          ]
+        };
+      }
+
+      //3: 'Exclude All'
+      if (3 == defined.scope) {
+        return { id: -1 };
+      }
+
+      //4: 'Exclude only in Define'
+      if (4 == defined.scope) {
+        return {
+          $or:[
+            { id: {$nin: (defined.define || []) }},
+            { "create_by.id": aUser.id, owner: 2 }
+          ]
+        };
+      }
+    },
+
+    idsOwnerQuery: function(req, itemIds) {
+      var aUser = req.user || {};
+      if (aUser.isAdmin) {
+        return {};
+      }
+
+      return {
+        $or:[
+          { id: {$in: (itemIds || []) }},
+          { "create_by.id": aUser.id, owner: 2 }
+        ]
+      };
+    },
+
     ownerQuery: function(req) {
       var aUser = req.user || {};
       if (aUser.isAdmin) {
@@ -24,10 +86,7 @@ module.exports = function(model, index, defineForm) {
       return {
         $or:[
           { owner: 1},
-          {
-            "create_by.id": aUser.id,
-            owner: 2
-          }
+          { "create_by.id": aUser.id, owner: 2 }
         ]
       };
     },

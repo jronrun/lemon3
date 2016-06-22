@@ -43,7 +43,8 @@ var resource = [
 
   {
     id: 50, name: 'api', desc: 'Manual API', protect: false, children: [
-
+      {id: 50001, name: 'servers', desc: 'Servers', method: M.POST, protect: false},
+      {id: 50002, name: 'interfaces', desc: 'Interfaces', method: M.POST, protect: false}
     ]
   },
 

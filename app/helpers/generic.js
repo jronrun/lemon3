@@ -13,91 +13,14 @@ module.exports = function(model, index, defineForm) {
     element: {}   //@see forms.schemaForm.options
   }, defineForm || {});
 
-  /**
-   *  defined: {
-   *     scope: 1
-   *     define: []
-   *  }
-   * @see power.sourceDefineConst
-   * @param req
-   * @param property
-   * @returns {{}}
-   */
-  function scopeOwnerQuery(req, property) {
-    var aUser = req.user || {};
-    if (aUser.isAdmin) {
-      return {};
-    }
-
-    var defined = aUser[defined] || {};
-    if (!defined.scope) {
-      defined.scope = 3;
-    }
-
-    //1: 'Include All'
-    if (1 == defined.scope) {
-      return {};
-    }
-
-    //2: 'Include only in Define'
-    else if (2 == defined.scope) {
-      return {
-        $or:[
-          { id: {$in: (defined.define || []) }},
-          { "create_by.id": aUser.id, owner: 2 }
-        ]
-      };
-    }
-
-    //3: 'Exclude All'
-    else if (3 == defined.scope) {
-      return { id: -1 };
-    }
-
-    //4: 'Exclude only in Define'
-    else if (4 == defined.scope) {
-      return {
-        $or:[
-          { id: {$nin: (defined.define || []) }},
-          { "create_by.id": aUser.id, owner: 2 }
-        ]
-      };
-    }
-  }
-
-  function idsOwnerQuery(req, property) {
-    var aUser = req.user || {};
-    if (aUser.isAdmin) {
-      return {};
-    }
-
-    var itemIds = aUser[property] || [];
-    return {
-      $or:[
-        { id: {$in: itemIds }},
-        { "create_by.id": aUser.id, owner: 2 }
-      ]
-    };
-  }
-
   var generic = {
     BREAK: BREAK,
 
-    envOwnerQuery: function(req) {
-      return idsOwnerQuery(req, 'env');
-    },
+    envOwnerQuery: items.envOwnerQuery,
+    groupOwnerQuery: items.groupOwnerQuery,
 
-    groupOwnerQuery: function(req) {
-      return idsOwnerQuery(req, 'group');
-    },
-
-    serverOwnerQuery: function(req) {
-      return scopeOwnerQuery(req, 'server');
-    },
-
-    interfaceOwnerQuery: function(req) {
-      return scopeOwnerQuery(req, 'interface');
-    },
+    serverOwnerQuery: items.serverOwnerQuery,
+    interfaceOwnerQuery: items.interfaceOwnerQuery,
 
     title: function(title, href, itemId) {
       var theId = '';

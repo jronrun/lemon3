@@ -9,8 +9,92 @@ var types = {
 };
 
 var helper = {
+
   /**
-   *
+   *  defined: {
+   *     scope: 1
+   *     define: []
+   *  }
+   * @see power.sourceDefineConst
+   * @param req
+   * @param property
+   * @returns {{}}
+   */
+  scopeOwnerQuery: function(req, property) {
+    var aUser = req.user || {};
+    if (aUser.isAdmin) {
+      return {};
+    }
+
+    var defined = aUser[defined] || {};
+    if (!defined.scope) {
+      defined.scope = 3;
+    }
+
+    //1: 'Include All'
+    if (1 == defined.scope) {
+      return {};
+    }
+
+    //2: 'Include only in Define'
+    else if (2 == defined.scope) {
+      return {
+        $or:[
+          { id: {$in: (defined.define || []) }},
+          { "create_by.id": aUser.id, owner: 2 }
+        ]
+      };
+    }
+
+    //3: 'Exclude All'
+    else if (3 == defined.scope) {
+      return { id: -1 };
+    }
+
+    //4: 'Exclude only in Define'
+    else if (4 == defined.scope) {
+      return {
+        $or:[
+          { id: {$nin: (defined.define || []) }},
+          { "create_by.id": aUser.id, owner: 2 }
+        ]
+      };
+    }
+  },
+
+  idsOwnerQuery: function(req, property) {
+    var aUser = req.user || {};
+    if (aUser.isAdmin) {
+      return {};
+    }
+
+    var itemIds = aUser[property] || [];
+    return {
+      $or:[
+        { id: {$in: itemIds }},
+        { "create_by.id": aUser.id, owner: 2 }
+      ]
+    };
+  },
+
+  envOwnerQuery: function(req) {
+    return helper.idsOwnerQuery(req, 'env');
+  },
+
+  groupOwnerQuery: function(req) {
+    return helper.idsOwnerQuery(req, 'group');
+  },
+
+  serverOwnerQuery: function(req) {
+    return helper.scopeOwnerQuery(req, 'server');
+  },
+
+  interfaceOwnerQuery: function(req) {
+    return helper.scopeOwnerQuery(req, 'interface');
+  },
+
+  /**
+   * For manage
    * @param define
    * [{
           "title": "",

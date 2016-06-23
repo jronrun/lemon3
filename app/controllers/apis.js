@@ -5,6 +5,7 @@ var express = require('express'),
   log = log_from('apis'),
   index = routes.api,
 
+  items = require('../helpers/items'),
   Environment = app_require('models/api/env'),
   Group = app_require('models/api/group'),
   Server = app_require('models/api/server'),
@@ -25,7 +26,44 @@ router.get(index.do, function (req, res, next) {
  * API Servers (Environment)
  */
 router.post(index.servers.do, function (req, res, next) {
+  async.waterfall([
+    function (callback) {
+      Environment.find(items.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
+        var envData = {};
+        _.each(items, function (item) {
+          envData[item.id] = item;
+        });
 
+        callback(null, envData);
+      });
+    },
+    function(envData, callback) {
+      Group.find(items.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
+        var groupData = {};
+        _.each(items, function (item) {
+          groupData[item.id] = item;
+        });
+
+        callback(null, envData, groupData);
+      });
+    },
+    function(envData, groupData, callback) {
+      var aSort = {
+        env_id: -1,
+        group_id: -1
+      };
+
+      Server.find(items.serverOwnerQuery(req)).sort(aSort).toArray(function (err, items) {
+        callback(null, {
+          env: envData,
+          group: groupData,
+          server: items || []
+        });
+      });
+    }
+  ], function(err, result) {
+
+  });
 });
 
 /**

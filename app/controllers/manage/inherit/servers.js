@@ -30,10 +30,9 @@ module.exports = function (router, index, root) {
    * Server list
    */
   router.get(index.do, function (req, res, next) {
-    var ownerQry = generic.ownerQuery(req);
     async.waterfall([
       function (callback) {
-        Environment.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+        Environment.find(generic.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var envData = {};
           _.each(items, function (item) {
             envData[item.id] = item;
@@ -43,7 +42,7 @@ module.exports = function (router, index, root) {
         });
       },
       function(envData, callback) {
-        Group.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+        Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var groupData = {};
           _.each(items, function (item) {
             groupData[item.id] = item;
@@ -136,11 +135,9 @@ module.exports = function (router, index, root) {
    * Server editor
    */
   router.get(index.editor.do, function (req, res, next) {
-    var ownerQry = generic.ownerQuery(req);
-
     async.waterfall([
       function (callback) {
-        Environment.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+        Environment.find(generic.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var envData = [];
           _.each(items, function (item) {
             envData.push({
@@ -155,7 +152,7 @@ module.exports = function (router, index, root) {
         });
       },
       function(envData, callback) {
-        Group.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+        Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var groupData = [];
           _.each(items, function (item) {
             groupData.push({
@@ -252,11 +249,9 @@ module.exports = function (router, index, root) {
    * Server retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
-    var ownerQry = generic.ownerQuery(req);
-
     async.waterfall([
       function (callback) {
-        Environment.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+        Environment.find(generic.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var envData = [];
           _.each(items, function (item) {
             envData.push({

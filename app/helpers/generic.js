@@ -13,82 +13,90 @@ module.exports = function(model, index, defineForm) {
     element: {}   //@see forms.schemaForm.options
   }, defineForm || {});
 
+  /**
+   *  defined: {
+   *     scope: 1
+   *     define: []
+   *  }
+   * @see power.sourceDefineConst
+   * @param req
+   * @param property
+   * @returns {{}}
+   */
+  function scopeOwnerQuery(req, property) {
+    var aUser = req.user || {};
+    if (aUser.isAdmin) {
+      return {};
+    }
+
+    var defined = aUser[defined] || {};
+    if (!defined.scope) {
+      defined.scope = 3;
+    }
+
+    //1: 'Include All'
+    if (1 == defined.scope) {
+      return {};
+    }
+
+    //2: 'Include only in Define'
+    else if (2 == defined.scope) {
+      return {
+        $or:[
+          { id: {$in: (defined.define || []) }},
+          { "create_by.id": aUser.id, owner: 2 }
+        ]
+      };
+    }
+
+    //3: 'Exclude All'
+    else if (3 == defined.scope) {
+      return { id: -1 };
+    }
+
+    //4: 'Exclude only in Define'
+    else if (4 == defined.scope) {
+      return {
+        $or:[
+          { id: {$nin: (defined.define || []) }},
+          { "create_by.id": aUser.id, owner: 2 }
+        ]
+      };
+    }
+  }
+
+  function idsOwnerQuery(req, property) {
+    var aUser = req.user || {};
+    if (aUser.isAdmin) {
+      return {};
+    }
+
+    var itemIds = aUser[property] || [];
+    return {
+      $or:[
+        { id: {$in: itemIds }},
+        { "create_by.id": aUser.id, owner: 2 }
+      ]
+    };
+  }
+
   var generic = {
     BREAK: BREAK,
 
-    /**
-     *  defined: {
-     *     scope: 1
-     *     define: []
-     *  }
-     * @see power.sourceDefineConst
-     * @param req
-     * @param defined
-     * @returns {{}}
-       */
-    scopeOwnerQuery: function(req, defined) {
-      var aUser = req.user || {};
-      if (aUser.isAdmin) {
-        return {};
-      }
-
-      //1: 'Include All'
-      if (1 == defined.scope) {
-        return {};
-      }
-
-      //2: 'Include only in Define'
-      if (2 == defined.scope) {
-        return {
-          $or:[
-            { id: {$in: (defined.define || []) }},
-            { "create_by.id": aUser.id, owner: 2 }
-          ]
-        };
-      }
-
-      //3: 'Exclude All'
-      if (3 == defined.scope) {
-        return { id: -1 };
-      }
-
-      //4: 'Exclude only in Define'
-      if (4 == defined.scope) {
-        return {
-          $or:[
-            { id: {$nin: (defined.define || []) }},
-            { "create_by.id": aUser.id, owner: 2 }
-          ]
-        };
-      }
+    envOwnerQuery: function(req) {
+      return idsOwnerQuery(req, 'env');
     },
 
-    idsOwnerQuery: function(req, itemIds) {
-      var aUser = req.user || {};
-      if (aUser.isAdmin) {
-        return {};
-      }
-
-      return {
-        $or:[
-          { id: {$in: (itemIds || []) }},
-          { "create_by.id": aUser.id, owner: 2 }
-        ]
-      };
+    groupOwnerQuery: function(req) {
+      return idsOwnerQuery(req, 'group');
     },
 
-    ownerQuery: function(req) {
-      var aUser = req.user || {};
-      if (aUser.isAdmin) {
-        return {};
-      }
+    serverOwnerQuery: function(req) {
+      return scopeOwnerQuery(req, 'server');
+    },
 
-      return {
-        $or:[
-          { owner: 1},
-          { "create_by.id": aUser.id, owner: 2 }
-        ]
-      };
+    interfaceOwnerQuery: function(req) {
+      return scopeOwnerQuery(req, 'interface');
     },
 
     title: function(title, href, itemId) {
@@ -328,7 +336,18 @@ module.exports = function(model, index, defineForm) {
       }
 
       if (1 == options.ownerQuery) {
-        realQuery = _.extend(realQuery, generic.ownerQuery(req));
+        var ownerQuery = {};
+        if ('env' == model.modelName) {
+          ownerQuery = generic.envOwnerQuery(req);
+        } else if ('group' == model.modelName) {
+          ownerQuery = generic.groupOwnerQuery(req);
+        } else if ('server' == model.modelName) {
+          ownerQuery = generic.serverOwnerQuery(req);
+        } else if ('interf' == model.modelName) {
+          ownerQuery = generic.interfaceOwnerQuery(req);
+        }
+
+        realQuery = _.extend(realQuery, ownerQuery);
       }
 
       model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {

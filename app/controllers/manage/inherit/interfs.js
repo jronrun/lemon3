@@ -18,7 +18,7 @@ module.exports = function (router, index, root) {
    * Interface list
    */
   router.get(index.do, function (req, res, next) {
-    Group.find(generic.ownerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
+    Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
       var groupData = {};
       _.each(items, function (item) {
         groupData[item.id] = item;
@@ -93,7 +93,7 @@ module.exports = function (router, index, root) {
    * Interface editor
    */
   router.get(index.editor.do, function (req, res, next) {
-    Group.find(generic.ownerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
+    Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
       var groupData = [];
       _.each(items, function (item) {
         groupData.push({
@@ -229,7 +229,7 @@ module.exports = function (router, index, root) {
    * Interface retrieve
    */
   router.get(index.retrieve.do, function (req, res, next) {
-    Group.find(generic.ownerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
+    Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
       var groupData = [];
       _.each(items, function (item) {
         groupData.push({

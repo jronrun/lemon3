@@ -127,6 +127,7 @@ module.exports = function(app, config, passport) {
         return;
       }
 
+      req.anonymous = false;
       if (req.user.isAdmin) {
         next();
         return;
@@ -156,6 +157,7 @@ module.exports = function(app, config, passport) {
       }
     }
 
+    req.anonymous = !req.isAuthenticated();
     next();
   });
 

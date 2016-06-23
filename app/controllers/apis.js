@@ -26,6 +26,10 @@ router.get(index.do, function (req, res, next) {
  * API Servers (Environment)
  */
 router.post(index.servers.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.succ({items: []}));
+  }
+
   async.waterfall([
     function (callback) {
       Environment.find(items.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
@@ -62,7 +66,11 @@ router.post(index.servers.do, function (req, res, next) {
       });
     }
   ], function(err, result) {
+    var servers = [];
 
+    return res.json(answer.succ({
+      items: servers
+    }));
   });
 });
 

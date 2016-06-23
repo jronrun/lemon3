@@ -6,6 +6,7 @@ var model = schema({
   id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
   desc: { type: 'string', allowEmpty: false },
+  order: { type: 'integer', required: true, description: 'Ascending sort by number value' },
   owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   create_by: {
     type: 'object',

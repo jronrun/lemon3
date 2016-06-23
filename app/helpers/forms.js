@@ -240,7 +240,7 @@ function getEl(fieldName, define, elLayout, formElType) {
     label: elLayout.label || (fieldName ? _.capitalize(fieldName) : ''),
     desc: elLayout.desc || define.description,
     inline: elLayout.inline || 0,
-    value: elLayout.value || ''
+    value: (_.has(elLayout, 'value') ? elLayout.value : '')
   };
 
   if ('' == elLayout.label) {

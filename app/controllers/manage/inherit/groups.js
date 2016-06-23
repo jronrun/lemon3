@@ -31,6 +31,11 @@ module.exports = function (router, index, root) {
         clazz: 'item-col-author'
       },
       {
+        title: 'Order',
+        prop: 'order',
+        clazz: 'item-col-author'
+      },
+      {
         title: 'Owner',
         prop: function(item) {
           switch (parseInt(item.owner)) {
@@ -83,6 +88,9 @@ module.exports = function (router, index, root) {
           el: 'radio',
           inline: 1
         }
+      },
+      resultHandle: function(item, respData) {
+        respData.order = 1;
       }
     }, req, res, next);
   });
@@ -96,6 +104,7 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.order = parseInt(item.order);
         item.create_by = {
           id: req.user.id,
           name: req.user.name
@@ -112,6 +121,7 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.order = parseInt(item.order);
       }
     }, req, res, next);
   });

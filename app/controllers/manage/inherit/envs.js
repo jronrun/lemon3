@@ -9,6 +9,9 @@ module.exports = function (router, index, root) {
     element: {
       desc: {
         label: 'Description'
+      },
+      alert_level: {
+        label: 'Alert Level'
       }
     }
   });
@@ -28,6 +31,18 @@ module.exports = function (router, index, root) {
       {
         title: 'Description',
         prop: 'desc',
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Alert Level',
+        prop: function(item) {
+          return format('<span class="label label-%s">%s</span>', item.alert_level, item.alert_level);
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Order',
+        prop: 'order',
         clazz: 'item-col-author'
       },
       {
@@ -83,6 +98,9 @@ module.exports = function (router, index, root) {
           el: 'radio',
           inline: 1
         }
+      },
+      resultHandle: function(item, respData) {
+        respData.order = 1;
       }
     }, req, res, next);
   });
@@ -96,6 +114,7 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.order = parseInt(item.order);
         item.create_by = {
           id: req.user.id,
           name: req.user.name
@@ -112,6 +131,7 @@ module.exports = function (router, index, root) {
       checkExistsField: 'name',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
+        item.order = parseInt(item.order);
       }
     }, req, res, next);
   });

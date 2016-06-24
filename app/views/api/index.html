@@ -1,5 +1,5 @@
 {{#content "head" mode="append"}}
-    <script src="/dist/api.js"></script>
+    <script src="/dist/api.js" xmlns="http://www.w3.org/1999/html"></script>
     <style>
         body { min-height: 40rem; padding-top: 4.5rem; }
         {{! .maxh { height: 588px; max-height: 588px; overflow-y: scroll; } }}
@@ -23,20 +23,39 @@
 
         <div class="collapse navbar-toggleable-xs navbar-toggleable-sm" id="navbar-tools">
           <ul class="nav navbar-nav">
-              <li class="nav-item dropdown hidden-sm-up"></li>
+              <li class="nav-item dropdown invisible hidden-sm-up">
+                  <a class="nav-link dropdown-toggle">Environment </a>
+              </li>
               <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false">Environment </a>
-                  <div class="dropdown-menu borderinfo">
+                  <div class="dropdown-menu borderinfo" id="env_dd">
+                      <div class="dropdown-divider invisible"></div>
+                      <div class="dropdown-header">
+                          <h5>
+                              <span class="label label-danger">
+                                  Product Environment
+                                  <br/>
+                                  <small class="linebreak">Add a header to label sections of actions in any dropdown menu.</small>
+                              </span>
+                          </h5>
+                      </div>
+                      <div class="dropdown-header">
+                          <h6>
+                              Appapi
+                              <br/>
+                              <small class="linebreak">Add a header to label sections of actions in any dropdown menu.</small>
+                          </h6>
+                      </div>
                       <a class="dropdown-item" href="#">Action</a>
                       <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
+                      <a class="dropdown-item" href="#">Something else here   adfasdf</a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#">Separated link</a>
                   </div>
               </li>
               <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false">Which API </a>
-                  <div class="dropdown-menu borderinfo">
+                  <div class="dropdown-menu borderinfo" id="api_dd">
                       <a class="dropdown-item" href="#">Action</a>
                       <a class="dropdown-item" href="#">Another action</a>
                       <a class="dropdown-item" href="#">Something else here</a>

@@ -1,0 +1,52 @@
+<script type="text/html" id="dd_env_header_tmpl">
+    <div class="dropdown-header" id="env_header_<%= id %>">
+        <h5>
+            <span class="label label-danger">
+                <%= name %>
+                <% if (desc.length > 0) { %>
+                <br/>
+                <small class="linebreak"><%= desc %></small>
+                <% } %>
+            </span>
+        </h5>
+    </div>
+</script>
+
+<script type="text/html" id="dd_env_group_tmpl">
+    <div class="dropdown-header" id="group_header_<%= id %>">
+        <h6>
+            <%= name %>
+            <% if (desc.length > 0) { %>
+            <br/>
+            <small class="linebreak"><%= desc %></small>
+            <% } %>
+        </h6>
+    </div>
+</script>
+
+{{!--
+<div class="dropdown-divider invisible"></div>
+<div class="dropdown-header">
+    <h5>
+        <span class="label label-danger">
+            Product Environment
+            <br/>
+            <small class="linebreak">Add a header to label sections of actions in any dropdown menu.</small>
+        </span>
+    </h5>
+
+    <div class="dropdown-header">
+        <h6>
+            Appapi
+            <br/>
+            <small class="linebreak">Add a header to label sections of actions in any dropdown menu.</small>
+        </h6>
+
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here   adfasdf</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">Separated link</a>
+    </div>
+</div>
+--}}

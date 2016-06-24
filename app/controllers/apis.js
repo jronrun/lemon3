@@ -74,14 +74,17 @@ router.post(index.servers.do, function (req, res, next) {
         }, items.serverOwnerQuery(req));
       }
 
-      Server.find(query).sort({
-        env_id: -1,
-        group_id: -1
-      }).toArray(function (err, items) {
+      var pn = req.page || 1, ps = false;
+      Server.page(query, pn, false, ps, {
+        sorts: {
+          env_id: -1,
+          group_id: -1
+        }
+      }).then(function (result) {
         callback(null, {
           env: envData,
           group: groupData,
-          server: items || []
+          server: result.items || []
         });
       });
     }

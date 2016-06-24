@@ -27,7 +27,7 @@ router.get(index.do, function (req, res, next) {
  */
 router.post(index.servers.do, function (req, res, next) {
   if (req.anonymous) {
-    return res.json(answer.succ({items: []}));
+    return res.json(answer.succ({ items: []}));
   }
 
   async.waterfall([
@@ -36,6 +36,12 @@ router.post(index.servers.do, function (req, res, next) {
         var envData = {}; _.each(items, function (item) {
           envData[item.id] = item;
         });
+
+        items = _.orderBy(items, ['order', 'id'], ['desc', 'desc']);
+        var sort = []; _.each(items, function (v) {
+          sort.push(v.id);
+        });
+        envData.sort = sort;
 
         callback(null, envData);
       });
@@ -46,11 +52,29 @@ router.post(index.servers.do, function (req, res, next) {
           groupData[item.id] = item;
         });
 
+        items = _.orderBy(items, ['order', 'id'], ['desc', 'desc']);
+        var sort = []; _.each(items, function (v) {
+          sort.push(v.id);
+        });
+        groupData.sort = sort;
+
         callback(null, envData, groupData);
       });
     },
     function(envData, groupData, callback) {
-      Server.find(items.serverOwnerQuery(req)).sort({
+      var query = {};
+      if (!req.user.isAdmin) {
+        query = _.extend({
+          env_id: {
+            $in: envData.sort
+          },
+          group_id: {
+            $in: groupData.sort
+          }
+        }, items.serverOwnerQuery(req));
+      }
+
+      Server.find(query).sort({
         env_id: -1,
         group_id: -1
       }).toArray(function (err, items) {
@@ -62,37 +86,69 @@ router.post(index.servers.do, function (req, res, next) {
       });
     }
   ], function(err, result) {
-    var servers = [];
-    _.each(result.server, function (item) {
-      var env = result.env[item.env_id];
-      var group = result.group[item.group_id];
+    /*
+    envs: [
+      {
+        info: {},
+        groups: [
+          {
+            info: {},
+            servs: []
+          }
+        ]
+      }
+    ]
+     */
+    var envs = [];
 
-      if (env && group) {
-        var serv = {
-          id: item.id,
-          name: item.name,
-          desc: item.desc,
-          url: item.url,
-          request: item.request,
-          env: {
-            id: env.id,
-            name: env.name,
-            desc: env.desc
-          },
-          group: {
+    _.each(result.env.sort, function (envId) {
+      var env = result.env[envId];
+
+      var aEnv = {
+        info: {
+          id: env.id,
+          name: env.name,
+          desc: env.desc
+        },
+        groups: []
+      };
+      _.each(result.group.sort, function (groupId) {
+        var group = result.group[groupId];
+
+        var aGroup = {
+          info: {
             id: group.id,
             name: group.name,
             desc: group.desc
-          }
+          },
+          servs: []
         };
 
-        servers.push(serv);
+        _.each(result.server, function (serv) {
+          if (serv && envId == serv.env_id && groupId == serv.group_id) {
+            var aServer = {
+              id: serv.id,
+              name: serv.name,
+              desc: serv.desc,
+              url: serv.url,
+              request: serv.request
+            };
+
+            aGroup.servs.push(aServer);
+          }
+        });
+
+        if (aGroup.servs.length > 0) {
+          aEnv.groups.push(aGroup);
+        }
+      });
+
+      if (aEnv.groups.length > 0) {
+        envs.push(aEnv);
       }
     });
 
-    return res.json(answer.succ({
-      items: servers
-    }));
+    return res.json(answer.succ({ envs: envs}));
   });
 });
 

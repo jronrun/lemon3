@@ -64,9 +64,15 @@ mapi = {
     var respCardEl = '#resp-card', respTool = '#resp-tool';
     mapi.resp = mapi.mirror('#response', respCardEl);
   },
+  intlServs: function() {
+    $.post('/api/servers', function (data) {
+      console.log(JSON.stringify(data));
+    });
+  },
   initialize: function() {
     mapi.intlRequ();
     mapi.intlResp();
+    mapi.intlServs();
 
     if (lemon.isView('xs', 'sm')) {
       $('head').append('<style>li.nav-item { margin:0 0 5px 0; }</style>');

@@ -100,7 +100,7 @@ module.exports = function (router, index, root) {
         }
       },
       resultHandle: function(item, respData) {
-        respData.order = 1;
+        respData.order = 10000;
       }
     }, req, res, next);
   });

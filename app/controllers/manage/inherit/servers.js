@@ -75,7 +75,8 @@ module.exports = function (router, index, root) {
             if (!aEnv) {
               return generic.ownerPrivate();
             }
-            return generic.info(getAction(root.env.retrieve, aEnv._id), aEnv.name);
+            return generic.info(getAction(root.env.retrieve, aEnv._id),
+              format('<span class="text-%s">%s</span>', aEnv.alert_level, aEnv.name));
           },
           clazz: 'item-col-author'
         },
@@ -118,7 +119,25 @@ module.exports = function (router, index, root) {
         }
       ];
 
+      var envQryOptions = [];
+      _.each(result.env, function (aEnv) {
+        envQryOptions.push({
+          val: aEnv.id,
+          text: aEnv.name
+        });
+      });
+
+      var groupQryOptions = [];
+      _.each(result.group, function (aGroup) {
+        groupQryOptions.push({
+          val: aGroup.id,
+          text: aGroup.name
+        });
+      });
+
       var search = [
+        generic.searchSelect('env_id', 'All Environment', envQryOptions),
+        generic.searchSelect('group_id', 'All Group', groupQryOptions),
         generic.searchInput('id', 'search id...'),
         generic.searchInput('name', 'search server...')
       ];
@@ -126,7 +145,15 @@ module.exports = function (router, index, root) {
       generic.list({
         ownerQuery: 1,
         defines: defines,
-        search: search
+        search: search,
+        queryHandle: function(realQry, qry) {
+          if (realQry['env_id']) {
+            realQry['env_id'] = parseInt(qry['env_id']);
+          }
+          if (realQry['group_id']) {
+            realQry['group_id'] = parseInt(qry['group_id']);
+          }
+        }
       }, req, res, next);
     });
   });
@@ -202,7 +229,7 @@ module.exports = function (router, index, root) {
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
       sequenceId: 1,
-      checkExistsField: 'name',
+      checkExistsField: 'url',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
         item.request.type = parseInt(item.request.type);
@@ -226,7 +253,7 @@ module.exports = function (router, index, root) {
    */
   router.put(index.retrieve.do, function (req, res, next) {
     generic.update({
-      checkExistsField: 'name',
+      checkExistsField: 'url',
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
         item.request.type = parseInt(item.request.type);
@@ -266,7 +293,7 @@ module.exports = function (router, index, root) {
         });
       },
       function(envData, callback) {
-        Group.find(ownerQry).sort({_id: -1}).toArray(function (err, items) {
+        Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var groupData = [];
           _.each(items, function (item) {
             groupData.push({

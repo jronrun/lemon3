@@ -5,7 +5,7 @@ var log = log_from('env');
 var model = schema({
   id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
-  desc: { type: 'string', allowEmpty: false },
+  desc: { type: 'string' },
   order: { type: 'integer', required: true, description: 'Ascending sort by number value' },
   alert_level: { type: 'string', enum: ['default', 'info', 'success', 'primary', 'warning', 'danger'], required: true },
   owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },

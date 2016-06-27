@@ -3,7 +3,103 @@
  */
 var mirror = require('../js/codemirror');
 
-mapi = {
+var envs = {
+  id: '#env_dd',
+  envHead: {
+    id: function(envId) {
+      return '#envh_' + envId;
+    },
+    render: function(envInfo) {
+      return lemon.tmpl($('#dd_env_tmpl').html(), envInfo);
+    }
+  },
+  groupHead: {
+    id: function(envId, groupId) {
+      return '#grouph_' + envId + '_' + groupId;
+    },
+    render: function(envInfo, groupInfo) {
+      return lemon.tmpl($('#dd_env_group_tmpl').html(), lemon.extend(groupInfo, {
+        env: envInfo
+      }));
+    }
+  },
+
+  servHead: {
+    id: function(servId) {
+      return '#server_' + servId;
+    },
+    render: function(envInfo, groupInfo, servInfo) {
+      return lemon.tmpl($('#dd_server_tmpl').html(), lemon.extend(servInfo, {
+        env: envInfo,
+        group: groupInfo
+      }));
+    }
+  },
+
+  render: function(page) {
+    var viewport = {
+      w: $(window).width(),
+      h: $(window).height()
+    };
+
+    page = page || 1;
+    $.post('/api/servers', {
+      page: page
+    }, function (resp) {
+      if (0 == resp.code) {
+        if (resp.result.envs.length > 0) {
+          $(envs.id).css({
+            height: viewport.h * 0.8,
+            'max-height': viewport.h * 0.8,
+            'overflow-y': 'scroll'
+        });
+
+          if (lemon.isView('xs', 'sm')) {
+            $(envs.id).css({
+              width: viewport.w * 0.8
+            });
+          } else {
+            $(envs.id).css({
+              width: viewport.w * 0.25
+            });
+          }
+        }
+
+        _.each(resp.result.envs, function (env) {
+          var envElId = envs.envHead.id(env.info.id);
+          if (!$(envElId).length) {
+            $(envs.id).append(envs.envHead.render(env.info));
+          }
+
+          _.each(env.groups, function (group) {
+            var groupElId = envs.groupHead.id(env.info.id, group.info.id);
+            if (!$(groupElId).length) {
+              $(envElId).append(envs.groupHead.render(env.info, group.info));
+            }
+
+            _.each(group.servs, function (serv) {
+              var servElId = envs.servHead.id(serv.id);
+              if (!$(servElId).length) {
+                $(groupElId).append(envs.servHead.render(env.info, group.info, serv));
+              }
+            });
+          });
+        });
+      } else {
+        lemon.msg(resp.msg);
+      }
+    });
+
+    //$('#env_dd a').click(function(e) {
+    //  e.stopPropagation();
+    //}).dblclick(function(e) {
+    //  $('#env_dd').click();
+    //})
+  }
+
+};
+
+var mapi = {
   requ: null,
   resp: null,
   mirror: function(elId, sizeElId, options) {
@@ -65,16 +161,7 @@ mapi = {
     mapi.resp = mapi.mirror('#response', respCardEl);
   },
   intlServs: function() {
-    //$.post('/api/servers', function (data) {
-    //  console.log(JSON.stringify(data));
-    //});
-
-    $('#env_dd a').click(function(e) {
-      e.stopPropagation();
-    }).dblclick(function(e) {
-      $('#env_dd').click();
-    })
-
+    envs.render();
   },
   initialize: function() {
     if (lemon.isView('xs', 'sm')) {

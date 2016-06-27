@@ -1,7 +1,7 @@
-<script type="text/html" id="dd_env_header_tmpl">
-    <div class="dropdown-header" id="env_header_<%= id %>">
+<script type="text/html" id="dd_env_tmpl">
+    <div class="dropdown-header" id="envh_<%= id %>">
         <h5>
-            <span class="label label-danger">
+            <span class="label label-<%= level %>">
                 <%= name %>
                 <% if (desc.length > 0) { %>
                 <br/>
@@ -13,15 +13,27 @@
 </script>
 
 <script type="text/html" id="dd_env_group_tmpl">
-    <div class="dropdown-header" id="group_header_<%= id %>">
+    <div class="dropdown-header" id="grouph_<%= env.id %>_<%= id %>">
         <h6>
-            <%= name %>
-            <% if (desc.length > 0) { %>
-            <br/>
-            <small class="linebreak"><%= desc %></small>
-            <% } %>
+            <span class="text-muted">
+              <%= name %>
+              <% if (desc.length > 0) { %>
+              <br/>
+              <small class="linebreak"><%= desc %></small>
+              <% } %>
+            </span>
         </h6>
     </div>
+</script>
+
+<script type="text/html" id="dd_server_tmpl">
+    <a class="dropdown-item" href="javascript:void(0);" id="server_<%= id %>">
+        <span class="text-<%= env.level %>"><%= name %></span>
+        <% if (desc.length > 0) { %>
+        <br/>
+        <small class="linebreak text-<%= env.level %>"><%= desc %></small>
+        <% } %>
+    </a>
 </script>
 
 {{!--
@@ -42,11 +54,15 @@
             <small class="linebreak">Add a header to label sections of actions in any dropdown menu.</small>
         </h6>
 
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here   adfasdf</a>
+        <a class="dropdown-item" href="#">
+            <span class="text-info">
+                Action
+            </span>
+            <br/>
+            <small class="linebreak text-muted">Add a header to label sections of actions in any dropdown menu.</small>
+        </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">Separated link</a>
+        <a class="dropdown-item" href="javascript:void(0);">Separated link</a>
     </div>
 </div>
 --}}

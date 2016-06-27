@@ -7,7 +7,7 @@ var model = schema({
   env_id: { type: 'integer', required: true },
   group_id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
-  desc: { type: 'string', allowEmpty: false },
+  desc: { type: 'string' },
   url: { type: 'string', required: true, allowEmpty: false, format: 'url' },
   owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   request: {

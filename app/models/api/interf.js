@@ -6,7 +6,7 @@ var model = schema({
   id: { type: 'integer', required: true },
   group_id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
-  desc: { type: 'string', allowEmpty: false },
+  desc: { type: 'string' },
   request: { type: 'object', required: true, allowEmpty: false},
   response: { type: 'object' },
   request_doc: { type: 'string', required: true, allowEmpty: false },

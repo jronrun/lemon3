@@ -92,6 +92,13 @@ module.exports = function(model, index, defineForm) {
       };
     },
 
+    /**
+     *
+     * @param name
+     * @param defaultSelect   default select text
+     * @param selectOptions   [{val: '', text: ''}]
+     * @returns {{type: number, tip: *, name: *, options: *}}
+       */
     searchSelect: function(name, defaultSelect, selectOptions) {
       return {
         type: 2,
@@ -143,7 +150,9 @@ module.exports = function(model, index, defineForm) {
      *        }
      *      ]
      *    }
-     *  ]
+     *  ],
+     *  searchPreciseField: [],   //not fuzzy query
+     *
      *  listName: '',                     //list name
      *  queryHandle: function(query) {},  //query param pre handle
      *  ownerQuery: 0,                    //is owner query, 1 yes
@@ -157,6 +166,7 @@ module.exports = function(model, index, defineForm) {
       options = _.extend({
         defines: [],
         search: [],
+        searchPreciseField: [],
         pageCallback: false,
         pageSize: DEFAULT_PAGESIZE,
         pageOptions: {},
@@ -184,7 +194,11 @@ module.exports = function(model, index, defineForm) {
         _.each(query, function (v, k) {
           if (v.length > 0) {
             if ('id' != k) {
-              realQuery[k] = new RegExp(v, 'i');
+              if (options.searchPreciseField.indexOf(k) != -1) {
+                realQuery[k] = v;
+              } else {
+                realQuery[k] = new RegExp(v, 'i');
+              }
             }
           }
         });
@@ -253,7 +267,7 @@ module.exports = function(model, index, defineForm) {
       }
 
       if (_.isFunction(options.queryHandle)) {
-        if (BREAK == options.queryHandle(realQuery)) {
+        if (BREAK == options.queryHandle(realQuery, query)) {
           return;
         }
       }
@@ -273,6 +287,14 @@ module.exports = function(model, index, defineForm) {
         realQuery = _.extend(realQuery, ownerQuery);
       }
 
+      var slen = Math.ceil((options.search.length - 1) / 3) + 1;
+      var searchLenCeil = [];
+      if (slen >= 2 && options.search.length > 3) {
+        for (var i = 0; i < slen; i++) {
+          searchLenCeil.push(1);
+        }
+      }
+
       model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
         res.render(index.page, {
           pagename: 'items-list-page',
@@ -284,6 +306,7 @@ module.exports = function(model, index, defineForm) {
           desc: options.listName,
           search: options.search,
           searchLastEl: options.search.length - 1,
+          searchLenCeil: searchLenCeil,
           queryStr: queryStr,
           listchoose: options.listchoose
         });

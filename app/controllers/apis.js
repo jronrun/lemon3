@@ -27,7 +27,7 @@ router.get(index.do, function (req, res, next) {
  */
 router.post(index.servers.do, function (req, res, next) {
   if (req.anonymous) {
-    return res.json(answer.succ({ items: []}));
+    return res.json(answer.succ({ envs: []}));
   }
 
   async.waterfall([
@@ -37,7 +37,7 @@ router.post(index.servers.do, function (req, res, next) {
           envData[item.id] = item;
         });
 
-        items = _.orderBy(items, ['order', 'id'], ['desc', 'desc']);
+        items = _.orderBy(items, ['order', 'id'], ['asc', 'desc']);
         var sort = []; _.each(items, function (v) {
           sort.push(v.id);
         });
@@ -52,7 +52,7 @@ router.post(index.servers.do, function (req, res, next) {
           groupData[item.id] = item;
         });
 
-        items = _.orderBy(items, ['order', 'id'], ['desc', 'desc']);
+        items = _.orderBy(items, ['order', 'id'], ['asc', 'desc']);
         var sort = []; _.each(items, function (v) {
           sort.push(v.id);
         });
@@ -111,7 +111,8 @@ router.post(index.servers.do, function (req, res, next) {
         info: {
           id: env.id,
           name: env.name,
-          desc: env.desc
+          desc: env.desc,
+          level: env.alert_level
         },
         groups: []
       };

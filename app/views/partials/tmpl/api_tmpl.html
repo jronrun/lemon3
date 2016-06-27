@@ -19,8 +19,9 @@
             <span class="text-muted">
               <em class="fa fa-flag-o"></em>&nbsp;&nbsp;<%= name %>
               <% if (desc.length > 0) { %>
-              <br/>
-              <small class="linebreak"><%= desc %></small>
+                <footer class="blockquote-footer">
+                    <small class="linebreak"><%= desc %></small>
+                </footer>
               <% } %>
             </span>
         </h6>
@@ -29,10 +30,11 @@
 
 <script type="text/html" id="dd_server_tmpl">
     <a class="dropdown-item" href="javascript:void(0);" id="server_<%= id %>">
-        <span class="text-<%= env.level %>"><%= name %></span>
+        <span class="text-<%= env.level %>" style="font-size: 110%"><%= name %></span>
         <% if (desc.length > 0) { %>
-        <br/>
-        <small class="linebreak text-<%= env.level %>"><%= desc %></small>
+        <footer class="blockquote-footer">
+            <small class="linebreak text-<%= env.level %>" style="font-size: 80%"><%= desc %></small>
+        </footer>
         <% } %>
     </a>
 </script>

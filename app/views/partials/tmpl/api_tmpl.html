@@ -14,9 +14,10 @@
 
 <script type="text/html" id="dd_env_group_tmpl">
     <div class="dropdown-header" id="grouph_<%= env.id %>_<%= id %>">
-        <h6>
+        <h6 style="font-size: 90%">
+            {{! <span class="text-<%= 'danger' == env.level ? 'danger' : 'muted' %>"> }}
             <span class="text-muted">
-              <%= name %>
+              <em class="fa fa-flag-o"></em>&nbsp;&nbsp;<%= name %>
               <% if (desc.length > 0) { %>
               <br/>
               <small class="linebreak"><%= desc %></small>

@@ -141,6 +141,11 @@ mirror.highlight = function(target, mode, output) {
   CodeMirror.runMode(lemon.query(target).value, mode, lemon.query(output));
 };
 
+mirror.highlightJson5 = function(text, output) {
+  $(output).addClass('cm-s-lemon');
+  CodeMirror.runMode(text, 'application/ld+json', lemon.query(output));
+};
+
 mirror.showJson = function(target, output) {
   output = output || target;
   $(output).addClass('cm-s-lemon');

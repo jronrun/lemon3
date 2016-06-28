@@ -10,7 +10,7 @@ var handlePageCall = {},
   handlePjax = {};
 
 //Bootstrap tooltips require Tether (http://github.hubspot.com/tether/)
-//global.Tether = require('tether');
+global.Tether = require('tether');
 global.lemon = require('lemon/coffee/lemon.coffee');
 lemon.register(require('lz-string'));
 lemon.dec = lemon.decompressFromEncodedURIComponent;

@@ -166,6 +166,7 @@ module.exports = function (router, index, root) {
       function (callback) {
         Environment.find(generic.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var envData = [];
+          items = _.orderBy(items, ['order', 'id'], ['asc', 'desc']);
           _.each(items, function (item) {
             envData.push({
               tip: item.name,
@@ -181,6 +182,7 @@ module.exports = function (router, index, root) {
       function(envData, callback) {
         Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
           var groupData = [];
+          items = _.orderBy(items, ['order', 'id'], ['asc', 'desc']);
           _.each(items, function (item) {
             groupData.push({
               tip: item.name,

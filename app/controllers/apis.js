@@ -165,51 +165,82 @@ router.post(index.interfaces.do, function (req, res, next) {
   }
 
   async.waterfall([
-    function(envData, callback) {
+    function(callback) {
       Group.find(items.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
         var groupData = {}; _.each(items, function (item) {
           groupData[item.id] = item;
         });
 
-        callback(null, envData, groupData);
+        items = _.orderBy(items, ['order', 'id'], ['asc', 'desc']);
+        var sort = []; _.each(items, function (v) {
+          sort.push(v.id);
+        });
+        groupData.sort = sort;
+
+        callback(null, groupData);
       });
     },
-    function(envData, groupData, callback) {
-      Interface.find(items.interfaceOwnerQuery(req)).sort({
-        group_id: -1,
-        id: -1
-      }).toArray(function (err, items) {
+    function(groupData, callback) {
+      var query = {};
+      if (!req.user.isAdmin) {
+        query = _.extend({
+          group_id: {
+            $in: groupData.sort
+          }
+        }, items.serverOwnerQuery(req));
+      }
+
+      var pn = req.page || 1, ps = false;
+      Interface.page(query, pn, false, ps, {
+        sorts: {
+          group_id: -1,
+          id: -1
+        }
+      }).then(function (result) {
         callback(null, {
           group: groupData,
-          interf: items || []
+          interf: result.items
         });
       });
     }
   ], function(err, result) {
-    var interfs = [];
-    _.each(result.interf, function (item) {
-      var group = result.group[item.group_id];
+    var items = [];
 
-      if (group) {
-        var interf = {
-          id: item.id,
-          name: item.name,
-          desc: item.desc,
-          request: item.request,
-          response: item.response,
-          group: {
-            id: group.id,
-            name: group.name,
-            desc: group.desc
-          }
-        };
+    _.each(result.group.sort, function (groupId) {
+      var group = result.group[groupId];
 
-        interfs.push(interf);
+      var aGroup = {
+        info: {
+          id: group.id,
+          name: group.name,
+          desc: group.desc
+        },
+        interfs: []
+      };
+
+      _.each(result.interf, function (interf) {
+        if (interf && groupId == interf.group_id) {
+          var aInterf = {
+            id: interf.id,
+            name: interf.name,
+            desc: interf.desc,
+            request: interf.request,
+            response: interf.response,
+            request_doc: interf.request_doc,
+            response_doc: interf.response_doc
+          };
+
+          aGroup.interfs.push(aInterf);
+        }
+      });
+
+      if (aGroup.interfs.length > 0) {
+        items.push(aGroup);
       }
     });
 
     return res.json(answer.succ({
-      items: interfs
+      items: items
     }));
   });
 });

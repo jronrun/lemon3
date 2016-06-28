@@ -39,6 +39,37 @@
     </a>
 </script>
 
+<script type="text/html" id="dd_api_group_tmpl">
+    <div class="dropdown-header" id="api_group_<%= id %>">
+        <h5>
+            <span class="label label-info">
+                <%= name %>
+                <% if (desc.length > 0) { %>
+                <br/>
+                <small class="linebreak"><%= desc %></small>
+                <% } %>
+            </span>
+        </h5>
+    </div>
+</script>
+
+<script type="text/html" id="dd_api_tmpl">
+    <div class="dropdown-item" id="interf_<%= id %>">
+        <blockquote class="blockquote" style="font-size: 130%">
+            <p class="m-b-0 linebreak"><%= name %></p>
+            <% if (desc.length > 0) { %>
+            <footer class="blockquote-footer">
+                <small class="linebreak text-muted"><%= desc %></small>
+            </footer>
+            <% } %>
+        </blockquote>
+    </div>
+</script>
+
+<div id="dd_api_exchange" style="display: none;">
+    <pre style="background-color:#ffffff;border:0;"></pre>
+</div>
+
 {{!--
 <div class="dropdown-divider invisible"></div>
 <div class="dropdown-header">

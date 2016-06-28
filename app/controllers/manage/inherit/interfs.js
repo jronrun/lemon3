@@ -20,6 +20,7 @@ module.exports = function (router, index, root) {
   router.get(index.do, function (req, res, next) {
     Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
       var groupData = {};
+      items = _.orderBy(items, ['order', 'id'], ['asc', 'desc']);
       _.each(items, function (item) {
         groupData[item.id] = item;
       });
@@ -95,6 +96,7 @@ module.exports = function (router, index, root) {
   router.get(index.editor.do, function (req, res, next) {
     Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
       var groupData = [];
+      items = _.orderBy(items, ['order', 'id'], ['asc', 'desc']);
       _.each(items, function (item) {
         groupData.push({
           tip: item.name,

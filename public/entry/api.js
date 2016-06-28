@@ -3,6 +3,88 @@
  */
 var mirror = require('../js/codemirror');
 
+var apis = {
+  id: '#api_dd',
+  groupHead: {
+    id: function(groupId) {
+      return '#api_group_' + groupId;
+    },
+    render: function(groupInfo) {
+      return lemon.tmpl($('#dd_api_group_tmpl').html(), groupInfo);
+    }
+  },
+
+  apiHead: {
+    id: function(apiId) {
+      return '#interf_' + apiId;
+    },
+
+    render: function(groupInfo, apiInfo) {
+      return lemon.tmpl($('#dd_api_tmpl').html(), lemon.extend(apiInfo, {
+        group: groupInfo
+      }));
+    }
+  },
+
+  getHighlightDoc: function(encodeDoc, rightTip) {
+    var exchange = '#dd_api_exchange';
+    mirror.highlightJson5(lemon.dec(encodeDoc), exchange + ' pre');
+    $(exchange + ' pre').prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
+    return $(exchange).html() + '';
+  },
+
+  render: function(page) {
+    var viewport = {
+      w: $(window).width(),
+      h: $(window).height()
+    };
+
+    page = page || 1;
+    $.post('/api/interfaces', {
+      page: page
+    }, function (resp) {
+      if (0 == resp.code) {
+        if (resp.result.items.length > 0) {
+          if (lemon.isView('xs', 'sm')) {
+            $(apis.id).css({
+              height: viewport.h * 0.7,
+              'max-height': viewport.h * 0.7,
+              'overflow-y': 'scroll',
+              width: viewport.w * 0.8
+            });
+          } else {
+            $(apis.id).css({
+              height: viewport.h * 0.8,
+              'max-height': viewport.h * 0.8,
+              'overflow-y': 'scroll',
+              width: viewport.w * 0.25
+            });
+          }
+        }
+
+        _.each(resp.result.items, function (group) {
+          var apiGroupElId = apis.groupHead.id(group.info.id);
+          if (!$(apiGroupElId).length) {
+            $(apis.id).append(apis.groupHead.render(group.info));
+          }
+
+          _.each(group.interfs, function (interf) {
+            var apiElId = apis.apiHead.id(interf.id);
+            if (!$(apiElId).length) {
+              interf.request_doc = apis.getHighlightDoc(interf.request_doc, 'Request');
+
+              $(apiGroupElId).append(apis.apiHead.render(group.info, interf));
+            }
+          });
+        });
+      } else {
+        lemon.msg(resp.msg);
+      }
+    });
+  }
+
+};
+
 var envs = {
   id: '#env_dd',
   envHead: {
@@ -160,8 +242,9 @@ var mapi = {
     var respCardEl = '#resp-card', respTool = '#resp-tool';
     mapi.resp = mapi.mirror('#response', respCardEl);
   },
-  intlServs: function() {
+  intlDD: function() {
     envs.render();
+    apis.render();
   },
   initialize: function() {
     if (lemon.isView('xs', 'sm')) {
@@ -170,7 +253,7 @@ var mapi = {
 
     mapi.intlRequ();
     mapi.intlResp();
-    mapi.intlServs();
+    mapi.intlDD();
   }
 };
 

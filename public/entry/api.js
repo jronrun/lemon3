@@ -87,7 +87,7 @@ var apis = {
                 ].join('');
                 lemon.popover(apiElId, {
                   title: title,
-                  trigger: 'hover click',
+                  trigger: 'hover',
                   placement: 'right',
                   content: function() {
                     return apis.getHighlightDoc(interf.request_doc, 'Request');

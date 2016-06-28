@@ -303,6 +303,72 @@ lemon.register({
   }
 });
 
+lemon.register({
+  popover: function(selector, options, events) {
+    var popoverTemplate = [
+      '<div class="popover" role="tooltip">',
+      '<div class="popover-arrow"></div>',
+      '<h3 class="popover-title"></h3>',
+      '<div class="popover-content"></div>',
+      '</div>'
+    ].join('');
+
+    if (lemon.isString(options) || lemon.isFunc(options)) {
+      options = { content: options };
+    }
+
+    var headId = 'prevent_twice' + lemon.uniqueId();
+    events = events || {};
+    options = options || {title: null};
+    var thePopover = $(selector).popover(lemon.extend({
+      title: '',
+      trigger: 'click',
+      content: '',
+      template: popoverTemplate,
+      placement: "bottom",
+      html: true
+    }, options || {}, {
+      //Prevent popover content function is executed twice
+      title: options.title || ('<div id="' + headId + '">&nbsp;</div>')
+    })).on('inserted.bs.popover', function() {
+      var el = $(this).data("bs.popover").tip;
+      events.inserted && events.inserted(el, this);
+    }).on('show.bs.popover', function() {
+      var el = $(this).data("bs.popover").tip;
+      lemon.isFunc(events.show) && events.show(el, this);
+    }).on('shown.bs.popover', function() {
+      if (lemon.isBlank(options.title)) {
+        $('#' + headId).parent().hide();
+      }
+
+      var el = $(this).data("bs.popover").tip;
+      lemon.isFunc(events.shown) && events.shown(el, this);
+    }).on('hide.bs.popover', function() {
+      var el = $(this).data("bs.popover").tip;
+      lemon.isFunc(events.hide) && events.hide(el, this);
+    }).on('hidden.bs.popover', function() {
+      var el = $(this).data("bs.popover").tip;
+      lemon.isFunc(events.hidden) && events.hidden(el, this);
+    });
+
+    return {
+      target: thePopover,
+      show: function() {
+        $(selector).popover('show');
+      },
+      hide: function() {
+        $(selector).popover('hide');
+      },
+      toggle: function() {
+        $(selector).popover('toggle');
+      },
+      dispose: function() {
+        $(selector).popover('dispose');
+      }
+    };
+  }
+});
+
 lemon.onModalShow = function(bizType, call) {
   handleModalCall.show[bizType] = call;
 };

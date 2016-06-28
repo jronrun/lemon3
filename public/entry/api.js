@@ -78,9 +78,16 @@ var apis = {
               if (lemon.isView('xs', 'sm')) {
 
               } else {
+                var title = [
+                  '<span class="font-weight-bold">',
+                  interf.name,
+                  '</span><span class="label label-info pull-right">',
+                  group.info.name,
+                  '</span>'
+                ].join('');
                 lemon.popover(apiElId, {
-                  title: interf.name,
-                  trigger: 'hover',
+                  title: title,
+                  trigger: 'hover click',
                   placement: 'right',
                   content: function() {
                     return apis.getHighlightDoc(interf.request_doc, 'Request');

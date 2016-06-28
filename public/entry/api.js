@@ -26,10 +26,10 @@ var apis = {
     }
   },
 
-  getHighlightDoc: function(encodeDoc, rightTip) {
+  getHighlightDoc: function(encodeDoc, rightTip, css) {
     var exchange = '#dd_api_exchange';
     mirror.highlightJson5(lemon.dec(encodeDoc), exchange + ' pre');
-    $(exchange + ' pre').prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
+    $(exchange + ' pre').css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
     return $(exchange).html() + '';
   },
 
@@ -90,13 +90,16 @@ var apis = {
                   trigger: 'hover',
                   placement: 'right',
                   content: function() {
-                    return apis.getHighlightDoc(interf.request_doc, 'Request');
+                    return apis.getHighlightDoc(interf.request_doc, 'Request', {
+                      'max-height': viewport.h * 0.9
+                    });
                   }
                 }, {
                   show: function(el, target) {
                     $(el).css({
                       width: viewport.w * 0.5,
-                      'max-width': viewport.w * 0.5
+                      'max-width': viewport.w * 0.5,
+                      'max-height': viewport.h
                     }).addClass('borderinfo');
                   }
                 });

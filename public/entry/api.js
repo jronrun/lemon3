@@ -33,18 +33,20 @@ var apis = {
     return $(exchange).html() + '';
   },
 
-  render: function(page) {
+  render: function(page, callback) {
     var viewport = {
       w: $(window).width(),
       h: $(window).height()
     };
 
     page = page || 1;
+    $(apis.id).data('page', page);
+
     $.post('/api/interfaces', {
       page: page
     }, function (resp) {
       if (0 == resp.code) {
-        if (resp.result.items.length > 0) {
+        if (resp.result.items.length > 0 && 1 == page) {
           if (lemon.isView('xs', 'sm')) {
             $(apis.id).css({
               height: viewport.h * 0.7,
@@ -95,9 +97,21 @@ var apis = {
             }
           });
         });
+
+        if (1 == page) {
+          lemon.scroll(apis.id, function () {
+            lemon.progress(apis.id + 't');
+            var pn = parseInt($(apis.id).data('page')) + 1;
+            apis.render(pn, function() {
+              lemon.progressEnd(apis.id + 't');
+            });
+          });
+        }
       } else {
         lemon.msg(resp.msg);
       }
+
+      lemon.isFunc(callback) && callback();
     });
   }
 
@@ -136,23 +150,25 @@ var envs = {
     }
   },
 
-  render: function(page) {
+  render: function(page, callback) {
     var viewport = {
       w: $(window).width(),
       h: $(window).height()
     };
 
     page = page || 1;
+    $(envs.id).data('page', page);
+
     $.post('/api/servers', {
       page: page
     }, function (resp) {
       if (0 == resp.code) {
-        if (resp.result.envs.length > 0) {
+        if (resp.result.envs.length > 0 && 1 == page) {
           $(envs.id).css({
-            height: viewport.h * 0.8,
-            'max-height': viewport.h * 0.8,
-            'overflow-y': 'scroll'
-        });
+              height: viewport.h * 0.8,
+              'max-height': viewport.h * 0.8,
+              'overflow-y': 'scroll'
+          });
 
           if (lemon.isView('xs', 'sm')) {
             $(envs.id).css({
@@ -185,9 +201,22 @@ var envs = {
             });
           });
         });
+
+        if (1 == page) {
+          lemon.scroll(envs.id, function () {
+            lemon.progress(envs.id + 't');
+            var pn = parseInt($(envs.id).data('page')) + 1;
+            envs.render(pn, function() {
+              lemon.progressEnd(envs.id + 't');
+            });
+          });
+        }
+
       } else {
         lemon.msg(resp.msg);
       }
+
+      lemon.isFunc(callback) && callback();
     });
 
     //$('#env_dd a').click(function(e) {

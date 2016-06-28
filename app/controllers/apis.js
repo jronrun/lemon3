@@ -74,7 +74,7 @@ router.post(index.servers.do, function (req, res, next) {
         }, items.serverOwnerQuery(req));
       }
 
-      var pn = req.page || 1, ps = false;
+      var pn = parseInt(req.param('page') || '1'), ps = 12;
       Server.page(query, pn, false, ps, {
         sorts: {
           env_id: -1,
@@ -190,7 +190,7 @@ router.post(index.interfaces.do, function (req, res, next) {
         }, items.serverOwnerQuery(req));
       }
 
-      var pn = req.page || 1, ps = false;
+      var pn = parseInt(req.param('page') || '1'), ps = 10;
       Interface.page(query, pn, false, ps, {
         sorts: {
           group_id: -1,

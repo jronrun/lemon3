@@ -304,6 +304,24 @@ lemon.register({
 });
 
 lemon.register({
+  scroll: function(selector, handle) {
+    var prevContentH = 0;
+    lemon.scrollNext = false;
+    $(selector).scroll(function(){
+      var $this = $(this), viewH = $this.height(),
+        contentH = $this.get(0).scrollHeight, scrollTop = $this.scrollTop();
+      //when reach bottom 100px, if(contentH - viewH - scrollTop <= 100)
+      if ('0' == ($(selector).data('lock') || '0')) {
+        if(lemon.scrollNext || ((prevContentH != contentH) && (scrollTop / (contentH - viewH) >= 0.95))){
+          $(selector).data('lock', '1');
+          lemon.scrollNext = false;
+          prevContentH = contentH;
+          lemon.isFunc(handle) && handle();
+          $(selector).data('lock', '0');
+        }
+      }
+    });
+  },
   popover: function(selector, options, events) {
     var popoverTemplate = [
       '<div class="popover" role="tooltip">',

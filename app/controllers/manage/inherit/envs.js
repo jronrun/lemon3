@@ -1,6 +1,7 @@
 'use strict';
 
 var Environment = app_require('models/api/env'),
+  Server = app_require('models/api/server'),
   log = log_from('envs');
 
 module.exports = function (router, index, root) {
@@ -100,7 +101,7 @@ module.exports = function (router, index, root) {
         }
       },
       resultHandle: function(item, respData) {
-        respData.order = 10000;
+        respData.order = DEFAULT_ORDER;
       }
     }, req, res, next);
   });
@@ -132,6 +133,19 @@ module.exports = function (router, index, root) {
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
         item.order = parseInt(item.order);
+      },
+      afterUpdateHandle: function(target, itemObj, callback) {
+        Server.updateMany({
+          env_id : itemObj.id
+        }, {
+          $set: {
+            env_order: itemObj.order
+          }
+        }, {
+          multi: true
+        }, function(r) {
+          callback(null, target);
+        });
       }
     }, req, res, next);
   });

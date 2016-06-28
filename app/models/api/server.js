@@ -6,6 +6,8 @@ var model = schema({
   id: { type: 'integer', required: true },
   env_id: { type: 'integer', required: true },
   group_id: { type: 'integer', required: true },
+  env_order: { type: 'integer', required: true },
+  group_order: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },
   desc: { type: 'string' },
   url: { type: 'string', required: true, allowEmpty: false, format: 'url' },

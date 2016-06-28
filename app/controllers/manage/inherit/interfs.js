@@ -117,7 +117,7 @@ module.exports = function (router, index, root) {
       });
 
       generic.editor({
-        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc'],
+        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc', 'group_order'],
         modelName: 'interface',
         defineElement: {
           owner: {
@@ -162,6 +162,7 @@ module.exports = function (router, index, root) {
           id: req.user.id,
           name: req.user.name
         };
+        item.group_order = DEFAULT_ORDER;
 
         item.request_doc = req.body.request;
         var dec = crypto.decompress(req.body.request);
@@ -184,6 +185,12 @@ module.exports = function (router, index, root) {
         } else {
           item.response = {};
         }
+      },
+      beforeCreateHandle: function(item, callback) {
+        Group.find({id: item.group_id}).limit(1).next(function(err, group) {
+          item.group_order = group.order;
+          callback(null, item);
+        });
       }
     }, req, res, next);
   });
@@ -201,6 +208,7 @@ module.exports = function (router, index, root) {
           id: req.user.id,
           name: req.user.name
         };
+        item.group_order = DEFAULT_ORDER;
 
         item.request_doc = req.body.request;
         var dec = crypto.decompress(req.body.request);
@@ -223,6 +231,12 @@ module.exports = function (router, index, root) {
         } else {
           item.response = {};
         }
+      },
+      beforeUpdateHandle: function(target, itemObj, callback) {
+        Group.find({id: itemObj.group_id}).limit(1).next(function(err, group) {
+          target.group_order = group.order;
+          callback(null, target, itemObj);
+        });
       }
     }, req, res, next);
   });
@@ -255,7 +269,7 @@ module.exports = function (router, index, root) {
       generic.retrieve({
         schemaExclude: [
           'create_by', 'group_id', 'request_doc',
-          'response_doc', 'request', 'response'
+          'response_doc', 'request', 'response', 'group_order'
         ],
         modelName: 'interface',
         defineElement: {

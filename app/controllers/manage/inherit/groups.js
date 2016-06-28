@@ -1,6 +1,8 @@
 'use strict';
 
 var Group = app_require('models/api/group'),
+  Server = app_require('models/api/server'),
+  Interface = app_require('models/api/interf'),
   log = log_from('groups');
 
 module.exports = function (router, index, root) {
@@ -90,7 +92,7 @@ module.exports = function (router, index, root) {
         }
       },
       resultHandle: function(item, respData) {
-        respData.order = 10000;
+        respData.order = DEFAULT_ORDER;
       }
     }, req, res, next);
   });
@@ -122,6 +124,29 @@ module.exports = function (router, index, root) {
       paramHandle: function(item) {
         item.owner = parseInt(item.owner);
         item.order = parseInt(item.order);
+      },
+      afterUpdateHandle: function(target, itemObj, callback) {
+        Server.updateMany({
+          group_id : itemObj.id
+        }, {
+          $set: {
+            group_order: itemObj.order
+          }
+        }, {
+          multi: true
+        }, function(r) {
+          Interface.updateMany({
+            group_id : itemObj.id
+          }, {
+            $set: {
+              group_order: itemObj.order
+            }
+          }, {
+            multi: true
+          }, function(r) {
+            callback(null, target);
+          });
+        });
       }
     }, req, res, next);
   });

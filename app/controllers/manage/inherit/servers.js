@@ -200,7 +200,7 @@ module.exports = function (router, index, root) {
       }
     ], function(err, result) {
       generic.editor({
-        schemaExclude: ['create_by','env_id','group_id'],
+        schemaExclude: ['create_by','env_id','group_id','env_order','group_order'],
         defineElement: {
           owner: {
             selected: 1,
@@ -246,6 +246,20 @@ module.exports = function (router, index, root) {
           res.json(answer.fail('Parameter name must provide if Multi-interface'));
           return generic.BREAK;
         }
+
+        item.env_order = DEFAULT_ORDER;
+        item.group_order = DEFAULT_ORDER;
+      },
+      beforeCreateHandle: function(item, callback) {
+        Environment.find({id: item.env_id}).limit(1).next(function(err, env) {
+          item.env_order = env.order;
+
+          Group.find({id: item.group_id}).limit(1).next(function(err, group) {
+            item.group_order = group.order;
+
+            callback(null, item);
+          });
+        });
       }
     }, req, res, next);
   });
@@ -270,6 +284,20 @@ module.exports = function (router, index, root) {
           res.json(answer.fail('Parameter name must provide if Multi-interface'));
           return generic.BREAK;
         }
+
+        item.env_order = DEFAULT_ORDER;
+        item.group_order = DEFAULT_ORDER;
+      },
+      beforeUpdateHandle: function(target, itemObj, callback) {
+        Environment.find({id: itemObj.env_id}).limit(1).next(function(err, env) {
+          target.env_order = env.order;
+
+          Group.find({id: itemObj.group_id}).limit(1).next(function(err, group) {
+            target.group_order = group.order;
+
+            callback(null, target, itemObj);
+          });
+        });
       }
     }, req, res, next);
   });
@@ -314,7 +342,7 @@ module.exports = function (router, index, root) {
       }
     ], function(err, result) {
       generic.retrieve({
-        schemaExclude: ['create_by','env_id','group_id'],
+        schemaExclude: ['create_by','env_id','group_id','env_order','group_order'],
         defineElement: {
           owner: {
             el: 'radio',

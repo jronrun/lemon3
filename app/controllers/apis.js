@@ -77,8 +77,9 @@ router.post(index.servers.do, function (req, res, next) {
       var pn = parseInt(req.param('page') || '1'), ps = false;
       Server.page(query, pn, false, ps, {
         sorts: {
-          env_id: -1,
-          group_id: -1
+          env_order: 1,
+          group_order: 1,
+          id: -1
         }
       }).then(function (result) {
         callback(null, {
@@ -193,7 +194,7 @@ router.post(index.interfaces.do, function (req, res, next) {
       var pn = parseInt(req.param('page') || '1'), ps = false;
       Interface.page(query, pn, false, ps, {
         sorts: {
-          group_id: -1,
+          group_order: 1,
           id: -1
         }
       }).then(function (result) {

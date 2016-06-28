@@ -530,7 +530,8 @@ module.exports = function(model, index, defineForm) {
      *  sequenceId: 0,        //need auto increment sequence id, 1 yes
      *  checkExistsField: '', //check field value exists if not empty
      *  checkExistsField2: '', //check field value exists if not empty
-     *  paramHandle: function(item){}     //param pre handle
+     *  paramHandle: function(item){},     //param pre handle
+     *  beforeCreateHandle: function(item, callback){}   //before create handle (waterfall)
      * }
      */
     create: function(options, req, res, next) {
@@ -539,7 +540,8 @@ module.exports = function(model, index, defineForm) {
         sequenceId: 0,
         checkExistsField: '',
         checkExistsField2: '',
-        paramHandle: false
+        paramHandle: false,
+        beforeCreateHandle: false
       }, options || {});
 
       var item = crypto.decompress(req.body.item);
@@ -600,10 +602,10 @@ module.exports = function(model, index, defineForm) {
               if (exists) {
                 return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
               }
-              callback(null, item);
+              callback(null, target);
             });
           } else {
-            callback(null, item);
+            callback(null, target);
           }
         },
         function(target, callback) {
@@ -616,10 +618,17 @@ module.exports = function(model, index, defineForm) {
               if (exists) {
                 return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
               }
-              callback(null, item);
+              callback(null, target);
             });
           } else {
-            callback(null, item);
+            callback(null, target);
+          }
+        },
+        function(target, callback) {
+          if (_.isFunction(options.beforeCreateHandle)) {
+            options.beforeCreateHandle(target, callback);
+          } else {
+            callback(null, target);
           }
         },
         function(target, callback) {
@@ -650,6 +659,8 @@ module.exports = function(model, index, defineForm) {
      *  checkExistsField2: '', //check field value exists if not empty
      *  resourceUpdate: 0,    //update resource tab, 1 yes
      *  paramHandle: function(item){}     //param pre handle
+     *  beforeUpdateHandle: function(target, itemObj, callback) {} //before update handle  (waterfall)
+     *  afterUpdateHandle: function(target, itemObj, callback) {}   //after update handle  (waterfall)
      * }
      */
     update: function(options, req, res, next) {
@@ -658,7 +669,9 @@ module.exports = function(model, index, defineForm) {
         resourceUpdate: 0,
         checkExistsField: '',
         checkExistsField2: '',
-        paramHandle: false
+        paramHandle: false,
+        beforeUpdateHandle: false,
+        afterUpdateHandle: false
       }, options || {});
 
       var itemId = req.params.id;
@@ -699,10 +712,10 @@ module.exports = function(model, index, defineForm) {
               return res.json(answer.fail(check.msg));
             }
 
-            callback(null, item);
+            callback(null, item, result);
           });
         },
-        function(target, callback) {
+        function(target, itemObj, callback) {
           var field = options.checkExistsField;
           if (field.length > 0) {
             var qry = {
@@ -716,13 +729,13 @@ module.exports = function(model, index, defineForm) {
                 return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
               }
 
-              callback(null, target);
+              callback(null, target, itemObj);
             });
           } else {
-            callback(null, target);
+            callback(null, target, itemObj);
           }
         },
-        function(target, callback) {
+        function(target, itemObj, callback) {
           var field = options.checkExistsField2;
           if (field.length > 0) {
             var qry = {
@@ -736,21 +749,35 @@ module.exports = function(model, index, defineForm) {
                 return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
               }
 
-              callback(null, target);
+              callback(null, target, itemObj);
             });
           } else {
-            callback(null, target);
+            callback(null, target, itemObj);
           }
         },
-
-        function (target, callback) {
+        function(target, itemObj, callback) {
+          if (_.isFunction(options.beforeUpdateHandle)) {
+            options.beforeUpdateHandle(target, itemObj, callback);
+          } else {
+            callback(null, target, itemObj);
+          }
+        },
+        function (target, itemObj, callback) {
           model.updateById(itemId, {$set: target}, function (err) {
             if (err) {
               return res.json(answer.fail(err.message));
             }
 
-            callback(null, target);
+            callback(null, target, itemObj);
           });
+        },
+
+        function (target, itemObj, callback) {
+          if (_.isFunction(options.afterUpdateHandle)) {
+            options.afterUpdateHandle(target, itemObj, callback);
+          } else {
+            callback(null, target);
+          }
         }
       ], function (err, result) {
         return res.json(answer.succ({

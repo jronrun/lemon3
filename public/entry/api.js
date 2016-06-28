@@ -71,9 +71,27 @@ var apis = {
           _.each(group.interfs, function (interf) {
             var apiElId = apis.apiHead.id(interf.id);
             if (!$(apiElId).length) {
-              interf.request_doc = apis.getHighlightDoc(interf.request_doc, 'Request');
-
               $(apiGroupElId).append(apis.apiHead.render(group.info, interf));
+
+              if (lemon.isView('xs', 'sm')) {
+
+              } else {
+                lemon.popover(apiElId, {
+                  title: interf.name,
+                  trigger: 'hover',
+                  placement: 'right',
+                  content: function() {
+                    return apis.getHighlightDoc(interf.request_doc, 'Request');
+                  }
+                }, {
+                  show: function(el, target) {
+                    $(el).css({
+                      width: viewport.w * 0.5,
+                      'max-width': viewport.w * 0.5
+                    }).addClass('borderinfo');
+                  }
+                });
+              }
             }
           });
         });

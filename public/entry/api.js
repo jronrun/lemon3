@@ -3,6 +3,11 @@
  */
 var mirror = require('../js/codemirror');
 
+var current = {
+  env: null,
+  api: null
+};
+
 var apis = {
   id: '#api_dd',
   groupHead: {
@@ -110,10 +115,10 @@ var apis = {
 
         if (1 == page) {
           lemon.scroll(apis.id, function () {
-            lemon.progress(apis.id + 't');
+            var pg = lemon.progress(apis.id + 't');
             var pn = parseInt($(apis.id).data('page')) + 1;
             apis.render(pn, function() {
-              lemon.progressEnd(apis.id + 't');
+              pg.end();
             });
           });
         }
@@ -158,6 +163,13 @@ var envs = {
         group: groupInfo
       }));
     }
+  },
+
+  msg: function(msg, level) {
+    $('#permanent_id')
+      .prop('class', '')
+      .prop('class', 'alert alert-' + level)
+      .html(msg || '&nbsp;');
   },
 
   render: function(page, callback) {
@@ -214,10 +226,10 @@ var envs = {
 
         if (1 == page) {
           lemon.scroll(envs.id, function () {
-            lemon.progress(envs.id + 't');
+            var pg = lemon.progress(envs.id + 't');
             var pn = parseInt($(envs.id).data('page')) + 1;
             envs.render(pn, function() {
-              lemon.progressEnd(envs.id + 't');
+              pg.end();
             });
           });
         }

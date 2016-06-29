@@ -74,7 +74,7 @@ router.post(index.servers.do, function (req, res, next) {
         }, items.serverOwnerQuery(req));
       }
 
-      var pn = parseInt(req.param('page') || '1'), ps = false;
+      var pn = parseInt(req.body.page || '1'), ps = false;
       Server.page(query, pn, false, ps, {
         sorts: {
           env_order: 1,
@@ -135,7 +135,6 @@ router.post(index.servers.do, function (req, res, next) {
               id: serv.id,
               name: serv.name,
               desc: serv.desc,
-              url: serv.url,
               request: serv.request
             };
 
@@ -191,7 +190,7 @@ router.post(index.interfaces.do, function (req, res, next) {
         }, items.serverOwnerQuery(req));
       }
 
-      var pn = parseInt(req.param('page') || '1'), ps = false;
+      var pn = parseInt(req.body.page || '1'), ps = false;
       Interface.page(query, pn, false, ps, {
         sorts: {
           group_order: 1,

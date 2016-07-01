@@ -44,9 +44,15 @@ var apis = {
     return $(exchange).html() + '';
   },
 
-  refresh: function(groupId) {
+  refresh: function(groupId, apiId) {
     $(lemon.format('blockquote[apig]', groupId)).css('background-color', 'white');
     $(lemon.format('blockquote[apig="{0}"]', groupId)).css('background-color', 'ghostwhite');
+
+    if (apiId) {
+      $('#_api_check').remove();
+      $(apis.apiHead.id(apiId) + ' .m-b-0')
+        .prepend('<em id="_api_check" class="fa fa-check text-success">&nbsp;&nbsp;</em>');
+    }
   },
 
   choose: function(apiId) {
@@ -69,7 +75,7 @@ var apis = {
       mapi.resp.json(api.response);
     }
 
-    apis.refresh(group.id);
+    apis.refresh(group.id, api.id);
     envs.refresh(group.id);
   },
 
@@ -161,6 +167,10 @@ var apis = {
             var pn = parseInt($(apis.id).data('page')) + 1;
             apis.render(pn, function() {
               pg.end();
+              var choosed = current();
+              if (choosed.apiGroup && choosed.api) {
+                apis.refresh(choosed.apiGroup.id, choosed.api.id);
+              }
             });
           });
         }
@@ -214,9 +224,15 @@ var envs = {
       .html(msg || '&nbsp;');
   },
 
-  refresh: function(groupId) {
+  refresh: function(groupId, servId) {
     $('div[id^="grouph_"]').css('background-color', 'white');
     $(lemon.format('div[envg="{0}"]', groupId)).css('background-color', 'ghostwhite');
+
+    if (servId) {
+      $('#_env_check').remove();
+      $(envs.servHead.id(servId))
+        .prepend('<em id="_env_check" class="fa fa-check text-success">&nbsp;&nbsp;</em>');
+    }
   },
 
   choose: function(servId) {
@@ -249,7 +265,7 @@ var envs = {
 
     envs.msg(servMsg.join('&nbsp;&nbsp;'), env.level);
     apis.refresh(group.id);
-    envs.refresh(group.id);
+    envs.refresh(group.id, serv.id);
   },
 
   render: function(page, callback) {
@@ -319,6 +335,10 @@ var envs = {
             var pn = parseInt($(envs.id).data('page')) + 1;
             envs.render(pn, function() {
               pg.end();
+              var choosed = current();
+              if (choosed.envGroup && choosed.serv) {
+                envs.refresh(choosed.envGroup.id, choosed.serv.id);
+              }
             });
           });
         }

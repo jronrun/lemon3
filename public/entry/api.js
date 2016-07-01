@@ -3,10 +3,16 @@
  */
 var mirror = require('../js/codemirror');
 
-var current = {
-  env: null,
-  api: null
-};
+var _current = {};
+function current(data) {
+  //data { env: null, serv: null, envGroup: null, apiGroup: null, api: null }
+  lemon.extend(_current, data || {});
+  return _current;
+}
+
+function leave(){
+  lemon.persist('api_snapshoot', mapi.snapshoot());
+}
 
 var apis = {
   id: '#api_dd',
@@ -25,7 +31,7 @@ var apis = {
     },
 
     render: function(groupInfo, apiInfo) {
-      return lemon.tmpl($('#dd_api_tmpl').html(), lemon.extend(apiInfo, {
+      return lemon.tmpl($('#dd_api_tmpl').html(), lemon.extend({}, apiInfo, {
         group: groupInfo
       }));
     }
@@ -36,6 +42,33 @@ var apis = {
     mirror.highlightJson5(lemon.dec(encodeDoc), exchange + ' pre');
     $(exchange + ' pre').css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
     return $(exchange).html() + '';
+  },
+
+  refresh: function() {
+
+  },
+
+  choose: function(apiId) {
+    var elId = apis.apiHead.id(apiId);
+    if (!$(elId).length) {
+      return;
+    }
+    var data = {
+      apiGroup: lemon.data(elId, 'group'),
+      api: lemon.data(elId, 'api')
+    };
+
+    current(data);
+    apis.doChoose(data.apiGroup, data.api);
+  },
+
+  doChoose: function(group, api) {
+    mapi.requ.json(api.request);
+    if (!lemon.isBlank(api.response || {})) {
+      mapi.resp.json(api.response);
+    }
+
+    envs.refresh();
   },
 
   render: function(page, callback) {
@@ -79,7 +112,14 @@ var apis = {
             var apiElId = apis.apiHead.id(interf.id);
             if (!$(apiElId).length) {
               $(apiGroupElId).append(apis.apiHead.render(group.info, interf));
+              lemon.data(apiElId, {
+                group: group.info,
+                api: interf
+              });
 
+              $(apiElId).click(function () {
+                apis.choose(interf.id);
+              });
               if (lemon.isView('xs', 'sm')) {
 
               } else {
@@ -147,7 +187,7 @@ var envs = {
       return '#grouph_' + envId + '_' + groupId;
     },
     render: function(envInfo, groupInfo) {
-      return lemon.tmpl($('#dd_env_group_tmpl').html(), lemon.extend(groupInfo, {
+      return lemon.tmpl($('#dd_env_group_tmpl').html(), lemon.extend({}, groupInfo, {
         env: envInfo
       }));
     }
@@ -158,7 +198,7 @@ var envs = {
       return '#server_' + servId;
     },
     render: function(envInfo, groupInfo, servInfo) {
-      return lemon.tmpl($('#dd_server_tmpl').html(), lemon.extend(servInfo, {
+      return lemon.tmpl($('#dd_server_tmpl').html(), lemon.extend({}, servInfo, {
         env: envInfo,
         group: groupInfo
       }));
@@ -170,6 +210,42 @@ var envs = {
       .prop('class', '')
       .prop('class', 'alert alert-' + level)
       .html(msg || '&nbsp;');
+  },
+
+  refresh: function() {
+
+  },
+
+  choose: function(servId) {
+    var elId = envs.servHead.id(servId);
+    if (!$(elId).length) {
+      console.log('aaa');
+      return;
+    }
+    var data = {
+      env: lemon.data(elId, 'env'),
+      envGroup: lemon.data(elId, 'group'),
+      serv: lemon.data(elId, 'serv')
+    };
+
+    current(data);
+    envs.doChoose(data.env, data.envGroup, data.serv);
+  },
+
+  doChoose: function(env, group, serv) {
+    var servMsg = [
+      env.name,
+      group.name,
+      '-',
+      serv.name
+    ];
+
+    if ('danger' == env.level) {
+      servMsg.push('&nbsp;&nbsp;&nbsp;<strong>Danger !!!</strong>');
+    }
+
+    envs.msg(servMsg.join('&nbsp;&nbsp;'), env.level);
+    apis.refresh();
   },
 
   render: function(page, callback) {
@@ -220,6 +296,15 @@ var envs = {
               if (!$(servElId).length) {
                 $(groupElId).append(envs.servHead.render(env.info, group.info, serv));
               }
+              lemon.data(servElId, {
+                env: env.info,
+                group: group.info,
+                serv: serv
+              });
+
+              $(servElId).click(function() {
+                envs.choose(serv.id);
+              });
             });
           });
         });
@@ -240,12 +325,6 @@ var envs = {
 
       lemon.isFunc(callback) && callback();
     });
-
-    //$('#env_dd a').click(function(e) {
-    //  e.stopPropagation();
-    //}).dblclick(function(e) {
-    //  $('#env_dd').click();
-    //})
   }
 
 };
@@ -253,6 +332,28 @@ var envs = {
 var mapi = {
   requ: null,
   resp: null,
+  snapshoot: function() {
+    return {
+      cur: current(),
+      requ: mapi.requ.val(),
+      resp: mapi.resp.val()
+    };
+  },
+  snapload: function(snapdata) {
+    snapdata = snapdata ? lemon.deepDec(snapdata) : lemon.persist('api_snapshoot');
+    var choosed = snapdata.cur || {};
+    current(choosed);
+
+    if (choosed.env && choosed.envGroup && choosed.serv) {
+      envs.doChoose(choosed.env, choosed.envGroup, choosed.serv);
+    }
+    if (choosed.apiGroup && choosed.api) {
+      apis.doChoose(choosed.apiGroup, choosed.api);
+    }
+
+    mapi.requ.val(snapdata.requ);
+    mapi.resp.val(snapdata.resp);
+  },
   mirror: function(elId, sizeElId, options) {
     var instance = mirror(elId, options);
     instance.setSize($(sizeElId).width(), $(sizeElId).height() - 46);
@@ -314,6 +415,7 @@ var mapi = {
   intlDD: function() {
     envs.render();
     apis.render();
+    mapi.snapload();
   },
   initialize: function() {
     if (lemon.isView('xs', 'sm')) {
@@ -323,6 +425,12 @@ var mapi = {
     mapi.intlRequ();
     mapi.intlResp();
     mapi.intlDD();
+
+    //http://stackoverflow.com/questions/9626059/window-onbeforeunload-in-chrome-what-is-the-most-recent-fix
+    $(window).on('beforeunload', function() {
+      //var x =logout(); return x;
+      leave();
+    });
   }
 };
 

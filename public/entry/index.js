@@ -20,6 +20,46 @@ lemon.enc = function(target) {
   }
   return lemon.compressToEncodedURIComponent(target);
 };
+lemon.deepDec = function(val) {
+  try { val = lemon.dec(val); } catch (e) {}
+  try { val = JSON.parse(val); } catch (e) {}
+  return val;
+};
+
+lemon.data = function(selector, target) {
+  //get all
+  if (lemon.isUndefined(target)) {
+    var r = $(selector).data() || {}, rdata = {};
+    _.each(r, function(v, k) {
+      rdata[k] = lemon.deepDec(v);
+    });
+
+    return rdata;
+  }
+
+  //get
+  if (lemon.isString(target)) {
+    return lemon.deepDec($(selector).data(target));
+  }
+
+  //set
+  var theData = {};
+  lemon.each(target, function (v, k) {
+    theData['data-' + k] = lemon.enc(v);
+  });
+  $(selector).attr(theData);
+};
+
+lemon.persist = function(key, data) {
+  var cur = lemon.deepDec(lemon.store(key) || {});
+  if (lemon.isUndefined(data)) {
+    return cur;
+  }
+
+  var v = lemon.extend({}, cur, data);
+  lemon.store(key, lemon.enc(v));
+  return v;
+};
 
 require('../js/store');
 require('jquery-pjax');

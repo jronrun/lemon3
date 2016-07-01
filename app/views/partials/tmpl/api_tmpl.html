@@ -13,7 +13,7 @@
 </script>
 
 <script type="text/html" id="dd_env_group_tmpl">
-    <div class="dropdown-header" id="grouph_<%= env.id %>_<%= id %>">
+    <div class="dropdown-header" id="grouph_<%= env.id %>_<%= id %>" envg="<%= id %>">
         <h6 style="font-size: 90%">
             {{! <span class="text-<%= 'danger' == env.level ? 'danger' : 'muted' %>"> }}
             <span class="text-muted">
@@ -55,7 +55,7 @@
 
 <script type="text/html" id="dd_api_tmpl">
     <div class="dropdown-item" id="interf_<%= id %>">
-        <blockquote class="blockquote" style="font-size: 110%">
+        <blockquote class="blockquote" style="font-size: 110%" apig="<%= group.id %>">
             <p class="m-b-0 linebreak"><%= name %></p>
             <% if (desc.length > 0) { %>
             <footer class="blockquote-footer">

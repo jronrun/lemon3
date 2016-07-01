@@ -44,8 +44,9 @@ var apis = {
     return $(exchange).html() + '';
   },
 
-  refresh: function() {
-
+  refresh: function(groupId) {
+    $(lemon.format('blockquote[apig]', groupId)).css('background-color', 'white');
+    $(lemon.format('blockquote[apig="{0}"]', groupId)).css('background-color', 'ghostwhite');
   },
 
   choose: function(apiId) {
@@ -68,7 +69,8 @@ var apis = {
       mapi.resp.json(api.response);
     }
 
-    envs.refresh();
+    apis.refresh(group.id);
+    envs.refresh(group.id);
   },
 
   render: function(page, callback) {
@@ -212,8 +214,9 @@ var envs = {
       .html(msg || '&nbsp;');
   },
 
-  refresh: function() {
-
+  refresh: function(groupId) {
+    $('div[id^="grouph_"]').css('background-color', 'white');
+    $(lemon.format('div[envg="{0}"]', groupId)).css('background-color', 'ghostwhite');
   },
 
   choose: function(servId) {
@@ -245,7 +248,8 @@ var envs = {
     }
 
     envs.msg(servMsg.join('&nbsp;&nbsp;'), env.level);
-    apis.refresh();
+    apis.refresh(group.id);
+    envs.refresh(group.id);
   },
 
   render: function(page, callback) {
@@ -415,7 +419,9 @@ var mapi = {
   intlDD: function() {
     envs.render();
     apis.render();
-    mapi.snapload();
+    lemon.delay(function () {
+      mapi.snapload();
+    }, 200);
   },
   initialize: function() {
     if (lemon.isView('xs', 'sm')) {

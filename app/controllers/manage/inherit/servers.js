@@ -205,7 +205,7 @@ module.exports = function (router, index, root) {
       }
     ], function(err, result) {
       generic.editor({
-        schemaExclude: ['create_by','env_id','group_id','env_order','group_order'],
+        schemaExclude: ['create_by','env_id','group_id','env_order','group_order','request.add_params_doc'],
         tabs: [
           {
             tabName: 'Additional Parameter',
@@ -379,7 +379,7 @@ module.exports = function (router, index, root) {
       }
     ], function(err, result) {
       generic.retrieve({
-        schemaExclude: ['create_by','env_id','group_id','env_order','group_order'],
+        schemaExclude: ['create_by','env_id','group_id','env_order','group_order','request.add_params_doc'],
         tabs: [
           {
             tabName: 'Additional Parameter',

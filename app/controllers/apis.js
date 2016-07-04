@@ -134,8 +134,7 @@ router.post(index.servers.do, function (req, res, next) {
             var aServer = {
               id: serv.id,
               name: serv.name,
-              desc: serv.desc,
-              request: serv.request
+              desc: serv.desc
             };
 
             aGroup.servs.push(aServer);

@@ -208,6 +208,11 @@ module.exports = function(scope, config) {
   scope.getResource = resource.getResource;
   scope.routes = resource.resource;
   scope.HttpMethod = resource.methods;
+  scope.getMethods = function() {
+    var methods = [];
+    _.each(resource.methods, function (v) { methods.push(v); });
+    return methods;
+  };
   scope.getUserMenu = function(source, isAdmin) {
     if (isAdmin) {
       return resource.menus;

@@ -1,6 +1,8 @@
 'use strict';
 
-var log = log_from('server');
+var log = log_from('server'),
+  methods = getMethods();
+methods.unshift('JSONP');
 
 var model = schema({
   id: { type: 'integer', required: true },
@@ -22,7 +24,9 @@ var model = schema({
       interf_prop: { type: 'string', description: 'Interface name property in request data' },
       //Add to request data every time
       add_params: { type: 'object' },
-      data_type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'JSON', 2: 'XML'} }
+      add_params_doc: { type: 'string' },
+      data_type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'JSON', 2: 'XML'} },
+      method: { type: 'string', required: true, enum: methods }
     }
   },
   create_by: {

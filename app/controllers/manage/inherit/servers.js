@@ -26,6 +26,11 @@ module.exports = function (router, index, root) {
     }
   });
 
+  var addParamsEl = generic.codemirrorEl('request_add_params', {
+    label: '',
+    desc: '[Optional] Add to request data each time'
+  });
+
   /**
    * Server list
    */
@@ -201,6 +206,12 @@ module.exports = function (router, index, root) {
     ], function(err, result) {
       generic.editor({
         schemaExclude: ['create_by','env_id','group_id','env_order','group_order'],
+        tabs: [
+          {
+            tabName: 'Additional Parameter',
+            form: generic.formEl(addParamsEl)
+          }
+        ],
         defineElement: {
           owner: {
             selected: 1,
@@ -249,6 +260,19 @@ module.exports = function (router, index, root) {
 
         item.env_order = DEFAULT_ORDER;
         item.group_order = DEFAULT_ORDER;
+
+        if (req.body.request_add_params) {
+          item.request.add_params_doc = req.body.request_add_params;
+          var dec = crypto.decompress(req.body.request_add_params);
+          try {
+            item.request.add_params = json5s.parse(dec);
+          } catch(e) {
+            res.json(answer.fail('Additional Parameter is not a valid JSON5'));
+            return generic.BREAK;
+          }
+        } else {
+          item.request.add_params = {};
+        }
       },
       beforeCreateHandle: function(item, callback) {
         Environment.find({id: item.env_id}).limit(1).next(function(err, env) {
@@ -287,6 +311,19 @@ module.exports = function (router, index, root) {
 
         item.env_order = DEFAULT_ORDER;
         item.group_order = DEFAULT_ORDER;
+
+        if (req.body.request_add_params) {
+          item.request.add_params_doc = req.body.request_add_params;
+          var dec = crypto.decompress(req.body.request_add_params);
+          try {
+            item.request.add_params = json5s.parse(dec);
+          } catch(e) {
+            res.json(answer.fail('Additional Parameter is not a valid JSON5'));
+            return generic.BREAK;
+          }
+        } else {
+          item.request.add_params = {};
+        }
       },
       beforeUpdateHandle: function(target, itemObj, callback) {
         Environment.find({id: itemObj.env_id}).limit(1).next(function(err, env) {
@@ -343,6 +380,12 @@ module.exports = function (router, index, root) {
     ], function(err, result) {
       generic.retrieve({
         schemaExclude: ['create_by','env_id','group_id','env_order','group_order'],
+        tabs: [
+          {
+            tabName: 'Additional Parameter',
+            form: generic.formEl(addParamsEl)
+          }
+        ],
         defineElement: {
           owner: {
             el: 'radio',
@@ -365,6 +408,11 @@ module.exports = function (router, index, root) {
 
           form.afterEl('url', theEnv);
           form.afterEl('env_id', theGroup);
+        },
+        additionHandle: function(item, addition) {
+          if (item.request.add_params_doc) {
+            addition.request_add_params = item.request.add_params_doc;
+          }
         }
       }, req, res, next);
     });

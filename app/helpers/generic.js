@@ -528,8 +528,8 @@ module.exports = function(model, index, defineForm) {
      * options: {
      *  resourceTab: 0,       //has resource tab, 1 has, 2 show readonly
      *  sequenceId: 0,        //need auto increment sequence id, 1 yes
-     *  checkExistsField: '', //check field value exists if not empty
-     *  checkExistsField2: '', //check field value exists if not empty
+     *  checkExistsField: '', //check field value exists if not empty, string or array
+     *  checkExistsField2: '', //check field value exists if not empty, string or array
      *  paramHandle: function(item){},     //param pre handle
      *  beforeCreateHandle: function(item, callback){}   //before create handle (waterfall)
      * }
@@ -594,14 +594,30 @@ module.exports = function(model, index, defineForm) {
         },
         function(target, callback) {
           var field = options.checkExistsField;
-          if (field.length > 0) {
+          var fields = [];
+          if (_.isString(field) && field.length > 0) {
+            fields.push(field);
+          } else if (_.isArray(field)) {
+            fields = field;
+          }
+
+          if (fields.length > 0) {
             var qry = {};
-            //{name: target.name}
-            qry[field] = target[field];
+
+            _.each(fields, function (prop) {
+              qry[prop] = _.get(target, prop);
+            });
+
             model.find(qry).limit(1).next(function(err, exists){
               if (exists) {
-                return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
+                var aExist = {};
+                _.each(fields, function (prop) {
+                  aExist[prop] = _.get(exists, prop);
+                });
+
+                return res.json(answer.fail('The ' + JSON.stringify(aExist) + ' already exist.'));
               }
+
               callback(null, target);
             });
           } else {
@@ -610,14 +626,30 @@ module.exports = function(model, index, defineForm) {
         },
         function(target, callback) {
           var field = options.checkExistsField2;
-          if (field.length > 0) {
+          var fields = [];
+          if (_.isString(field) && field.length > 0) {
+            fields.push(field);
+          } else if (_.isArray(field)) {
+            fields = field;
+          }
+
+          if (fields.length > 0) {
             var qry = {};
-            //{name: target.name}
-            qry[field] = target[field];
+
+            _.each(fields, function (prop) {
+              qry[prop] = _.get(target, prop);
+            });
+
             model.find(qry).limit(1).next(function(err, exists){
               if (exists) {
-                return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
+                var aExist = {};
+                _.each(fields, function (prop) {
+                  aExist[prop] = _.get(exists, prop);
+                });
+
+                return res.json(answer.fail('The ' + JSON.stringify(aExist) + ' already exist.'));
               }
+
               callback(null, target);
             });
           } else {
@@ -655,8 +687,8 @@ module.exports = function(model, index, defineForm) {
      * update
      * options: {
      *  resourceTab: 0,       //has resource tab, 1 has, 2 show readonly
-     *  checkExistsField: '', //check field value exists if not empty
-     *  checkExistsField2: '', //check field value exists if not empty
+     *  checkExistsField: '', //check field value exists if not empty, string or array
+     *  checkExistsField2: '', //check field value exists if not empty, string or array
      *  resourceUpdate: 0,    //update resource tab, 1 yes
      *  paramHandle: function(item){}     //param pre handle
      *  beforeUpdateHandle: function(target, itemObj, callback) {} //before update handle  (waterfall)
@@ -717,16 +749,30 @@ module.exports = function(model, index, defineForm) {
         },
         function(target, itemObj, callback) {
           var field = options.checkExistsField;
-          if (field.length > 0) {
+          var fields = [];
+          if (_.isString(field) && field.length > 0) {
+            fields.push(field);
+          } else if (_.isArray(field)) {
+            fields = field;
+          }
+
+          if (fields.length > 0) {
             var qry = {
-              $ne: model.toObjectID(itemId)
+              '_id': { $ne: model.toObjectID(itemId) }
             };
 
-            //{name: target.name}
-            qry[field] = target[field];
+            _.each(fields, function (prop) {
+              qry[prop] = _.get(target, prop);
+            });
+
             model.find(qry).limit(1).next(function(err, exists){
               if (exists) {
-                return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
+                var aExist = {};
+                _.each(fields, function (prop) {
+                  aExist[prop] = _.get(exists, prop);
+                });
+
+                return res.json(answer.fail('The ' + JSON.stringify(aExist) + ' already exist.'));
               }
 
               callback(null, target, itemObj);
@@ -737,16 +783,30 @@ module.exports = function(model, index, defineForm) {
         },
         function(target, itemObj, callback) {
           var field = options.checkExistsField2;
-          if (field.length > 0) {
+          var fields = [];
+          if (_.isString(field) && field.length > 0) {
+            fields.push(field);
+          } else if (_.isArray(field)) {
+            fields = field;
+          }
+
+          if (fields.length > 0) {
             var qry = {
-              $ne: model.toObjectID(itemId)
+              '_id': { $ne: model.toObjectID(itemId) }
             };
 
-            //{name: target.name}
-            qry[field] = target[field];
+            _.each(fields, function (prop) {
+              qry[prop] = _.get(target, prop);
+            });
+
             model.find(qry).limit(1).next(function(err, exists){
               if (exists) {
-                return res.json(answer.fail('The ' + field + ' ' + target[field] + ' already exist.'));
+                var aExist = {};
+                _.each(fields, function (prop) {
+                  aExist[prop] = _.get(exists, prop);
+                });
+
+                return res.json(answer.fail('The ' + JSON.stringify(aExist) + ' already exist.'));
               }
 
               callback(null, target, itemObj);

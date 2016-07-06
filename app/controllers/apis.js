@@ -6,6 +6,7 @@ var express = require('express'),
   index = routes.api,
 
   items = require('../helpers/items'),
+  apiRequest = require('../helpers/api_request'),
   Environment = app_require('models/api/env'),
   Group = app_require('models/api/group'),
   Server = app_require('models/api/server'),
@@ -20,6 +21,25 @@ module.exports = function (app) {
  */
 router.get(index.do, function (req, res, next) {
   res.render(index);
+});
+
+/**
+ * API Request
+ */
+router.post(index.request.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.succ({ envs: []}));
+  }
+
+  var requs = apiRequest(req.user, {
+    envId: req.body.env,
+    groupId: req.body.group,
+    servId: req.body.serv,
+    apiId: req.body.api,
+    requ: req.body.requ
+  }).request(function(answer) {
+    return res.json(answer);
+  });
 });
 
 /**

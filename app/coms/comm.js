@@ -35,6 +35,13 @@ var answer = {
       result: result || {},
       msg: msg || ''
     }
+  },
+  resp: function(code, result, msg) {
+    return {
+      code: code,
+      result: result || {},
+      msg: msg || ''
+    }
   }
 };
 

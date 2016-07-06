@@ -1,8 +1,6 @@
 'use strict';
 
-var log = log_from('server'),
-  methods = getMethods();
-methods.unshift('JSONP');
+var log = log_from('server');
 
 var model = schema({
   id: { type: 'integer', required: true },
@@ -26,7 +24,7 @@ var model = schema({
       add_params: { type: 'object' },
       add_params_doc: { type: 'string' },
       data_type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'JSON', 2: 'XML'} },
-      method: { type: 'string', required: true, enum: methods }
+      method: { type: 'string', required: true, enum: ['JSONP', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'] }
     }
   },
   create_by: {

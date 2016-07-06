@@ -10,6 +10,63 @@ var types = {
 
 var helper = {
 
+  ownScope: function(usr, property, target) {
+    if (usr.isAdmin) {
+      return true;
+    }
+
+    target = parseInt(target || '-1');
+    var defined = usr[property] || {};
+    if (!defined.scope) {
+      defined.scope = 3;
+    }
+
+    //1: 'Include All'
+    if (1 == defined.scope) {
+      return true;
+    }
+
+    //2: 'Include only in Define'
+    else if (2 == defined.scope) {
+      return _.indexOf(defined.define || [], target) != -1;
+    }
+
+    //3: 'Exclude All'
+    else if (3 == defined.scope) {
+      return false;
+    }
+
+    //4: 'Exclude only in Define'
+    else if (4 == defined.scope) {
+      return _.indexOf(defined.define || [], target) == -1;
+    }
+  },
+
+  ownIds: function(usr, property, target) {
+    if (usr.isAdmin) {
+      return true;
+    }
+
+    target = parseInt(target || '-1');
+    return _.indexOf(usr[property] || [], target) != -1;
+  },
+
+  ownEnv: function(usr, target) {
+    return helper.ownIds(usr, 'env', target);
+  },
+
+  ownGroup: function(usr, target) {
+    return helper.ownIds(usr, 'group', target);
+  },
+
+  ownServer: function(usr, target) {
+    return helper.ownScope(usr, 'server', target);
+  },
+
+  ownInterface: function(usr, target) {
+    return helper.ownScope(usr, 'interface', target);
+  },
+
   /**
    *  defined: {
    *     scope: 1

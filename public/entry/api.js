@@ -235,6 +235,15 @@ var envs = {
     }
   },
 
+  isDanger: function() {
+    var choosed = current();
+    if (choosed.env) {
+      return 'danger' == choosed.env.level;
+    }
+
+    return false;
+  },
+
   choose: function(servId) {
     var elId = envs.servHead.id(servId);
     if (!$(elId).length) {
@@ -353,7 +362,69 @@ var envs = {
 
 };
 
+var requs = {
+  id: '#api_request',
+
+  init: function() {
+    $(requs.id).click(function () {
+      var choosed = current();
+      if (!choosed.env || !choosed.envGroup || !choosed.serv) {
+        return lemon.msg('Please choose an Environment first.');
+      }
+
+      //chosen API
+      if (choosed.apiGroup && choosed.api) {
+        if (choosed.envGroup.id != choosed.apiGroup.id) {
+          var tip = 'The chosen {0} server {1} does not support the {2} {3}';
+          return lemon.msg(lemon.format(tip, choosed.envGroup.name, choosed.serv.name, choosed.apiGroup.name, choosed.api.name));
+        }
+      }
+      //unchosen API
+      else {
+
+      }
+
+      if (!mapi.requ.isJson()) {
+        return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
+      }
+
+      if (envs.isDanger()) {
+        var env = choosed.env,
+          tip = '<h5>Are you sure ?</h5> <span class="text-warning">{0} !!!</span>';
+        lemon.confirm(lemon.format(tip, env.desc || env.name) , function () {
+          requs.request();
+        });
+      } else {
+        requs.request();
+      }
+    });
+  },
+
+  request: function() {
+    var choosed = current(), pg = lemon.progress(mapi.navbarId);
+    var data = {
+      env: choosed.env.id,
+      group: choosed.envGroup.id,
+      serv: choosed.serv.id,
+      api: choosed.api ? choosed.api.id : -1,
+      requ: lemon.enc(mapi.requ.json())
+    };
+
+    $.post('/api/request', data).done(function (resp) {
+      if (0 == resp.code) {
+        alert(lemon.dec(resp.result.path));
+      } else if (2 == resp.code) {
+
+      } else {
+        lemon.msg(resp.msg);
+      }
+      pg.end();
+    });
+  }
+};
+
 var mapi = {
+  navbarId: '#navbar-layout',
   requ: null,
   resp: null,
   snapshoot: function() {
@@ -451,6 +522,7 @@ var mapi = {
     mapi.intlRequ();
     mapi.intlResp();
     mapi.intlDD();
+    requs.init();
 
     //http://stackoverflow.com/questions/9626059/window-onbeforeunload-in-chrome-what-is-the-most-recent-fix
     $(window).on('beforeunload', function() {

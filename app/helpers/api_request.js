@@ -22,7 +22,11 @@ module.exports = function(usr, options) {
 
   var apiRequest = {
 
-    request: function(resultCall, isJustGetRequParam) {
+    request: function(resultCall, requestOptions) {
+      requestOptions = _.extend({
+        opt: 0                // 1 {path: '', data: {}}, 2 whole url with param {path: ''}
+      }, requestOptions || {});
+
       async.waterfall([
         function (callback) {
           var target = {};
@@ -129,8 +133,8 @@ module.exports = function(usr, options) {
               break;
           }
 
-          //just get url and params
-          if (isJustGetRequParam) {
+          //{path: '', data: {}}
+          if (1 == requestOptions.opt) {
             _.extend(theResp, {
               path: target.serv.url,
               data: theParam
@@ -138,59 +142,74 @@ module.exports = function(usr, options) {
 
             callback(null, target, answer.succ(theResp));
           }
-          //jsonp
-          else if ('JSONP' == servRequ.method || isJustGetRequParam) {
+          //whole url with param {path: ''}
+          else if (2 == requestOptions.opt) {
             _.extend(theResp, {
-              path: crypto.compress(format(requpath, target.serv.url, qs.stringify(theParam)))
+              path: format(requpath, target.serv.url, qs.stringify(theParam))
             });
 
             callback(null, target, answer.succ(theResp));
           }
-          //Other method
-          else {
-            var headers = {}, reqOptions = {};
-
-            _.extend(reqOptions, {
-              url: target.serv.url,
-              method: servRequ.method,
-              headers: headers
-            });
-
-            if (_.indexOf(['PATCH', 'POST', 'PUT'], servRequ.method) != -1) {
-              _.extend(reqOptions, {
-                body: theParam,
-                json: true
+          //do request
+          else if (0 == requestOptions.opt) {
+            //jsonp
+            if ('JSONP' == servRequ.method) {
+              _.extend(theResp, {
+                path: crypto.compress(format(requpath, target.serv.url, qs.stringify(theParam)))
               });
+
+              callback(null, target, answer.succ(theResp));
             }
-            //
-            else if (_.indexOf(['GET', 'DELETE'], servRequ.method) != -1) {
-              _.extend(reqOptions, {
-                qs: theParam
-              });
-            }
-            //
+            //Other method
             else {
-              return resultCall(answer.fail('Unsupport method ' + servRequ.method));
-            }
+              var headers = {}, reqOptions = {};
 
-            //http://blog.modulus.io/node.js-tutorial-how-to-use-request-module
-            request(reqOptions, function(error, response, body) {
-              if(error){
-                return resultCall(answer.fail(error.message, error));
+              _.extend(reqOptions, {
+                url: target.serv.url,
+                method: servRequ.method,
+                headers: headers
+              });
+
+              if (_.indexOf(['PATCH', 'POST', 'PUT'], servRequ.method) != -1) {
+                _.extend(reqOptions, {
+                  body: theParam,
+                  json: true
+                });
+              }
+              //
+              else if (_.indexOf(['GET', 'DELETE'], servRequ.method) != -1) {
+                _.extend(reqOptions, {
+                  qs: theParam
+                });
+              }
+              //
+              else {
+                return resultCall(answer.fail('Unsupport method ' + servRequ.method));
               }
 
-              log.info('response', JSON.stringify(response));
-              log.info('body', JSON.stringify(body));
+              //http://blog.modulus.io/node.js-tutorial-how-to-use-request-module
+              request(reqOptions, function(error, response, body) {
+                if(error){
+                  return resultCall(answer.fail(error.message, error));
+                }
 
-              callback(null, target, answer.resp(2, theResp));
-            });
+                log.info('response', JSON.stringify(response));
+                log.info('body', JSON.stringify(body));
+
+                callback(null, target, answer.resp(2, theResp));
+              });
+            }
+          } else {
+            return resultCall(answer.fail('Unknown option ' + requestOptions.opt));
           }
+
         },
 
         function(target, answer, callback) {
-          if (!isJustGetRequParam) {
+          if (0 == requestOptions.opt) {
             //history
           }
+
           callback(null, answer);
         }
       ], function(err, result) {

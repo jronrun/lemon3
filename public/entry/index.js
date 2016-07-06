@@ -362,6 +362,92 @@ lemon.register({
       }
     });
   },
+  confirm: function(text, okCallback, cancelCallback, title) {
+    var okId = 'ok_id_' + lemon.uniqueId();
+    var footer = [
+      '<button type="button" id="{0}" class="btn btn-secondary" data-dismiss="modal">Cancel</button>',
+      lemon.format('<button type="button" id="{0}" class="btn btn-primary" data-dismiss="modal">OK</button>', okId)
+    ].join('');
+
+    var body = [
+      '<p class="text-warning icondh"><em class="fa fa-question">&nbsp;</em></p>',
+      text
+    ].join('');
+
+    lemon.modal({
+      title: title || '',
+      body: body,
+      footer: footer,
+      modal: {
+        show: true
+      }
+    }, {
+      hidden: cancelCallback
+    });
+
+    $('#' + okId).click(function(e) {
+      lemon.isFunc(okCallback) && okCallback(e);
+    });
+  },
+  modal: function(options, events) {
+    options = lemon.extend({
+      id: 'a_modal_' + lemon.uniqueId(),
+      title: '',
+      titleClose: false,
+      body: '',
+      footer: '',
+      modal: null,
+      cache: false
+    }, options || {});
+
+    var modalId = lemon.startIf(options.id, '#');
+    if (!$(modalId).length) {
+      $('#modals_context').append(lemon.tmpl($('#modal_tmpl').html(), options));
+
+      options.modal = lemon.extend({
+        backdrop: true,
+        keyboard: true,
+        show: false
+      }, options.modal || {});
+
+      events = events || {};
+      var theModal = $(modalId).modal(options.modal)
+        .on('show.bs.modal', function(e) {
+          lemon.isFunc(events.show) && events.show(e, this);
+        })
+        .on('shown.bs.modal', function(e) {
+          lemon.isFunc(events.shown) && events.shown(e, this);
+        })
+        .on('hide.bs.modal', function(e) {
+          lemon.isFunc(events.hide) && events.hide(e, this);
+        })
+        .on('hidden.bs.modal', function(e) {
+          if (!options.cache) {
+            $(modalId).remove();
+          }
+          lemon.isFunc(events.hidden) && events.hidden(e, this);
+        })
+        .on('loaded.bs.modal', function(e) {
+          lemon.isFunc(events.loaded) && events.loaded(e, this);
+        });
+    }
+
+    return {
+      target: theModal,
+      toggle: function() {
+        $(modalId).modal('toggle');
+      },
+      show: function() {
+        $(modalId).modal('show');
+      },
+      hide: function() {
+        $(modalId).modal('hide');
+      },
+      destroy: function() {
+        $(modalId).remove();
+      }
+    }
+  },
   popover: function(selector, options, events) {
     var popoverTemplate = [
       '<div class="popover" role="tooltip">',

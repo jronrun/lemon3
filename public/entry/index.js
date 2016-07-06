@@ -370,7 +370,7 @@ lemon.register({
     ].join('');
 
     var body = [
-      '<p class="text-warning icondh"><em class="fa fa-question">&nbsp;</em></p>',
+      '<p class="text-warning icondh"><em class="fa fa-warning">&nbsp;</em></p>',
       text
     ].join('');
 
@@ -397,6 +397,7 @@ lemon.register({
       body: '',
       footer: '',
       modal: null,
+      size: '',     //lg, sm, default is normal size
       cache: false
     }, options || {});
 

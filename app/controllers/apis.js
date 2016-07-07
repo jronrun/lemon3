@@ -28,19 +28,47 @@ router.get(index.do, function (req, res, next) {
  */
 router.post(index.request.do, function (req, res, next) {
   if (req.anonymous) {
-    return res.json(answer.succ({ envs: []}));
+    return res.json(answer.resp(401));
   }
 
-  var requs = apiRequest(req.user, {
-    envId: req.body.env,
-    groupId: req.body.group,
-    servId: req.body.serv,
-    apiId: req.body.api,
-    requ: req.body.requ
-  }).request(function(answer) {
-    answer.result = crypto.compress(answer.result);
-    return res.json(answer);
+  apiRequest(req.user).request({
+      envId: req.body.env,
+      groupId: req.body.group,
+      servId: req.body.serv,
+      apiId: req.body.api,
+      requ: req.body.requ
+    }, function(answer) {
+      answer.result = crypto.compress(answer.result);
+      return res.json(answer);
+    }, {
+      ip: req.ip
+    }
+  );
+});
+
+/**
+ * Fill History Response
+ */
+router.post(index.history.do, function (req, res, next) {
+  var hisId = parseInt(req.body.hisId), resp = req.body.resp;
+
+  apiRequest(req.user).setHisResp(hisId, resp, function() {
+    return res.json(answer.succ());
   });
+});
+
+/**
+ * Next History
+ */
+router.post(index.history.next.do, function (req, res, next) {
+
+});
+
+/**
+ * Previous History
+ */
+router.post(index.history.prev.do, function (req, res, next) {
+
 });
 
 /**

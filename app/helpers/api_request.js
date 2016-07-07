@@ -10,21 +10,23 @@ var log = log_from('api_request'),
   Interface = app_require('models/api/interf'),
   History = app_require('models/api/history');
 
-module.exports = function(usr, options) {
-  var permission = 'There is no authority for %s',
-    requpath = '%s?%s';
-  options = _.extend({
-    envId: null,
-    groupId: null,
-    servId: null,
-    apiId: null,
-    requ: null
-  }, options || {});
+module.exports = function(usr, commOptions) {
+  var permission = 'There is no authority for %s';
+  commOptions = _.extend({}, commOptions || {});
 
   var apiRequest = {
 
-    request: function(resultCall, requestOptions) {
+    request: function(options, resultCall, requestOptions) {
+      options = _.extend({
+        envId: null,
+        groupId: null,
+        servId: null,
+        apiId: null,
+        requ: null
+      }, options || {});
+
       requestOptions = _.extend({
+        ip: '',
         opt: 0                // 1 {path: '', data: {}, 'param_name'}
       }, requestOptions || {});
 
@@ -203,13 +205,73 @@ module.exports = function(usr, options) {
 
         function(target, answer, callback) {
           if (0 == requestOptions.opt) {
-            //history
-          }
+            var history = {
+              env: {
+                id: target.env.id,
+                name: target.env.name,
+                level: target.env.alert_level
+              },
+              group: {
+                id: target.group.id,
+                name: target.group.name
+              },
+              serv: {
+                id: target.serv.id,
+                name: target.serv.name
+              },
+              interf: {
+                request: target.requ
+              },
+              user: {
+                id: usr.id,
+                name: usr.name,
+                ip: requestOptions.ip || ''
+              },
+              create_time: new Date()
+            };
 
-          callback(null, answer);
+            History.nextId(function (id) {
+              history.id = id;
+
+              History.insertOne(history, function(err, result) {
+                if (err) {
+                  return resultCall(answer.fail(err.message));
+                }
+
+                if (1 != result.insertedCount) {
+                  return resultCall(answer.fail('Request fail, Try again?'));
+                }
+
+                answer.result.hisId = id;
+                callback(null, answer);
+              });
+            });
+          } else {
+            callback(null, answer);
+          }
         }
       ], function(err, result) {
         resultCall(result);
+      });
+    },
+
+    setHisResp: function(historyId, response, callback) {
+      var response = crypto.decompress(response), json = false;
+      try {
+        response = convertData(json5s.parse(response));
+        json = true;
+      } catch (e) {
+      }
+
+      History.updateOne({
+        id: historyId
+      }, {
+        $set: {
+          "interf.response": response,
+          "interf.json": json
+        }
+      }, function(err, result) {
+        _.isFunction(callback) && callback();
       });
     }
   };

@@ -4,6 +4,8 @@ var log = log_from('history');
 
 var model = schema({
   id: { type: 'integer', required: true },
+  env: { type: 'object' },
+  group: { type: 'object' },
   serv: { type: 'object' },
   interf: { type: 'object' },
   user: {

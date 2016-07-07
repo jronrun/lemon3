@@ -45,7 +45,13 @@ var resource = [
     id: 50, name: 'api', desc: 'Manual API', protect: false, children: [
       {id: 50001, name: 'servers', desc: 'Servers', method: M.POST, protect: false},
       {id: 50002, name: 'interfaces', desc: 'Interfaces', method: M.POST, protect: false},
-      {id: 50003, name: 'request', desc: 'Request', method: M.POST, protect: false}
+      {id: 50003, name: 'request', desc: 'Request', method: M.POST, protect: false},
+      {
+        id: 50004, name: 'history', desc: 'History Fill Response', method: M.POST, protect: false, children: [
+          {id: 500041, name: 'next', desc: 'Next History', method: M.POST, protect: false},
+          {id: 500042, name: 'prev', desc: 'Previous History', method: M.POST, protect: false}
+        ]
+      }
     ]
   },
 

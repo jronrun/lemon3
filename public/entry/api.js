@@ -423,7 +423,9 @@ var requs = {
     };
 
     $.post('/api/request', data).done(function (resp) {
-      if (0 == resp.code) {
+      if (401 == resp.code) {
+        lemon.isFunc(callback) && callback();
+      } else if (0 == resp.code) {
         var rdata = lemon.deepDec(resp.result);
         lemon.jsonp(rdata.path, rdata.data).done(function (data, textStatus, jqXHR) {
           lemon.info(textStatus, 'request status');
@@ -435,6 +437,13 @@ var requs = {
           }
 
           lemon.isFunc(callback) && callback();
+
+          $.post('/api/history', {
+            hisId: rdata.hisId,
+            resp: lemon.enc(data)
+          }).done(function (resp) {
+            lemon.info(resp);
+          });
         }).fail(function(jqXHR, textStatus, errorThrown){
           lemon.error(jqXHR);
           lemon.error(textStatus, 'request status');
@@ -460,6 +469,12 @@ var requs = {
         lemon.isFunc(callback) && callback();
       }
     });
+  }
+};
+
+var history = {
+  setResp: function() {
+
   }
 };
 

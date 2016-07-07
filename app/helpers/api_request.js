@@ -10,13 +10,13 @@ var log = log_from('api_request'),
   Interface = app_require('models/api/interf'),
   History = app_require('models/api/history');
 
-module.exports = function(usr, commOptions) {
+module.exports = function(commOptions) {
   var permission = 'There is no authority for %s';
   commOptions = _.extend({}, commOptions || {});
 
   var apiRequest = {
 
-    request: function(options, resultCall, requestOptions) {
+    request: function(options, resultCall, usr, requestOptions) {
       options = _.extend({
         envId: null,
         groupId: null,
@@ -110,11 +110,12 @@ module.exports = function(usr, commOptions) {
         },
 
         function(target, callback) {
-          var servRequ = target.serv.request, theResp = {}, isChosenAPI = false;
+          var servRequ = target.serv.request, theResp = {};
+          target.isChosenAPI = false;
 
           if (servRequ.interf_prop && target.api) {
             if (_.get(target.requ, servRequ.interf_prop) == _.get(target.api.request, servRequ.interf_prop)) {
-              isChosenAPI = true;
+              target.isChosenAPI = true;
               if (!items.ownInterface(usr, options.apiId)) {
                 return resultCall(answer.fail(format(permission, target.api.name)));
               }
@@ -217,9 +218,10 @@ module.exports = function(usr, commOptions) {
               },
               serv: {
                 id: target.serv.id,
-                name: target.serv.name
+                name: target.serv.name,
+                url: target.serv.url
               },
-              interf: {
+              api: {
                 request: target.requ
               },
               user: {
@@ -229,6 +231,13 @@ module.exports = function(usr, commOptions) {
               },
               create_time: new Date()
             };
+
+            if (target.isChosenAPI && target.api) {
+              _.extend(history.api, {
+                id: target.api.id,
+                name: target.api.name
+              });
+            }
 
             History.nextId(function (id) {
               history.id = id;
@@ -267,11 +276,53 @@ module.exports = function(usr, commOptions) {
         id: historyId
       }, {
         $set: {
-          "interf.response": response,
-          "interf.json": json
+          "api.response": response,
+          "api.json": json
         }
       }, function(err, result) {
         _.isFunction(callback) && callback();
+      });
+    },
+
+    nextHistory: function(lastId, isPrev, callback) {
+      lastId = lastId || -1;
+      async.waterfall([
+        function (callback) {
+          if (-1 == lastId) {
+            History.lastId(function (theLastId) {
+              if (isPrev) {
+                lastId = theLastId + 1;
+              } else {
+                lastId = theLastId - 1;
+              }
+              callback(null, lastId);
+            });
+          } else {
+            callback(null, lastId);
+          }
+        },
+        function(lastId, callback) {
+          var qry = null, sort = null;
+          if (isPrev) {
+            qry = {id: {$lt: lastId}};
+            sort = {id: -1};
+          } else {
+            qry = {id: {$gt: lastId}};
+            sort = {id: 1};
+          }
+
+          History.find(qry).limit(1).sort(sort).next(function(err, his) {
+            if (err) {
+              callback(null, answer.fail(err.message));
+            }
+
+            callback(null, answer.succ({
+              item: his
+            }));
+          });
+        }
+      ], function (err, answer) {
+        callback(answer);
       });
     }
   };

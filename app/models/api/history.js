@@ -7,6 +7,7 @@ var model = schema({
   env: { type: 'object' },
   group: { type: 'object' },
   serv: { type: 'object' },
+  api: { type: 'object' },
   interf: { type: 'object' },
   user: {
     type: 'object',

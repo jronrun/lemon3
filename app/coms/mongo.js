@@ -472,7 +472,7 @@ module.exports.Base = function(model, modelName, define) {
         if (err) {
           deferred.reject(err);
         } else {
-          deferred.resolve(doc.seq);
+          deferred.resolve((doc && doc.seq) ? doc.seq : 0);
         }
       });
 

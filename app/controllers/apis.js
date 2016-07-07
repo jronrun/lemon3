@@ -12,6 +12,8 @@ var express = require('express'),
   Server = app_require('models/api/server'),
   Interface = app_require('models/api/interf');
 
+var requs = apiRequest();
+
 module.exports = function (app) {
   app.use(index.action, router);
 };
@@ -31,7 +33,7 @@ router.post(index.request.do, function (req, res, next) {
     return res.json(answer.resp(401));
   }
 
-  apiRequest(req.user).request({
+  requs.request({
       envId: req.body.env,
       groupId: req.body.group,
       servId: req.body.serv,
@@ -40,7 +42,7 @@ router.post(index.request.do, function (req, res, next) {
     }, function(answer) {
       answer.result = crypto.compress(answer.result);
       return res.json(answer);
-    }, {
+    }, req.user, {
       ip: req.ip
     }
   );
@@ -50,9 +52,12 @@ router.post(index.request.do, function (req, res, next) {
  * Fill History Response
  */
 router.post(index.history.do, function (req, res, next) {
-  var hisId = parseInt(req.body.hisId), resp = req.body.resp;
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
 
-  apiRequest(req.user).setHisResp(hisId, resp, function() {
+  var hisId = parseInt(req.body.hisId), resp = req.body.resp;
+  requs.setHisResp(hisId, resp, function() {
     return res.json(answer.succ());
   });
 });
@@ -61,14 +66,30 @@ router.post(index.history.do, function (req, res, next) {
  * Next History
  */
 router.post(index.history.next.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.succ(crypto.compress({ item: null })));
+  }
 
+  var curHis = parseInt(req.body.curHis);
+  requs.nextHistory(curHis, false, function(answer) {
+    answer.result = crypto.compress(answer.result);
+    return res.json(answer);
+  });
 });
 
 /**
  * Previous History
  */
 router.post(index.history.prev.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.succ(crypto.compress({ item: null })));
+  }
 
+  var curHis = parseInt(req.body.curHis);
+  requs.nextHistory(curHis, true, function(answer) {
+    answer.result = crypto.compress(answer.result);
+    return res.json(answer);
+  });
 });
 
 /**

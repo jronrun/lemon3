@@ -70,13 +70,23 @@ var apis = {
   },
 
   doChoose: function(group, api) {
-    mapi.requ.json(api.request);
+    if (!lemon.isBlank(api.request || {})) {
+      mapi.requ.json(api.request);
+    }
     if (!lemon.isBlank(api.response || {})) {
-      mapi.resp.json(api.response);
+      if (lemon.has(api, 'json') && api.json) {
+        mapi.resp.json(api.response);
+      } else {
+        mapi.resp.val(lemon.dec(api.response));
+      }
     }
 
-    apis.refresh(group.id, api.id);
-    envs.refresh(group.id);
+    if (group.id) {
+      envs.refresh(group.id);
+      if (api.id) {
+        apis.refresh(group.id, api.id);
+      }
+    }
   },
 
   render: function(page, callback) {
@@ -247,7 +257,6 @@ var envs = {
   choose: function(servId) {
     var elId = envs.servHead.id(servId);
     if (!$(elId).length) {
-      console.log('aaa');
       return;
     }
     var data = {
@@ -473,15 +482,80 @@ var requs = {
 };
 
 var history = {
-  setResp: function() {
+  cur: -1,
+  prevId: '#history_prev',
+  nextId: '#history_next',
 
+  next: function(callback, isPrev) {
+    var tip = isPrev ? 'previous' : 'next',
+      action = isPrev ? '/api/history/prev' : '/api/history/next';
+    $.post(action, {
+      curHis: history.cur
+    }).done(function (resp) {
+      if (0 == resp.code) {
+        var rdata = lemon.deepDec(resp.result);
+        if (!rdata.item) {
+          lemon.msg('There is no ' + tip +' history.')
+        } else {
+          history.cur = rdata.item.id;
+          envs.doChoose(rdata.item.env, rdata.item.group, rdata.item.serv);
+          mapi.setCur(rdata.item.env, rdata.item.serv, rdata.item.group);
+          apis.doChoose(rdata.item.group, rdata.item.api);
+          mapi.setCur(null, null, null, rdata.item.group, rdata.item.api);
+        }
+        lemon.isFunc(callback) && callback();
+      } else {
+        lemon.msg(resp.msg);
+        lemon.isFunc(callback) && callback();
+      }
+    });
+  },
+  prev: function(callback) {
+    history.next(callback, true);
+  },
+
+  init: function() {
+    $(history.nextId).click(function () {
+      var pg = lemon.progress(mapi.respToolId);
+      history.next(function () {
+        pg.end();
+      });
+    });
+
+    $(history.prevId).click(function () {
+      var pg = lemon.progress(mapi.respToolId);
+      history.prev(function () {
+        pg.end();
+      });
+    });
   }
 };
 
 var mapi = {
   navbarId: '#navbar-layout',
+  requToolId: '#requ-tool',
+  respToolId: '#resp-tool',
   requ: null,
   resp: null,
+  setCur: function(env, serv, envGroup, apiGroup, api) {
+    var cur = {};
+    if (env) {
+      lemon.extend(cur, { env: env});
+    }
+    if (serv) {
+      lemon.extend(cur, { serv: serv});
+    }
+    if (envGroup) {
+      lemon.extend(cur, { envGroup: envGroup});
+    }
+    if (apiGroup) {
+      lemon.extend(cur, { apiGroup: apiGroup});
+    }
+    if (api) {
+      lemon.extend(cur, { api: api});
+    }
+    current(cur);
+  },
   snapshoot: function() {
     return {
       cur: current(),
@@ -510,7 +584,7 @@ var mapi = {
     return instance;
   },
   intlRequ: function() {
-    var requCardEl = '#requ-card', requTool = '#requ-tool';
+    var requCardEl = '#requ-card';
     mapi.requ = mapi.mirror('#request', requCardEl);
 
     if (lemon.isView(['md','lg'])) {
@@ -531,17 +605,17 @@ var mapi = {
 
       //-> form
       if (lemon.buttonTgl(this)) {
-        lemon.progress(requTool);
+        lemon.progress(mapi.requToolId);
         $.post('/general/form', {data: lemon.enc(mapi.requ.json())}).done(function (resp) {
           $('#tab-form').html(resp);
           lemon.tabShow('#tab-tri-form');
-          lemon.progressEnd(requTool);
+          lemon.progressEnd(mapi.requToolId);
         });
 
       }
       //-> json
       else {
-        lemon.progress(requTool);
+        lemon.progress(mapi.requToolId);
         var aData = lemon.getParam('#tab-form');
         $.post('/general/convert', {
           data: lemon.enc(aData),
@@ -553,7 +627,7 @@ var mapi = {
           } else {
             lemon.msg(resp.msg);
           }
-          lemon.progressEnd(requTool);
+          lemon.progressEnd(mapi.requToolId);
         });
       }
     });
@@ -580,6 +654,7 @@ var mapi = {
     mapi.intlResp();
     mapi.intlDD();
     requs.init();
+    history.init();
 
     //http://stackoverflow.com/questions/9626059/window-onbeforeunload-in-chrome-what-is-the-most-recent-fix
     $(window).on('beforeunload', function() {

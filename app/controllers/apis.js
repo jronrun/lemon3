@@ -38,6 +38,7 @@ router.post(index.request.do, function (req, res, next) {
     apiId: req.body.api,
     requ: req.body.requ
   }).request(function(answer) {
+    answer.result = crypto.compress(answer.result);
     return res.json(answer);
   });
 });

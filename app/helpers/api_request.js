@@ -24,7 +24,7 @@ module.exports = function(usr, options) {
 
     request: function(resultCall, requestOptions) {
       requestOptions = _.extend({
-        opt: 0                // 1 {path: '', data: {}}, 2 whole url with param {path: ''}
+        opt: 0                // 1 {path: '', data: {}, 'param_name'}
       }, requestOptions || {});
 
       async.waterfall([
@@ -129,23 +129,16 @@ module.exports = function(usr, options) {
 
             //Multi-interface
             case 2:
-              theParam[servRequ.param_name] = target.requ;
+              theParam[servRequ.param_name] = JSON.stringify(target.requ);
               break;
           }
 
-          //{path: '', data: {}}
+          //{path: '', data: {}, param_name: ''}
           if (1 == requestOptions.opt) {
             _.extend(theResp, {
               path: target.serv.url,
-              data: theParam
-            });
-
-            callback(null, target, answer.succ(theResp));
-          }
-          //whole url with param {path: ''}
-          else if (2 == requestOptions.opt) {
-            _.extend(theResp, {
-              path: format(requpath, target.serv.url, qs.stringify(theParam))
+              data: theParam,
+              param_name: servRequ.param_name
             });
 
             callback(null, target, answer.succ(theResp));
@@ -155,7 +148,9 @@ module.exports = function(usr, options) {
             //jsonp
             if ('JSONP' == servRequ.method) {
               _.extend(theResp, {
-                path: crypto.compress(format(requpath, target.serv.url, qs.stringify(theParam)))
+                path: target.serv.url,
+                data: theParam,
+                param_name: servRequ.param_name
               });
 
               callback(null, target, answer.succ(theResp));

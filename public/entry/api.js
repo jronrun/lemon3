@@ -412,13 +412,37 @@ var requs = {
 
     $.post('/api/request', data).done(function (resp) {
       if (0 == resp.code) {
-        alert(lemon.dec(resp.result.path));
+        var rdata = lemon.deepDec(resp.result);
+        lemon.jsonp(rdata.path, rdata.data).done(function (data, textStatus, jqXHR) {
+          lemon.info(textStatus, 'request status');
+          lemon.info(data, 'response');
+          if (lemon.isString(data)) {
+            mapi.resp.val(data);
+          } else {
+            mapi.resp.json(data);
+          }
+          pg.end();
+        }).fail(function(jqXHR, textStatus, errorThrown){
+          lemon.error(jqXHR);
+          lemon.error(textStatus, 'request status');
+          lemon.error(errorThrown);
+
+          mapi.resp.json({
+            title: 'Request Failed (JSONP)',
+            cause: 'See browser console for more information',
+            jqXHR: jqXHR,
+            textStatus: textStatus,
+            errorThrown: errorThrown
+          });
+          pg.end();
+        });
       } else if (2 == resp.code) {
 
+        pg.end();
       } else {
         lemon.msg(resp.msg);
+        pg.end();
       }
-      pg.end();
     });
   }
 };

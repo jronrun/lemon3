@@ -170,6 +170,7 @@ lemon.register({
   jsonp: function (action, data, options) {
     return lemon.request(action, data, lemon.extend(options || {}, {
       type: 'GET',
+      async: false,
       dataType: 'jsonp'
     }));
   },
@@ -365,7 +366,7 @@ lemon.register({
   confirm: function(text, okCallback, cancelCallback, title) {
     var okId = 'ok_id_' + lemon.uniqueId();
     var footer = [
-      '<button type="button" id="{0}" class="btn btn-secondary" data-dismiss="modal">Cancel</button>',
+      '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>',
       lemon.format('<button type="button" id="{0}" class="btn btn-primary" data-dismiss="modal">OK</button>', okId)
     ].join('');
 
@@ -382,7 +383,10 @@ lemon.register({
         show: true
       }
     }, {
-      hidden: cancelCallback
+      hidden: cancelCallback,
+      shown: function() {
+        $('#' + okId).focus();
+      }
     });
 
     $('#' + okId).click(function(e) {

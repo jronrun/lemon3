@@ -72,15 +72,6 @@ lemon.register({
       case 3: $(selector).addClass(uncheck).removeClass(check); break;
     }
     return $(selector).hasClass(check) ? 1 : 0;
-  },
-  isDisable: function(selector) {
-    return $(selector).attr('disabled');
-  },
-  disable: function(selector) {
-    $(selector).attr({disabled: true});
-  },
-  enable: function(selector) {
-    $(selector).removeAttr('disabled');
   }
 });
 

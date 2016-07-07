@@ -7,7 +7,8 @@ var log = log_from('api_request'),
   Environment = app_require('models/api/env'),
   Group = app_require('models/api/group'),
   Server = app_require('models/api/server'),
-  Interface = app_require('models/api/interf');
+  Interface = app_require('models/api/interf'),
+  History = app_require('models/api/history');
 
 module.exports = function(usr, options) {
   var permission = 'There is no authority for %s',

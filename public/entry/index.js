@@ -102,6 +102,15 @@ global.register = function(call) {
 };
 
 lemon.register({
+  isDisable: function(selector) {
+    return $(selector).attr('disabled');
+  },
+  disable: function(selector) {
+    $(selector).attr({disabled: true});
+  },
+  enable: function(selector) {
+    $(selector).removeAttr('disabled');
+  },
   disableEl: function(selector) {
     return progressJs(selector).setOptions({
       theme: 'blueOverlayRadiusHalfOpacity',

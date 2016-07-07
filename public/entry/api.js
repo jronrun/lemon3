@@ -388,21 +388,33 @@ var requs = {
         return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
       }
 
+      if (lemon.isDisable(requs.id)) {
+        return;
+      }
+
+      lemon.disable(requs.id);
+      var startRequ = function () {
+        var pg = lemon.progress(mapi.navbarId);
+        requs.request(function() {
+          lemon.enable(requs.id);
+          pg.end();
+        });
+      };
+
       if (envs.isDanger()) {
         var env = choosed.env,
           tip = '<h5>Are you sure ?</h5> <span class="text-warning">{0} !!!</span>';
-        lemon.confirm(lemon.format(tip, env.desc || env.name) , function () {
-          requs.request();
+        lemon.confirm(lemon.format(tip, env.desc || env.name) , startRequ, function() {
+          lemon.enable(requs.id);
         });
       } else {
-        requs.request();
+        startRequ();
       }
     });
   },
 
-  request: function() {
-    var choosed = current(), pg = lemon.progress(mapi.navbarId);
-    var data = {
+  request: function(callback) {
+    var choosed = current(), data = {
       env: choosed.env.id,
       group: choosed.envGroup.id,
       serv: choosed.serv.id,
@@ -421,7 +433,8 @@ var requs = {
           } else {
             mapi.resp.json(data);
           }
-          pg.end();
+
+          lemon.isFunc(callback) && callback();
         }).fail(function(jqXHR, textStatus, errorThrown){
           lemon.error(jqXHR);
           lemon.error(textStatus, 'request status');
@@ -434,14 +447,17 @@ var requs = {
             textStatus: textStatus,
             errorThrown: errorThrown
           });
-          pg.end();
+
+          lemon.isFunc(callback) && callback();
         });
       } else if (2 == resp.code) {
 
-        pg.end();
+
+        lemon.isFunc(callback) && callback();
       } else {
         lemon.msg(resp.msg);
-        pg.end();
+
+        lemon.isFunc(callback) && callback();
       }
     });
   }
@@ -541,6 +557,8 @@ var mapi = {
   initialize: function() {
     if (lemon.isView('xs', 'sm')) {
       $('head').append('<style>li.nav-item { margin:0 0 5px 0; }</style>');
+    } else {
+      lemon.console();
     }
 
     mapi.intlRequ();

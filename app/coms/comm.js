@@ -107,7 +107,7 @@ function reverseObj(target, theRef, path) {
         reverseObj(item, theRef, k + '[' + idx + ']');
       });
     } else if (_.isObject(v)) {
-      reverseObj(v, theRef, k);
+      reverseObj(v, theRef, '' == path ? k : (path + '.' + k));
     } else {
       theRef['' == path ? k : (path + '.' + k)] = v;
     }

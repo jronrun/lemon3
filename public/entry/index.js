@@ -218,12 +218,18 @@ lemon.register({
   },
 
   /**
+   * Extra small screen / phone     xs: 0,
+   * Small screen / phone           sm: 544px,
+   * Medium screen / tablet         md: 768px,
+   * Large screen / desktop         lg: 992px,
+   * Extra large screen / wide desktop    xl: 1200px
+   *
    * Detect and return the current active responsive breakpoint in Bootstrap
    * http://stackoverflow.com/questions/18575582/how-to-detect-responsive-breakpoints-of-twitter-bootstrap-3-using-javascript/37141090#37141090
    * @returns {string}
    */
   detect: function () {
-    var envs = ["xs", "sm", "md", "lg"];
+    var envs = ["xs", "sm", "md", "lg", "xl"];
     var env = "";
 
     var $el = $("<div>");
@@ -242,6 +248,12 @@ lemon.register({
   isView: function (target) {
     target = lemon.isArray(target) ? target : [target];
     return target.indexOf(lemon.detect()) != -1;
+  },
+  isMediumUpView: function() {
+    return lemon.isView(['md','lg', 'xl']);
+  },
+  isSmallDownView: function() {
+    return lemon.isView('xs', 'sm');
   },
 
   hasEvent: function(selector, type) {

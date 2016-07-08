@@ -103,7 +103,7 @@ var apis = {
     }, function (resp) {
       if (0 == resp.code) {
         if (resp.result.items.length > 0 && 1 == page) {
-          if (lemon.isView('xs', 'sm')) {
+          if (lemon.isSmallDownView()) {
             $(apis.id).css({
               height: viewport.h * 0.7,
               'max-height': viewport.h * 0.7,
@@ -138,7 +138,7 @@ var apis = {
               $(apiElId).click(function () {
                 apis.choose(interf.id);
               });
-              if (lemon.isView('xs', 'sm')) {
+              if (lemon.isSmallDownView()) {
 
               } else {
                 var title = [
@@ -306,7 +306,7 @@ var envs = {
               'overflow-y': 'scroll'
           });
 
-          if (lemon.isView('xs', 'sm')) {
+          if (lemon.isSmallDownView()) {
             $(envs.id).css({
               width: viewport.w * 0.8
             });
@@ -533,8 +533,14 @@ var history = {
 
 var mapi = {
   navbarId: '#navbar-layout',
+  gridId: '#grid-layout',
+
   requToolId: '#requ-tool',
+  requCardId: '#requ-card',
+
   respToolId: '#resp-tool',
+  respCardId: '#resp-card',
+
   requ: null,
   resp: null,
   setCur: function(env, serv, envGroup, apiGroup, api) {
@@ -580,17 +586,19 @@ var mapi = {
   },
   mirror: function(elId, sizeElId, options) {
     var instance = mirror(elId, options);
-    instance.setSize($(sizeElId).width(), $(sizeElId).height() - 46);
+    mapi.mirrorSize(instance, sizeElId);
     return instance;
   },
+  mirrorSize: function(aMirror, sizeElId) {
+    aMirror.setSize($(sizeElId).width(), $(sizeElId).height() - 46);
+  },
   intlRequ: function() {
-    var requCardEl = '#requ-card';
-    mapi.requ = mapi.mirror('#request', requCardEl);
+    mapi.requ = mapi.mirror('#request', mapi.requCardId);
 
-    if (lemon.isView(['md','lg'])) {
-      var fromH = $(requCardEl).height() - 46;
+    if (lemon.isMediumUpView()) {
+      var fromH = $(mapi.requCardId).height() - 46;
       $('#tab-form').css({
-        width: $(requCardEl).width(),
+        width: $(mapi.requCardId).width(),
         height: fromH,
         'max-height': fromH,
         'overflow-y': 'scroll'
@@ -633,8 +641,7 @@ var mapi = {
     });
   },
   intlResp: function () {
-    var respCardEl = '#resp-card', respTool = '#resp-tool';
-    mapi.resp = mapi.mirror('#response', respCardEl);
+    mapi.resp = mapi.mirror('#response', mapi.respCardId);
   },
   intlDD: function() {
     envs.render();
@@ -643,9 +650,27 @@ var mapi = {
       mapi.snapload();
     }, 200);
   },
+  resize: function() {
+    var interval = 34;  //$(mapi.gridId).offset().top - $(mapi.navbarId).height();
+    $(mapi.gridId).offset({
+      top: ($(mapi.navbarId).height() + interval)
+    });
+
+    if (mapi.requ) {
+      mapi.mirrorSize(mapi.requ, mapi.requCardId);
+    }
+    if (mapi.resp) {
+      mapi.mirrorSize(mapi.resp, mapi.respCardId);
+    }
+  },
   initialize: function() {
-    if (lemon.isView('xs', 'sm')) {
+    if (lemon.isSmallDownView()) {
       $('head').append('<style>li.nav-item { margin:0 0 5px 0; }</style>');
+      $('#navbar-smdown-tgl').click(function() {
+        lemon.delay(function () {
+          mapi.resize();
+        }, 100);
+      });
     } else {
       lemon.console();
     }
@@ -661,6 +686,9 @@ var mapi = {
       //var x =logout(); return x;
       leave();
     });
+
+    $(window).resize(mapi.resize);
+    mapi.resize();
   }
 };
 

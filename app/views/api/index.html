@@ -17,7 +17,7 @@
         <button class="navbar-toggler navbar-brand" type="button" data-toggle="collapse" data-target="#navbar-header" title="Manual API">
           {{> logo}}
         </button>
-        <button class="navbar-toggler hidden-sm-up pull-right icondh" type="button" data-toggle="collapse" data-target="#navbar-tools" aria-controls="navbar-header">
+        <button class="navbar-toggler hidden-sm-up pull-right icondh" id="navbar-smdown-tgl" type="button" data-toggle="collapse" data-target="#navbar-tools" aria-controls="navbar-header">
             <p class="text-info"><em class="fa fa-navicon"></em></p>
         </button>
 
@@ -70,10 +70,12 @@
     </div>
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid" id="grid-layout">
 
-    <div id="message">
-        <div class="alert alert-success" role="alert" id="permanent_id">&nbsp;</div>
+    <div class="row">
+      <div id="message" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <div class="alert alert-success" role="alert" id="permanent_id">&nbsp;</div>
+      </div>
     </div>
 
     <div class="row">

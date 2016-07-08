@@ -366,6 +366,40 @@ lemon.register({
 });
 
 lemon.register({
+  enter: function(selector, options) {
+    if (lemon.isFunc(options)) {
+      options = {enter: options};
+    }
+
+    options = lemon.extend({
+      enter: null,
+      ctrlEnter: null,
+      shiftEnter: null,
+      preventDefault: true
+    }, options || {});
+
+    $(selector).keypress(function(event) {
+      if(event.ctrlKey && event.which == 13 || event.which == 10) {
+        if (options.preventDefault) {
+          event.preventDefault();
+        }
+
+        lemon.isFunc(options.ctrlEnter) && options.ctrlEnter(event);
+      } else if (event.shiftKey && event.which == 13 || event.which == 10) {
+        if (options.preventDefault) {
+          event.preventDefault();
+        }
+
+        lemon.isFunc(options.shiftEnter) && options.shiftEnter(event);
+      } else if (event.keyCode == "13") {
+        if (options.preventDefault) {
+          event.preventDefault();
+        }
+
+        lemon.isFunc(options.enter) && options.enter(event);
+      }
+    });
+  },
   scroll: function(selector, handle) {
     var prevContentH = 0;
     lemon.scrollNext = false;

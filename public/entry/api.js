@@ -531,6 +531,17 @@ var history = {
   }
 };
 
+var qry = {
+  inputId: '#input_search',
+  searchId: '#do_search',
+
+  init: function() {
+    lemon.enter(qry.inputId, function() {
+
+    });
+  }
+};
+
 var mapi = {
   navbarId: '#navbar-layout',
   gridId: '#grid-layout',

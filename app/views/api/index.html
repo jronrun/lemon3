@@ -54,7 +54,7 @@
                               <a class="dropdown-item" href="#">Separated link</a>
                           </div>
                       </div>
-                      <textarea type="text" class="form-control" id="input_search" style="border:0;width:230px;height:36px" placeholder="API &amp; Histories.."></textarea>
+                      <textarea type="text" class="form-control" id="input_search" style="border:0;width:230px; height:35px" placeholder="API &amp; Histories.."></textarea>
                       <span class="input-group-btn icondh">
                         <button class="btn btn-secondary text-muted" id="do_search" style="border: 0px;" type="button"> <em class="fa fa-search" title="Search"></em> </button>
                       </span>
@@ -69,86 +69,102 @@
     </div>
 </div>
 
-<div class="container-fluid" id="grid-layout">
+<div>
+    <ul class="nav nav-tabs" style="display: none;" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab-tri-api-home" data-toggle="tab" data-target="#tab-api-home" href="#tab-api-home" role="tab">API HOME</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-tri-api-search" data-toggle="tab" data-target="#tab-api-search" href="#tab-api-search" role="tab">API SEARCH</a>
+        </li>
+    </ul>
 
-    <div class="row">
-      <div id="message" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          <div class="alert alert-success" role="alert" id="permanent_id">&nbsp;</div>
-      </div>
-    </div>
+    <div class="tab-content" id="api-layout">
+        <div class="tab-pane active" id="tab-api-home" role="tabpanel">
+            <div class="container-fluid" id="grid-layout">
 
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card card-block minh borderinfo" id="requ-card">
-                <form>
-                    <div class="form-group" id="requ-tool">
-                        <button class="btn btn-sm btn-secondary-outline" style="border: 0px;" type="button"><span class="text-muted">Request</span> </button>
-                        <div class="btn-group btn-group-sm pull-xs-right" role="group">
-                            <button type="button" id="btn-tgl-form" class="btn btn-secondary-outline icondh" style="border: 0px;">
-                            <em class="fa fa-coffee" title="Toggle Form or JSON"></em>
-                            </button>
-                            <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
-                                <em class="fa fa-question-circle" title="API Help"></em>
-                            </button>
+                <div class="row">
+                    <div id="message" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="alert alert-success" role="alert" id="permanent_id">&nbsp;</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="card card-block minh borderinfo" id="requ-card">
+                            <form>
+                                <div class="form-group" id="requ-tool">
+                                    <button class="btn btn-sm btn-secondary-outline" style="border: 0px;" type="button"><span class="text-muted">Request</span> </button>
+                                    <div class="btn-group btn-group-sm pull-xs-right" role="group">
+                                        <button type="button" id="btn-tgl-form" class="btn btn-secondary-outline icondh" style="border: 0px;">
+                                            <em class="fa fa-coffee" title="Toggle Form or JSON"></em>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
+                                            <em class="fa fa-question-circle" title="API Help"></em>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <ul class="nav nav-tabs" style="display: none;" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="tab-tri-mirror" data-toggle="tab" href="#tab-mirror" role="tab">MIRROR</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tab-tri-form" data-toggle="tab" href="#tab-form" role="tab">FORM</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab-mirror" role="tabpanel">
+                                            <textarea class="form-control" rows="17" style="border:0px;" id="request"></textarea>
+                                        </div>
+                                        <div class="tab-pane" id="tab-form" role="tabpanel">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div>
-                        <ul class="nav nav-tabs" style="display: none;" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="tab-tri-mirror" data-toggle="tab" href="#tab-mirror" role="tab">MIRROR</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="tab-tri-form" data-toggle="tab" href="#tab-form" role="tab">FORM</a>
-                            </li>
-                        </ul>
 
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="tab-mirror" role="tabpanel">
-                                <textarea class="form-control" rows="17" style="border:0px;" id="request"></textarea>
-                            </div>
-                            <div class="tab-pane" id="tab-form" role="tabpanel">
-                            </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="card card-block minh borderinfo" id="resp-card">
+                            <form>
+                                <div class="form-group" id="resp-tool">
+                                    <button class="btn btn-sm btn-secondary-outline" style="border: 0px;" type="button"><span class="text-muted">Response</span> </button>
+                                    <div class="btn-group btn-group-sm pull-xs-right" role="group">
+                                        <button type="button" class="btn btn-secondary-outline icondh" id="history_prev" style="border: 0px;">
+                                            <em class="fa fa-chevron-left" title="Previous History"></em>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary-outline icondh" id="history_next" style="border: 0px;">
+                                            <em class="fa fa-chevron-right" title="Next History"></em>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
+                                            <em class="fa fa-info-circle" title="Previews"></em>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <ul class="nav nav-tabs" style="display: none;" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="tab-resp-tri-mirror" data-toggle="tab" href="#tab-resp-mirror" role="tab">MIRROR</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab-resp-mirror" role="tabpanel">
+                                            <textarea class="form-control" rows="17" style="border:0px;" id="response"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
+                </div>
+
             </div>
         </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card card-block minh borderinfo" id="resp-card">
-                <form>
-                    <div class="form-group" id="resp-tool">
-                        <button class="btn btn-sm btn-secondary-outline" style="border: 0px;" type="button"><span class="text-muted">Response</span> </button>
-                        <div class="btn-group btn-group-sm pull-xs-right" role="group">
-                            <button type="button" class="btn btn-secondary-outline icondh" id="history_prev" style="border: 0px;">
-                            <em class="fa fa-chevron-left" title="Previous History"></em>
-                            </button>
-                            <button type="button" class="btn btn-secondary-outline icondh" id="history_next" style="border: 0px;">
-                            <em class="fa fa-chevron-right" title="Next History"></em>
-                            </button>
-                            <button type="button" class="btn btn-secondary-outline icondh" style="border: 0px;">
-                                <em class="fa fa-info-circle" title="Previews"></em>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <ul class="nav nav-tabs" style="display: none;" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="tab-resp-tri-mirror" data-toggle="tab" href="#tab-resp-mirror" role="tab">MIRROR</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="tab-resp-mirror" role="tabpanel">
-                                <textarea class="form-control" rows="17" style="border:0px;" id="response"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <div class="tab-pane" id="tab-api-search" role="tabpanel"></div>
     </div>
-
 </div>
 
 {{> tmpl/api_tmpl}}

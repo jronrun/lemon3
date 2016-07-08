@@ -337,7 +337,8 @@ lemon.register({
   },
   /**
    *
-   * @param selector
+   * @param selector  tab content id
+   * trigger must has property data-target='#{tab content id}' same as property href
    * @param options
    * {
    *  show: function(current, previous) {},   //show.bs.tab event

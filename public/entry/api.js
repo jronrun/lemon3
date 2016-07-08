@@ -534,20 +534,27 @@ var history = {
 var qry = {
   inputId: '#input_search',
   searchId: '#do_search',
+  contentId: '#tab-api-search',
 
   init: function() {
     lemon.enter(qry.inputId, function() {
 
     });
 
-    lemon.popover(qry.searchId, {}, {
-      show: function(el) {
-        $(el).css({
-          border: 0,
-          width: $(window).width(),
-          height: $(window).height(),
-          maxWidth: "100%"
-        });
+    $(qry.searchId).click(function () {
+      if (lemon.buttonTgl(this)) {
+        lemon.tabShow(mapi.triApiSearchId);
+      } else {
+        lemon.tabShow(mapi.triApiHomeId);
+      }
+    });
+
+    lemon.tabEvent(qry.contentId, {
+      shown: function(current, previous) {
+
+      },
+      hidden: function(current, soonToBeActive) {
+
       }
     });
   }
@@ -556,12 +563,16 @@ var qry = {
 var mapi = {
   navbarId: '#navbar-layout',
   gridId: '#grid-layout',
+  apiLayoutId: '#api-layout',
 
   requToolId: '#requ-tool',
   requCardId: '#requ-card',
 
   respToolId: '#resp-tool',
   respCardId: '#resp-card',
+
+  triApiHomeId: '#tab-tri-api-home',
+  triApiSearchId: '#tab-tri-api-search',
 
   requ: null,
   resp: null,
@@ -675,7 +686,7 @@ var mapi = {
   },
   resize: function() {
     var interval = 34;  //$(mapi.gridId).offset().top - $(mapi.navbarId).height();
-    $(mapi.gridId).offset({
+    $(mapi.apiLayoutId).offset({
       top: ($(mapi.navbarId).height() + interval)
     });
 

@@ -43,14 +43,6 @@ require('codemirror/addon/hint/show-hint');
 require('codemirror/addon/hint/sql-hint');
 require('codemirror/addon/hint/xml-hint');
 
-require('codemirror/addon/lint/coffeescript-lint');
-require('codemirror/addon/lint/css-lint');
-require('codemirror/addon/lint/javascript-lint');
-require('codemirror/addon/lint/json-lint');
-require('codemirror/addon/lint/lint.css');
-require('codemirror/addon/lint/lint');
-require('codemirror/addon/lint/yaml-lint');
-
 require('codemirror/addon/runmode/runmode');
 require('codemirror/addon/scroll/annotatescrollbar');
 

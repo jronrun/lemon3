@@ -274,6 +274,30 @@ lemon.register({
 
   getURI: function() {
     return location.href.replace(location.origin, '');
+  },
+
+  getVal: function(json, prop) {
+    prop = prop || '';
+    var val = json, props = prop.indexOf('.') > 0 ? prop.split('.') : [prop];
+    lemon.each(props, function(v, k) {
+      var original = v;
+      if (v.indexOf('[') > 0 && v.indexOf(']') > 0) {
+        var tags = lemon.betn(v, '[', ']', true);
+        v = v.replace(tags.join(''), '');
+      }
+      val = val && val[v];
+      if (lemon.isArray(val)) {
+        var idxs = lemon.betn(original, '[', ']');
+        if (idxs.length > 0) {
+          var tmp = val;
+          lemon.each(idxs, function(v, k) {
+            tmp = tmp && tmp[parseInt(v)];
+          });
+          val = tmp;
+        }
+      }
+    });
+    return val;
   }
 });
 

@@ -618,7 +618,11 @@ var mapi = {
     mapi.resp.val(snapdata.resp);
   },
   mirror: function(elId, sizeElId, options) {
-    var instance = mirror(elId, options);
+    var instance = mirror(elId, options, {
+      fullscreen: function(isFullscreen) {
+        $(mapi.navbarId).toggle(!isFullscreen);
+      }
+    });
     mapi.mirrorSize(instance, sizeElId);
     instance.chgFontSize(14);
     return instance;

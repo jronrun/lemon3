@@ -8,6 +8,67 @@ var CodeMirror = require('codemirror/lib/codemirror'),
 global._ = {};  //for json5s
 _.each = lemon.each;
 
+require('codemirror/addon/comment/comment');
+require('codemirror/addon/comment/continuecomment');
+require('codemirror/addon/dialog/dialog.css');
+require('codemirror/addon/dialog/dialog');
+
+require('codemirror/addon/display/autorefresh');
+require('codemirror/addon/display/fullscreen.css');
+require('codemirror/addon/display/fullscreen');
+require('codemirror/addon/display/panel');
+require('codemirror/addon/display/placeholder');
+
+require('codemirror/addon/edit/closebrackets');
+require('codemirror/addon/edit/closetag');
+require('codemirror/addon/edit/continuelist');
+require('codemirror/addon/edit/matchbrackets');
+require('codemirror/addon/edit/matchtags');
+
+require('codemirror/addon/fold/brace-fold');
+require('codemirror/addon/fold/comment-fold');
+require('codemirror/addon/fold/foldcode');
+require('codemirror/addon/fold/foldgutter.css');
+require('codemirror/addon/fold/foldgutter');
+require('codemirror/addon/fold/indent-fold');
+require('codemirror/addon/fold/markdown-fold');
+require('codemirror/addon/fold/xml-fold');
+
+require('codemirror/addon/hint/anyword-hint');
+require('codemirror/addon/hint/css-hint');
+require('codemirror/addon/hint/html-hint');
+require('codemirror/addon/hint/javascript-hint');
+require('codemirror/addon/hint/show-hint.css');
+require('codemirror/addon/hint/show-hint');
+require('codemirror/addon/hint/sql-hint');
+require('codemirror/addon/hint/xml-hint');
+
+require('codemirror/addon/lint/coffeescript-lint');
+require('codemirror/addon/lint/css-lint');
+require('codemirror/addon/lint/javascript-lint');
+require('codemirror/addon/lint/json-lint');
+require('codemirror/addon/lint/lint.css');
+require('codemirror/addon/lint/lint');
+require('codemirror/addon/lint/yaml-lint');
+
+require('codemirror/addon/runmode/runmode');
+require('codemirror/addon/scroll/annotatescrollbar');
+
+require('codemirror/addon/search/jump-to-line');
+require('codemirror/addon/search/match-highlighter');
+require('codemirror/addon/search/matchesonscrollbar.css');
+require('codemirror/addon/search/matchesonscrollbar');
+require('codemirror/addon/search/search');
+require('codemirror/addon/search/searchcursor');
+
+require('codemirror/addon/selection/active-line');
+require('codemirror/addon/selection/mark-selection');
+require('codemirror/addon/selection/selection-pointer');
+
+require('codemirror/addon/wrap/hardwrap');
+
+require('codemirror/mode/javascript/javascript');
+
 lemon.fmtjson = function(target) {
   if (!lemon.isString(target)) {
     target = json5s.stringify(target);
@@ -15,11 +76,8 @@ lemon.fmtjson = function(target) {
   return json5s.format(target);
 };
 
-require('codemirror/addon/runmode/runmode');
-
-require('codemirror/mode/javascript/javascript');
-
-var helper = function(cm) {
+var helper = function(cm, events) {
+  events = events || {};
   var tools = {
     target: cm,
     mapkey: function (keymap) {
@@ -36,15 +94,19 @@ var helper = function(cm) {
         };
       }
 
+      var isFullscreen = null;
       cm.setOption("fullScreen", lemon.isUndefined(full) ? !cm.getOption("fullScreen") : full);
       if (cm.getOption('fullScreen')) {
         cm.setOption('lineNumbers', true);
         cm.setOption('styleActiveLine', true);
+        isFullscreen = true;
       } else {
         lemon.each(tools.fullBefore, function (v, k) {
           cm.setOption(k, v);
         });
+        isFullscreen = false;
       }
+      lemon.isFunc(events.fullscreen) && events.fullscreen(isFullscreen);
     },
     format: function () {
       var cursor = cm.getCursor();
@@ -102,7 +164,15 @@ var helper = function(cm) {
   return tools;
 };
 
-var mirror = function (elId, options) {
+/**
+ *
+ * @param elId
+ * @param options
+ * @param events {
+ *  fullscreen: function(isFullscreen) {}
+ * }
+ */
+var mirror = function (elId, options, events) {
   options = options || {};
   var rich = CodeMirror.fromTextArea(lemon.query(lemon.startIf(elId, '#')), lemon.extend({
       lineNumbers: false,
@@ -122,9 +192,6 @@ var mirror = function (elId, options) {
       },
       extraKeys: {
         //http://codemirror.net/doc/manual.html#commands
-        "Esc": function (cm) {
-          helper.fullscreenTgl(cm)
-        },
         "Ctrl-K": "toMatchingTag",
         "Ctrl-J": "autocomplete",
         "Ctrl-Q": function (cm) {
@@ -134,7 +201,22 @@ var mirror = function (elId, options) {
     }, options)
   );
 
-  return helper(rich);
+  //rich.on('inputRead', function(cm, changeObj) {
+  //  if (options.valchange && lemon.isFunc(options.valchange)) {
+  //    options.valchange(cm, changeObj);
+  //  } else {
+  //    after.rich.fmt(cm);
+  //  }
+  //});
+
+
+  var aHelp = helper(rich, events);
+  aHelp.mapkey({
+    "Esc": function (cm) {
+      aHelp.fullscreenTgl();
+    }
+  });
+  return aHelp;
 };
 
 mirror.highlight = function(target, mode, output) {

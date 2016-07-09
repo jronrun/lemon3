@@ -163,9 +163,13 @@ var helper = function(cm, events) {
  * @param events {
  *  fullscreen: function(isFullscreen) {}
  * }
+ * @see http://codemirror.net/doc/manual.html#events
  */
 var mirror = function (elId, options, events) {
-  options = options || {};
+  options = options || {}, events = events || {}, customEvts = [
+    'fullscreen'
+  ];
+
   var rich = CodeMirror.fromTextArea(lemon.query(lemon.startIf(elId, '#')), lemon.extend({
       lineNumbers: false,
       matchBrackets: true,
@@ -193,21 +197,29 @@ var mirror = function (elId, options, events) {
     }, options)
   );
 
-  //rich.on('inputRead', function(cm, changeObj) {
-  //  if (options.valchange && lemon.isFunc(options.valchange)) {
-  //    options.valchange(cm, changeObj);
-  //  } else {
-  //    after.rich.fmt(cm);
-  //  }
-  //});
-
-
   var aHelp = helper(rich, events);
+
+  events = lemon.extend({
+    inputRead: function(cm, changeObj) {
+      if (aHelp.isJson()) {
+        aHelp.format();
+      }
+    }
+  }, events);
+
+  lemon.each(events, function (v, k) {
+    //CodeMirror event
+    if (customEvts.indexOf(k) == -1 && lemon.isFunc(v)) {
+      rich.on(k, v);
+    }
+  });
+
   aHelp.mapkey({
     "Esc": function (cm) {
       aHelp.fullscreenTgl();
     }
   });
+
   return aHelp;
 };
 

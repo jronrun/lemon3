@@ -536,6 +536,9 @@ var qry = {
   searchId: '#do_search',
   contentId: '#tab-api-search',
 
+  partApiId: '#search-part-api',
+  partHisId: '#search-part-his',
+
   init: function() {
     lemon.enter(qry.inputId, function() {
 
@@ -551,10 +554,10 @@ var qry = {
 
     lemon.tabEvent(qry.contentId, {
       shown: function(current, previous) {
-
+        alert('sh');
       },
       hidden: function(current, soonToBeActive) {
-
+        alert('hi');
       }
     });
   }

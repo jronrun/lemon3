@@ -540,6 +540,8 @@ var qry = {
   partHisId: '#search-part-his',
 
   apiEnd: false,
+  hisEnd: true,
+
   prevKey: null,
   init: function() {
     lemon.enter(qry.inputId, function() {
@@ -570,6 +572,8 @@ var qry = {
       },
       shown: function(current, previous) {
         qry.apiEnd = false;
+        qry.hisEnd = true;
+
         var searchKey = $(qry.inputId).val();
         if (qry.prevKey != searchKey) {
           qry.prevKey = searchKey;
@@ -603,6 +607,12 @@ var qry = {
           if (qry.apiEnd) {
             qry.addHisBtn();
           }
+        });
+      } else if (!qry.hisEnd) {
+        var pg = lemon.progress(mapi.navbarId);
+        var pn = parseInt($(qry.partHisId).data('page')) + 1;
+        qry.searchHis(1, function() {
+          pg.end();
         });
       }
     });
@@ -660,14 +670,37 @@ var qry = {
     });
   },
 
+  searchHis: function(page, callback) {
+    page = page || 1;
+    $(qry.partHisId).data('page', page);
+
+    var fp = false;
+    if (fp = (1 == page) && !$('#s_his_table').length) {
+      $(qry.partHisId).append(lemon.tmpl($('#his_table_tmpl').html(), {}));
+    }
+
+    lemon.isFunc(callback) && callback();
+  },
+
   addHisBtn: function() {
-    if (!$('#btn_match_his').length) {
+    var mhisId = '#btn_match_his';
+    if (!$(mhisId).length) {
       var aBtn = [
         '<button type="button" class="btn btn-info btn-lg btn-block" id="btn_match_his">',
         'Show Match Histories',
         '</button>'
       ].join('');
       $(qry.partHisId).append(aBtn);
+      $(mhisId).click(function () {
+        qry.hisEnd = false;
+        var pg = lemon.progress(mapi.navbarId);
+        qry.searchHis(1, function() {
+          pg.end();
+          $(mhisId).slideUp(500, function() {
+            $(mhisId).remove();
+          });
+        });
+      });
     }
   }
 };

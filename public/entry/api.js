@@ -539,12 +539,10 @@ var qry = {
   partApiId: '#search-part-api',
   partHisId: '#search-part-his',
 
-  abiTableTmplId: '#api_table_tmpl',
-  hisTableTmplId: '#his_table_tmpl',
-
+  prevKey: null,
   init: function() {
     lemon.enter(qry.inputId, function() {
-
+      $(qry.searchId).click();
     });
 
     $(qry.searchId).click(function () {
@@ -557,21 +555,57 @@ var qry = {
 
     lemon.tabEvent(qry.contentId, {
       shown: function(current, previous) {
-        alert('sh');
+        var searchKey = $(qry.inputId).val();
+        if (qry.prevKey != searchKey) {
+          qry.prevKey = searchKey;
+          $(qry.partApiId).empty();
+          qry.searchAPI(searchKey);
+        }
       },
       hidden: function(current, soonToBeActive) {
-        alert('hi');
+
       }
     });
   },
 
   searchAPI: function(key, page) {
+    page = page || 1;
+    var fp = false;
+    if (fp = (1 == page) && !$('#s_api_table').length) {
+      $(qry.partApiId).append(lemon.tmpl($('#api_table_tmpl').html(), {}));
+    }
+
     $.post('/api/interfaces', {
       page: page,
       key: key
     }, function (resp) {
       if (0 == resp.code) {
+        if (resp.result.items.length > 0) {
+          var baseW = Math.min($(window).width(), $(qry.partApiId).width());
+          var preStyle = {
+            'font-size': 14,
+            padding: 9.5
+          };
 
+          if (lemon.isMediumUpView()) {
+            lemon.extend(preStyle, {
+              width: baseW - 105,
+              'max-width': baseW - 105
+            });
+          } else {
+            lemon.extend(preStyle, {
+              width: baseW - 25,
+              'max-width': baseW - 25
+            });
+          }
+
+          $('#s_api_tbody').append(lemon.tmpl($('#api_tr_tmpl').html(), {
+            items: resp.result.items,
+            highlight: function(doc, tip) {
+              return apis.getHighlightDoc(doc, tip, preStyle);
+            }
+          }));
+        }
       } else {
         lemon.msg(resp.msg);
       }

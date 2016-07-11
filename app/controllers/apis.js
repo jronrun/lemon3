@@ -285,7 +285,7 @@ router.post(index.interfaces.do, function (req, res, next) {
         }
       }
 
-      var pn = parseInt(req.body.page || '1'), ps = false;
+      var pn = parseInt(req.body.page || '1'), ps = 3;
       Interface.page(query, pn, false, ps, {
         sorts: {
           group_order: 1,

@@ -93,6 +93,13 @@ router.post(index.history.prev.do, function (req, res, next) {
 });
 
 /**
+ * Query History
+ */
+router.post(index.history.query.do, function (req, res, next) {
+
+});
+
+/**
  * API Servers (Environment)
  */
 router.post(index.servers.do, function (req, res, next) {
@@ -257,6 +264,25 @@ router.post(index.interfaces.do, function (req, res, next) {
             $in: groupData.sort
           }
         }, items.serverOwnerQuery(req));
+      }
+
+      //Param Query
+      var key = req.body.key;
+      if (key && key.length > 0) {
+        var likeKey = new RegExp(key, 'i'), paramQry = {
+          $or:[
+            { name: likeKey},
+            { desc: likeKey}
+          ]
+        };
+
+        //https://docs.mongodb.com/manual/reference/operator/query/and/#op._S_and
+        query = {
+          $and: [
+            query,
+            paramQry
+          ]
+        }
       }
 
       var pn = parseInt(req.body.page || '1'), ps = false;

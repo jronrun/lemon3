@@ -49,7 +49,8 @@ var resource = [
       {
         id: 50004, name: 'history', desc: 'History Fill Response', method: M.POST, protect: false, children: [
           {id: 500041, name: 'next', desc: 'Next History', method: M.POST, protect: false},
-          {id: 500042, name: 'prev', desc: 'Previous History', method: M.POST, protect: false}
+          {id: 500042, name: 'prev', desc: 'Previous History', method: M.POST, protect: false},
+          {id: 500043, name: 'query', desc: 'History Query', method: M.POST, protect: false}
         ]
       }
     ]

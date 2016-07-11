@@ -539,6 +539,9 @@ var qry = {
   partApiId: '#search-part-api',
   partHisId: '#search-part-his',
 
+  abiTableTmplId: '#api_table_tmpl',
+  hisTableTmplId: '#his_table_tmpl',
+
   init: function() {
     lemon.enter(qry.inputId, function() {
 
@@ -558,6 +561,19 @@ var qry = {
       },
       hidden: function(current, soonToBeActive) {
         alert('hi');
+      }
+    });
+  },
+
+  searchAPI: function(key, page) {
+    $.post('/api/interfaces', {
+      page: page,
+      key: key
+    }, function (resp) {
+      if (0 == resp.code) {
+
+      } else {
+        lemon.msg(resp.msg);
       }
     });
   }

@@ -552,6 +552,7 @@ var qry = {
   hisEnd: true,
 
   prevKey: null,
+  searchType: 0,
   init: function() {
     lemon.enter(qry.inputId, function() {
       $(qry.searchId).click();
@@ -564,6 +565,11 @@ var qry = {
       } else {
         lemon.tabShow(mapi.triApiHomeId);
       }
+    });
+
+    $('#search_dd a').click(function () {
+      qry.searchType = parseInt($(this).data('type'));
+      $(qry.searchId).click();
     });
 
     lemon.tabEvent(qry.contentId, {
@@ -580,6 +586,21 @@ var qry = {
         });
       },
       shown: function(current, previous) {
+        qry.openSearch(qry.searchType);
+      },
+      hidden: function(current, soonToBeActive) {
+        qry.searchType = 0;
+      }
+    });
+  },
+
+  openSearch: function(searchType) {
+    switch (searchType) {
+      //Define APIs
+      case 2:
+        $(qry.partHisId).empty();
+      //default
+      case 0:
         qry.apiEnd = false;
         qry.hisEnd = true;
 
@@ -599,11 +620,22 @@ var qry = {
           lemon.progressEnd(mapi.navbarId);
           qry.scrollPage();
         }
-      },
-      hidden: function(current, soonToBeActive) {
-
-      }
-    });
+        break;
+      //Advance Search
+      case 1:
+        lemon.progressEnd(mapi.navbarId);
+        break;
+      //Histories
+      case 3:
+        lemon.progressEnd(mapi.navbarId);
+        $(qry.partApiId).empty();
+        qry.hisEnd = false;
+        var pg = lemon.progress(mapi.navbarId);
+        qry.searchHis(qry.prevKey, 1, function() {
+          pg.end();
+        });
+        break;
+    }
   },
 
   scrollPage: function() {
@@ -779,7 +811,7 @@ var qry = {
 
   addHisBtn: function() {
     var mhisId = '#btn_match_his';
-    if (!$(mhisId).length && !$('#s_his_table').length) {
+    if (!$(mhisId).length && !$('#s_his_table').length && 0 == qry.searchType) {
       var aBtn = [
         '<button type="button" class="btn btn-info btn-lg btn-block" id="btn_match_his">',
         'Show Match Histories',

@@ -69,16 +69,19 @@ var apis = {
     apis.doChoose(data.apiGroup, data.api);
   },
 
-  doChoose: function(group, api) {
+  doChoose: function(group, api, forceResp) {
     if (!lemon.isBlank(api.request || {})) {
       mapi.requ.json(api.request);
     }
+
     if (!lemon.isBlank(api.response || {})) {
       if (lemon.has(api, 'json') && api.json) {
         mapi.resp.json(api.response);
       } else {
         mapi.resp.val(lemon.dec(api.response));
       }
+    } else if (forceResp) {
+      mapi.resp.json({});
     }
 
     if (group.id) {
@@ -500,7 +503,7 @@ var history = {
           history.cur = rdata.item.id;
           envs.doChoose(rdata.item.env, rdata.item.group, rdata.item.serv);
           mapi.setCur(rdata.item.env, rdata.item.serv, rdata.item.group);
-          apis.doChoose(rdata.item.group, rdata.item.api);
+          apis.doChoose(rdata.item.group, rdata.item.api, true);
           mapi.setCur(null, null, null, rdata.item.group, rdata.item.api);
         }
         lemon.isFunc(callback) && callback();

@@ -109,7 +109,9 @@ router.post(index.history.query.do, function (req, res, next) {
         { 'group.name': likeKey},
         { 'serv.name': likeKey},
         { 'serv.url': likeKey},
-        { 'api.name': likeKey}
+        { 'api.name': likeKey},
+        { 'user.ip': likeKey},
+        { 'user.name': likeKey}
       ]
     };
   } else if (req.body.query) {

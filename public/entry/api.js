@@ -536,6 +536,15 @@ var history = {
   }
 };
 
+lemon.register('qry', {
+  chooseApi: function(el) {
+    console.log(lemon.data(el, 'api'))
+  },
+  chooseHis: function(el, clicks) {
+    console.log(lemon.data(el, 'his'))
+  }
+});
+
 var qry = {
   inputId: '#input_search',
   searchId: '#do_search',

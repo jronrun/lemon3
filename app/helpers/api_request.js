@@ -341,6 +341,9 @@ module.exports = function(commOptions) {
       History.page(query || {}, pn, false, ps, _.extend({
         sorts: {
           id: -1
+        },
+        fields: {
+          _id: 0
         }
       }, options || {})).then(function (result) {
         callback(answer.succ({

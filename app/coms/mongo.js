@@ -150,7 +150,8 @@ module.exports.Base = function(model, modelName, define) {
      * {
      *  field: '',      //sort field name
      *  sort: 1,        //sort 1 asc, -1 desc
-     *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
+     *  sorts: {},      //custom sort, eg: {id:1,name:-1}, will override property field, sort
+     *  fields: {},     //Project Fields to Return from Query https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/
      * }
      *
      * @returns {Promise}
@@ -169,7 +170,8 @@ module.exports.Base = function(model, modelName, define) {
       page = page || 1; size = size || pages.default_size; options = _.extend({
         field: '_id',
         sort: -1,
-        sorts: false
+        sorts: false,
+        fields: {}
       }, options || {});
 
       var aSort = {}, originalQry = _.extend(query || {});
@@ -179,7 +181,7 @@ module.exports.Base = function(model, modelName, define) {
         aSort[options.field] = options.sort;
       }
 
-      model.find(originalQry).sort(aSort).skip((page - 1) * size).limit(size).toArray(function (err, items) {
+      model.find(originalQry, options.fields).sort(aSort).skip((page - 1) * size).limit(size).toArray(function (err, items) {
         if (err) {
           deferred.reject(err);
         } else {
@@ -232,7 +234,8 @@ module.exports.Base = function(model, modelName, define) {
      *  order: 1,       //page order, 1 next page, -1 prev page
      *  field: '',      //sort field name
      *  sort: 1,        //sort 1 asc, -1 desc,
-     *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
+     *  sorts: {},      //custom sort, eg: {id:1,name:-1}, will override property field, sort
+     *  fields: {},     //Project Fields to Return from Query https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/
      *  format: function(fieldVal){}    //format param field value
      * }
      */
@@ -245,6 +248,7 @@ module.exports.Base = function(model, modelName, define) {
           field: '_id',
           sort: -1,
           sorts: false,
+          fields: {},
           order: 'za' == order ? -1 : 1
         }, options || {});
 
@@ -257,7 +261,7 @@ module.exports.Base = function(model, modelName, define) {
             aSort[options.field] = options.sort;
           }
 
-          model.find(query).sort(aSort).limit(1).toArray(function (err, items) {
+          model.find(query, options.fields).sort(aSort).limit(1).toArray(function (err, items) {
             if (err) {
               deferred.reject(err);
             }
@@ -292,6 +296,7 @@ module.exports.Base = function(model, modelName, define) {
      *  field: '',      //sort field name
      *  sort: 1,        //sort 1 asc, -1 desc,
      *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
+     *  fields: {},     //Project Fields to Return from Query https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/
      *  format: function(fieldVal){}    //format param field value
      * }
      *
@@ -313,6 +318,7 @@ module.exports.Base = function(model, modelName, define) {
         field: '_id',
         sort: -1,
         sorts: false,
+        fields: {},
         order: 1
       }, options || {});
 
@@ -374,6 +380,7 @@ module.exports.Base = function(model, modelName, define) {
      *  field: '',      //sort field name
      *  sort: 1,        //sort 1 asc, -1 desc,
      *  sorts: {}       //custom sort, eg: {id:1,name:-1}, will override property field, sort
+     *  fields: {},     //Project Fields to Return from Query https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/
      *  format: function(fieldVal){}    //format param field value
      * }
      * @returns {*}
@@ -383,6 +390,7 @@ module.exports.Base = function(model, modelName, define) {
         field: '_id',
         sort: -1,
         sorts: false,
+        fields: {},
         order: 1
       }, options || {});
 
@@ -421,7 +429,7 @@ module.exports.Base = function(model, modelName, define) {
         aSort[options.field] = options.sort;
       }
 
-      return model.find(_.extend(query || {}, condition)).sort(aSort).limit(pageSize);
+      return model.find(_.extend(query || {}, condition), options.fields).sort(aSort).limit(pageSize);
     },
 
     getEditVal: function(schema, compress, item, reverse, handle) {

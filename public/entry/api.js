@@ -37,9 +37,9 @@ var apis = {
     }
   },
 
-  getHighlightDoc: function(encodeDoc, rightTip, css) {
+  getHighlightDoc: function(target, rightTip, css, isDecode) {
     var exchange = '#dd_api_exchange';
-    mirror.highlightJson5(lemon.dec(encodeDoc), exchange + ' pre');
+    mirror.highlightJson5(isDecode ? target : lemon.dec(target), exchange + ' pre');
     $(exchange + ' pre').css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
     return $(exchange).html() + '';
   },
@@ -611,7 +611,7 @@ var qry = {
       } else if (!qry.hisEnd) {
         var pg = lemon.progress(mapi.navbarId);
         var pn = parseInt($(qry.partHisId).data('page')) + 1;
-        qry.searchHis(1, function() {
+        qry.searchHis(qry.prevKey, pn, function() {
           pg.end();
         });
       }
@@ -649,18 +649,30 @@ var qry = {
               'max-width': baseW - 25
             });
           }
-
           $('#s_api_tbody').append(lemon.tmpl($('#api_tr_tmpl').html(), {
             items: resp.result.items,
             highlight: function(doc, tip) {
               return apis.getHighlightDoc(doc, tip, preStyle);
             }
           }));
-        } else {
+        }
+
+        if (!resp.result.hasNext ) {
           qry.apiEnd = true;
         }
 
-        qry.scrollPage();
+        if (fp) {
+          qry.scrollPage();
+        }
+
+        if (resp.result.items.length < 1 && fp) {
+          $(qry.partApiId).empty();
+          qry.hisEnd = false;
+          var pg = lemon.progress(mapi.navbarId);
+          qry.searchHis(qry.prevKey, 1, function() {
+            pg.end();
+          });
+        }
 
       } else {
         lemon.msg(resp.msg);
@@ -670,7 +682,7 @@ var qry = {
     });
   },
 
-  searchHis: function(page, callback) {
+  searchHis: function(key, page, callback) {
     page = page || 1;
     $(qry.partHisId).data('page', page);
 
@@ -679,12 +691,58 @@ var qry = {
       $(qry.partHisId).append(lemon.tmpl($('#his_table_tmpl').html(), {}));
     }
 
-    lemon.isFunc(callback) && callback();
+    $.post('/api/history/query', {
+      page: page,
+      key: key
+    }, function (resp) {
+      if (0 == resp.code) {
+        var rdata = lemon.deepDec(resp.result);
+        if (rdata.items.length > 0) {
+          var baseW = Math.min($(window).width(), $(qry.partHisId).width());
+          var preStyle = {
+            'font-size': 14,
+            padding: 9.5
+          };
+
+          if (lemon.isMediumUpView()) {
+            lemon.extend(preStyle, {
+              width: baseW - 105,
+              'max-width': baseW - 105
+            });
+          } else {
+            lemon.extend(preStyle, {
+              width: baseW - 25,
+              'max-width': baseW - 25
+            });
+          }
+
+          $('#s_his_tbody').append(lemon.tmpl($('#his_tr_tmpl').html(), {
+            items: rdata.items,
+            highlight: function(doc, tip) {
+              return apis.getHighlightDoc(lemon.fmtjson(doc), tip, preStyle, true);
+            }
+          }));
+        }
+
+        if (!rdata.hasNext ) {
+          qry.hisEnd = true;
+        }
+
+        if (rdata.items.length < 1 && fp) {
+          $(qry.partHisId).empty();
+        }
+
+      } else {
+        lemon.msg(resp.msg);
+      }
+
+      lemon.isFunc(callback) && callback();
+    });
   },
 
   addHisBtn: function() {
     var mhisId = '#btn_match_his';
-    if (!$(mhisId).length) {
+    if (!$(mhisId).length && !$('#s_his_table').length) {
       var aBtn = [
         '<button type="button" class="btn btn-info btn-lg btn-block" id="btn_match_his">',
         'Show Match Histories',
@@ -694,7 +752,7 @@ var qry = {
       $(mhisId).click(function () {
         qry.hisEnd = false;
         var pg = lemon.progress(mapi.navbarId);
-        qry.searchHis(1, function() {
+        qry.searchHis(qry.prevKey, 1, function() {
           pg.end();
           $(mhisId).slideUp(500, function() {
             $(mhisId).remove();

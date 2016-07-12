@@ -96,7 +96,36 @@ router.post(index.history.prev.do, function (req, res, next) {
  * Query History
  */
 router.post(index.history.query.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.succ(crypto.compress({ items: [] })));
+  }
 
+  var query = {}, pn = parseInt(req.body.page || '1'), ps = 3, key = req.body.key;
+  if (key && key.length > 0) {
+    var likeKey = new RegExp(key, 'i'), query = {
+      $or:[
+        { 'env.name': likeKey},
+        { 'env.level': likeKey},
+        { 'group.name': likeKey},
+        { 'serv.name': likeKey},
+        { 'serv.url': likeKey},
+        { 'api.name': likeKey}
+      ]
+    };
+  } else if (req.body.query) {
+    query = req.body.query;
+  }
+
+  if (!req.user.isAdmin) {
+    _.extend(query, {
+      'user.id': req.user.id
+    });
+  }
+
+  requs.qryHistory(query, pn, function (answer) {
+    answer.result = crypto.compress(answer.result);
+    return res.json(answer);
+  }, ps);
 });
 
 /**
@@ -294,7 +323,8 @@ router.post(index.interfaces.do, function (req, res, next) {
       }).then(function (result) {
         callback(null, {
           group: groupData,
-          interf: result.items
+          interf: result.items,
+          hasNext: result.page.hasNext
         });
       });
     }
@@ -335,7 +365,8 @@ router.post(index.interfaces.do, function (req, res, next) {
     });
 
     return res.json(answer.succ({
-      items: items
+      items: items,
+      hasNext: result.hasNext
     }));
   });
 });

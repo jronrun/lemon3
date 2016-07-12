@@ -206,7 +206,7 @@ module.exports = function(commOptions) {
 
         function(target, answer, callback) {
           if (0 == requestOptions.opt) {
-            var history = {
+            var servRequ = target.serv.request, history = {
               env: {
                 id: target.env.id,
                 name: target.env.name,
@@ -232,11 +232,22 @@ module.exports = function(commOptions) {
               create_time: new Date()
             };
 
-            if (target.isChosenAPI && target.api) {
-              _.extend(history.api, {
-                id: target.api.id,
-                name: target.api.name
-              });
+            if (target.isChosenAPI) {
+              if (target.api) {
+                _.extend(history.api, {
+                  id: target.api.id,
+                  name: target.api.name,
+                  desc: target.api.desc
+                });
+              }
+            }
+            //not choose API
+            else {
+              if (servRequ.interf_prop) {
+                _.extend(history.api, {
+                  name: _.get(target.requ, servRequ.interf_prop)
+                });
+              }
             }
 
             History.nextId(function (id) {
@@ -323,6 +334,19 @@ module.exports = function(commOptions) {
         }
       ], function (err, answer) {
         callback(answer);
+      });
+    },
+
+    qryHistory: function(query, pn, callback, ps, options) {
+      History.page(query || {}, pn, false, ps, _.extend({
+        sorts: {
+          id: -1
+        }
+      }, options || {})).then(function (result) {
+        callback(answer.succ({
+          items: result.items,
+          hasNext: result.page.hasNext
+        }));
       });
     }
   };

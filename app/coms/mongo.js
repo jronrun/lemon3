@@ -76,6 +76,9 @@ var pages = {
 
     if (currentPage > 1) {
       index.push(pages.index(Math.min(currentPage - 1, pageCount), 'Prev'));
+      pagination.hasPrev = true;
+    } else {
+      pagination.hasPrev = false;
     }
 
     if (start > 1) {
@@ -100,6 +103,9 @@ var pages = {
 
     if (currentPage < pageCount) {
       index.push(pages.index(parseInt(currentPage) + 1, 'Next'));
+      pagination.hasNext = true;
+    } else {
+      pagination.hasNext = false;
     }
 
     pagination.index = index;

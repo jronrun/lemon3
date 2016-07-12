@@ -112,7 +112,7 @@
                       <%= highlight(api.response_doc, 'Response') %>
                     <% } %>
                     <footer class="blockquote-footer"> <%= api.name %>
-                        <cite title="Source Title"><%= api.desc %></cite>
+                        <cite><%= api.desc %></cite>
                     </footer>
                 </blockquote>
             </td>
@@ -150,6 +150,51 @@
 </script>
 
 <script type="text/html" id="his_tr_tmpl">
+    <%
+    var prevInterval = '';
+    lemon.each(items, function(his) {
+      var curInterval = lemon.when.interval(his.create_time);
+      if (curInterval != prevInterval) {
+          prevInterval = curInterval;
+    %>
+          <tr>
+              <td>
+                  <h5>
+                        <span class="label label-info">
+                            <span class="fa fa-clock-o"></span> &nbsp;<%= curInterval %>
+                        </span>
+                  </h5>
+              </td>
+              <td class="hidden-sm-down"></td>
+          </tr>
+      <% } %>
+
+      <tr>
+          <td>
+              <blockquote class="blockquote">
+                  <%= highlight(his.api.request, 'Request') %>
+                  <%= highlight(his.api.response, 'Response') %>
+                  <footer class="blockquote-footer">
+                      <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
+                  </footer>
+                  <footer class="blockquote-footer">
+                      <cite><%= ( his.api.desc || his.api.name || '') %></cite>
+                      <code><span class="text-<%= his.env.level %>"><%= his.serv.url %></span></code>
+                      <%= lemon.when.default(his.create_time) %>
+                  </footer>
+              </blockquote>
+          </td>
+          <td class="hidden-sm-down">
+              <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
+                  <em class="fa fa-search" title="Search"></em>
+              </button>
+              <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
+                  <em class="fa fa-search" title="Search"></em>
+              </button>
+          </td>
+      </tr>
+
+    <% }); %>
 </script>
 
 <div id="dd_api_exchange" style="display: none;">

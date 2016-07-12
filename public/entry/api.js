@@ -676,6 +676,10 @@ var qry = {
             }
             $(qry.searchId).click();
           });
+
+          if (qry.prevKey.length > 0) {
+            lemon.blast(qry.prevKey, qry.partApiId);
+          }
         }
 
         if (!resp.result.hasNext ) {
@@ -751,6 +755,10 @@ var qry = {
             history.set(lemon.data(this, 'his'));
             $(qry.searchId).click();
           });
+
+          if (qry.prevKey.length > 0) {
+            lemon.blast(qry.prevKey, qry.partHisId);
+          }
         }
 
         if (!rdata.hasNext ) {

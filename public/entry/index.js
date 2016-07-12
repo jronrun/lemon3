@@ -4,6 +4,9 @@
 'use strict';
 
 require('../css/style.styl');
+//require('velocity/velocity');
+//require('velocity/velocity.ui');
+require('blast-text');
 var handlePageCall = {},
   handleModalCall = { show: {}, shown: {}, confirm: {} },
   handleTab = {},
@@ -102,6 +105,14 @@ global.register = function(call) {
 };
 
 lemon.register({
+  blast: function(target, selector) {
+    var blast = $(selector).blast({ search: target });
+    blast.css({
+      backgroundColor: "yellow",
+      transition: "color 400ms"
+    }); //.velocity({ backgroundColorAlpha: 1 }, { duration: 400 });
+    return blast;
+  },
   isDisable: function(selector) {
     return $(selector).attr('disabled');
   },

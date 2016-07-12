@@ -182,6 +182,16 @@
                       <code><span class="text-<%= his.env.level %>"><%= his.serv.url %></span></code>
                       <%= lemon.when.default(his.create_time) %>
                   </footer>
+                  <% if (userl) { %>
+                      <footer class="blockquote-footer">
+                          <% if (his.user.id) { %>
+                            <a href="/manage/user/<%= his.user.id %>" target="_blank"><%= (his.user.name || '') %></a>
+                          <% } else { %>
+                            <%= (his.user.name || '') %>
+                          <% } %>
+                          <cite><%= (his.user.ip || '') %></cite>
+                      </footer>
+                  <% } %>
               </blockquote>
           </td>
           <td class="hidden-sm-down">

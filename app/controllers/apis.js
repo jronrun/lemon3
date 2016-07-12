@@ -123,6 +123,7 @@ router.post(index.history.query.do, function (req, res, next) {
   }
 
   requs.qryHistory(query, pn, function (answer) {
+    answer.result.userl = req.user.isAdmin ? 1 : 0;
     answer.result = crypto.compress(answer.result);
     return res.json(answer);
   }, ps);

@@ -718,6 +718,7 @@ var qry = {
 
           $('#s_his_tbody').append(lemon.tmpl($('#his_tr_tmpl').html(), {
             items: rdata.items,
+            userl: (1 == rdata.userl ? true : false),
             highlight: function(doc, tip) {
               return apis.getHighlightDoc(lemon.fmtjson(doc), tip, preStyle, true);
             }

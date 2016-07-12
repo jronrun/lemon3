@@ -100,7 +100,7 @@ router.post(index.history.query.do, function (req, res, next) {
     return res.json(answer.succ(crypto.compress({ items: [] })));
   }
 
-  var query = {}, pn = parseInt(req.body.page || '1'), ps = 3, key = req.body.key;
+  var query = {}, pn = parseInt(req.body.page || '1'), ps = false, key = req.body.key;
   if (key && key.length > 0) {
     var likeKey = new RegExp(key, 'i'), query = {
       $or:[
@@ -321,7 +321,7 @@ router.post(index.interfaces.do, function (req, res, next) {
         }
       }
 
-      var pn = parseInt(req.body.page || '1'), ps = 3;
+      var pn = parseInt(req.body.page || '1'), ps = false;
       Interface.page(query, pn, false, ps, {
         sorts: {
           group_order: 1,

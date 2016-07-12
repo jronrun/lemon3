@@ -502,11 +502,7 @@ var history = {
         if (!rdata.item) {
           lemon.msg('There is no ' + tip +' history.')
         } else {
-          history.cur = rdata.item.id;
-          envs.doChoose(rdata.item.env, rdata.item.group, rdata.item.serv);
-          mapi.setCur(rdata.item.env, rdata.item.serv, rdata.item.group);
-          apis.doChoose(rdata.item.group, rdata.item.api, true);
-          mapi.setCur(null, null, null, rdata.item.group, rdata.item.api);
+          history.set(rdata.item);
         }
         lemon.isFunc(callback) && callback();
       } else {
@@ -517,6 +513,14 @@ var history = {
   },
   prev: function(callback) {
     history.next(callback, true);
+  },
+
+  set: function(his) {
+    history.cur = his.id;
+    envs.doChoose(his.env, his.group, his.serv);
+    mapi.setCur(his.env, his.serv, his.group);
+    apis.doChoose(his.group, his.api, true);
+    mapi.setCur(null, null, null, his.group, his.api);
   },
 
   init: function() {
@@ -538,10 +542,17 @@ var history = {
 
 lemon.register('qry', {
   chooseApi: function(el) {
-    console.log(lemon.data(el, 'api'))
+    var api = lemon.data(el, 'api');
+    if (api) {
+      api.json = true;
+      apis.doChoose(false, api);
+    }
+    $(qry.searchId).click();
   },
   chooseHis: function(el, clicks) {
-    console.log(lemon.data(el, 'his'))
+    var his = lemon.data(el, 'his');
+    history.set(his);
+    $(qry.searchId).click();
   }
 });
 

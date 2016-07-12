@@ -118,9 +118,13 @@ router.post(index.history.query.do, function (req, res, next) {
     query = req.body.query;
   }
 
+  var qryOpts = { fields: { _id: 0}};
   if (!req.user.isAdmin) {
     _.extend(query, {
       'user.id': req.user.id
+    });
+    _.extend(qryOpts.fields, {
+      user: 0
     });
   }
 
@@ -128,7 +132,7 @@ router.post(index.history.query.do, function (req, res, next) {
     answer.result.userl = req.user.isAdmin ? 1 : 0;
     answer.result = crypto.compress(answer.result);
     return res.json(answer);
-  }, ps);
+  }, ps, qryOpts);
 });
 
 /**

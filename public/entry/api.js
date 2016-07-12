@@ -540,22 +540,6 @@ var history = {
   }
 };
 
-lemon.register('qry', {
-  chooseApi: function(el) {
-    var api = lemon.data(el, 'api');
-    if (api) {
-      api.json = true;
-      apis.doChoose(false, api);
-    }
-    $(qry.searchId).click();
-  },
-  chooseHis: function(el, clicks) {
-    var his = lemon.data(el, 'his');
-    history.set(his);
-    $(qry.searchId).click();
-  }
-});
-
 var qry = {
   inputId: '#input_search',
   searchId: '#do_search',
@@ -674,12 +658,24 @@ var qry = {
               'max-width': baseW - 25
             });
           }
+
+          var batchNo = 'api' + lemon.uniqueId();
           $('#s_api_tbody').append(lemon.tmpl($('#api_tr_tmpl').html(), {
+            batchNo: batchNo,
             items: resp.result.items,
             highlight: function(doc, tip, attrs) {
               return apis.getHighlightDoc(doc, tip, preStyle, false, attrs);
             }
           }));
+
+          $('td[clickable="' + batchNo + '"]').on('dblclick', function () {
+            var api = lemon.data(this, 'api');
+            if (api) {
+              api.json = true;
+              apis.doChoose(false, api);
+            }
+            $(qry.searchId).click();
+          });
         }
 
         if (!resp.result.hasNext ) {
@@ -741,13 +737,20 @@ var qry = {
             });
           }
 
+          var batchNo = 'his' + lemon.uniqueId();
           $('#s_his_tbody').append(lemon.tmpl($('#his_tr_tmpl').html(), {
+            batchNo: batchNo,
             items: rdata.items,
             userl: (1 == rdata.userl ? true : false),
             highlight: function(doc, tip, attrs) {
               return apis.getHighlightDoc(lemon.fmtjson(doc), tip, preStyle, true, attrs);
             }
           }));
+
+          $('td[clickable="' + batchNo + '"]').on('dblclick', function () {
+            history.set(lemon.data(this, 'his'));
+            $(qry.searchId).click();
+          });
         }
 
         if (!rdata.hasNext ) {

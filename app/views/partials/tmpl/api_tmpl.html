@@ -88,8 +88,6 @@
 
 <script type="text/html" id="api_tr_tmpl">
     <%
-      var clickEvt = lemon.isSmallDownView()
-          ? 'onclick="lemon.qry.chooseApi(this);' : 'ondblclick="lemon.qry.chooseApi(this);"';
       lemon.each(items, function(group) {
     %>
 
@@ -107,7 +105,7 @@
 
       <% lemon.each(group.interfs, function(api) { %>
         <tr>
-            <td <%= clickEvt %> data-api="<%= lemon.enc(api) %>">
+            <td clickable="<%= batchNo %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="blockquote">
                     <%= highlight(api.request_doc, 'Request', {'tgl-apirequ': 'tgl'}) %>
                     <% if ((api.response_doc || '').length > 0) { %>
@@ -153,8 +151,7 @@
 
 <script type="text/html" id="his_tr_tmpl">
     <%
-    var prevInterval = '', clickEvt = lemon.isSmallDownView()
-        ? 'onclick="lemon.qry.chooseHis(this);' : 'ondblclick="lemon.qry.chooseHis(this);"';
+    var prevInterval = '';
 
     lemon.each(items, function(his) {
       var curInterval = lemon.when.interval(his.create_time);
@@ -174,7 +171,7 @@
       <% } %>
 
       <tr>
-          <td <%= clickEvt %> data-his="<%= lemon.enc(his) %>">
+          <td clickable="<%= batchNo %>" data-his="<%= lemon.enc(his) %>">
               <blockquote class="blockquote">
                   <%= highlight(his.api.request, 'Request', {'tgl-requ': 'tgl'}) %>
                   <%= highlight(his.api.response, 'Response', {'tgl-resp': 'tgl'}) %>

@@ -37,10 +37,12 @@ var apis = {
     }
   },
 
-  getHighlightDoc: function(target, rightTip, css, isDecode) {
+  getHighlightDoc: function(target, rightTip, css, isDecode, attrs) {
     var exchange = '#dd_api_exchange';
+    $(exchange).empty().append('<pre class="roundedcorner" style="background-color:#ffffff;border:0;overflow-y:scroll;"></pre>');
     mirror.highlightJson5(isDecode ? target : lemon.dec(target), exchange + ' pre');
     $(exchange + ' pre').css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
+    $(exchange + ' pre').attr(attrs || {});
     return $(exchange).html() + '';
   },
 
@@ -654,8 +656,8 @@ var qry = {
           }
           $('#s_api_tbody').append(lemon.tmpl($('#api_tr_tmpl').html(), {
             items: resp.result.items,
-            highlight: function(doc, tip) {
-              return apis.getHighlightDoc(doc, tip, preStyle);
+            highlight: function(doc, tip, attrs) {
+              return apis.getHighlightDoc(doc, tip, preStyle, false, attrs);
             }
           }));
         }
@@ -722,8 +724,8 @@ var qry = {
           $('#s_his_tbody').append(lemon.tmpl($('#his_tr_tmpl').html(), {
             items: rdata.items,
             userl: (1 == rdata.userl ? true : false),
-            highlight: function(doc, tip) {
-              return apis.getHighlightDoc(lemon.fmtjson(doc), tip, preStyle, true);
+            highlight: function(doc, tip, attrs) {
+              return apis.getHighlightDoc(lemon.fmtjson(doc), tip, preStyle, true, attrs);
             }
           }));
         }

@@ -106,10 +106,10 @@
       <% lemon.each(group.interfs, function(api) { %>
         <tr>
             <td>
-                <blockquote class="blockquote">
-                    <%= highlight(api.request_doc, 'Request') %>
+                <blockquote class="blockquote" api="1" data-api="<%= lemon.enc(api) %>">
+                    <%= highlight(api.request_doc, 'Request', {'tgl-apirequ': 'tgl'}) %>
                     <% if ((api.response_doc || '').length > 0) { %>
-                      <%= highlight(api.response_doc, 'Response') %>
+                      <%= highlight(api.response_doc, 'Response', {'tgl-apiresp': 'tgl'}) %>
                     <% } %>
                     <footer class="blockquote-footer"> <%= api.name %>
                         <cite><%= api.desc %></cite>
@@ -171,9 +171,9 @@
 
       <tr>
           <td>
-              <blockquote class="blockquote">
-                  <%= highlight(his.api.request, 'Request') %>
-                  <%= highlight(his.api.response, 'Response') %>
+              <blockquote class="blockquote" his="1" data-his="<%= lemon.enc(his) %>">
+                  <%= highlight(his.api.request, 'Request', {'tgl-requ': 'tgl'}) %>
+                  <%= highlight(his.api.response, 'Response', {'tgl-resp': 'tgl'}) %>
                   <footer class="blockquote-footer">
                       <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
                   </footer>
@@ -207,9 +207,7 @@
     <% }); %>
 </script>
 
-<div id="dd_api_exchange" style="display: none;">
-    <pre class="roundedcorner" style="background-color:#ffffff;border:0;overflow-y:scroll;"></pre>
-</div>
+<div id="dd_api_exchange" style="display: none;"> </div>
 
 {{!--
 <div class="dropdown-divider invisible"></div>

@@ -158,14 +158,10 @@ router.post(index.history.query.do, function (req, res, next) {
           }
         });
 
-        log.info('respQry ', JSON.stringify(respQry));
-
         _.each(respQry, function (v, k) {
           query[k] = _.isString(v) ? new RegExp(v, 'i') : v;
         });
       }
-
-      log.info('query ', JSON.stringify(query));
     }
   }
 

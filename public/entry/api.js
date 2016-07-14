@@ -664,14 +664,14 @@ var qry = {
           'overflow-y': 'scroll'
         });
 
-        lemon.disableEl(mapi.navbarIds);
+        lemon.disable(mapi.navbarIds);
       },
       shown: function(current, previous) {
         qry.openSearch(qry.searchType);
       },
       hidden: function(current, soonToBeActive) {
         qry.searchType = 0;
-        lemon.enableEl(mapi.navbarIds);
+        lemon.enable(mapi.navbarIds);
       }
     });
   },
@@ -946,7 +946,7 @@ var qry = {
 
 var mapi = {
   navbarId: '#navbar-layout',
-  navbarIds: '#logo, #env_ddt, #api_ddt, #search_ddt, #input_search, #api_request',
+  navbarIds: '#navbar-layout [navel="1"]',
   gridId: '#grid-layout',
   apiLayoutId: '#api-layout',
 

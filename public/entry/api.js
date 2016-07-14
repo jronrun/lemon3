@@ -569,6 +569,7 @@ var qry = {
   hisEnd: true,
 
   prevKey: null,
+  prevSearchType: 0,
   searchType: 0,
 
   advMirror: null,
@@ -616,11 +617,19 @@ var qry = {
 
           $(advId).attr('clicked', 1);
           $(advId).click(function () {
-
+            if (qry.advMirror.isJson()) {
+              qry.advModal.toggle();
+              qry.searchType = 4;
+              $(qry.searchId).click();
+            } else {
+              lemon.msg('Not a valid JSON', {
+                containerId: '#adv_form'
+              });
+            }
           });
 
           if (lemon.isSmallDownView()) {
-            $('#adv_sep').append('<h1 class="invisible"></h1>');
+            $(advEnvId).after('<h1 class="invisible"></h1>');
           }
         }
 
@@ -638,7 +647,7 @@ var qry = {
         });
       },
       hidden: function(current, soonToBeActive) {
-        qry.searchType = 0;
+        qry.searchType = 4;
       }
     });
 
@@ -675,7 +684,7 @@ var qry = {
         qry.hisEnd = true;
 
         var searchKey = $(qry.inputId).val();
-        if (qry.prevKey != searchKey) {
+        if (qry.prevSearchType != searchType || qry.prevKey != searchKey) {
           qry.prevKey = searchKey;
           $(qry.partApiId).empty();
           $(qry.partHisId).empty();
@@ -697,22 +706,34 @@ var qry = {
         break;
       //Do Advance Search
       case 4:
-        qry.apiEnd = false;
-        qry.hisEnd = true;
+        qry.apiEnd = true;
+        qry.hisEnd = false;
 
+        var advQry = lemon.getParam('#adv_form');
+        lemon.extend(advQry, {
+          body: qry.advMirror.json()
+        });
 
+        $(qry.partApiId).empty();
+        $(qry.partHisId).empty();
+        qry.searchHis(advQry, 1, function() {
+          lemon.progressEnd(mapi.navbarId);
+        });
         break;
       //Histories
       case 3:
-        lemon.progressEnd(mapi.navbarId);
-        $(qry.partApiId).empty();
+        qry.apiEnd = true;
         qry.hisEnd = false;
-        var pg = lemon.progress(mapi.navbarId);
+
+        $(qry.partApiId).empty();
+        $('#btn_match_his').remove();
         qry.searchHis(qry.prevKey, 1, function() {
-          pg.end();
+          lemon.progressEnd(mapi.navbarId);
         });
         break;
     }
+
+    qry.prevSearchType = searchType;
   },
 
   scrollPage: function() {
@@ -786,7 +807,7 @@ var qry = {
             $(qry.searchId).click();
           });
 
-          if (qry.prevKey.length > 0) {
+          if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partApiId);
           }
         }
@@ -825,10 +846,21 @@ var qry = {
       $(qry.partHisId).append(lemon.tmpl($('#his_table_tmpl').html(), {}));
     }
 
-    $.post('/api/history/query', {
-      page: page,
-      key: key
-    }, function (resp) {
+    var data = {
+      page: page
+    };
+
+    if (lemon.isString(key)) {
+      lemon.extend(data, {
+        key: key
+      });
+    } else {
+      lemon.extend(data, {
+        query: key
+      });
+    }
+
+    $.post('/api/history/query', data, function (resp) {
       if (0 == resp.code) {
         var rdata = lemon.deepDec(resp.result);
         if (rdata.items.length > 0) {
@@ -865,7 +897,7 @@ var qry = {
             $(qry.searchId).click();
           });
 
-          if (qry.prevKey.length > 0) {
+          if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partHisId);
           }
         }

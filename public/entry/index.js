@@ -326,7 +326,8 @@ lemon.register({
       permanentId: '#permanent_id'
     }, options || {});
 
-    var msgId = options.msgId || ('#msg_id_' + lemon.uniqueId()), cid = options.containerId;
+    var msgId = options.msgId || ('#msg_id_' + lemon.uniqueId()),
+      cid = options.containerId, isDefaultContainer = '#message' == options.containerId;
     var msg = $(document.createElement('div')).attr({
       class: 'alert alert-' + options.level,
       role: 'alert',
@@ -344,7 +345,7 @@ lemon.register({
         '<span aria-hidden="true">&times;</span></button>'
       ].join(''));
     } else if (options.close == 1) {
-      if (holdMsgId[cid].length <= 1) {
+      if (isDefaultContainer && holdMsgId[cid].length <= 1) {
         $(options.permanentId).slideToggle();
       }
       lemon.delay(function() {
@@ -353,7 +354,7 @@ lemon.register({
           $(msgId).remove();
         });
 
-        if (!holdMsgId[cid].length && !$(options.permanentId + ':visible').length) {
+        if (isDefaultContainer && !holdMsgId[cid].length && !$(options.permanentId + ':visible').length) {
           $(options.permanentId).slideToggle();
         }
       }, options.delay);

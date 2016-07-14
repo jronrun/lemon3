@@ -208,6 +208,28 @@
     <% }); %>
 </script>
 
+<script type="text/html" id="adv_body_tmpl">
+    <form class="form-inline">
+        <select class="form-control" style="height: 37px;" name="env.id" id="adv_env_id">
+            <option value="">Environment</option>
+        </select>
+        <div id="adv_sep"></div>
+        <select class="form-control" style="height: 37px;" name="group.id" id="adv_group_id">
+            <option value="">Group</option>
+        </select>
+        <h1 class="invisible"></h1>
+        <textarea class="form-control" rows="3" style="border:0px;" id="adv_mirror"></textarea>
+    </form>
+</script>
+
+<script type="text/html" id="adv_footer_tmpl">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <button type="button" id="do_adv_search" class="btn btn-primary icondh"
+            data-advinit="PQKhAIEEBMDcEMB2BjApuAyq+AnZALcACgAkBLAZwBcB7HATwEpwRgAoAbzYEhhgBtAPIAHKmRqJ4AGwC64AEqoAjgFdU1cKtQNwyCdDLIxEnjmVrqALnBdu3HgF8ANDz5DR4ybIXrhEiuhaOnqIBkaepr7+qNa29tzOrgIixl5yWDiw2uCSALaoPHkx4ADkJWwOQA">
+        <em class="fa fa-search" title="Search"></em> Search
+    </button>
+</script>
+
 <div id="dd_api_exchange" style="display: none;"> </div>
 
 {{!--

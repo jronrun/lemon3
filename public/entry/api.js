@@ -201,6 +201,11 @@ var apis = {
 
 var envs = {
   id: '#env_dd',
+  cur: {
+    envs: {},
+    group: {},
+    serv: {}
+  },
   envHead: {
     id: function(envId) {
       return '#envh_' + envId;
@@ -229,6 +234,16 @@ var envs = {
         env: envInfo,
         group: groupInfo
       }));
+    }
+  },
+
+  addCur: function(env, group, serv) {
+    if (!envs.cur.envs[env.id]) {
+      envs.cur.envs[env.id] = env;
+    }
+
+    if (!envs.cur.group[group.id]) {
+      envs.cur.group[group.id] = group;
     }
   },
 
@@ -344,6 +359,8 @@ var envs = {
                 group: group.info,
                 serv: serv
               });
+
+              envs.addCur(env.info, group.info, serv);
 
               $(servElId).click(function() {
                 envs.choose(serv.id);
@@ -553,6 +570,9 @@ var qry = {
 
   prevKey: null,
   searchType: 0,
+
+  advMirror: null,
+  advModal: null,
   init: function() {
     lemon.enter(qry.inputId, function() {
       $(qry.searchId).click();
@@ -569,7 +589,57 @@ var qry = {
 
     $('#search_dd a').click(function () {
       qry.searchType = parseInt($(this).data('type'));
-      $(qry.searchId).click();
+      if (1 == qry.searchType) {
+        qry.openSearch(qry.searchType);
+      } else {
+        $(qry.searchId).click();
+      }
+    });
+
+    qry.advModal = lemon.modal({
+      id: 'adv_search',
+      cache: true,
+      body: lemon.tmpl($('#adv_body_tmpl').html(), {}),
+      footer: lemon.tmpl($('#adv_footer_tmpl').html(), {}),
+      modal: {
+        backdrop: 'static',
+        keyboard: false
+      }
+    }, {
+      shown: function(evt, el) {
+        var advId = '#do_adv_search', advEnvId = '#adv_env_id', advGroupId = '#adv_group_id';
+        if ('1' != $(advId).attr('clicked')) {
+          qry.advMirror = mapi.mirror('#adv_mirror', false, {
+            gutters: []
+          });
+          qry.advMirror.val(lemon.dec($(advId).data('advinit')));
+
+          $(advId).attr('clicked', 1);
+          $(advId).click(function () {
+
+          });
+
+          if (lemon.isSmallDownView()) {
+            $('#adv_sep').append('<h1 class="invisible"></h1>');
+          }
+        }
+
+        var optionFmt = '<option value="{0}">{1}</option>', optSelFmt = '{0} option[value="{1}"]';
+        lemon.each(envs.cur.envs, function (aEnv) {
+          if (!$(lemon.format(optSelFmt, advEnvId, aEnv.id)).length) {
+            $(advEnvId).append(lemon.format(optionFmt, aEnv.id, aEnv.name));
+          }
+        });
+
+        lemon.each(envs.cur.group, function (aGroup) {
+          if (!$(lemon.format(optSelFmt, advGroupId, aGroup.id)).length) {
+            $(advGroupId).append(lemon.format(optionFmt, aGroup.id, aGroup.name));
+          }
+        });
+      },
+      hidden: function(current, soonToBeActive) {
+        qry.searchType = 0;
+      }
     });
 
     lemon.tabEvent(qry.contentId, {
@@ -623,7 +693,14 @@ var qry = {
         break;
       //Advance Search
       case 1:
-        lemon.progressEnd(mapi.navbarId);
+        qry.advModal.toggle();
+        break;
+      //Do Advance Search
+      case 4:
+        qry.apiEnd = false;
+        qry.hisEnd = true;
+
+
         break;
       //Histories
       case 3:
@@ -900,7 +977,9 @@ var mapi = {
     return instance;
   },
   mirrorSize: function(aMirror, sizeElId) {
-    aMirror.setSize($(sizeElId).width(), $(sizeElId).height() - 46);
+    if (sizeElId) {
+      aMirror.setSize($(sizeElId).width(), $(sizeElId).height() - 46);
+    }
   },
   intlRequ: function() {
     mapi.requ = mapi.mirror('#request', mapi.requCardId);

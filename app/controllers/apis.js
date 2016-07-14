@@ -115,7 +115,58 @@ router.post(index.history.query.do, function (req, res, next) {
       ]
     };
   } else if (req.body.query) {
-    query = req.body.query;
+    var paramQry = req.body.query;
+    if (paramQry.env && paramQry.env.length > 0) {
+      _.extend(query, {
+        'env.id': parseInt(paramQry.env)
+      });
+    }
+
+    if (paramQry.group && paramQry.group.length > 0) {
+      _.extend(query, {
+        'group.id': parseInt(paramQry.group)
+      });
+    }
+
+    if (paramQry.body) {
+      if (paramQry.body.name && paramQry.body.name.length > 0) {
+        var nameQry = new RegExp(paramQry.body.name, 'i');
+        _.extend(query, {
+          $or: [
+            {'serv.name': nameQry},
+            {'serv.url': nameQry}
+          ]
+        })
+      }
+
+      if (paramQry.body.request) {
+        var requQry = reverseData({
+          api: {
+            request: paramQry.body.request
+          }
+        });
+
+        _.each(requQry, function (v, k) {
+          query[k] = _.isString(v) ? new RegExp(v, 'i') : v;
+        });
+      }
+
+      if (paramQry.body.response) {
+        var respQry = reverseData({
+          api: {
+            response: paramQry.body.response
+          }
+        });
+
+        log.info('respQry ', JSON.stringify(respQry));
+
+        _.each(respQry, function (v, k) {
+          query[k] = _.isString(v) ? new RegExp(v, 'i') : v;
+        });
+      }
+
+      log.info('query ', JSON.stringify(query));
+    }
   }
 
   var qryOpts = { fields: { _id: 0}};

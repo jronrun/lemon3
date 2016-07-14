@@ -663,12 +663,15 @@ var qry = {
           'max-height': viewport.h * 0.86,
           'overflow-y': 'scroll'
         });
+
+        lemon.disableEl(mapi.navbarIds);
       },
       shown: function(current, previous) {
         qry.openSearch(qry.searchType);
       },
       hidden: function(current, soonToBeActive) {
         qry.searchType = 0;
+        lemon.enableEl(mapi.navbarIds);
       }
     });
   },
@@ -943,6 +946,7 @@ var qry = {
 
 var mapi = {
   navbarId: '#navbar-layout',
+  navbarIds: '#env_ddt, #api_ddt, #search_ddt, #input_search, #api_request',
   gridId: '#grid-layout',
   apiLayoutId: '#api-layout',
 

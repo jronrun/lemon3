@@ -1030,6 +1030,14 @@ var mapi = {
       });
     }
 
+    lemon.popover('#btn-doc', {
+      title: 'API Document',
+      placement: 'right',
+      content: function() {
+        return '';
+      }
+    });
+
     $('#btn-tgl-form').click(function () {
       if (!mapi.requ.isJson()) {
         lemon.msg('The Request Data is not a Valid JSON or JSON5.');

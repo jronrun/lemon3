@@ -946,7 +946,7 @@ var qry = {
 
 var mapi = {
   navbarId: '#navbar-layout',
-  navbarIds: '#env_ddt, #api_ddt, #search_ddt, #input_search, #api_request',
+  navbarIds: '#logo, #env_ddt, #api_ddt, #search_ddt, #input_search, #api_request',
   gridId: '#grid-layout',
   apiLayoutId: '#api-layout',
 

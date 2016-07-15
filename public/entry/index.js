@@ -561,13 +561,14 @@ lemon.register({
     var headId = 'prevent_twice' + lemon.uniqueId();
     events = events || {};
     options = options || {title: null};
-    var thePopover = $(selector).popover(lemon.extend({
+    var thePopover = $(selector).popover(options = lemon.extend({
       title: '',
       trigger: 'click',
       content: '',
       template: popoverTemplate,
       placement: "bottom",
-      html: true
+      html: true,
+      arrow: true
     }, options || {}, {
       //Prevent popover content function is executed twice
       title: options.title || ('<div id="' + headId + '">&nbsp;</div>')
@@ -583,6 +584,10 @@ lemon.register({
       }
 
       var el = $(this).data("bs.popover").tip;
+      if (!options.arrow) {
+        $(el).find('.popover-arrow').remove();
+      }
+
       lemon.isFunc(events.shown) && events.shown(el, this);
     }).on('hide.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;

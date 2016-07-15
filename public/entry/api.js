@@ -1067,6 +1067,7 @@ var mapi = {
                   title: 'API Document',
                   placement: 'right',
                   trigger: 'manual',
+                  arrow: false,
                   content: function() {
                     var html = [
                       apis.getHighlightDoc(rdata.item.request_doc, 'Request')
@@ -1077,19 +1078,23 @@ var mapi = {
                     return html.join('');
                   }
                 }, {
+                  show: function(el) {
+                    $(el).hide();
+                  },
                   shown: function(el) {
-                    var offset = $(thiz).offset(), addW = $(thiz).width();
-                    var viewport = {
-                      w: $(window).width(),
-                      h: $(window).height()
-                    };
-
+                    var offset = $(mapi.respCardId).offset(),
+                      w = $(mapi.respCardId).width() + 43, h = $(mapi.respCardId).height() + 43;
+                    $(el).offset(offset);
                     $(el).css({
-                      width: viewport.w - (offset.left + addW),
-                      'max-width': viewport.w - (offset.left + addW),
-                      height: viewport.h,
-                      'max-height': viewport.h * 0.9
+                      'min-width': w,
+                      'max-width': w,
+                      'min-height': h,
+                      'max-height': h,
+                      'overflow-y': 'scroll'
                     });
+                    lemon.delay(function () {
+                      $(el).fadeIn();
+                    }, 300);
                   },
                   hidden: function(el) {
                     lemon.buttonTgl(thiz);

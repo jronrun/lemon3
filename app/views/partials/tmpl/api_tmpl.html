@@ -229,6 +229,25 @@
     </button>
 </script>
 
+<script type="text/html" id="api_doc_tmpl">
+  <div class="card" style="border:0px; margin-top: -70px;">
+      <div class="card-block">
+          <button type="button" class="close" id="doc_close" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+          <span class="text-muted">API Document - <span class="label label-info"> <%= api.name %> </span></span>
+          <% if (api.desc && api.desc.length > 0) { %>
+          <br/><br/>
+          <p class="font-italic text-muted" style="font-size: 80%"> -- <%= api.desc %> </p>
+          <% } %>
+          <br/>
+          <%= highlight(api.request_doc, 'Request') %>
+          <br/>
+          <% if (!lemon.isBlank(api.response || {})) { %>
+          <%= highlight(api.response_doc, 'Response') %>
+          <% } %>
+      </div>
+  </div>
+</script>
+
 <div id="dd_api_exchange" style="display: none;"> </div>
 
 {{!--

@@ -386,6 +386,23 @@ lemon.register({
   tabEvent: function(selector, options) {
     handleTab[selector] = options || {};
   },
+  tabEventOnce: function(tabBodyId, events) {
+    events = events || {};
+    lemon.tabEvent(tabBodyId, {
+      show: function(current, previous) {
+        lemon.isFunc(events.show) && events.show(tabBodyId, current, previous);
+      },
+      shown: function(current, previous) {
+        lemon.isFunc(events.shown) && events.shown(tabBodyId, current, previous);
+      },
+      hide: function(current, soonToBeActive) {
+        lemon.isFunc(events.hide) && events.hide(tabBodyId, current, soonToBeActive);
+      },
+      hidden: function(current, soonToBeActive) {
+        lemon.isFunc(events.hidden) && events.hidden(tabBodyId, current, soonToBeActive);
+      }
+    });
+  },
   tabShow: function(selector) {
     $(selector).tab('show');
   },

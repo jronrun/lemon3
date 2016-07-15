@@ -168,7 +168,7 @@ var apis = {
                       width: viewport.w * 0.5,
                       'max-width': viewport.w * 0.5,
                       'max-height': viewport.h
-                    }).addClass('borderinfo');
+                    });
                   }
                 });
               }
@@ -962,6 +962,8 @@ var mapi = {
 
   requ: null,
   resp: null,
+
+  docPopover: null,
   setCur: function(env, serv, envGroup, apiGroup, api) {
     var cur = {};
     if (env) {
@@ -1031,13 +1033,89 @@ var mapi = {
       });
     }
 
-    lemon.popover('#btn-doc', {
-      title: 'API Document',
-      placement: 'right',
-      content: function() {
-        return '';
-      }
-    });
+    if (lemon.isMediumUpView()) {
+      $('#btn-doc').click(function () {
+        if (!mapi.requ.isJson()) {
+          return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
+        }
+
+        var choosed = current();
+        if (!choosed.serv) {
+          return lemon.msg('Please choose an Environment first.');
+        }
+
+        var thiz = this;
+        if (lemon.buttonTgl(thiz)) {
+          lemon.progress(mapi.requToolId);
+
+          var data = {
+            serv: choosed.serv.id,
+            requ: mapi.requ.json()
+          };
+
+          if (choosed.api) {
+            lemon.extend(data, {
+              api: choosed.api.id
+            });
+          }
+
+          $.post('/api/define', { params: data }).done(function (resp) {
+            if (0 == resp.code) {
+              var rdata = lemon.deepDec(resp.result);
+              if (rdata.item) {
+                mapi.docPopover = lemon.popover('#btn-doc', {
+                  title: 'API Document',
+                  placement: 'right',
+                  trigger: 'manual',
+                  content: function() {
+                    var html = [
+                      apis.getHighlightDoc(rdata.item.request_doc, 'Request')
+                    ];
+                    if (!lemon.isBlank(rdata.item.response || {})) {
+                      html.push(apis.getHighlightDoc(rdata.item.response_doc, 'Response'));
+                    }
+                    return html.join('');
+                  }
+                }, {
+                  shown: function(el) {
+                    var offset = $(thiz).offset(), addW = $(thiz).width();
+                    var viewport = {
+                      w: $(window).width(),
+                      h: $(window).height()
+                    };
+
+                    $(el).css({
+                      width: viewport.w - (offset.left + addW),
+                      'max-width': viewport.w - (offset.left + addW),
+                      height: viewport.h,
+                      'max-height': viewport.h * 0.9
+                    });
+                  },
+                  hidden: function(el) {
+                    lemon.buttonTgl(thiz);
+                  }
+                });
+                mapi.docPopover.show();
+              } else {
+                lemon.buttonTgl(thiz);
+                lemon.msg('There is none document defined.');
+              }
+            } else {
+              lemon.buttonTgl(thiz);
+              lemon.msg(resp.msg);
+            }
+
+            lemon.progressEnd(mapi.requToolId);
+          });
+        } else {
+          if (mapi.docPopover) {
+            mapi.docPopover.dispose();
+            mapi.docPopover = null;
+          }
+        }
+
+      });
+    }
 
     $('#btn-tgl-form').click(function () {
       if (!mapi.requ.isJson()) {

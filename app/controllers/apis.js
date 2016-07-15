@@ -48,6 +48,118 @@ router.post(index.request.do, function (req, res, next) {
   );
 });
 
+function getRespAPI(api) {
+  return {
+    id: api.id,
+    name: api.name,
+    desc: api.desc,
+    request: api.request,
+    response: api.response,
+    request_doc: api.request_doc,
+    response_doc: api.response_doc
+  };
+}
+
+/**
+ * API define { serv: 1, requ: {}, api: 1}
+ */
+router.post(index.define.do, function (req, res, next) {
+  var defineNone = answer.succ(crypto.compress({ item: null }));
+  if (req.anonymous) {
+    return res.json(defineNone);
+  }
+
+  var params = req.body.params;
+  if (!params.serv || !params.requ) {
+    return res.json(defineNone);
+  }
+
+  async.waterfall([
+    function (callback) {
+      Server.find({id: parseInt(params.serv)}).limit(1).next(function(err, serv) {
+        if (err) {
+          return res.json(answer.fail(err.message));
+        }
+
+        if (!serv) {
+          return res.json(defineNone);
+        }
+
+        var target = {
+          serv: serv,
+          requ: params.requ
+        };
+        callback(null, target);
+      });
+    },
+
+    function(target, callback) {
+      if (params.api) {
+        Interface.find({id: parseInt(params.api)}).limit(1).next(function(err, api) {
+          if (api) {
+            target.api = api;
+            callback(null, target);
+          } else {
+            callback(null, target);
+          }
+        });
+      } else {
+        callback(null, target);
+      }
+    },
+
+    function(target, callback) {
+      var servRequ = target.serv.request;
+      //Single interface
+      if (1 == servRequ.type) {
+        if (!target.api) {
+          return res.json(defineNone);
+        } else {
+          callback(null, answer.succ({ item: getRespAPI(target.api) }));
+        }
+      }
+      //Multi-interface
+      else if (2 == servRequ.type) {
+        //choose & editor match
+        if (target.api && target.requ
+          && (_.get(target.requ, servRequ.interf_prop) == _.get(target.api.request, servRequ.interf_prop))) {
+          callback(null, answer.succ({ item: getRespAPI(target.api) }));
+        } else {
+          var cmdFromRequ = _.get(target.requ, servRequ.interf_prop);
+          //editor
+          if (cmdFromRequ && cmdFromRequ.length > 0) {
+            Interface.find({name: cmdFromRequ}).limit(1).next(function(err, api) {
+              //editor
+              if (api) {
+                callback(null, answer.succ({ item: getRespAPI(api) }));
+              }
+              //choose
+              else if (target.api) {
+                callback(null, answer.succ({ item: getRespAPI(target.api) }));
+              }
+              //none match
+              else {
+                return res.json(defineNone);
+              }
+            });
+          }
+          //choose
+          else if (target.api) {
+            callback(null, answer.succ({ item: getRespAPI(target.api) }));
+          }
+          //none match
+          else {
+            return res.json(defineNone);
+          }
+        }
+      }
+    }
+  ], function(err, answer) {
+    answer.result = crypto.compress(answer.result);
+    return res.json(answer);
+  });
+});
+
 /**
  * Fill History Response
  */
@@ -399,17 +511,7 @@ router.post(index.interfaces.do, function (req, res, next) {
 
       _.each(result.interf, function (interf) {
         if (interf && groupId == interf.group_id) {
-          var aInterf = {
-            id: interf.id,
-            name: interf.name,
-            desc: interf.desc,
-            request: interf.request,
-            response: interf.response,
-            request_doc: interf.request_doc,
-            response_doc: interf.response_doc
-          };
-
-          aGroup.interfs.push(aInterf);
+          aGroup.interfs.push(getRespAPI(interf));
         }
       });
 

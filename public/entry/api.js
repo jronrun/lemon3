@@ -664,14 +664,16 @@ var qry = {
           'overflow-y': 'scroll'
         });
 
-        lemon.disable(mapi.navbarIds);
+        lemon.disable(mapi.navbarId + ' [navel="1"]');
+        $(mapi.navbarId + ' [navel="2"]').addClass('disabled');
       },
       shown: function(current, previous) {
         qry.openSearch(qry.searchType);
       },
       hidden: function(current, soonToBeActive) {
         qry.searchType = 0;
-        lemon.enable(mapi.navbarIds);
+        lemon.enable(mapi.navbarId + ' [navel="1"]');
+        $(mapi.navbarId + ' [navel="2"]').removeClass('disabled');
       }
     });
   },
@@ -946,7 +948,6 @@ var qry = {
 
 var mapi = {
   navbarId: '#navbar-layout',
-  navbarIds: '#navbar-layout [navel="1"]',
   gridId: '#grid-layout',
   apiLayoutId: '#api-layout',
 

@@ -53,7 +53,8 @@ var resource = [
           {id: 500043, name: 'query', desc: 'History Query', method: M.POST, protect: false}
         ]
       },
-      {id: 50005, name: 'define', desc: 'API define', method: M.POST, protect: false}
+      {id: 50005, name: 'define', desc: 'API define', method: M.POST, protect: false},
+      {id: 50006, name: 'comment', desc: 'API comment', method: M.POST, protect: false}
     ]
   },
 

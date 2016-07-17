@@ -1166,10 +1166,57 @@ var mapi = {
 
     });
 
+    $('#btn-tgl-comment').click(function () {
+      if (!mapi.requ.isJson()) {
+        return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
+      }
+
+      var choosed = current();
+      if (!choosed.serv) {
+        return lemon.msg('Please choose an Environment first.');
+      }
+
+      var thiz = this;
+
+      //comment
+      if (lemon.buttonTgl(this)) {
+        lemon.progress(mapi.requToolId);
+        var data = {
+          serv: choosed.serv.id,
+          requ: mapi.requ.json()
+        };
+
+        if (choosed.api) {
+          lemon.extend(data, {
+            api: choosed.api.id
+          });
+        }
+
+        $.post('/api/comment', { params: data }).done(function (resp) {
+          if (0 == resp.code) {
+            var rdata = lemon.dec(resp.result);
+            if (rdata && rdata.length > 0) {
+              mapi.requ.val(rdata);
+            } else {
+              lemon.buttonTgl(thiz);
+            }
+          } else {
+            lemon.msg(resp.msg);
+            lemon.buttonTgl(thiz);
+          }
+
+          lemon.progressEnd(mapi.requToolId);
+        });
+      }
+      //json
+      else {
+        mapi.requ.json(mapi.requ.json());
+      }
+    });
+
     $('#btn-tgl-form').click(function () {
       if (!mapi.requ.isJson()) {
-        lemon.msg('The Request Data is not a Valid JSON or JSON5.');
-        return;
+        return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
       }
 
       //-> form

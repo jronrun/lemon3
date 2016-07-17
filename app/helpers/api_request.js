@@ -10,12 +10,24 @@ var log = log_from('api_request'),
   Interface = app_require('models/api/interf'),
   History = app_require('models/api/history');
 
+function getRespAPI(api) {
+  return {
+    id: api.id,
+    name: api.name,
+    desc: api.desc,
+    request: api.request,
+    response: api.response,
+    request_doc: api.request_doc,
+    response_doc: api.response_doc
+  };
+}
+
 module.exports = function(commOptions) {
   var permission = 'There is no authority for %s';
   commOptions = _.extend({}, commOptions || {});
 
   var apiRequest = {
-
+    getRespAPI: getRespAPI,
     request: function(options, resultCall, usr, requestOptions) {
       options = _.extend({
         envId: null,
@@ -347,6 +359,111 @@ module.exports = function(commOptions) {
           items: result.items,
           hasNext: result.page.hasNext
         }));
+      });
+    },
+
+    /**
+     *
+     * @param params   { serv: 1, requ: {}, api: 1}
+     * @param resultCall
+     * @returns {*}
+       */
+    apiDefine: function(params, resultCall, notUseChooseIfRequNoDefine) {
+      var defineNone = answer.succ({ item: null });
+      if (!params.serv || !params.requ) {
+        return resultCall(defineNone);
+      }
+
+      async.waterfall([
+        function (callback) {
+          Server.find({id: parseInt(params.serv)}).limit(1).next(function(err, serv) {
+            if (err) {
+              return resultCall(answer.fail(err.message));
+            }
+
+            if (!serv) {
+              return resultCall(defineNone);
+            }
+
+            var target = {
+              serv: serv,
+              requ: params.requ
+            };
+            callback(null, target);
+          });
+        },
+
+        function(target, callback) {
+          if (params.api) {
+            Interface.find({id: parseInt(params.api)}).limit(1).next(function(err, api) {
+              if (api) {
+                target.api = api;
+                callback(null, target);
+              } else {
+                callback(null, target);
+              }
+            });
+          } else {
+            callback(null, target);
+          }
+        },
+
+        function(target, callback) {
+          var servRequ = target.serv.request;
+          //Single interface
+          if (1 == servRequ.type) {
+            if (!target.api) {
+              return resultCall(defineNone);
+            } else {
+              callback(null, answer.succ({ item: getRespAPI(target.api) }));
+            }
+          }
+          //Multi-interface
+          else if (2 == servRequ.type) {
+            //choose & editor match
+            if (target.api && target.requ
+              && (_.get(target.requ, servRequ.interf_prop) == _.get(target.api.request, servRequ.interf_prop))) {
+              callback(null, answer.succ({ item: getRespAPI(target.api) }));
+            } else {
+              var cmdFromRequ = _.get(target.requ, servRequ.interf_prop);
+              //editor
+              if (cmdFromRequ && cmdFromRequ.length > 0) {
+                Interface.find({name: cmdFromRequ}).limit(1).next(function(err, api) {
+                  //editor
+                  if (api) {
+                    callback(null, answer.succ({ item: getRespAPI(api) }));
+                  }
+                  //choose
+                  else if (target.api) {
+                    if (notUseChooseIfRequNoDefine) {
+                      return resultCall(defineNone);
+                    } else {
+                      callback(null, answer.succ({ item: getRespAPI(target.api) }));
+                    }
+                  }
+                  //none match
+                  else {
+                    return resultCall(defineNone);
+                  }
+                });
+              }
+              //choose
+              else if (target.api) {
+                if (notUseChooseIfRequNoDefine) {
+                  return resultCall(defineNone);
+                } else {
+                  callback(null, answer.succ({ item: getRespAPI(target.api) }));
+                }
+              }
+              //none match
+              else {
+                return resultCall(defineNone);
+              }
+            }
+          }
+        }
+      ], function(err, answer) {
+        return resultCall(answer);
       });
     }
   };

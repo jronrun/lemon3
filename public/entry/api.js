@@ -420,7 +420,7 @@ var requs = {
       }
 
       if (!mapi.requ.isJson()) {
-        return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
+        return lemon.msg('The Request Data is not a Valid JSON.');
       }
 
       if (lemon.isDisable(requs.id)) {
@@ -1101,7 +1101,7 @@ var mapi = {
 
     $('#btn-doc').click(function () {
       if (!mapi.requ.isJson()) {
-        return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
+        return lemon.msg('The Request Data is not a Valid JSON.');
       }
 
       var choosed = current();
@@ -1168,7 +1168,7 @@ var mapi = {
 
     $('#btn-tgl-comment').click(function () {
       if (!mapi.requ.isJson()) {
-        return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
+        return lemon.msg('The Request Data is not a Valid JSON.');
       }
 
       var choosed = current();
@@ -1216,7 +1216,7 @@ var mapi = {
 
     $('#btn-tgl-form').click(function () {
       if (!mapi.requ.isJson()) {
-        return lemon.msg('The Request Data is not a Valid JSON or JSON5.');
+        return lemon.msg('The Request Data is not a Valid JSON.');
       }
 
       //-> form

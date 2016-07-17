@@ -93,7 +93,7 @@ var editor = {
       } else {
         if ('required' == required || '' != val) {
           isValidJSON5 = false;
-          msg.warn(name + ' is not valid JSON5.', '#item-card');
+          msg.warn(name + ' is not valid JSON.', '#item-card');
         }
       }
     });

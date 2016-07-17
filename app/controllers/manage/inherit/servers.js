@@ -267,7 +267,7 @@ module.exports = function (router, index, root) {
           try {
             item.request.add_params = json5s.parse(dec);
           } catch(e) {
-            res.json(answer.fail('Additional Parameter is not a valid JSON5'));
+            res.json(answer.fail('Additional Parameter is not a valid JSON'));
             return generic.BREAK;
           }
         } else {
@@ -318,7 +318,7 @@ module.exports = function (router, index, root) {
           try {
             item.request.add_params = json5s.parse(dec);
           } catch(e) {
-            res.json(answer.fail('Additional Parameter is not a valid JSON5'));
+            res.json(answer.fail('Additional Parameter is not a valid JSON'));
             return generic.BREAK;
           }
         } else {

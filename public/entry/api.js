@@ -615,7 +615,10 @@ var qry = {
         var advId = '#do_adv_search', advEnvId = '#adv_env_id', advGroupId = '#adv_group_id';
         if ('1' != $(advId).attr('clicked')) {
           qry.advMirror = mapi.mirror('#adv_mirror', false, {
-            gutters: []
+            gutters: [],
+            cust: {
+              escKey: false
+            }
           });
           qry.advMirror.val(lemon.dec($(advId).data('advinit')));
 

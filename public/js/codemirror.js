@@ -170,6 +170,11 @@ var mirror = function (elId, options, events) {
     'fullscreen'
   ];
 
+  var custOptions = lemon.extend({
+    escKey: true
+  }, options.cust || {});
+  delete options.cust;
+
   var rich = CodeMirror.fromTextArea(lemon.query(lemon.startIf(elId, '#')), lemon.extend({
       lineNumbers: false,
       matchBrackets: true,
@@ -214,11 +219,13 @@ var mirror = function (elId, options, events) {
     }
   });
 
-  aHelp.mapkey({
-    "Esc": function (cm) {
-      aHelp.fullscreenTgl();
-    }
-  });
+  if (custOptions.escKey) {
+    aHelp.mapkey({
+      "Esc": function (cm) {
+        aHelp.fullscreenTgl();
+      }
+    });
+  }
 
   return aHelp;
 };

@@ -90,7 +90,7 @@ router.post(index.viewurl.do, function (req, res, next) {
   try {
     requ = convertData(json5s.parse(requ));
   } catch (e) {
-    return resultCall(answer.fail('invalid request data: ' + e.message));
+    return res.json(answer.fail('invalid request data: ' + e.message));
   }
 
   if (req.anonymous) {

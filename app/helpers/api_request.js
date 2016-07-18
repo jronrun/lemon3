@@ -153,8 +153,7 @@ module.exports = function(commOptions) {
           if (1 == requestOptions.opt) {
             _.extend(theResp, {
               path: target.serv.url,
-              data: theParam,
-              param_name: servRequ.param_name
+              data: theParam
             });
 
             callback(null, target, answer.succ(theResp));

@@ -1250,6 +1250,51 @@ var mapi = {
         });
       }
     });
+
+    $('#btn-show-url').click(function () {
+      if (lemon.buttonTgl(this)) {
+        var choosed = current();
+        if (!choosed.env || !choosed.envGroup || !choosed.serv) {
+          return lemon.msg('Please choose an Environment first.');
+        }
+
+        var choosed = current(), data = {
+          env: choosed.env.id,
+          group: choosed.envGroup.id,
+          serv: choosed.serv.id
+        };
+
+        lemon.progress(mapi.requToolId);
+        var theAPI = {};
+        if (mapi.requ.isJson()) {
+          theAPI = mapi.requ.json();
+        }
+
+        lemon.extend(data, {
+          requ: lemon.enc(theAPI)
+        });
+
+        $.post('/api/viewurl', data).done(function (resp) {
+          if (0 == resp.code) {
+            var rdata = lemon.deepDec(resp.result);
+
+            lemon.tabEventOnce('#tab-requ-tab3', {
+              shown: function(elId) {
+                var aURL = lemon.format('{0}?{1}', rdata.path, $.param(rdata.data));
+                $(elId).html(aURL);
+              }
+            });
+            lemon.tabShow('#tab-tri-requ-tab3');
+          } else {
+            lemon.msg(resp.msg);
+          }
+
+          lemon.progressEnd(mapi.requToolId);
+        });
+      } else {
+        lemon.tabShow('#tab-tri-mirror');
+      }
+    });
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);

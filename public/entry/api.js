@@ -1280,8 +1280,42 @@ var mapi = {
 
             lemon.tabEventOnce('#tab-requ-tab3', {
               shown: function(elId) {
-                var aURL = lemon.format('{0}?{1}', rdata.path, $.param(rdata.data));
-                $(elId).html(aURL);
+                var copyEl = '#request_view_url',
+                  aURL = lemon.format('{0}?{1}', rdata.path, decodeURIComponent($.param(rdata.data)));
+                $(elId).html(lemon.tmpl($('#api_view_url_tmpl').html(), {
+                  aURL: aURL
+                }));
+
+                $('#tgl_view_url').click(function () {
+                  if (lemon.buttonTgl(this)) {
+                    $(copyEl).val(lemon.format('{0}?{1}', rdata.path, $.param(rdata.data)));
+                  } else {
+                    $(copyEl).val(aURL);
+                  }
+                });
+
+                $(copyEl).focus(function() {
+                  var $this = $(this); $this.select();
+
+                  // Work around Chrome's little problem
+                  $this.mouseup(function() {
+                    // Prevent further mouseup intervention
+                    $this.unbind("mouseup");
+                    return false;
+                  });
+                });
+
+                if (lemon.isSmallDownView()) {
+                  $(copyEl).css({
+                    width: $(mapi.requCardId).width() * 0.8,
+                    height: $(mapi.requCardId).height() * 0.6
+                  });
+                } else {
+                  $(copyEl).css({
+                    width: $(mapi.requCardId).width() * 0.85,
+                    height: $(mapi.requCardId).height() * 0.75
+                  });
+                }
               }
             });
             lemon.tabShow('#tab-tri-requ-tab3');

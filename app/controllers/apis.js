@@ -86,8 +86,18 @@ router.post(index.comment.do, function (req, res, next) {
  * API View URL
  */
 router.post(index.viewurl.do, function (req, res, next) {
+  var requ = crypto.decompress(req.body.requ);
+  try {
+    requ = convertData(json5s.parse(requ));
+  } catch (e) {
+    return resultCall(answer.fail('invalid request data: ' + e.message));
+  }
+
   if (req.anonymous) {
-    return res.json(answer.resp(401));
+    return res.json(answer.succ(crypto.compress({
+      path: '',
+      data: requ
+    })));
   }
 
   requs.request({

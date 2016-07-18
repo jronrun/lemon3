@@ -222,7 +222,7 @@
 </script>
 
 <script type="text/html" id="adv_footer_tmpl">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>
     <button type="button" id="do_adv_search" class="btn btn-primary icondh"
             data-advinit="PQKhAIEEBMDcEMB2BjApuAyq+AnZALcACgAkBLAZwBcB7HATwEpwRgAoAbzYEhhgBtAPIAHKmRqJ4AGwC64AEqoAjgFdU1cKtQNwyCdDLIxEnjmVrqALnBdu3HgF8ANDz5DR4ybIXrhEiuhaOnqIBkaepr7+qNa29tzOrgIixl5yWDiw2uCSALaoPHkx4ADkJWwOQA">
         <em class="fa fa-search" title="Search"></em> Search
@@ -245,6 +245,15 @@
           <%= highlight(api.response_doc, 'Response') %>
           <% } %>
       </div>
+  </div>
+</script>
+
+<script type="text/html" id="api_view_url_tmpl">
+  <div class="card card-block" style="border: 0px;">
+      <button type="button" class="btn btn-sm btn-secondary borderinfo pull-right" id="tgl_view_url">
+          <small class="text-muted pull-right icondh"><em class="fa fa-edit"></em>&nbsp;&nbsp;Request URL</small>
+      </button>
+      <textarea id="request_view_url" style="border:0px solid #ffffff;"><%= aURL %></textarea>
   </div>
 </script>
 

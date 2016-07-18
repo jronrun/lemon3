@@ -83,6 +83,28 @@ router.post(index.comment.do, function (req, res, next) {
 });
 
 /**
+ * API View URL
+ */
+router.post(index.viewurl.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  requs.request({
+      envId: req.body.env,
+      groupId: req.body.group,
+      servId: req.body.serv,
+      requ: req.body.requ
+    }, function(answer) {
+      answer.result = crypto.compress(answer.result);
+      return res.json(answer);
+    }, req.user, {
+      opt: 1
+    }
+  );
+});
+
+/**
  * Fill History Response
  */
 router.post(index.history.do, function (req, res, next) {

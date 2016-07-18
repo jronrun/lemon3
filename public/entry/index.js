@@ -131,6 +131,23 @@ lemon.register({
   enableEl: function(selector) {
     progressJs(selector).end();
   },
+  disableRightclick: function(selector) {
+    //forbiden right click context menu
+    $(selector).bind('contextmenu', function() {
+      return false;
+    });
+  },
+  rightclick: function(selector, callback) {
+    lemon.disableRightclick(selector);
+    $(selector).mousedown(function (event) {
+      //1 left 2 middle 3 right
+      if (event.which == 3) {
+        event.stopPropagation();
+        event.preventDefault();
+        lemon.isFunc(callback) && callback(selector, event)
+      }
+    });
+  },
   progress: function(options) {
     if (lemon.isString(options)) {
       options = {

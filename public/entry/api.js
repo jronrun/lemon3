@@ -1329,6 +1329,43 @@ var mapi = {
         lemon.tabShow('#tab-tri-mirror');
       }
     });
+
+    var fromUrlModal = lemon.modal({
+      title: 'Set Join Selection Separator',
+      id: 'from_url_modal',
+      cache: true,
+      body: [
+        '<div class="input-group input-group-lg">',
+        '<input type="text" id="input_sep" class="form-control" style="border: 0px;" placeholder="Separator default is \',\'">',
+        '</div>'
+      ].join('')
+    }, {
+      hidden: function() {
+        mapi.joinsep = $('#input_sep').val();
+      }
+    });
+
+    lemon.rightclick('#btn-from-url', function() {
+      lemon.delay(function() {
+        fromUrlModal.toggle();
+      }, 100);
+    });
+
+    $('#btn-from-url').click(function() {
+      if (mapi.requ.doc().somethingSelected()) {
+        var sel = mapi.requ.doc().getSelection();
+        if (!lemon.isBlank(sel)) {
+          var join = [], tmp = null;
+          lemon.each(sel.split(/\s/), function(v, idx) {
+            if (!lemon.isBlank(tmp = lemon.trim(v))) {
+              join.push(tmp);
+            }
+          });
+        }
+        mapi.requ.doc().replaceSelection(join.join(mapi.joinsep || ','));
+        return false;
+      }
+    });
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);

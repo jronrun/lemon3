@@ -72,6 +72,9 @@ var helper = function(cm, events) {
   events = events || {};
   var tools = {
     target: cm,
+    doc: function() {
+      return cm.doc;
+    },
     mapkey: function (keymap) {
       cm.setOption("extraKeys", lemon.extend(cm.getOption('extraKeys'), keymap || {}));
     },

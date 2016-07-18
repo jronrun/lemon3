@@ -107,6 +107,9 @@
                                         <div class="form-group" id="requ-tool">
                                             <button class="btn btn-sm btn-secondary-outline" style="border: 0px;" type="button"><span class="text-muted">Request</span> </button>
                                             <div class="btn-group btn-group-sm pull-xs-right" role="group">
+                                                <button type="button" id="btn-show-url" class="btn btn-secondary-outline icondh" style="border: 0px;">
+                                                    <em class="fa fa-eye" title="Show Request URL"></em>
+                                                </button>
                                                 <button type="button" id="btn-tgl-comment" class="btn btn-secondary-outline icondh" style="border: 0px;">
                                                     <em class="fa fa-comment" title="Toggle Comment for API"></em>
                                                 </button>
@@ -121,10 +124,13 @@
                                         <div>
                                             <ul class="nav nav-tabs" style="display: none;" role="tablist">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" id="tab-tri-mirror" data-toggle="tab" href="#tab-mirror" role="tab">MIRROR</a>
+                                                    <a class="nav-link active" id="tab-tri-mirror" data-toggle="tab" data-target="#tab-mirror" href="#tab-mirror" role="tab">MIRROR</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="tab-tri-form" data-toggle="tab" href="#tab-form" role="tab">FORM</a>
+                                                    <a class="nav-link" id="tab-tri-form" data-toggle="tab" data-target="#tab-form" href="#tab-form" role="tab">FORM</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="tab-tri-requ-tab3" data-toggle="tab" data-target="#tab-requ-tab3" href="#tab-requ-tab3" role="tab">REQU TAB3</a>
                                                 </li>
                                             </ul>
 
@@ -133,6 +139,8 @@
                                                     <textarea class="form-control" rows="17" style="border:0px;" id="request"></textarea>
                                                 </div>
                                                 <div class="tab-pane" id="tab-form" role="tabpanel">
+                                                </div>
+                                                <div class="tab-pane" id="tab-requ-tab3" role="tabpanel">
                                                 </div>
                                             </div>
                                         </div>

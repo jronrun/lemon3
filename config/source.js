@@ -62,7 +62,8 @@ var resource = [
   {
     id: 60, name: 'general', desc: 'General', protect: false, children: [
       {id: 60001, name: 'form', desc: 'Form', method: M.POST, protect: false},
-      {id: 60002, name: 'convert', desc: 'Data Convert', method: M.POST, protect: false}
+      {id: 60002, name: 'convert', desc: 'Data Convert', method: M.POST, protect: false},
+      {id: 60003, name: 'convertqs', desc: 'Convert Query String As JSON', method: M.POST, protect: false}
     ]
   },
 

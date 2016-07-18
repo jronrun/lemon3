@@ -3,6 +3,7 @@
 var express = require('express'),
   router = express.Router(),
   log = log_from('general'),
+  qs = require('qs'),
   forms = app_require('helpers/forms'),
   index = routes.general;
 
@@ -17,6 +18,47 @@ router.get(index.do, function (req, res, next) {
   res.render(index);
 });
 
+/**
+ * Convert Query String As JSON
+ * https://github.com/ljharb/qs
+ */
+router.post(index.convertqs.do, function (req, res, next) {
+  var target = crypto.decompress(req.body.data);
+
+  var prefix = '';
+  if (target && target.length > 0 && isURL(target)) {
+    var urlcom = target.split('?');
+    if (urlcom.length > 1) {
+      prefix = urlcom[0];
+      target = urlcom[1];
+    } else {
+      prefix = urlcom[0];
+      target = '';
+    }
+  }
+
+  var aResult = [], parsed = {};
+  if (target && target.length > 0) {
+    parsed = qs.parse(target, {
+      delimiter: /[;,&]/,
+      allowDots: false,
+      plainObjects: true,
+      depth: 100,
+      arrayLimit: 1000,
+      parseArrays: true,
+      parameterLimit: 10000
+    });
+  }
+
+  if (prefix.length > 0) {
+    aResult.push('// ' + prefix);
+  }
+  aResult.push(JSON.stringify(parsed));
+
+  return res.json(answer.succ({
+    parsed: aResult.join('\n')
+  }))
+});
 
 /**
  * General data transfer {"a.b.c": 3} -> {a: {b: {c: 3}}}

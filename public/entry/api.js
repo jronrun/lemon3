@@ -1365,7 +1365,30 @@ var mapi = {
         mapi.requ.doc().replaceSelection(join.join(mapi.joinsep || ','));
         return false;
       }
+
+      if (mapi.requ.isJson()) {
+        mapi.requ.format();
+        return false;
+      }
+
+      lemon.progress(mapi.requToolId);
+      $.post('/general/convertqs', {
+        data: lemon.enc(mapi.requ.val())
+      }).done(function (resp) {
+        if (0 == resp.code) {
+          var rdata = lemon.deepDec(resp.result);
+          mapi.requ.val(rdata.parsed);
+          if (mapi.requ.isJson()) {
+            mapi.requ.format();
+          }
+        } else {
+          lemon.msg(resp.msg);
+        }
+
+        lemon.progressEnd(mapi.requToolId);
+      });
     });
+
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);

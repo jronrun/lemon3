@@ -4,6 +4,8 @@ var Interface = app_require('models/api/interf'),
   Group = app_require('models/api/group'),
   log = log_from('interfs');
 
+var MUTATION = 2;
+
 module.exports = function (router, index, root) {
 
   var generic = app_require('helpers/generic')(Interface, index, {
@@ -117,7 +119,7 @@ module.exports = function (router, index, root) {
       });
 
       generic.editor({
-        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc', 'group_order'],
+        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc', 'group_order', 'mutation'],
         modelName: 'interface',
         defineElement: {
           owner: {
@@ -148,14 +150,15 @@ module.exports = function (router, index, root) {
     });
   });
 
-  /**
-   * Interface create
-   */
-  router.post(index.editor.do, function (req, res, next) {
-    generic.create({
+  function createAPI(options, req, res, next) {
+    var createOptions = {
       sequenceId: 1,
-      checkExistsField: 'name',
       paramHandle: function(item) {
+        if (MUTATION == options.mutation) {
+          item.mutation_host = options.mutation_host
+        }
+
+        item.mutation = options.mutation;
         item.owner = parseInt(item.owner);
         item.group_id = parseInt(item.group_id);
         item.create_by = {
@@ -192,6 +195,21 @@ module.exports = function (router, index, root) {
           callback(null, item);
         });
       }
+    };
+
+    if (MUTATION != options.mutation) {
+      createOptions.checkExistsField = 'name';
+    }
+
+    generic.create(createOptions, req, res, next);
+  }
+
+  /**
+   * Interface create
+   */
+  router.post(index.editor.do, function (req, res, next) {
+    createAPI({
+      mutation: 1
     }, req, res, next);
   });
 
@@ -202,6 +220,33 @@ module.exports = function (router, index, root) {
     generic.update({
       checkExistsField: 'name',
       paramHandle: function(item) {
+        item.mutation = parseInt(item.mutation);
+        if (MUTATION == item.mutation) {
+          //new mutation
+          if ('1' != item.mutation_update) {
+            Interface.findById(req.params.id, function (err, aResult) {
+              if (err) {
+                return res.json(answer.fail(err.message));
+              }
+
+              if (!aResult) {
+                return res.json(answer.fail('mutation host not exists.'));
+              }
+
+              if (item.name != aResult.name) {
+                return res.json(answer.fail('mutation interface name must equal host interface name: ' + aResult.name));
+              }
+
+              createAPI({
+                mutation: MUTATION,
+                mutation_host: aResult.id
+              }, req, res, next);
+            });
+
+            return generic.BREAK;
+          }
+        }
+
         item.owner = parseInt(item.owner);
         item.group_id = parseInt(item.group_id);
         item.create_by = {
@@ -295,6 +340,21 @@ module.exports = function (router, index, root) {
           });
 
           form.afterEl('desc', theGroup);
+
+          if (MUTATION == form.item.mutation) {
+            var mutationEl = form.get('mutation');
+            mutationEl.attrs.disabled = "disabled";
+
+            var nameEl = form.get('name');
+            nameEl.attrs.disabled = "disabled";
+            nameEl.attrs.readonly = "readonly";
+
+            var theUpdateMark = generic.inputEl('mutation_update', 'hidden', {
+              label: '',
+              value: 1
+            });
+            form.afterEl('mutation', theUpdateMark);
+          }
         },
         resultHandle: function(item, respdata) {
           respdata.group_id = item.group_id;

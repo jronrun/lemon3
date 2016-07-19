@@ -1366,6 +1366,13 @@ var mapi = {
         return false;
       }
 
+      try {
+        mapi.requ.json(JSON.parse(mapi.requ.val()));
+        return false;
+      } catch (e) {
+
+      }
+
       if (mapi.requ.isJson()) {
         mapi.requ.format();
         return false;

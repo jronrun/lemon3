@@ -1384,10 +1384,7 @@ var mapi = {
       }).done(function (resp) {
         if (0 == resp.code) {
           var rdata = lemon.deepDec(resp.result);
-          mapi.requ.val(rdata.parsed);
-          if (mapi.requ.isJson()) {
-            mapi.requ.format();
-          }
+          mapi.requ.json(rdata.parsed);
         } else {
           lemon.msg(resp.msg);
         }

@@ -48,6 +48,24 @@ router.post(index.convertqs.do, function (req, res, next) {
       parseArrays: true,
       parameterLimit: 10000
     });
+
+    var parseNest = function(aObj) {
+      _.each(aObj, function (v, k) {
+        if (_.isString(v) && v.indexOf('{') != -1 && v.indexOf('}') != -1) {
+          try {
+            aObj[k] = json5s.parse(v);
+          } catch (e) {
+
+          }
+        }
+
+        if (_.isObject(v) && !_.isArray(v)) {
+          parseNest(v);
+        }
+      });
+    };
+
+    parseNest(parsed);
   }
 
   if (prefix.length > 0) {

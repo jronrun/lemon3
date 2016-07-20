@@ -15,6 +15,7 @@ function getRespAPI(api) {
     id: api.id,
     name: api.name,
     desc: api.desc,
+    mutation: api.mutation,
     request: api.request,
     response: api.response,
     request_doc: api.request_doc,

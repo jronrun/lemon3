@@ -56,7 +56,12 @@
 <script type="text/html" id="dd_api_tmpl">
     <div class="dropdown-item" id="interf_<%= id %>">
         <blockquote class="blockquote" style="font-size: 110%" apig="<%= group.id %>">
-            <p class="m-b-0 linebreak"><%= name %></p>
+            <p class="m-b-0 linebreak icondh">
+                <% if (2 == mutation) { %>
+                    <span class="label label-success">Mutation </span>
+                <% } %>
+                <%= name %>
+            </p>
             <% if (desc.length > 0) { %>
             <footer class="blockquote-footer">
                 <small class="linebreak text-muted"><%= desc %></small>

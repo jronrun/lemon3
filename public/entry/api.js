@@ -72,8 +72,8 @@ var apis = {
   },
 
   doChoose: function(group, api, forceResp) {
-    if (!lemon.isBlank(api.request || {})) {
-      mapi.requ.json(api.request);
+    if (lemon.isJson(api.request || {})) {
+      mapi.requ.json(api.request || {});
     }
 
     if (!lemon.isBlank(api.response || {})) {
@@ -151,9 +151,11 @@ var apis = {
 
               } else {
                 var title = [
-                  '<span class="font-weight-bold">',
+                  '<span class="font-weight-bold text-muted">',
                   interf.name,
-                  '</span><span class="label label-info pull-right">',
+                  '</span>',
+                  (2 == interf.mutation ? '<span class="label label-success pull-right">Mutation </span>' : ''),
+                  '<span class="label label-info pull-right">',
                   group.info.name,
                   '</span>'
                 ].join('');

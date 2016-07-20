@@ -68,7 +68,7 @@ router.post(index.comment.do, function (req, res, next) {
     if (null != aDef) {
       var doc = [
         '/**',
-        ' * API Document - ' + aDef.name,
+        ' * API Document - ' + (2 == aDef.mutation ? 'Mutation of ' : '') + aDef.name,
         ' * ' + aDef.desc || '',
         ' */',
         crypto.decompress(aDef.request_doc)

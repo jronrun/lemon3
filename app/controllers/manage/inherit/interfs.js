@@ -198,7 +198,7 @@ module.exports = function (router, index, root) {
     };
 
     if (MUTATION != options.mutation) {
-      createOptions.checkExistsField = 'name';
+      createOptions.checkExistsField = ['name', 'mutation'];
     }
 
     generic.create(createOptions, req, res, next);
@@ -218,8 +218,8 @@ module.exports = function (router, index, root) {
    */
   router.put(index.retrieve.do, function (req, res, next) {
     generic.update({
-      checkExistsField: 'name',
-      paramHandle: function(item) {
+      checkExistsField: ['name', 'mutation'],
+      paramHandle: function(item, theOptions) {
         item.mutation = parseInt(item.mutation);
         if (MUTATION == item.mutation) {
           //new mutation
@@ -244,6 +244,10 @@ module.exports = function (router, index, root) {
             });
 
             return generic.BREAK;
+          }
+          //update mutation
+          else {
+            theOptions.checkExistsField = false;
           }
         }
 

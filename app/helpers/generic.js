@@ -690,7 +690,7 @@ module.exports = function(model, index, defineForm) {
      *  checkExistsField: '', //check field value exists if not empty, string or array
      *  checkExistsField2: '', //check field value exists if not empty, string or array
      *  resourceUpdate: 0,    //update resource tab, 1 yes
-     *  paramHandle: function(item){}     //param pre handle
+     *  paramHandle: function(item, options){}     //param pre handle
      *  beforeUpdateHandle: function(target, itemObj, callback) {} //before update handle  (waterfall)
      *  afterUpdateHandle: function(target, itemObj, callback) {}   //after update handle  (waterfall)
      * }
@@ -723,7 +723,7 @@ module.exports = function(model, index, defineForm) {
       item.last_modify_time = new Date();
 
       if (_.isFunction(options.paramHandle)) {
-        if (BREAK == options.paramHandle(item)) {
+        if (BREAK == options.paramHandle(item, options)) {
           return;
         }
       }

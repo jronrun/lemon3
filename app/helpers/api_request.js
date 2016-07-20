@@ -248,6 +248,7 @@ module.exports = function(commOptions) {
               if (target.api) {
                 _.extend(history.api, {
                   id: target.api.id,
+                  mutation: target.api.mutation,
                   name: target.api.name,
                   desc: target.api.desc
                 });

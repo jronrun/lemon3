@@ -112,12 +112,23 @@
         <tr>
             <td clickable="<%= batchNo %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="blockquote">
+                    <% if (2 == api.mutation) { %>
+                      <span class="label label-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
+                      <h5 class="invisible"></h5>
+                    <% } %>
                     <%= highlight(api.request_doc, 'Request', {'tgl-apirequ': 'tgl'}) %>
                     <% if ((api.response_doc || '').length > 0) { %>
                       <%= highlight(api.response_doc, 'Response', {'tgl-apiresp': 'tgl'}) %>
                     <% } %>
-                    <footer class="blockquote-footer"> <%= api.name %>
-                        <cite><%= api.desc %></cite>
+                    <footer class="blockquote-footer">
+                        <span class="font-weight-bold"><%= api.name %></span>
+                        <cite style="font-size: 90%">
+                            <% if (2 == api.mutation) { %>
+                                <span class="text-success"><%= api.desc %></span>
+                            <% } else { %>
+                                <%= api.desc %>
+                            <% } %>
+                        </cite>
                     </footer>
                 </blockquote>
             </td>
@@ -177,6 +188,10 @@
 
       <tr>
           <td clickable="<%= batchNo %>" data-his="<%= lemon.enc(his) %>">
+              <% if (2 == his.api.mutation) { %>
+                  <span class="label label-success" style="font-size: 65%;">Mutation of <%= his.api.name %></span>
+                  <h5 class="invisible"></h5>
+              <% } %>
               <blockquote class="blockquote">
                   <%= highlight(his.api.request, 'Request', {'tgl-requ': 'tgl'}) %>
                   <%= highlight(his.api.response, 'Response', {'tgl-resp': 'tgl'}) %>
@@ -184,7 +199,14 @@
                       <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
                   </footer>
                   <footer class="blockquote-footer">
-                      <cite><%= ( his.api.desc || his.api.name || '') %></cite>
+                      <span class="font-weight-bold"><%= his.api.name %></span>
+                      <cite style="font-size: 90%">
+                          <% if (2 == his.api.mutation) { %>
+                          <span class="text-success"><%= his.api.desc %></span>
+                          <% } else { %>
+                          <%= his.api.desc %>
+                          <% } %>
+                      </cite>
                       <code><span class="text-<%= his.env.level %>"><%= his.serv.url %></span></code>
                       <%= lemon.when.default(his.create_time) %>
                   </footer>

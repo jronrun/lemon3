@@ -1043,6 +1043,7 @@ var mapi = {
   mediumUpViewDoc: function(rdata, thiz) {
     var title = [
       '<span class="text-muted">API Document</span>',
+      (2 == rdata.item.mutation ? '<span class="label label-success pull-right">Mutation </span>' : ''),
       '<span class="label label-info pull-right">',
       rdata.item.name,
       '</span>'
@@ -1055,9 +1056,10 @@ var mapi = {
       arrow: false,
       content: function() {
         var html = [
-          '<p class="font-italic text-muted icondh" style="font-size: 90%; margin-top: 5px;">',
+          '<p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">',
           '<em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;',
-          (rdata.item.desc || ''),
+          (2 == rdata.item.mutation ? 'Mutation of ' : '') + rdata.item.name,
+          (rdata.item.desc ? (', ' + rdata.item.desc) : ''),
           '</p>',
           apis.getHighlightDoc(rdata.item.request_doc, 'Request')
         ];

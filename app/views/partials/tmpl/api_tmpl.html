@@ -238,7 +238,10 @@
   <div class="card" style="border:0px; margin-top: -70px;">
       <div class="card-block">
           <button type="button" class="close" id="doc_close" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
-          <span class="text-muted">API Document - <span class="label label-info"> <%= api.name %> </span></span>
+          <span class="text-muted">
+              API Document -
+              <span class="label label-info"> <%= (2 == api.mutation ? 'Mutation of ' : '') %> <%= api.name %> </span>
+          </span>
           <% if (api.desc && api.desc.length > 0) { %>
           <br/><br/>
           <p class="font-italic text-muted" style="font-size: 80%"> -- <%= api.desc %> </p>

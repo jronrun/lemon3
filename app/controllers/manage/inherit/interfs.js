@@ -37,7 +37,18 @@ module.exports = function (router, index, root) {
         },
         {
           title: 'Description',
-          prop: 'desc',
+          prop: function(item) {
+            var descs = [];
+            if (MUTATION == item.mutation) {
+              descs.push(generic.label('Mutation of ' + item.name, 'label-success'));
+            } else {
+              descs.push(generic.label('Define API', 'label-info'));
+            }
+
+            descs.push('<small>' + item.desc + '</small>');
+
+            return descs.join('<br/>');
+          },
           clazz: 'item-col-author'
         },
         {

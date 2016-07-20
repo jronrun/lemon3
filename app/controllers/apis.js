@@ -176,6 +176,7 @@ router.post(index.history.query.do, function (req, res, next) {
         { 'serv.name': likeKey},
         { 'serv.url': likeKey},
         { 'api.name': likeKey},
+        { 'api.desc': likeKey},
         { 'user.ip': likeKey},
         { 'user.name': likeKey}
       ]

@@ -813,11 +813,10 @@ var qry = {
           }));
 
           $('td[clickable="' + batchNo + '"]').on('dblclick', function () {
-            var api = lemon.data(this, 'api');
-            if (api) {
-              api.json = true;
-              apis.doChoose(false, api);
-            }
+            var api = lemon.data(this, 'api'), group = lemon.data(this, 'group');
+            api.json = true;
+            apis.doChoose(group, api);
+            mapi.setCur(null, null, null, group, api);
             $(qry.searchId).click();
           });
 

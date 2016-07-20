@@ -110,7 +110,7 @@
 
       <% lemon.each(group.interfs, function(api) { %>
         <tr>
-            <td clickable="<%= batchNo %>" data-api="<%= lemon.enc(api) %>">
+            <td clickable="<%= batchNo %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="blockquote">
                     <% if (2 == api.mutation) { %>
                       <span class="label label-success" style="font-size: 65%;">Mutation of <%= api.name %></span>

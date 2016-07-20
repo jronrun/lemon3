@@ -154,7 +154,7 @@ module.exports = function(model, index, defineForm) {
      *  searchPreciseField: [],   //not fuzzy query
      *
      *  listName: '',                     //list name
-     *  queryHandle: function(query) {},  //query param pre handle
+     *  queryHandle: function(realQuery, query) {},  //query param pre handle
      *  ownerQuery: 0,                    //is owner query, 1 yes
      *
      *  pageCallback: false,          //model.page parameter callback

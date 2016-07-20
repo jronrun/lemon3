@@ -98,7 +98,20 @@ module.exports = function (router, index, root) {
       generic.list({
         ownerQuery: 1,
         defines: defines,
-        search: search
+        search: search,
+        queryHandle: function(realQuery, query) {
+          if (realQuery.name) {
+            var likeKey = realQuery.name;
+            _.extend(realQuery, {
+              $or:[
+                { name: likeKey},
+                { desc: likeKey}
+              ]
+            });
+
+            delete realQuery.name;
+          }
+        }
       }, req, res, next);
     });
   });

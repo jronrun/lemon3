@@ -452,6 +452,7 @@ router.post(index.interfaces.do, function (req, res, next) {
       Interface.page(query, pn, false, ps, {
         sorts: {
           group_order: 1,
+          name: 1,
           id: -1
         }
       }).then(function (result) {

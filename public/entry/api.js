@@ -680,6 +680,7 @@ var qry = {
         qry.openSearch(qry.searchType);
       },
       hidden: function(current, soonToBeActive) {
+        qry.prevMutation = null;
         qry.searchType = 0;
         lemon.enable(mapi.navbarId + ' [navel="1"]');
         $(mapi.navbarId + ' [navel="2"]').removeClass('disabled');
@@ -757,12 +758,13 @@ var qry = {
           $(qry.partApiId).empty();
           $(qry.partHisId).empty();
 
+          qry.prevMutation = 2;
           qry.searchAPI(searchKey, 1, function() {
             lemon.progressEnd(mapi.navbarId);
             if (qry.apiEnd) {
               qry.addHisBtn();
             }
-          }, 2);
+          }, qry.prevMutation);
         } else {
           lemon.progressEnd(mapi.navbarId);
           qry.scrollPage();
@@ -970,7 +972,7 @@ var qry = {
 
   addHisBtn: function() {
     var mhisId = '#btn_match_his';
-    if (!$(mhisId).length && !$('#s_his_table').length && 0 == qry.searchType) {
+    if (!$(mhisId).length && !$('#s_his_table').length && [0, 5].indexOf(qry.searchType) != -1) {
       var aBtn = [
         '<button type="button" class="btn btn-info btn-lg btn-block" id="btn_match_his">',
         'Show Match Histories',
@@ -985,7 +987,7 @@ var qry = {
           $(mhisId).slideUp(500, function() {
             $(mhisId).remove();
           });
-        });
+        }, qry.prevMutation);
       });
     }
   }

@@ -688,6 +688,7 @@ var qry = {
   },
 
   openSearch: function(searchType) {
+    var searchKey = $(qry.inputId).val();
     switch (searchType) {
       //Define APIs
       case 2:
@@ -697,7 +698,6 @@ var qry = {
         qry.apiEnd = false;
         qry.hisEnd = true;
 
-        var searchKey = $(qry.inputId).val();
         if (qry.prevSearchType != searchType || qry.prevKey != searchKey) {
           qry.prevKey = searchKey;
           $(qry.partApiId).empty();
@@ -741,9 +741,32 @@ var qry = {
 
         $(qry.partApiId).empty();
         $('#btn_match_his').remove();
+        if (qry.prevSearchType != searchType || qry.prevKey != searchKey) {
+          qry.prevKey = searchKey;
+        }
         qry.searchHis(qry.prevKey, 1, function() {
           lemon.progressEnd(mapi.navbarId);
         });
+        break;
+      case 5:
+        qry.apiEnd = false;
+        qry.hisEnd = true;
+
+        if (qry.prevSearchType != searchType || qry.prevKey != searchKey) {
+          qry.prevKey = searchKey;
+          $(qry.partApiId).empty();
+          $(qry.partHisId).empty();
+
+          qry.searchAPI(searchKey, 1, function() {
+            lemon.progressEnd(mapi.navbarId);
+            if (qry.apiEnd) {
+              qry.addHisBtn();
+            }
+          }, 2);
+        } else {
+          lemon.progressEnd(mapi.navbarId);
+          qry.scrollPage();
+        }
         break;
     }
 
@@ -771,7 +794,7 @@ var qry = {
     });
   },
 
-  searchAPI: function(key, page, callback) {
+  searchAPI: function(key, page, callback, mutation) {
     page = page || 1;
     $(qry.partApiId).data('page', page);
     var fp = false;
@@ -779,10 +802,18 @@ var qry = {
       $(qry.partApiId).append(lemon.tmpl($('#api_table_tmpl').html(), {}));
     }
 
-    $.post('/api/interfaces', {
+    var qryData = {
       page: page,
       key: key
-    }, function (resp) {
+    };
+
+    if (mutation) {
+      lemon.extend(qryData, {
+        mutation: mutation
+      });
+    }
+
+    $.post('/api/interfaces', qryData, function (resp) {
       if (0 == resp.code) {
         if (resp.result.items.length > 0) {
           var baseW = Math.min($(window).width(), $(qry.partApiId).width());
@@ -839,7 +870,7 @@ var qry = {
           var pg = lemon.progress(mapi.navbarId);
           qry.searchHis(qry.prevKey, 1, function() {
             pg.end();
-          });
+          }, mutation);
         }
 
       } else {
@@ -850,7 +881,7 @@ var qry = {
     });
   },
 
-  searchHis: function(key, page, callback) {
+  searchHis: function(key, page, callback, mutation) {
     page = page || 1;
     $(qry.partHisId).data('page', page);
 
@@ -867,6 +898,12 @@ var qry = {
       lemon.extend(data, {
         key: key
       });
+
+      if (mutation) {
+        lemon.extend(data, {
+          mutation: mutation
+        });
+      }
     } else {
       lemon.extend(data, {
         query: key

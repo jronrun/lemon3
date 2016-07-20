@@ -166,7 +166,14 @@ router.post(index.history.query.do, function (req, res, next) {
     return res.json(answer.succ(crypto.compress({ items: [] })));
   }
 
-  var query = {}, pn = parseInt(req.body.page || '1'), ps = false, key = req.body.key;
+  var query = {}, pn = parseInt(req.body.page || '1'), ps = false,
+    key = req.body.key, mutation = req.body.mutation;
+  if (mutation) {
+    _.extend(query, {
+      'api.mutation': parseInt(mutation)
+    })
+  }
+
   if (key && key.length > 0) {
     var likeKey = new RegExp(key, 'i'), query = {
       $or:[
@@ -417,7 +424,13 @@ router.post(index.interfaces.do, function (req, res, next) {
       }
 
       //Param Query
-      var key = req.body.key;
+      var key = req.body.key, mutation = req.body.mutation;
+      if (mutation) {
+        _.extend(query, {
+          mutation: parseInt(mutation)
+        });
+      }
+
       if (key && key.length > 0) {
         var likeKey = new RegExp(key, 'i'), paramQry = {
           $or:[

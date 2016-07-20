@@ -25,7 +25,11 @@ var editor = {
     var addition = editor.getVal('#item-addition') || {};
     $('#item-card').find('textarea[codemirror="1"]').each(function () {
       var id = '#' + $(this).attr('id'), name = $(this).attr('name');
-      editor.ctx[name] = mirror(id);
+      editor.ctx[name] = mirror(id, false, {
+        fullscreen: function(isFullscreen) {
+          $('aside, header').toggle(!isFullscreen);
+        }
+      });
 
       var tabId = '#' + $(id).parentsUntil('.tab-content', '[id^="item-sel-"]').attr('id');
       lemon.tabEvent(tabId, {

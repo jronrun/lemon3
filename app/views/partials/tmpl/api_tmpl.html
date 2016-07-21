@@ -112,7 +112,9 @@
           </tr>
         <% } %>
 
-      <% lemon.each(group.interfs, function(api) { %>
+      <% lemon.each(group.interfs, function(api) {
+          var hasResp = (api.response_doc || '').length > 0;
+      %>
         <tr tgl-group="tgl" apigroupc="<%= group.info.id %>">
             <td clickable="<%= batchNo %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="blockquote">
@@ -120,9 +122,15 @@
                       <span class="label label-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
                       <h5 class="invisible"></h5>
                     <% } %>
-                    <%= highlight(api.request_doc, 'Request', {'tgl-apirequ': 'tgl'}) %>
-                    <% if ((api.response_doc || '').length > 0) { %>
-                      <%= highlight(api.response_doc, 'Response', {'tgl-apiresp': 'tgl'}) %>
+                    <%= highlight(api.request_doc, 'Request', {
+                          'tgl-apirequ': 'tgl',
+                          id: ('bapi_' + batchNo + '_1_' + api.id)
+                    }) %>
+                    <% if (hasResp) { %>
+                      <%= highlight(api.response_doc, 'Response', {
+                          'tgl-apiresp': 'tgl',
+                          id: ('bapi_' + batchNo + '_2_' + api.id)
+                      }) %>
                     <% } %>
                     <footer class="blockquote-footer">
                         <% if (2 == api.mutation) { %>
@@ -140,12 +148,24 @@
                 </blockquote>
             </td>
             <td class="hidden-sm-down">
-                <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                    <em class="fa fa-search" title="Search"></em>
+                <% if (hasResp) { %>
+                    <button class="btn btn-secondary btn-sm text-muted icondh"
+                            id="btgl_<%= batchNo %>_3_<%= api.id%>" title="Toggle Request & Response" style="border: 0px;" type="button">
+                    <em class="fa fa-eye"></em>
+                    </button>
+                    <h6 class="invisible"></h6>
+                <% } %>
+                <button class="btn btn-secondary btn-sm text-muted icondh"
+                        id="btgl_<%= batchNo %>_1_<%= api.id%>" title="Toggle Request" style="border: 0px;" type="button">
+                <em class="fa fa-mail-reply"></em>
                 </button>
-                <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                    <em class="fa fa-search" title="Search"></em>
-                </button>
+                <% if (hasResp) { %>
+                    <h6 class="invisible"></h6>
+                    <button class="btn btn-secondary btn-sm text-muted icondh"
+                            id="btgl_<%= batchNo %>_2_<%= api.id%>" title="Toggle Response" style="border: 0px; " type="button">
+                    <em class="fa fa-mail-forward"></em>
+                    </button>
+                <% } %>
             </td>
         </tr>
       <% }); %>

@@ -390,8 +390,24 @@ lemon.register({
     }
     return false;
   },
-  buttonTgl: function(selector) {
-    $(selector).button('toggle');
+  //1 toggle, 2 active, 3 unactive
+  buttonTgl: function(selector, opt) {
+    opt = opt || 1;
+    switch (opt) {
+      case 1:
+        $(selector).button('toggle');
+        break;
+      case 2:
+        if (!lemon.isButtonActive(selector)) {
+          $(selector).button('toggle');
+        }
+        break;
+      case 3:
+        if (lemon.isButtonActive(selector)) {
+          $(selector).button('toggle');
+        }
+        break;
+    }
     return lemon.isButtonActive(selector);
   },
   /**

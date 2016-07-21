@@ -861,6 +861,10 @@ var qry = {
             $(qry.searchId).click();
           });
 
+          $('tr[apigroupable="' + batchNo + '"]').click(function() {
+            $('tr[apigroupc="' + lemon.data(this, 'groupId') + '"]').fadeToggle();
+          });
+
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partApiId);
           }
@@ -963,6 +967,10 @@ var qry = {
           $('td[clickable="' + batchNo + '"]').on('dblclick', function () {
             history.set(lemon.data(this, 'his'));
             $(qry.searchId).click();
+          });
+
+          $('tr[timegroupable="' + batchNo + '"]').click(function() {
+            $('tr[timegroupc="' + lemon.data(this, 'timeId') + '"]').fadeToggle();
           });
 
           if (qry.prevKey && qry.prevKey.length > 0) {

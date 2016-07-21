@@ -99,7 +99,7 @@
       lemon.each(items, function(group) {
         if (!lemon.existsEl('#apitgl_group_' + group.info.id)) {
     %>
-          <tr id="apitgl_group_<%= group.info.id %>">
+          <tr id="apitgl_group_<%= group.info.id %>" apigroupable="<%= batchNo %>" data-group-id="<%= lemon.enc(group.info.id) %>">
               <td>
                   <h5>
                       <span class="label label-info">
@@ -113,7 +113,7 @@
         <% } %>
 
       <% lemon.each(group.interfs, function(api) { %>
-        <tr tgl-group="tgl">
+        <tr tgl-group="tgl" apigroupc="<%= group.info.id %>">
             <td clickable="<%= batchNo %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="blockquote">
                     <% if (2 == api.mutation) { %>
@@ -181,12 +181,12 @@
 
     lemon.each(items, function(his) {
       var curInterval = lemon.when.interval(his.create_time);
+      var theTimeId = curInterval.replace(/\s*/g, '');
       if (curInterval != prevInterval) {
           prevInterval = curInterval;
-          var theTimeId = curInterval.replace(/\s*/g, '');
           if (!lemon.existsEl('#histgl_time_' + theTimeId)) {
     %>
-              <tr id="histgl_time_<%= theTimeId %>">
+              <tr id="histgl_time_<%= theTimeId %>" timegroupable="<%= batchNo %>" data-time-id="<%= lemon.enc(theTimeId) %>">
                   <td>
                       <h5>
                             <span class="label label-info">
@@ -199,7 +199,7 @@
           <% } %>
       <% } %>
 
-      <tr tgl-timegroup="tgl">
+      <tr tgl-timegroup="tgl" timegroupc="<%= theTimeId %>">
           <td clickable="<%= batchNo %>" data-his="<%= lemon.enc(his) %>">
               <% if (2 == his.api.mutation) { %>
                   <span class="label label-success" style="font-size: 65%;">Mutation of <%= his.api.name %></span>

@@ -76,12 +76,15 @@
     <thead>
     <tr>
         <th style="border: 0px;">
-            <span class="text-muted">API</span>
-            <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                <em class="fa fa-search" title="Search"></em>
+            <span class="text-muted">API &nbsp;&nbsp;</span>
+            <button class="btn btn-secondary btn-sm text-muted borderinfo" id="apitgl_apirequ" type="button">
+                Request
             </button>
-            <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                <em class="fa fa-search" title="Search"></em>
+            <button class="btn btn-secondary btn-sm text-muted borderinfo" id="apitgl_apiresp" type="button">
+                Response
+            </button>
+            <button class="btn btn-secondary btn-sm text-muted borderinfo" id="apitgl_group" type="button">
+                Group
             </button>
         </th>
         <th class="hidden-sm-down" style="width: 37px;"></th>
@@ -109,7 +112,7 @@
       </tr>
 
       <% lemon.each(group.interfs, function(api) { %>
-        <tr>
+        <tr tgl-group="tgl">
             <td clickable="<%= batchNo %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="blockquote">
                     <% if (2 == api.mutation) { %>
@@ -153,12 +156,15 @@
         <thead>
         <tr>
             <th style="border: 0px;">
-                <span class="text-muted">Histories</span>
-                <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                    <em class="fa fa-search" title="Search"></em>
+                <span class="text-muted">Histories &nbsp;&nbsp;</span>
+                <button class="btn btn-secondary btn-sm text-muted borderinfo" id="histgl_requ" type="button">
+                    Request
                 </button>
-                <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                    <em class="fa fa-search" title="Search"></em>
+                <button class="btn btn-secondary btn-sm text-muted borderinfo" id="histgl_resp" type="button">
+                    Response
+                </button>
+                <button class="btn btn-secondary btn-sm text-muted borderinfo" id="histgl_timegroup" type="button">
+                    Time Group
                 </button>
             </th>
             <th class="hidden-sm-down" style="width: 37px;"></th>
@@ -189,7 +195,7 @@
           </tr>
       <% } %>
 
-      <tr>
+      <tr tgl-timegroup="tgl">
           <td clickable="<%= batchNo %>" data-his="<%= lemon.enc(his) %>">
               <% if (2 == his.api.mutation) { %>
                   <span class="label label-success" style="font-size: 65%;">Mutation of <%= his.api.name %></span>

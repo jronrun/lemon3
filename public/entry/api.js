@@ -802,6 +802,14 @@ var qry = {
     var fp = false;
     if (fp = (1 == page) && !$('#s_api_table').length) {
       $(qry.partApiId).append(lemon.tmpl($('#api_table_tmpl').html(), {}));
+      $('#s_api_table button[id^="apitgl_"]').click(function () {
+        var type = $(this).attr('id').replace('apitgl_', ''), els = '[tgl-' + type + '="tgl"]';
+        if (lemon.buttonTgl(this)) {
+          $(els).slideUp();
+        } else {
+          $(els).slideDown();
+        }
+      });
     }
 
     var qryData = {
@@ -890,6 +898,14 @@ var qry = {
     var fp = false;
     if (fp = (1 == page) && !$('#s_his_table').length) {
       $(qry.partHisId).append(lemon.tmpl($('#his_table_tmpl').html(), {}));
+      $('#s_his_table button[id^="histgl_"]').click(function () {
+        var type = $(this).attr('id').replace('histgl_', ''), els = '[tgl-' + type + '="tgl"]';
+        if (lemon.buttonTgl(this)) {
+          $(els).slideUp();
+        } else {
+          $(els).slideDown();
+        }
+      });
     }
 
     var data = {

@@ -122,6 +122,9 @@ lemon.register({
   enable: function(selector) {
     $(selector).removeAttr('disabled');
   },
+  existsEl: function(selector) {
+    return $(selector).length > 0;
+  },
   disableEl: function(selector) {
     return progressJs(selector).setOptions({
       theme: 'blueOverlayRadiusHalfOpacity',

@@ -97,19 +97,20 @@
 <script type="text/html" id="api_tr_tmpl">
     <%
       lemon.each(items, function(group) {
+        if (!lemon.existsEl('#apitgl_group_' + group.info.id)) {
     %>
-
-      <tr>
-          <td>
-              <h5>
-                  <span class="label label-info">
-                      <span class="fa fa-flag"></span>
-                      &nbsp;<%= group.info.name %>
-                  </span>
-              </h5>
-          </td>
-          <td class="hidden-sm-down"></td>
-      </tr>
+          <tr id="apitgl_group_<%= group.info.id %>">
+              <td>
+                  <h5>
+                      <span class="label label-info">
+                          <span class="fa fa-flag"></span>
+                          &nbsp;<%= group.info.name %>
+                      </span>
+                  </h5>
+              </td>
+              <td class="hidden-sm-down"></td>
+          </tr>
+        <% } %>
 
       <% lemon.each(group.interfs, function(api) { %>
         <tr tgl-group="tgl">
@@ -182,17 +183,20 @@
       var curInterval = lemon.when.interval(his.create_time);
       if (curInterval != prevInterval) {
           prevInterval = curInterval;
+          var theTimeId = curInterval.replace(/\s*/g, '');
+          if (!lemon.existsEl('#histgl_time_' + theTimeId)) {
     %>
-          <tr>
-              <td>
-                  <h5>
-                        <span class="label label-info">
-                            <span class="fa fa-clock-o"></span> &nbsp;<%= curInterval %>
-                        </span>
-                  </h5>
-              </td>
-              <td class="hidden-sm-down"></td>
-          </tr>
+              <tr id="histgl_time_<%= theTimeId %>">
+                  <td>
+                      <h5>
+                            <span class="label label-info">
+                                <span class="fa fa-clock-o"></span> &nbsp;<%= curInterval %>
+                            </span>
+                      </h5>
+                  </td>
+                  <td class="hidden-sm-down"></td>
+              </tr>
+          <% } %>
       <% } %>
 
       <tr tgl-timegroup="tgl">

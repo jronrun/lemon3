@@ -121,6 +121,9 @@
                       <%= highlight(api.response_doc, 'Response', {'tgl-apiresp': 'tgl'}) %>
                     <% } %>
                     <footer class="blockquote-footer">
+                        <% if (2 == api.mutation) { %>
+                          Mutation of
+                        <% } %>
                         <span class="font-weight-bold"><%= api.name %></span>
                         <cite style="font-size: 90%">
                             <% if (2 == api.mutation) { %>

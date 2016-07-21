@@ -199,6 +199,9 @@
                       <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
                   </footer>
                   <footer class="blockquote-footer">
+                      <% if (2 == his.api.mutation) { %>
+                        Mutation of
+                      <% } %>
                       <span class="font-weight-bold"><%= his.api.name %></span>
                       <cite style="font-size: 90%">
                           <% if (2 == his.api.mutation) { %>

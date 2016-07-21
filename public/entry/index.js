@@ -384,12 +384,15 @@ lemon.register({
     $(msgId).slideToggle();
     return msgId;
   },
-  buttonTgl: function(selector) {
-    $(selector).button('toggle');
+  isButtonActive: function(selector) {
     if ($(selector).hasClass('active')) {
       return true;
     }
     return false;
+  },
+  buttonTgl: function(selector) {
+    $(selector).button('toggle');
+    return lemon.isButtonActive(selector);
   },
   /**
    *

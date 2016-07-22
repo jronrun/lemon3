@@ -846,14 +846,15 @@ var qry = {
             });
           } else {
             lemon.extend(preStyle, {
-              width: baseW - 25,
-              'max-width': baseW - 25
+              width: baseW - 15,
+              'max-width': baseW - 15
             });
           }
 
           var batchNo = 'api' + lemon.uniqueId();
           $('#s_api_tbody').append(lemon.tmpl($('#api_tr_tmpl').html(), {
             batchNo: batchNo,
+            baseW: baseW,
             items: resp.result.items,
             highlight: function(doc, tip, attrs) {
               return apis.getHighlightDoc(doc, tip, preStyle, false, attrs);
@@ -998,8 +999,8 @@ var qry = {
             });
           } else {
             lemon.extend(preStyle, {
-              width: baseW - 25,
-              'max-width': baseW - 25
+              width: baseW - 15,
+              'max-width': baseW - 15
             });
           }
 

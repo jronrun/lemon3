@@ -117,7 +117,7 @@
       %>
         <tr tgl-group="tgl" apigroupc="<%= group.info.id %>">
             <td clickable="<%= batchNo %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
-            <blockquote class="blockquote">
+            <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
                     <% if (2 == api.mutation) { %>
                       <span class="label label-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
                       <h5 class="invisible"></h5>
@@ -225,7 +225,7 @@
                   <span class="label label-success" style="font-size: 65%;">Mutation of <%= his.api.name %></span>
                   <h5 class="invisible"></h5>
               <% } %>
-              <blockquote class="blockquote">
+              <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
                   <%= highlight(his.api.request, 'Request', {
                       'tgl-requ': 'tgl',
                       id: ('bhis_' + batchNo + '_1_' + his.id)

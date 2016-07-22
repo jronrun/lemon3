@@ -477,9 +477,34 @@ module.exports = function(commOptions) {
               }
             }
           }
+        },
+
+        function(anAnswer, callback) {
+          var apiItem = anAnswer.result.item;
+          if (0 == anAnswer.code
+            && null != apiItem
+            && 2 == apiItem.mutation
+            && apiItem.mutation_host > 0) {
+
+            Interface.find({id: apiItem.mutation_host}).limit(1).next(function(err, hostApi) {
+              if (!err && hostApi) {
+                if (items.ownInterface(usr, hostApi.id)) {
+                  _.extend(anAnswer.result, {
+                    host: getRespAPI(hostApi, usr)
+                  });
+                }
+
+                callback(null, anAnswer);
+              } else {
+                callback(null, anAnswer);
+              }
+            });
+          } else {
+            callback(null, anAnswer);
+          }
         }
-      ], function(err, answer) {
-        return resultCall(answer);
+      ], function(err, anAnswer) {
+        return resultCall(anAnswer);
       });
     }
   };

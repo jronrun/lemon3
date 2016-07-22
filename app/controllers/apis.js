@@ -53,6 +53,7 @@ router.post(index.request.do, function (req, res, next) {
  */
 router.post(index.define.do, function (req, res, next) {
   requs.apiDefine(req.body.params, function(answer) {
+
     answer.result = crypto.compress(answer.result);
     return res.json(answer);
   }, false, req.user);

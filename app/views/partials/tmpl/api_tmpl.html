@@ -322,20 +322,53 @@
 <script type="text/html" id="api_doc_tmpl">
   <div class="card" style="border:0px; margin-top: -70px;">
       <div class="card-block">
+          <%
+          var hasHost = lemon.has(rdata, 'host') && rdata.host;
+          var api = rdata.item, host = rdata.host;
+          if (hasHost) {
+          %>
+              <button type="button" class="btn btn-secondary btn-block borderinfo" id="doc_tgl_mutation">
+                  <span class="text-muted icondh"><em class="fa fa-pencil"></em>&nbsp;&nbsp;<%= api.name %> </span>
+              </button>
+              <h4 class="invisible"></h4>
+          <% } %>
+
           <button type="button" class="close" id="doc_close" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
-          <span class="text-muted">
+
+          <div id="api_doc_<%= api.id %>">
+              <span class="text-muted">
               API Document -
               <span class="label label-info"> <%= (2 == api.mutation ? 'Mutation of ' : '') %> <%= api.name %> </span>
           </span>
-          <% if (api.desc && api.desc.length > 0) { %>
-          <br/><br/>
-          <p class="font-italic text-muted" style="font-size: 80%"> -- <%= api.desc %> </p>
-          <% } %>
-          <br/>
-          <%= highlight(api.request_doc, 'Request') %>
-          <br/>
-          <% if (!lemon.isBlank(api.response || {})) { %>
-          <%= highlight(api.response_doc, 'Response') %>
+              <% if (api.desc && api.desc.length > 0) { %>
+              <br/><br/>
+              <p class="font-italic text-muted" style="font-size: 80%"> -- <%= api.desc %> </p>
+              <% } %>
+              <br/>
+              <%= highlight(api.request_doc, 'Request') %>
+              <br/>
+              <% if (!lemon.isBlank(api.response || {})) { %>
+              <%= highlight(api.response_doc, 'Response') %>
+              <% } %>
+          </div>
+
+          <% if (hasHost) { %>
+              <div id="api_doc_<%= host.id %>" style="display: none;">
+                  <span class="text-muted">
+                      API Document -
+                      <span class="label label-info"> <%= host.name %> </span>
+                  </span>
+                  <% if (host.desc && host.desc.length > 0) { %>
+                      <br/><br/>
+                      <p class="font-italic text-muted" style="font-size: 80%"> -- <%= host.desc %> </p>
+                  <% } %>
+                  <br/>
+                  <%= highlight(host.request_doc, 'Request') %>
+                  <br/>
+                  <% if (!lemon.isBlank(host.response || {})) { %>
+                  <%= highlight(host.response_doc, 'Response') %>
+                  <% } %>
+              </div>
           <% } %>
       </div>
   </div>

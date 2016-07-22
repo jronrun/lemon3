@@ -1219,17 +1219,29 @@ var mapi = {
       trigger: 'manual',
       arrow: false,
       content: function() {
+        var apiDocs = function(anAPI) {
+          var html = [
+            '<p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">',
+            '<em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;',
+            (2 == anAPI.mutation ? 'Mutation of ' : '') + anAPI.name,
+            (anAPI.desc ? (', ' + anAPI.desc) : ''),
+            '</p>',
+            apis.getHighlightDoc(anAPI.request_doc, 'Request')
+          ];
+          if (!lemon.isBlank(anAPI.response || {})) {
+            html.push(apis.getHighlightDoc(anAPI.response_doc, 'Response'));
+          }
+          return html.join('');
+        };
+
         var html = [
-          '<p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">',
-          '<em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;',
-          (2 == rdata.item.mutation ? 'Mutation of ' : '') + rdata.item.name,
-          (rdata.item.desc ? (', ' + rdata.item.desc) : ''),
-          '</p>',
-          apis.getHighlightDoc(rdata.item.request_doc, 'Request')
+          apiDocs(rdata.item)
         ];
-        if (!lemon.isBlank(rdata.item.response || {})) {
-          html.push(apis.getHighlightDoc(rdata.item.response_doc, 'Response'));
+
+        if (rdata.host) {
+          html.push(apiDocs(rdata.host));
         }
+
         return html.join('');
       }
     }, {
@@ -1305,12 +1317,25 @@ var mapi = {
                 lemon.buttonTgl(thiz);
                 homes.tab2({
                   shown: function(elId) {
+                    var aItemId = '#api_doc_' + rdata.item.id, aHostId = '#api_doc_' + rdata.host.id;
+
                     $(elId).html(lemon.tmpl($('#api_doc_tmpl').html(), {
-                      api: rdata.item,
+                      rdata: rdata,
                       highlight: function(doc, tip) {
                         return apis.getHighlightDoc(doc, tip);
                       }
                     }));
+
+                    $('#doc_tgl_mutation').click(function () {
+                      if (lemon.buttonTgl(this)) {
+                        $(aItemId).hide();
+                        $(aHostId).fadeIn();
+                      } else {
+                        $(aHostId).hide();
+                        $(aItemId).fadeIn();
+                      }
+                    });
+
                     $('#doc_close').click(function () {
                       homes.home();
                     });

@@ -55,7 +55,7 @@ router.post(index.define.do, function (req, res, next) {
   requs.apiDefine(req.body.params, function(answer) {
     answer.result = crypto.compress(answer.result);
     return res.json(answer);
-  });
+  }, false, req.user);
 });
 
 /**
@@ -79,7 +79,7 @@ router.post(index.comment.do, function (req, res, next) {
     }
     answer.result = crypto.compress(answer.result);
     return res.json(answer);
-  }, true);
+  }, true, req.user);
 });
 
 /**
@@ -480,7 +480,7 @@ router.post(index.interfaces.do, function (req, res, next) {
 
       _.each(result.interf, function (interf) {
         if (interf && groupId == interf.group_id) {
-          aGroup.interfs.push(requs.getRespAPI(interf));
+          aGroup.interfs.push(requs.getRespAPI(interf, req.user));
         }
       });
 

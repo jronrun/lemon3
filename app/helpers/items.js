@@ -11,6 +11,7 @@ var types = {
 var helper = {
 
   ownScope: function(usr, property, target) {
+    usr = usr || {};
     if (usr.isAdmin) {
       return true;
     }
@@ -43,6 +44,7 @@ var helper = {
   },
 
   ownIds: function(usr, property, target) {
+    usr = usr || {};
     if (usr.isAdmin) {
       return true;
     }

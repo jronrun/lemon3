@@ -10,8 +10,8 @@ var log = log_from('api_request'),
   Interface = app_require('models/api/interf'),
   History = app_require('models/api/history');
 
-function getRespAPI(api) {
-  return {
+function getRespAPI(api, usr) {
+  var respAPI = {
     id: api.id,
     name: api.name,
     desc: api.desc,
@@ -21,6 +21,20 @@ function getRespAPI(api) {
     request_doc: api.request_doc,
     response_doc: api.response_doc
   };
+
+  if (usr) {
+    _.extend(respAPI, {
+      owner: items.ownInterface(usr, api.id) ? 2 : 1
+    });
+  }
+
+  if (2 == respAPI.owner) {
+    _.extend(respAPI, {
+      _id: api._id
+    });
+  }
+
+  return respAPI;
 }
 
 module.exports = function(commOptions) {
@@ -369,7 +383,7 @@ module.exports = function(commOptions) {
      * @param resultCall
      * @returns {*}
        */
-    apiDefine: function(params, resultCall, notUseChooseIfRequNoDefine) {
+    apiDefine: function(params, resultCall, notUseChooseIfRequNoDefine, usr) {
       var defineNone = answer.succ({ item: null });
       if (!params.serv || !params.requ) {
         return resultCall(defineNone);
@@ -416,7 +430,7 @@ module.exports = function(commOptions) {
             if (!target.api) {
               return resultCall(defineNone);
             } else {
-              callback(null, answer.succ({ item: getRespAPI(target.api) }));
+              callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
             }
           }
           //Multi-interface
@@ -424,7 +438,7 @@ module.exports = function(commOptions) {
             //choose & editor match
             if (target.api && target.requ
               && (_.get(target.requ, servRequ.interf_prop) == _.get(target.api.request, servRequ.interf_prop))) {
-              callback(null, answer.succ({ item: getRespAPI(target.api) }));
+              callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
             } else {
               var cmdFromRequ = _.get(target.requ, servRequ.interf_prop);
               //editor
@@ -432,14 +446,14 @@ module.exports = function(commOptions) {
                 Interface.find({name: cmdFromRequ}).limit(1).next(function(err, api) {
                   //editor
                   if (api) {
-                    callback(null, answer.succ({ item: getRespAPI(api) }));
+                    callback(null, answer.succ({ item: getRespAPI(api, usr) }));
                   }
                   //choose
                   else if (target.api) {
                     if (notUseChooseIfRequNoDefine) {
                       return resultCall(defineNone);
                     } else {
-                      callback(null, answer.succ({ item: getRespAPI(target.api) }));
+                      callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
                     }
                   }
                   //none match
@@ -453,7 +467,7 @@ module.exports = function(commOptions) {
                 if (notUseChooseIfRequNoDefine) {
                   return resultCall(defineNone);
                 } else {
-                  callback(null, answer.succ({ item: getRespAPI(target.api) }));
+                  callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
                 }
               }
               //none match

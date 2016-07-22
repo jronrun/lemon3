@@ -166,6 +166,14 @@
                     <em class="fa fa-mail-forward"></em>
                     </button>
                 <% } %>
+                <% if (api.owner && 2 == api.owner) { %>
+                    <h6 class="invisible"></h6>
+                    <a class="btn btn-secondary btn-sm text-muted icondh" target="_blank"
+                       href="/manage/interface/<%= api._id %>"
+                       title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: 0px; " type="button">
+                    <em class="fa fa-pencil-square-o"></em>
+                    </a>
+                <% } %>
             </td>
         </tr>
       <% }); %>

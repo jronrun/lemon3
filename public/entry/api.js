@@ -949,6 +949,53 @@ var qry = {
     });
   },
 
+  hisToggleComment: function(selector, preStyle, batchNo) {
+    $(selector).click(function () {
+      var hisId = $(this).attr('id').split('_')[2], thiz = this;
+      var aHis = lemon.data('#ahis_' + hisId, 'his'),
+        hisRequId = '#bhis_' + batchNo + '_1_' + aHis.id, hisRequDocId = hisRequId + '_doc';
+
+      if (lemon.buttonTgl(thiz)) {
+        if (lemon.existsEl(hisRequDocId)) {
+          $(hisRequId).hide();
+          $(hisRequDocId).show();
+        } else {
+          var data = {
+            serv: aHis.serv.id,
+            requ: aHis.api.request,
+            api: aHis.api.id
+          };
+
+          lemon.progress(mapi.navbarId);
+          $.post('/api/comment', { params: data }).done(function (resp) {
+            if (0 == resp.code) {
+              var rdata = lemon.dec(resp.result);
+              if (rdata && rdata.length > 0) {
+                var theRequDoc = apis.getHighlightDoc(rdata, 'Request with Document', preStyle, true, {
+                  id: lemon.ltrim(hisRequDocId, '#')
+                });
+                $(hisRequId).after(theRequDoc);
+                $(hisRequId).hide();
+              } else {
+                lemon.buttonTgl(thiz);
+                lemon.info('There is none document defined for ' + aHis.api.name);
+              }
+            } else {
+              lemon.buttonTgl(thiz);
+            }
+
+            lemon.progressEnd(mapi.navbarId);
+          });
+        }
+
+      } else {
+        $(hisRequId).show();
+        $(hisRequDocId).hide();
+      }
+
+    });
+  },
+
   searchHis: function(key, page, callback, mutation) {
     page = page || 1;
     $(qry.partHisId).data('page', page);
@@ -1026,50 +1073,7 @@ var qry = {
           qry.toggleHis('#s_his_table button[id^="histgl_"]');
 
           qry.toggleItem(batchNo, 'histgl', 'histgl_', 'bhis_');
-          $('#s_his_table button[id^="commenttgl_"]').click(function () {
-            var hisId = $(this).attr('id').split('_')[2], thiz = this;
-            var aHis = lemon.data('#ahis_' + hisId, 'his'),
-              hisRequId = '#bhis_' + batchNo + '_1_' + aHis.id, hisRequDocId = hisRequId + '_doc';
-
-            if (lemon.buttonTgl(thiz)) {
-              if (lemon.existsEl(hisRequDocId)) {
-                $(hisRequId).hide();
-                $(hisRequDocId).show();
-              } else {
-                var data = {
-                  serv: aHis.serv.id,
-                  requ: aHis.api.request,
-                  api: aHis.api.id
-                };
-
-                lemon.progress(mapi.navbarId);
-                $.post('/api/comment', { params: data }).done(function (resp) {
-                  if (0 == resp.code) {
-                    var rdata = lemon.dec(resp.result);
-                    if (rdata && rdata.length > 0) {
-                      var theRequDoc = apis.getHighlightDoc(rdata, 'Request with Document', preStyle, true, {
-                        id: lemon.ltrim(hisRequDocId, '#')
-                      });
-                      $(hisRequId).after(theRequDoc);
-                      $(hisRequId).hide();
-                    } else {
-                      lemon.buttonTgl(thiz);
-                      lemon.info('There is none document defined for ' + aHis.api.name);
-                    }
-                  } else {
-                    lemon.buttonTgl(thiz);
-                  }
-
-                  lemon.progressEnd(mapi.navbarId);
-                });
-              }
-
-            } else {
-              $(hisRequId).show();
-              $(hisRequDocId).hide();
-            }
-
-          });
+          qry.hisToggleComment('#s_his_table button[id^="commenttgl_"]', preStyle, batchNo);
 
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partHisId);

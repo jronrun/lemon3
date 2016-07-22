@@ -1246,7 +1246,7 @@ var mapi = {
           $(el).fadeIn();
         }, 300);
 
-        var aItemId = '#api_doc_' + rdata.item.id, aHostId = '#api_doc_' + rdata.host.id;
+        var aItemId = '#api_doc_' + rdata.item.id, aHostId = '#api_doc_' + (rdata.host || {}).id;
 
         $('#doc_tgl_mutation').click(function () {
           if (lemon.buttonTgl(this)) {
@@ -1312,7 +1312,7 @@ var mapi = {
                 lemon.buttonTgl(thiz);
                 homes.tab2({
                   shown: function(elId) {
-                    var aItemId = '#api_doc_' + rdata.item.id, aHostId = '#api_doc_' + rdata.host.id;
+                    var aItemId = '#api_doc_' + rdata.item.id, aHostId = '#api_doc_' + (rdata.host || {}).id;
 
                     $(elId).html(lemon.tmpl($('#api_doc_tmpl').html(), {
                       rdata: rdata,

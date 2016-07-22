@@ -339,8 +339,12 @@
           <div id="api_doc_<%= api.id %>">
               <span class="text-muted">
               API Document -
-              <span class="label label-info"> <%= (2 == api.mutation ? 'Mutation of ' : '') %> <%= api.name %> </span>
-          </span>
+                  <% if (2 == api.mutation) { %>
+                      <span class="label label-success"><%= 'Mutation of ' + api.name %></span>
+                  <% } else { %>
+                      <span class="label label-info"><%= api.name %></span>
+                  <% } %>
+              </span>
               <% if (api.desc && api.desc.length > 0) { %>
               <br/><br/>
               <p class="font-italic text-muted" style="font-size: 80%"> -- <%= api.desc %> </p>
@@ -391,7 +395,12 @@
     <div id="api_doc_<%= api.id %>">
         <p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">
             <em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;
-            <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name + (api.desc ? (', ' + api.desc) : '') %>
+            <% if (2 == api.mutation) { %>
+                <span class="text-success"><%= 'Mutation of ' + api.name %></span>
+            <% } else { %>
+                <span class="text-info"><%= api.name %></span>
+            <% } %>
+            <%= (api.desc ? ('  ' + api.desc) : '') %>
         </p>
         <%= highlight(api.request_doc, 'Request') %>
         <% if (!lemon.isBlank(api.response || {})) { %>
@@ -403,7 +412,8 @@
         <div id="api_doc_<%= host.id %>" style="display: none;">
             <p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">
                 <em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;
-                <%= host.name + (host.desc ? (', ' + host.desc) : '') %>
+                <span class="text-info"><%= api.name %></span>
+                <%= (host.desc ? ('  ' + host.desc) : '') %>
             </p>
             <%= highlight(host.request_doc, 'Request') %>
             <% if (!lemon.isBlank(host.response || {})) { %>

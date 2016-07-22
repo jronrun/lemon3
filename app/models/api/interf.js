@@ -13,6 +13,7 @@ var model = schema({
   request_doc: { type: 'string', required: true, allowEmpty: false },
   response_doc: { type: 'string' },
   mutation: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Define API', 2: 'Mutation'} },
+  mutation_host: { type: 'integer' },
   owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   create_by: {
     type: 'object',

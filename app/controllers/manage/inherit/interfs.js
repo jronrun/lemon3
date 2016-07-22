@@ -143,7 +143,10 @@ module.exports = function (router, index, root) {
       });
 
       generic.editor({
-        schemaExclude: ['create_by', 'group_id', 'request_doc', 'response_doc', 'group_order', 'mutation'],
+        schemaExclude: [
+          'create_by', 'group_id', 'request_doc', 'response_doc',
+          'group_order', 'mutation', 'mutation_host'
+        ],
         modelName: 'interface',
         defineElement: {
           owner: {
@@ -341,7 +344,7 @@ module.exports = function (router, index, root) {
 
       generic.retrieve({
         schemaExclude: [
-          'create_by', 'group_id', 'request_doc',
+          'create_by', 'group_id', 'request_doc', 'mutation_host',
           'response_doc', 'request', 'response', 'group_order'
         ],
         modelName: 'interface',

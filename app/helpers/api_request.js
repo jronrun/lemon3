@@ -16,6 +16,7 @@ function getRespAPI(api, usr) {
     name: api.name,
     desc: api.desc,
     mutation: api.mutation,
+    mutation_host: api.mutation_host || 0,
     request: api.request,
     response: api.response,
     request_doc: api.request_doc,

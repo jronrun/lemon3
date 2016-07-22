@@ -328,7 +328,8 @@
           if (hasHost) {
           %>
               <button type="button" class="btn btn-secondary btn-block borderinfo" id="doc_tgl_mutation">
-                  <span class="text-muted icondh"><em class="fa fa-pencil"></em>&nbsp;&nbsp;<%= api.name %> </span>
+                  <span class="text-muted icondh"><em class="fa fa-pencil text-info"></em>&nbsp;&nbsp;<%= api.name %>
+                  </span>
               </button>
               <h4 class="invisible"></h4>
           <% } %>
@@ -372,6 +373,45 @@
           <% } %>
       </div>
   </div>
+</script>
+
+<script type="text/html" id="api_doc_lg_tmpl">
+    <%
+    var hasHost = lemon.has(rdata, 'host') && rdata.host;
+    var api = rdata.item, host = rdata.host;
+    if (hasHost) {
+    %>
+        <button type="button" class="btn btn-secondary pull-right"
+                title="Toggle Mutation of <%= api.name %> API Document" style="border: 0px;" id="doc_tgl_mutation">
+            <span class="text-info icondh"><em class="fa fa-pencil"></em></span>
+        </button>
+    <% } %>
+
+    <h4 class="invisible"></h4>
+    <div id="api_doc_<%= api.id %>">
+        <p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">
+            <em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;
+            <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name + (api.desc ? (', ' + api.desc) : '') %>
+        </p>
+        <%= highlight(api.request_doc, 'Request') %>
+        <% if (!lemon.isBlank(api.response || {})) { %>
+        <%= highlight(api.response_doc, 'Response') %>
+        <% } %>
+    </div>
+
+    <% if (hasHost) { %>
+        <div id="api_doc_<%= host.id %>" style="display: none;">
+            <p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">
+                <em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;
+                <%= host.name + (host.desc ? (', ' + host.desc) : '') %>
+            </p>
+            <%= highlight(host.request_doc, 'Request') %>
+            <% if (!lemon.isBlank(host.response || {})) { %>
+            <%= highlight(host.response_doc, 'Response') %>
+            <% } %>
+        </div>
+    <% } %>
+
 </script>
 
 <script type="text/html" id="api_view_url_tmpl">

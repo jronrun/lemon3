@@ -1219,30 +1219,12 @@ var mapi = {
       trigger: 'manual',
       arrow: false,
       content: function() {
-        var apiDocs = function(anAPI) {
-          var html = [
-            '<p class="text-muted icondh" style="font-size: 95%;margin-top: 5px;">',
-            '<em class="fa fa-info"></em>&nbsp;&nbsp;&nbsp;&nbsp;',
-            (2 == anAPI.mutation ? 'Mutation of ' : '') + anAPI.name,
-            (anAPI.desc ? (', ' + anAPI.desc) : ''),
-            '</p>',
-            apis.getHighlightDoc(anAPI.request_doc, 'Request')
-          ];
-          if (!lemon.isBlank(anAPI.response || {})) {
-            html.push(apis.getHighlightDoc(anAPI.response_doc, 'Response'));
+        return lemon.tmpl($('#api_doc_lg_tmpl').html(), {
+          rdata: rdata,
+          highlight: function(doc, tip) {
+            return apis.getHighlightDoc(doc, tip);
           }
-          return html.join('');
-        };
-
-        var html = [
-          apiDocs(rdata.item)
-        ];
-
-        if (rdata.host) {
-          html.push(apiDocs(rdata.host));
-        }
-
-        return html.join('');
+        });
       }
     }, {
       show: function(el) {
@@ -1259,9 +1241,22 @@ var mapi = {
           'max-height': h,
           'overflow-y': 'scroll'
         });
+
         lemon.delay(function () {
           $(el).fadeIn();
         }, 300);
+
+        var aItemId = '#api_doc_' + rdata.item.id, aHostId = '#api_doc_' + rdata.host.id;
+
+        $('#doc_tgl_mutation').click(function () {
+          if (lemon.buttonTgl(this)) {
+            $(aItemId).hide();
+            $(aHostId).fadeIn();
+          } else {
+            $(aHostId).hide();
+            $(aItemId).fadeIn();
+          }
+        });
       },
       hidden: function(el) {
         lemon.buttonTgl(thiz);

@@ -220,7 +220,7 @@
       <% } %>
 
       <tr tgl-timegroup="tgl" timegroupc="<%= theTimeId %>">
-          <td clickable="<%= batchNo %>" data-his="<%= lemon.enc(his) %>">
+          <td clickable="<%= batchNo %>" data-his="<%= lemon.enc(his) %>" id="ahis_<%= his.id %>">
               <% if (2 == his.api.mutation) { %>
                   <span class="label label-success" style="font-size: 65%;">Mutation of <%= his.api.name %></span>
                   <h5 class="invisible"></h5>
@@ -278,6 +278,11 @@
               <button class="btn btn-secondary btn-sm text-muted icondh"
                       id="histgl_<%= batchNo %>_2_<%= his.id%>" title="Toggle <%= his.api.name %> Response" style="border: 0px; " type="button">
                   <em class="fa fa-mail-forward"></em>
+              </button>
+              <h6 class="invisible"></h6>
+              <button class="btn btn-secondary btn-sm text-muted icondh"
+                      id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API Document" style="border: 0px; " type="button">
+                  <em class="fa fa-comment"></em>
               </button>
           </td>
       </tr>

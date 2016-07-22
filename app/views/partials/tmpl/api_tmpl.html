@@ -226,8 +226,14 @@
                   <h5 class="invisible"></h5>
               <% } %>
               <blockquote class="blockquote">
-                  <%= highlight(his.api.request, 'Request', {'tgl-requ': 'tgl'}) %>
-                  <%= highlight(his.api.response, 'Response', {'tgl-resp': 'tgl'}) %>
+                  <%= highlight(his.api.request, 'Request', {
+                      'tgl-requ': 'tgl',
+                      id: ('bhis_' + batchNo + '_1_' + his.id)
+                  }) %>
+                  <%= highlight(his.api.response, 'Response', {
+                      'tgl-resp': 'tgl',
+                      id: ('bhis_' + batchNo + '_2_' + his.id)
+                  }) %>
                   <footer class="blockquote-footer">
                       <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
                   </footer>
@@ -259,11 +265,19 @@
               </blockquote>
           </td>
           <td class="hidden-sm-down">
-              <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                  <em class="fa fa-search" title="Search"></em>
+              <button class="btn btn-secondary btn-sm text-muted icondh"
+                      id="histgl_<%= batchNo %>_3_<%= his.id%>" title="Toggle Request & Response" style="border: 0px;" type="button">
+              <em class="fa fa-eye"></em>
               </button>
-              <button class="btn btn-secondary btn-sm text-muted" style="border: 0px;" type="button">
-                  <em class="fa fa-search" title="Search"></em>
+              <h6 class="invisible"></h6>
+              <button class="btn btn-secondary btn-sm text-muted icondh"
+                      id="histgl_<%= batchNo %>_1_<%= his.id%>" title="Toggle Request" style="border: 0px;" type="button">
+                  <em class="fa fa-mail-reply"></em>
+              </button>
+              <h6 class="invisible"></h6>
+              <button class="btn btn-secondary btn-sm text-muted icondh"
+                      id="histgl_<%= batchNo %>_2_<%= his.id%>" title="Toggle Response" style="border: 0px; " type="button">
+                  <em class="fa fa-mail-forward"></em>
               </button>
           </td>
       </tr>

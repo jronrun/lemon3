@@ -874,34 +874,7 @@ var qry = {
 
           qry.toggleAPI('#s_api_table button[id^="apitgl_"]');
 
-          $(lemon.format('button[id^="btgl_{0}_"]', batchNo)).click(function () {
-            //1 batchNo, 2 type, 3 apiId
-            var bid = $(this).attr('id'), binfo = bid.split('_'), prefixT = 'btgl_', prefixA = 'bapi_',
-              btype = binfo[2], tid = '#' + bid.replace(prefixT, prefixA), realId = null;
-            if (lemon.buttonTgl(this)) {
-              //requ
-              if (['1', '3'].indexOf(btype) != -1) {
-                $(realId = tid.replace('_3_', '_1_')).slideUp();
-                lemon.buttonTgl(realId.replace(prefixA, prefixT), 2);
-              }
-              //resp
-              if (['2', '3'].indexOf(btype) != -1) {
-                $(realId = tid.replace('_3_', '_2_')).slideUp();
-                lemon.buttonTgl(realId.replace(prefixA, prefixT), 2);
-              }
-            } else {
-              //requ
-              if (['1', '3'].indexOf(btype) != -1) {
-                $(realId = tid.replace('_3_', '_1_')).slideDown();
-                lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
-              }
-              //resp
-              if (['2', '3'].indexOf(btype) != -1) {
-                $(realId = tid.replace('_3_', '_2_')).slideDown();
-                lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
-              }
-            }
-          });
+          qry.toggleItem(batchNo, 'btgl', 'btgl_', 'bapi_');
 
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partApiId);
@@ -940,6 +913,37 @@ var qry = {
         $(els).slideUp();
       } else {
         $(els).slideDown();
+      }
+    });
+  },
+
+  toggleItem: function(batchNo, tglMark, prefixBtn, prefixItem) {
+    $(lemon.format('button[id^="{1}_{0}_"]', batchNo, tglMark)).click(function () {
+      //1 batchNo, 2 type, 3 apiId
+      var bid = $(this).attr('id'), binfo = bid.split('_'), prefixT = prefixBtn, prefixA = prefixItem,
+        btype = binfo[2], tid = '#' + bid.replace(prefixT, prefixA), realId = null;
+      if (lemon.buttonTgl(this)) {
+        //requ
+        if (['1', '3'].indexOf(btype) != -1) {
+          $(realId = tid.replace('_3_', '_1_')).slideUp();
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 2);
+        }
+        //resp
+        if (['2', '3'].indexOf(btype) != -1) {
+          $(realId = tid.replace('_3_', '_2_')).slideUp();
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 2);
+        }
+      } else {
+        //requ
+        if (['1', '3'].indexOf(btype) != -1) {
+          $(realId = tid.replace('_3_', '_1_')).slideDown();
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
+        }
+        //resp
+        if (['2', '3'].indexOf(btype) != -1) {
+          $(realId = tid.replace('_3_', '_2_')).slideDown();
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
+        }
       }
     });
   },
@@ -1019,6 +1023,8 @@ var qry = {
           });
 
           qry.toggleHis('#s_his_table button[id^="histgl_"]');
+
+          qry.toggleItem(batchNo, 'histgl', 'histgl_', 'bhis_');
 
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partHisId);

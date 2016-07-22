@@ -936,12 +936,12 @@ var qry = {
       } else {
         //requ
         if (['1', '3'].indexOf(btype) != -1) {
-          $(realId = tid.replace('_3_', '_1_')).slideDown();
+          $(realId = tid.replace('_3_', '_1_')).fadeIn();
           lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
         }
         //resp
         if (['2', '3'].indexOf(btype) != -1) {
-          $(realId = tid.replace('_3_', '_2_')).slideDown();
+          $(realId = tid.replace('_3_', '_2_')).fadeIn();
           lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
         }
       }

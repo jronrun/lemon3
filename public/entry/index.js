@@ -251,6 +251,18 @@ lemon.register({
     handlePjax[url] = options || {};
   },
 
+  live: function(events, selector, handler, data) {
+    if (data) {
+      $(document).on(events, selector, data, function(eventObject){
+        lemon.isFunc(handler) && handler(eventObject);
+      });
+    } else {
+      $(document).on(events, selector, function(eventObject){
+        lemon.isFunc(handler) && handler(eventObject);
+      });
+    }
+  },
+
   /**
    * Extra small screen / phone     xs: 0,
    * Small screen / phone           sm: 544px,
@@ -686,7 +698,7 @@ lemon.register({
             pg.end();
           });
         } else {
-          text = text.replace(/\\\//g, '/');
+          text = (text || '').replace(/\\\//g, '/');
           view.write(text);
           view.doc.keydown(function(e){
             //esc key
@@ -884,6 +896,18 @@ $(function () {
   });
 
   $(document).pjax('a[data-pjax]', '#page');
+
+  lemon.live('click', 'a[data-preview]', function (evt) {
+    evt.preventDefault();
+    var href = $(evt.originalEvent.target).attr('href');
+    if (! href || href.length < 1) {
+      href = $(evt.originalEvent.target).parent().attr('href');
+    }
+
+    if (href && href.length > 0) {
+      lemon.preview((location.origin || '') + href);
+    }
+  });
 
   $(document).on('pjax:beforeSend', function(event, xhr, options) {
     var target = event.relatedTarget, ds = target ? (target.dataset || {}) : {};

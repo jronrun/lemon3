@@ -113,6 +113,9 @@ lemon.register({
     }); //.velocity({ backgroundColorAlpha: 1 }, { duration: 400 });
     return blast;
   },
+  isUrl: function(text) {
+    return /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/.test(text);
+  },
   isDisable: function(selector) {
     return $(selector).attr('disabled');
   },
@@ -616,9 +619,61 @@ lemon.register({
       lemon.isFunc(okCallback) && okCallback(e);
     });
   },
+  preview: function(text, callback) {
+    var contextId = '#preview_full';
+    var previewM = lemon.modal({
+      content: function() {
+        return lemon.tmpl($('#preview_tmpl').html(), {});
+      },
+      modal: {
+        show: true
+      }
+    }, {
+      shown: function(event, el) {
+
+        var viewport = {
+          w: document.body.clientWidth,
+          h: document.body.clientHeight
+        };
+        $(el).find('.modal-dialog').css({
+          'max-height': viewport.w,
+          margin: 0
+        });
+
+        var view = lemon.iframe({
+          frameborder: 0
+        }, contextId);
+
+        view.attr({
+          width: viewport.w,
+          height: viewport.h - 6,
+          style: 'background-color: white'
+        });
+
+        var pg = lemon.progress(contextId);
+        if (lemon.isUrl(text)) {
+          view.openUrl(text, function() {
+            pg.end();
+          });
+        } else {
+          view.write(text);
+          view.doc.keydown(function(e){
+            //esc key
+            if (27 == e.keyCode) {
+              previewM.hide();
+            }
+          });
+          pg.end();
+        }
+
+        lemon.isFunc(callback) && callback(view);
+      }
+    });
+  },
   modal: function(options, events) {
     options = lemon.extend({
       id: 'a_modal_' + lemon.uniqueId(),
+      content: false,
       title: '',
       titleClose: false,
       body: '',

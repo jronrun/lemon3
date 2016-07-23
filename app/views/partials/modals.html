@@ -3,18 +3,30 @@
 <script type="text/html" id="modal_tmpl">
   <div class="modal fade" id="<%= id %>">
       <div class="modal-dialog <%= (('' == size) ? '' : ('modal-' + size)) %>" role="document">
-          <div class="modal-content">
-              <% if (title.length > 0) { %>
-                <div class="modal-header">
-                    <% if (titleClose) { %>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <% } %>
-                    <h4 class="modal-title"><%= title %></h4>
-                </div>
-              <% } %>
-              <div class="modal-body borderinfo"> <%= body %></div>
-              <div class="modal-footer borderinfo"> <%= footer %></div>
-          </div>
+          <% if (content && lemon.isFunc(content)) { %>
+              <%= content(id) %>
+          <% } else { %>
+              <div class="modal-content">
+                  <% if (title.length > 0) { %>
+                    <div class="modal-header">
+                        <% if (titleClose) { %>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <% } %>
+                        <h4 class="modal-title"><%= title %></h4>
+                    </div>
+                  <% } %>
+                  <div class="modal-body borderinfo"> <%= body %></div>
+                  <div class="modal-footer borderinfo"> <%= footer %></div>
+              </div>
+          <% } %>
       </div>
   </div>
+</script>
+
+<script type="text/html" id="preview_tmpl">
+    <button type="button" class="btn btn-danger-outline btn-sm icondh"
+            data-dismiss="modal" style="position: absolute;left: 0;top: 0;border: 0px;" aria-label="Close">
+        <em class="fa fa-close"></em>
+    </button>
+    <div id="preview_full"></div>
 </script>

@@ -669,6 +669,8 @@ lemon.register({
         return '<div id="preview_full"></div>';
       },
       modal: {
+        backdrop: false,
+        keyboard: false,
         show: true
       }
     }, {

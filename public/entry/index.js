@@ -674,11 +674,11 @@ lemon.register({
     }, {
       shown: function(event, el) {
         var viewport = {
-          w: document.body.clientWidth,
-          h: document.body.clientHeight
+          w: $(window).width(),
+          h: $(window).height()
         };
         $(el).find('.modal-dialog').css({
-          'max-height': viewport.w,
+          'max-height': viewport.h,
           margin: 0
         });
 

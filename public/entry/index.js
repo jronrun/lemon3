@@ -335,6 +335,81 @@ lemon.register({
 var holdMsgId = {};
 //bootstrap
 lemon.register({
+  iframe: function(options, selector) {
+    var uid = 'ifr_' + lemon.uniqueId();
+    options = lemon.extend({
+      id: uid,
+      name: uid,
+      align: null,
+      allowfullscreen: null,
+      frameborder: null,
+      height: null,
+      width: null,
+      longdesc: null,
+      marginheight: null,
+      marginwidth: null,
+      mozallowfullscreen: null,
+      webkitallowfullscreen: null,
+      referrerpolicy: null,
+      scrolling: null,
+      sandbox: null,
+      seamless: null,
+      src: null,
+      srcdoc: null
+    }, options || {});
+
+    var iframe = document.createElement('iframe');
+    var meta = {
+      iframe: iframe,
+      attr: function(options) {
+        lemon.each(options, function(v, k) {
+          if (!lemon.isNull(v)) { iframe.setAttribute(k, v); }
+        });
+        return meta;
+      },
+      fit: function(selector, offset) {
+        offset = lemon.extend({
+          height: 0,
+          width: 0
+        }, offset || {});
+        meta.attr({
+          width: $(selector).width() + offset.width,
+          height: $(selector).height() + offset.height
+        });
+        return meta;
+      },
+      write: function(text) {
+        var target = meta.getDocument();
+        target.open();
+        target.write(text);
+        target.close();
+        return meta;
+      },
+      openUrl: function(url, onready) {
+        meta.attr({
+          src: url
+        });
+        $('#' + options.id).load(function() {
+          lemon.isFunc(onready) && onready(meta);
+        });
+        return meta;
+      },
+      reload: function() {
+        meta.getDocument().location.reload(true);
+        return meta;
+      },
+      getDocument: function() {
+        return iframe.contentDocument || iframe.contentWindow.document;
+      }
+    };
+
+    meta.attr(options);
+    $(selector || 'body').append(iframe);
+
+    meta.dom = $(window.frames[options.name].document).contents();
+    meta.doc = $(meta.getDocument());
+    return meta;
+  },
   msg: function(text, options) {
     options = lemon.extend({
       msgId: '',

@@ -622,15 +622,15 @@ lemon.register({
   preview: function(text, callback) {
     var contextId = '#preview_full';
     var previewM = lemon.modal({
+      contentClose: true,
       content: function() {
-        return lemon.tmpl($('#preview_tmpl').html(), {});
+        return '<div id="preview_full"></div>';
       },
       modal: {
         show: true
       }
     }, {
       shown: function(event, el) {
-
         var viewport = {
           w: document.body.clientWidth,
           h: document.body.clientHeight
@@ -674,6 +674,7 @@ lemon.register({
     options = lemon.extend({
       id: 'a_modal_' + lemon.uniqueId(),
       content: false,
+      contentClose: false,
       title: '',
       titleClose: false,
       body: '',

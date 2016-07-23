@@ -2,6 +2,12 @@
 
 <script type="text/html" id="modal_tmpl">
   <div class="modal fade" id="<%= id %>">
+      <% if (contentClose) { %>
+          <button type="button" class="btn btn-danger-outline btn-sm icondh"
+                  data-dismiss="modal" style="position: absolute;right: 0;top: 0;border: 0px;z-index: 500000" aria-label="Close">
+              <em class="fa fa-close"></em>
+          </button>
+      <% } %>
       <div class="modal-dialog <%= (('' == size) ? '' : ('modal-' + size)) %>" role="document">
           <% if (content && lemon.isFunc(content)) { %>
               <%= content(id) %>
@@ -21,12 +27,4 @@
           <% } %>
       </div>
   </div>
-</script>
-
-<script type="text/html" id="preview_tmpl">
-    <button type="button" class="btn btn-danger-outline btn-sm icondh"
-            data-dismiss="modal" style="position: absolute;left: 0;top: 0;border: 0px;" aria-label="Close">
-        <em class="fa fa-close"></em>
-    </button>
-    <div id="preview_full"></div>
 </script>

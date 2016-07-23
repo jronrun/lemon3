@@ -1584,6 +1584,15 @@ var mapi = {
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);
+
+    $('#btn_preview').click(function () {
+      if (mapi.resp.doc().somethingSelected()) {
+        text = mapi.resp.doc().getSelection();
+      } else {
+        text = mapi.resp.val();
+      }
+      lemon.preview(text);
+    });
   },
   intlDD: function() {
     envs.render();

@@ -644,7 +644,8 @@ lemon.register({
       if (jsonOptions.mirror && jsonOptions.mirror.isJson(text)) {
         text = [
           lemon.jsonStyl(),
-          lemon.getHighlightDoc(jsonOptions.mirror, text, jsonOptions.rightTip, jsonOptions.css, jsonOptions.isDecode, jsonOptions.attrs)
+          lemon.getHighlightDoc(jsonOptions.mirror, text,
+            jsonOptions.rightTip, jsonOptions.css, jsonOptions.isDecode, jsonOptions.attrs)
         ].join('');
       }
     }
@@ -685,6 +686,7 @@ lemon.register({
             pg.end();
           });
         } else {
+          text = text.replace(/\\\//g, '/');
           view.write(text);
           view.doc.keydown(function(e){
             //esc key
@@ -695,7 +697,7 @@ lemon.register({
           pg.end();
         }
 
-        lemon.isFunc(callback) && callback(view);
+        lemon.isFunc(callback) && callback(view, previewM);
       }
     });
   },

@@ -644,7 +644,7 @@ lemon.register({
       lemon.isFunc(okCallback) && okCallback(e);
     });
   },
-  preview: function(text, callback, jsonOptions) {
+  preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl) {
     if (jsonOptions) {
       jsonOptions = lemon.extend({
         mirror: null,
@@ -698,6 +698,7 @@ lemon.register({
         if (lemon.isUrl(text)) {
           view.openUrl(text, function() {
             pg.end();
+            lemon.isFunc(domReadyCallbackIfUrl) && domReadyCallbackIfUrl();
           });
         } else {
           text = (text || '').replace(/\\\//g, '/');

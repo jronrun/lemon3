@@ -332,6 +332,19 @@ lemon.register({
       }
     });
     return val;
+  },
+
+  jsonStyl: function() {
+    return lemon.data('#modals_context', 'styl');
+  },
+
+  getHighlightDoc: function(mirror, target, rightTip, css, isDecode, attrs) {
+    var exchange = '#dd_api_exchange';
+    $(exchange).empty().append('<pre class="roundedcorner" style="background-color:#ffffff;border:0;overflow-y:scroll;"></pre>');
+    mirror.highlightJson5(isDecode ? target : lemon.dec(target), exchange + ' pre');
+    $(exchange + ' pre').css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
+    $(exchange + ' pre').attr(attrs || {});
+    return $(exchange).html() + '';
   }
 });
 
@@ -619,7 +632,23 @@ lemon.register({
       lemon.isFunc(okCallback) && okCallback(e);
     });
   },
-  preview: function(text, callback) {
+  preview: function(text, callback, jsonOptions) {
+    if (jsonOptions) {
+      jsonOptions = lemon.extend({
+        mirror: null,
+        rightTip: '',
+        css: {},
+        isDecode: false,
+        attrs: {}
+      }, jsonOptions || {});
+      if (jsonOptions.mirror && jsonOptions.mirror.isJson(text)) {
+        text = [
+          lemon.jsonStyl(),
+          lemon.getHighlightDoc(jsonOptions.mirror, text, jsonOptions.rightTip, jsonOptions.css, jsonOptions.isDecode, jsonOptions.attrs)
+        ].join('');
+      }
+    }
+
     var contextId = '#preview_full';
     var previewM = lemon.modal({
       contentClose: true,

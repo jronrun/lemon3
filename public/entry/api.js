@@ -38,12 +38,7 @@ var apis = {
   },
 
   getHighlightDoc: function(target, rightTip, css, isDecode, attrs) {
-    var exchange = '#dd_api_exchange';
-    $(exchange).empty().append('<pre class="roundedcorner" style="background-color:#ffffff;border:0;overflow-y:scroll;"></pre>');
-    mirror.highlightJson5(isDecode ? target : lemon.dec(target), exchange + ' pre');
-    $(exchange + ' pre').css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
-    $(exchange + ' pre').attr(attrs || {});
-    return $(exchange).html() + '';
+    return lemon.getHighlightDoc(mirror, target, rightTip, css, isDecode, attrs);
   },
 
   refresh: function(groupId, apiId) {
@@ -1591,7 +1586,11 @@ var mapi = {
       } else {
         text = mapi.resp.val();
       }
-      lemon.preview(text);
+
+      lemon.preview(text, false, {
+        mirror: mirror,
+        isDecode: true
+      });
     });
   },
   intlDD: function() {

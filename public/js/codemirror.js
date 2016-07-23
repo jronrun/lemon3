@@ -133,13 +133,7 @@ var helper = function(cm, events) {
       return data;
     },
     isJson: function() {
-      try {
-        json5s.parse(cm.getValue());
-      } catch (e) {
-        lemon.warn('codemirror.isJson: ' + e.message);
-        return false;
-      }
-      return true;
+      return mirror.isJson(cm.getValue());
     },
     refreshDelay: function(delay) {
       lemon.delay(function () {
@@ -231,6 +225,16 @@ var mirror = function (elId, options, events) {
   }
 
   return aHelp;
+};
+
+mirror.isJson = function(target) {
+  try {
+    json5s.parse(target);
+  } catch (e) {
+    lemon.warn('mirror.isJson: ' + e.message);
+    return false;
+  }
+  return true;
 };
 
 mirror.highlight = function(target, mode, output) {

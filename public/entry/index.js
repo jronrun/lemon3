@@ -624,7 +624,7 @@ lemon.register({
   confirm: function(text, okCallback, cancelCallback, title) {
     var okId = 'ok_id_' + lemon.uniqueId();
     var footer = [
-      '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>',
+      '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       lemon.format('<button type="button" id="{0}" class="btn btn-primary" data-dismiss="modal">OK</button>', okId)
     ].join('');
 

@@ -244,4 +244,11 @@ module.exports = function(scope, config) {
     return regexp.test(target);
   };
 
+  scope.publishEvent = function(req, eventName, data) {
+    req.session.customEvent = {
+      event: eventName,
+      data: data || {}
+    };
+  };
+
 };

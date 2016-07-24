@@ -193,11 +193,20 @@ module.exports = function(app, config, passport) {
         source: req.resource.id,
         reference: req.reference
       });
+
       if (app.locals.ENV_DEVELOPMENT) {
         log.debug('render source ' + (req.resource.id || req.originalUrl) + ' with ' + view, options);
         _.extend(options, {
           livereload: config.livereload
         });
+      }
+
+      if ((req.session || {}).customEvent) {
+        _.extend(options, {
+          userEvent: crypto.compress(req.session.customEvent)
+        });
+
+        req.session.customEvent = null;
       }
 
       _render.call(this, view, options, fn);

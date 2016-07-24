@@ -25,6 +25,25 @@ router.get(index.do, function (req, res, next) {
   res.render(index);
 });
 
+
+/**
+ * Navbar header, User Information
+ */
+router.post(index.header.do, function (req, res, next) {
+  var indexData = {
+    logined: false
+  };
+
+  if (!req.anonymous) {
+    _.extend(indexData, {
+      logined: true,
+      username: req.user.name
+    });
+  }
+
+  res.json(answer.succ(crypto.compress(indexData)));
+});
+
 /**
  * API Request
  */

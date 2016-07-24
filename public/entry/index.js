@@ -698,7 +698,7 @@ lemon.register({
         if (lemon.isUrl(text)) {
           view.openUrl(text, function() {
             pg.end();
-            lemon.isFunc(domReadyCallbackIfUrl) && domReadyCallbackIfUrl();
+            lemon.isFunc(domReadyCallbackIfUrl) && domReadyCallbackIfUrl(view, previewM);
           });
         } else {
           text = (text || '').replace(/\\\//g, '/');
@@ -892,7 +892,53 @@ function doTabHandle(e, type) {
   handle && lemon.isFunc(handle[type]) && handle[type](cur, prev);
 }
 
+lemon.register({
+  pubMsg: function(cfg) {
+    window.name = cfg;
+    try {
+      var target = parent.postMessage ? parent : (parent.document.postMessage ? parent.document : undefined);
+
+      if (typeof target != "undefined") {
+        target.postMessage(cfg, "*");
+      }
+    } catch (e) {/**/}
+  },
+
+  subMsg: function(callback, once) {
+    var _cb;
+    if (window.postMessage) {
+      if (lemon.isFunc(callback)) {
+        _cb = null;
+        _cb = function(e) {
+          if (once) {
+            $(window).unbind('message', _cb);
+          }
+          callback(e.originalEvent.data);
+        };
+
+        $(window).bind('message', _cb);
+      }
+    } else {
+      try {
+        var data = $('iframe').get(0).contentWindow.name || null;
+        if (data != null) {
+          callback(data);
+        }
+      } catch (e) {/**/}
+    }
+  }
+});
+
+function publishUserEvent() {
+  var userEvt = $('head').data('userEvent') || 'none';
+  if ('none' != userEvt) {
+    lemon.pubMsg(lemon.deepDec(userEvt));
+  }
+}
+
 $(function () {
+
+  lemon.previewInstance = null;
 
   $.ajaxSetup({
     cache: false
@@ -908,7 +954,9 @@ $(function () {
     }
 
     if (href && href.length > 0) {
-      lemon.preview((location.origin || '') + href);
+      lemon.preview((location.origin || '') + href, function(theIframe, thePreview) {
+        lemon.previewInstance = thePreview;
+      });
     }
   });
 
@@ -960,5 +1008,6 @@ $(function () {
   }
 
   lemon.tabEventListen();
+  publishUserEvent();
 
 });

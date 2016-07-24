@@ -1259,6 +1259,16 @@ var mapi = {
     });
     mapi.docPopover.show();
   },
+  renderNavbarHeader: function() {
+    $.post('/api/header').done(function (resp) {
+      if (0 == resp.code) {
+        var hdata = lemon.deepDec(resp.result);
+        $('#navbar-header .p-a-1').html(lemon.tmpl($('#api_navbar_header_tmpl').html(), hdata));
+      } else {
+        lemon.msg(resp.msg);
+      }
+    });
+  },
   intlRequ: function() {
     mapi.requ = mapi.mirror('#request', mapi.requCardId);
 
@@ -1631,6 +1641,20 @@ var mapi = {
     requs.init();
     history.init();
     qry.init();
+    mapi.renderNavbarHeader();
+
+    lemon.subMsg(function (data) {
+      if (data && data.event) {
+        switch (data.event) {
+          case 'SIGNIN':
+          case 'SIGNUP':
+          case 'SIGNOUT':
+            lemon.previewInstance && lemon.previewInstance.hide();
+            mapi.renderNavbarHeader();
+            break;
+        }
+      }
+    });
 
     //http://stackoverflow.com/questions/9626059/window-onbeforeunload-in-chrome-what-is-the-most-recent-fix
     $(window).on('beforeunload', function() {

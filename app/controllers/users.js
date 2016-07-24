@@ -15,6 +15,7 @@ module.exports = function (app, passport) {
       //failureFlash: 'Invalid email or password, Try again?'
     }), function (req, res, next) {
 
+    publishEvent(req, 'SIGNIN');
     var redirectTo = req.session.returnTo ? req.session.returnTo : routes.home.action;
     delete req.session.returnTo;
     res.redirect(redirectTo);
@@ -96,6 +97,7 @@ router.post(index.signup.do, function (req, res, next) {
     }
   ], function (err, result) {
     res.succ('Congratulations! Sign up success!');
+    publishEvent(req, 'SIGNUP');
     res.redirect(index.signin.action);
   });
 
@@ -103,5 +105,6 @@ router.post(index.signup.do, function (req, res, next) {
 
 router.get(index.signout.do, function (req, res, next) {
   req.logout();
+  publishEvent(req, 'SIGNOUT');
   res.redirect(routes.home.action);
 });

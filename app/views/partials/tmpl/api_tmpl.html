@@ -433,6 +433,23 @@
   </div>
 </script>
 
+<script type="text/html" id="api_navbar_header_tmpl">
+    <div class="card">
+        <div class="card-block">
+          <% if (logined) { %>
+              <h5 class="card-title text-muted">Hello, <%= username %></h5>
+              <p class="card-text"></p>
+              <a href="/user/signout" data-preview class="btn btn-primary">Sign Out</a>
+          <% } else { %>
+              <h5 class="card-title text-muted">Hello</h5>
+              <p class="card-text text-muted">You need to login to get more.</p>
+              <a href="/user/signin" data-preview class="btn btn-primary">Sign In</a>
+              <a href="/user/signup" data-preview class="btn btn-primary">Create account</a>
+          <% } %>
+        </div>
+    </div>
+</script>
+
 {{!--
 <div class="dropdown-divider invisible"></div>
 <div class="dropdown-header">

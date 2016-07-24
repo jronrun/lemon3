@@ -55,7 +55,8 @@ var resource = [
       },
       {id: 50005, name: 'define', desc: 'API define', method: M.POST, protect: false},
       {id: 50006, name: 'comment', desc: 'API comment', method: M.POST, protect: false},
-      {id: 50007, name: 'viewurl', desc: 'Show API Request URL', method: M.POST, protect: false}
+      {id: 50007, name: 'viewurl', desc: 'Show API Request URL', method: M.POST, protect: false},
+      {id: 50008, name: 'header', desc: 'User Information', method: M.POST, protect: false}
     ]
   },
 

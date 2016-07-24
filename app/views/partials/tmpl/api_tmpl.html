@@ -439,7 +439,10 @@
           <% if (logined) { %>
               <h5 class="card-title text-muted">Hello, <%= username %></h5>
               <p class="card-text"></p>
-              <a href="/user/signout" data-preview class="btn btn-primary">Sign Out</a>
+              <a href="/manage" data-preview class="btn btn-primary">Manage API</a>
+              <a href="/user/signout" data-preview class="btn btn-secondary pull-right borderinfo">
+                  <span class="text-muted">Sign Out</span>
+              </a>
           <% } else { %>
               <h5 class="card-title text-muted">Hello</h5>
               <p class="card-text text-muted">You need to login to get more.</p>

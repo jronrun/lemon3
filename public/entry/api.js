@@ -1624,6 +1624,7 @@ var mapi = {
     }
   },
   initialize: function() {
+    lemon.homeProgress();
     if (lemon.isSmallDownView()) {
       $('head').append('<style>li.nav-item { margin:0 0 5px 0; }</style>');
       $('#navbar-smdown-tgl').click(function() {
@@ -1670,6 +1671,9 @@ var mapi = {
 
     $(window).resize(mapi.resize);
     mapi.resize();
+    lemon.delay(function () {
+      lemon.homeProgressEnd();
+    }, 900);
   }
 };
 

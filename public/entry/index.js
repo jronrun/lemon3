@@ -104,6 +104,7 @@ global.register = function(call) {
   }
 };
 
+var homeProgress = null;
 lemon.register({
   blast: function(target, selector) {
     var blast = $(selector).blast({ search: target });
@@ -153,6 +154,12 @@ lemon.register({
         lemon.isFunc(callback) && callback(selector, event)
       }
     });
+  },
+  homeProgress: function() {
+    return (homeProgress = progressJs().start().autoIncrease(5, 100));
+  },
+  homeProgressEnd: function() {
+    homeProgress && homeProgress.end();
   },
   progress: function(options) {
     if (lemon.isString(options)) {

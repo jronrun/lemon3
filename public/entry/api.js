@@ -1644,12 +1644,18 @@ var mapi = {
     mapi.renderNavbarHeader();
 
     lemon.subMsg(function (data) {
+      var closePreview = function() {
+        lemon.previewInstance && lemon.previewInstance.hide();
+      };
       if (data && data.event) {
         switch (data.event) {
           case 'SIGNIN':
+            closePreview();
+            location.reload();
+            break;
           case 'SIGNUP':
           case 'SIGNOUT':
-            lemon.previewInstance && lemon.previewInstance.hide();
+            closePreview();
             mapi.renderNavbarHeader();
             break;
         }

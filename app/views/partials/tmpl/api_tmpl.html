@@ -16,7 +16,8 @@
     <div class="dropdown-header" id="grouph_<%= env.id %>_<%= id %>" envg="<%= id %>">
         <h6 style="font-size: 90%">
             {{! <span class="text-<%= 'danger' == env.level ? 'danger' : 'muted' %>"> }}
-            <span class="text-muted">
+            {{! <span class="text-<%= env.level %>"> }}
+            <span class="text-silver">
               <em class="fa fa-flag-o"></em>&nbsp;&nbsp;<%= name %>
               <% if (desc.length > 0) { %>
                 <footer class="blockquote-footer">

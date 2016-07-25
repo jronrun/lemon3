@@ -651,6 +651,9 @@ lemon.register({
       lemon.isFunc(okCallback) && okCallback(e);
     });
   },
+  isRootWin: function() {
+    return window.top == window.self;
+  },
   preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl) {
     if (jsonOptions) {
       jsonOptions = lemon.extend({

@@ -1701,6 +1701,13 @@ var mapi = {
         }, 500);
       });
     } else {
+      $(mapi.requCardId).css({
+        border: 0
+      });
+      $(mapi.respCardId).css({
+        border: 0
+      });
+
       lemon.console();
     }
 

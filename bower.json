@@ -25,6 +25,7 @@
     "Progress.js": "progress.js#^0.1.0",
     "jscroll": "^2.3.5",
     "blast-text": "^2.0.0",
-    "velocity": "^1.2.3"
+    "velocity": "^1.2.3",
+    "screenfull": "^3.0.0"
   }
 }

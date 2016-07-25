@@ -1323,6 +1323,23 @@ var mapi = {
   intlRequ: function() {
     mapi.requ = mapi.mirror('#request', mapi.requCardId);
 
+    $('#api-requ-left').click(function () {
+      lemon.screenfull(function (isFull) {
+        if (lemon.isMediumUpView()) {
+          var orginalH = $(mapi.requCardId).height(), checkH = isFull ? 15 : 46;
+          var offsetH = $(window).height() - $(mapi.requCardId).offset().top - orginalH - checkH;
+          $(mapi.requCardId).css({
+            height: orginalH + offsetH
+          });
+          $($(mapi.respCardId)).css({
+            height: orginalH + offsetH
+          });
+        }
+
+        mapi.resize();
+      });
+    });
+
     if (lemon.isMediumUpView()) {
       var fromH = $(mapi.requCardId).height() - 46;
       $('#tab-form').css({

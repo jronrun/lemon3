@@ -7,6 +7,8 @@ require('../css/style.styl');
 //require('velocity/velocity');
 //require('velocity/velocity.ui');
 require('blast-text');
+var screenfull = require('screenfull');
+
 var handlePageCall = {},
   handleModalCall = { show: {}, shown: {}, confirm: {} },
   handleTab = {},
@@ -177,6 +179,23 @@ lemon.register({
   },
   homeProgressEnd: function() {
     homeProgress && homeProgress.end();
+  },
+  screenfull: function(callback) {
+    var fullsctgl = function() {
+      lemon.delay(function() {
+        screenfull.toggle();
+      }, 100);
+    };
+
+    $(document).on(screenfull.raw.fullscreenchange, function (event) {
+      lemon.delay(function() {
+        lemon.isFunc(callback) && callback(screenfull.isFullscreen, screenfull, event);
+      }, 600);
+    });
+
+    fullsctgl();
+
+    return screenfull;
   },
   progress: function(options) {
     if (lemon.isString(options)) {

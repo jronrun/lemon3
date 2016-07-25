@@ -22,7 +22,7 @@ var user = model_bind('user', model);
   * 3: 'Exclude All',
   * 4: 'Exclude only in Define'
   *
-  * @see power.sourceDefineConst
+  * @see comm.SCOPE_DEFINE
   * @param scopes
   * @param excludeDefine
   * @param includeDefine
@@ -90,7 +90,7 @@ var user = model_bind('user', model);
   *       define: []
   *     }
   * }
-  * @see power.sourceDefineConst
+  * @see comm.SCOPE_DEFINE
   * @param userId
   * @param callback
   * @returns {Promise}

@@ -119,6 +119,21 @@ lemon.register({
   isUrl: function(text) {
     return /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/.test(text);
   },
+  inlineTip: function(selector, msg, delay) {
+    var tipSel = selector + ' .inlinetip';
+    var isBtn = $(selector).get(0).tagName == 'BUTTON';
+    if (!$(tipSel).length) {
+      $(selector).append('<span class="inlinetip"></span>');
+    }
+    if (isBtn) {
+      $(selector).attr({disabled: 'disabled'}).addClass('disabled');
+    }
+    $(tipSel).html(msg || ' done!');
+    lemon.delay(function(){
+      $(tipSel).empty();
+      $(selector).removeAttr('disabled').removeClass('disabled');
+    }, delay || 1500);
+  },
   isDisable: function(selector) {
     return $(selector).attr('disabled');
   },

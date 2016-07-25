@@ -32,7 +32,6 @@ var model = schema({
   end_time: { type: 'date', required: true },
   //Reference ID if type is 1, 3, 4
   content: { type: 'string', allowEmpty: false },
-  state: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Normal', 2: 'Canceled'} },
   user: {
     type: 'object',
     properties: {
@@ -41,6 +40,7 @@ var model = schema({
       ip: { type: 'string', allowEmpty: false }
     }
   },
+  state: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Sharing', 2: 'Canceled'} },
   create_time: { type: 'date', required: true }
 });
 

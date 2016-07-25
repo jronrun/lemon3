@@ -207,8 +207,8 @@ var menu = [
     {sourceId: 200009, args: '1'},
     {sourceId: 200005, args: '1'},
     {sourceId: 200007, args: '1'},
-    {sourceId: 200006, args: '1'},
-    {sourceId: 200008, args: '1'}
+    {sourceId: 200006, args: '1'}
+    //{sourceId: 200008, args: '1'}
   ]
   }
 ];

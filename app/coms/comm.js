@@ -120,6 +120,14 @@ module.exports = function(scope, config) {
   _.extend(_, extend_lodash);
   _.extend(scope, CONSTANT);
 
+  // Exclude > Include if contain both in same time
+  scope.SCOPE_DEFINE = {
+    1: 'Include All',
+    2: 'Include only in Define',
+    3: 'Exclude All',
+    4: 'Exclude only in Define'
+  };
+
   scope.moment = moment;
   scope.answer = answer;
   scope.json5s = json5s;

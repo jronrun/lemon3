@@ -2,14 +2,6 @@
 
 var log = log_from('power');
 
-// Exclude > Include if contain both in same time
-var sourceDefineConst = {
-  1: 'Include All',
-  2: 'Include only in Define',
-  3: 'Exclude All',
-  4: 'Exclude only in Define'
-};
-
 var model = schema({
   id: { type: 'integer', required: true },
   type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Resource', 2: 'Manual API'} },
@@ -21,14 +13,14 @@ var model = schema({
   server: {
     type: 'object',
     properties: {
-      scope: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: sourceDefineConst },
+      scope: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: SCOPE_DEFINE },
       define: { type: 'array', uniqueItems: true }
     }
   },
   interface: {
     type: 'object',
     properties: {
-      scope: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: sourceDefineConst },
+      scope: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: SCOPE_DEFINE },
       define: { type: 'array', uniqueItems: true }
     }
   },

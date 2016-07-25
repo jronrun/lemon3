@@ -74,7 +74,7 @@ var helper = {
    *     scope: 1
    *     define: []
    *  }
-   * @see power.sourceDefineConst
+   * @see comm.SCOPE_DEFINE
    * @param req
    * @param property
    * @returns {{}}

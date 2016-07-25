@@ -1651,7 +1651,6 @@ var mapi = {
       if (data && data.event) {
         switch (data.event) {
           case 'SIGNIN':
-            closePreview();
             location.reload();
             break;
           case 'SIGNUP':

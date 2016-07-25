@@ -8,6 +8,7 @@ var model = schema({
   group: { type: 'object' },
   serv: { type: 'object' },
   api: { type: 'object' },
+  note: { type: 'string' },
   user: {
     type: 'object',
     properties: {

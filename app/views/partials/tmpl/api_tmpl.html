@@ -243,6 +243,13 @@
                       'tgl-resp': 'tgl',
                       id: ('bhis_' + batchNo + '_2_' + his.id)
                   }) %>
+                  <% var hasNote = his.note && his.note.length > 0; %>
+                  <div class="alert alert-warning linebreak" role="alert" id="anote4his_<%= batchNo %>_<%= his.id %>"
+                       style="<%= hasNote ? '' : 'display: none;' %>border: 0px;font-size: 85%;width:<%= preStyle.width %>px; max-width:<%= preStyle['max-width'] %>px;">
+                      <% if (hasNote) { %>
+                          <%= his.note %>
+                      <% } %>
+                  </div>
                   <footer class="blockquote-footer">
                       <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
                   </footer>
@@ -292,6 +299,10 @@
               <button class="btn btn-secondary btn-sm text-muted icondh"
                       id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API Document" style="border: 0px; " type="button">
                   <em class="fa fa-comment"></em>
+              </button>
+              <button class="btn btn-secondary btn-sm text-muted icondh"
+                      id="hisnote_<%= batchNo %>_<%= his.id %>" title="Add Note for <%= his.api.name %>" style="border: 0px; " type="button">
+                  <em class="fa fa-sticky-note-o"></em>
               </button>
           </td>
       </tr>

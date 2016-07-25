@@ -533,6 +533,15 @@ var history = {
     history.next(callback, true);
   },
 
+  note: function(hisId, note) {
+    $.post('/api/history/note', {
+      hisId: hisId,
+      note: lemon.enc(note)
+    }).done(function (resp) {
+      lemon.info(resp);
+    });
+  },
+
   set: function(his) {
     history.cur = his.id;
     envs.doChoose(his.env, his.group, his.serv);
@@ -944,6 +953,46 @@ var qry = {
     });
   },
 
+  hisNote: function(selector) {
+    $(selector).click(function () {
+      var tmp = $(this).attr('id').split('_'), hisId = tmp[2], batchNo = tmp[1],
+        aHis = lemon.data('#ahis_' + hisId, 'his'), inputNoteId = 'input_hisnote_' + hisId,
+        viewNoteId = '#anote4his_' + batchNo + '_' + hisId;
+        title = (aHis.api.name ? (aHis.api.name + ' '): '') + 'Note';
+      var body = [
+        '<textarea type="text" class="form-control borderinfo" rows="5" id="' + inputNoteId + '">',
+        aHis.note || '',
+        '</textarea>'
+      ].join('');
+
+      lemon.modal({
+        title: title,
+        titleClose: true,
+        body: body,
+        modal: {
+          show: true,
+          backdrop: 'static',
+          keyboard: false
+        }
+      }, {
+        hide: function() {
+          var aNote = $('#' + inputNoteId).val() || '';
+          aHis.note = aNote;
+          lemon.data('#ahis_' + hisId, {
+            his: aHis
+          });
+
+          $(viewNoteId).text(aNote).show();
+          history.note(hisId, aNote);
+
+          if (aNote.length < 1) {
+            $(viewNoteId).text('').hide();
+          }
+        }
+      });
+    });
+  },
+
   hisToggleComment: function(selector, preStyle, batchNo) {
     $(selector).click(function () {
       var hisId = $(this).attr('id').split('_')[2], thiz = this;
@@ -1049,6 +1098,7 @@ var qry = {
           var batchNo = 'his' + lemon.uniqueId();
           $('#s_his_tbody').append(lemon.tmpl($('#his_tr_tmpl').html(), {
             batchNo: batchNo,
+            preStyle: preStyle,
             items: rdata.items,
             userl: (1 == rdata.userl ? true : false),
             highlight: function(doc, tip, attrs) {
@@ -1065,10 +1115,11 @@ var qry = {
             $('tr[timegroupc="' + lemon.data(this, 'timeId') + '"]').fadeToggle();
           });
 
-          qry.toggleHis('#s_his_table button[id^="histgl_"]');
+          qry.toggleHis(lemon.format('#s_his_table button[id^="histgl_{0}_"]', batchNo));
 
           qry.toggleItem(batchNo, 'histgl', 'histgl_', 'bhis_');
-          qry.hisToggleComment('#s_his_table button[id^="commenttgl_"]', preStyle, batchNo);
+          qry.hisToggleComment(lemon.format('#s_his_table button[id^="commenttgl_{0}_"]', batchNo), preStyle, batchNo);
+          qry.hisNote(lemon.format('button[id^="hisnote_{0}_"], button[id^="anote4his_{0}_"]', batchNo));
 
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partHisId);

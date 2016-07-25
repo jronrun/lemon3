@@ -149,6 +149,20 @@ router.post(index.history.do, function (req, res, next) {
 });
 
 /**
+ * History note
+ */
+router.post(index.history.note.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  var hisId = parseInt(req.body.hisId), note = req.body.note;
+  requs.setHisNote(hisId, note, function() {
+    return res.json(answer.succ());
+  });
+});
+
+/**
  * Next History
  */
 router.post(index.history.next.do, function (req, res, next) {
@@ -205,7 +219,8 @@ router.post(index.history.query.do, function (req, res, next) {
         { 'api.name': likeKey},
         { 'api.desc': likeKey},
         { 'user.ip': likeKey},
-        { 'user.name': likeKey}
+        { 'user.name': likeKey},
+        { note: likeKey}
       ]
     };
   } else if (req.body.query) {

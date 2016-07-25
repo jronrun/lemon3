@@ -30,11 +30,13 @@ lemon.deepDec = function(val) {
 };
 
 lemon.data = function(selector, target) {
+  var prefix = 'data-';
+
   //get all
   if (lemon.isUndefined(target)) {
-    var r = $(selector).data() || {}, rdata = {};
+    var $el = $(selector), r = $el.data() || {}, rdata = {};
     _.each(r, function(v, k) {
-      rdata[k] = lemon.deepDec(v);
+      rdata[k] = lemon.deepDec($el.attr(prefix + target));
     });
 
     return rdata;
@@ -42,13 +44,13 @@ lemon.data = function(selector, target) {
 
   //get
   if (lemon.isString(target)) {
-    return lemon.deepDec($(selector).data(target));
+    return lemon.deepDec($(selector).attr(prefix + target));
   }
 
   //set
   var theData = {};
   lemon.each(target, function (v, k) {
-    theData['data-' + k] = lemon.enc(v);
+    theData[prefix + k] = lemon.enc(v);
   });
   $(selector).attr(theData);
 };
@@ -745,7 +747,7 @@ lemon.register({
       $('#modals_context').append(lemon.tmpl($('#modal_tmpl').html(), options));
 
       options.modal = lemon.extend({
-        backdrop: true,
+        backdrop: true, // doesn't close the modal on click if 'static'
         keyboard: true,
         show: false
       }, options.modal || {});

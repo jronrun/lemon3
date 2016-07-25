@@ -303,6 +303,20 @@ module.exports = function(commOptions) {
       });
     },
 
+    setHisNote: function(historyId, note, callback) {
+      note = crypto.decompress(note);
+
+      History.updateOne({
+        id: historyId
+      }, {
+        $set: {
+          note: note
+        }
+      }, function(err, result) {
+        _.isFunction(callback) && callback();
+      });
+    },
+
     setHisResp: function(historyId, response, callback) {
       var response = crypto.decompress(response), json = false;
       try {

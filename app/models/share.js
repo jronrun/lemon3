@@ -4,7 +4,10 @@ var log = log_from('share');
 
 var model = schema({
   id: { type: 'integer', required: true },
-  //Allow open count (if type is 3, 4, 5) or request count (if type is 1, 2), Unlimited if count is -1
+  read_write: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Readonly', 2: 'Read Write'} },
+  //Allow count, Unlimited if count is -1
+  //Opened count if readonly
+  //Requested count if read write
   count: { type: 'integer', required: true },
   requested: { type: 'integer', required: true },
   start_time: { type: 'date', required: true },

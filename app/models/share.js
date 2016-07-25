@@ -4,15 +4,6 @@ var log = log_from('share');
 
 var model = schema({
   id: { type: 'integer', required: true },
-  read_write: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Readonly', 2: 'Read Write'} },
-  //Allow count, Unlimited if count is -1
-  //Opened count if readonly
-  //Requested count if read write
-  count: { type: 'integer', required: true },
-  requested: { type: 'integer', required: true },
-  start_time: { type: 'date', required: true },
-  //share expire time
-  end_time: { type: 'date', required: true },
   type: { type: 'integer', enum: [1, 2], required: true, const: {
       1: 'API',
       2: 'API Capture',
@@ -30,6 +21,15 @@ var model = schema({
       define: { type: 'array', uniqueItems: true }
     }
   },
+  read_write: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Readonly', 2: 'Read Write'} },
+  //Allow count, Unlimited if count is -1
+  //Opened count if readonly
+  //Requested count if read write
+  count: { type: 'integer', required: true },
+  used_count: { type: 'integer', required: true },
+  start_time: { type: 'date', required: true },
+  //share expire time
+  end_time: { type: 'date', required: true },
   //Reference ID if type is 1, 3, 4
   content: { type: 'string', allowEmpty: false },
   state: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Normal', 2: 'Canceled'} },

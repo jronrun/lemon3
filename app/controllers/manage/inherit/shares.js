@@ -36,10 +36,10 @@ module.exports = function (router, index, root) {
       },
 
       start_time: {
-        label: 'Start share time'
+        label: 'Start time'
       },
       end_time: {
-        label: 'End share time'
+        label: 'End time'
       }
     }
   });

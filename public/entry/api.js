@@ -406,10 +406,10 @@ var requs = {
 
       //chosen API
       if (choosed.apiGroup && choosed.api) {
-        if (choosed.envGroup.id != choosed.apiGroup.id) {
-          var tip = 'The chosen {0} server {1} does not support the {2} {3}';
-          return lemon.msg(lemon.format(tip, choosed.envGroup.name, choosed.serv.name, choosed.apiGroup.name, choosed.api.name));
-        }
+        //if (choosed.envGroup.id != choosed.apiGroup.id) {
+        //  var tip = 'The chosen {0} server {1} does not support the {2} {3}';
+        //  return lemon.msg(lemon.format(tip, choosed.envGroup.name, choosed.serv.name, choosed.apiGroup.name, choosed.api.name));
+        //}
       }
       //unchosen API
       else {

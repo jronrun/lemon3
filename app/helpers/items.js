@@ -22,25 +22,7 @@ var helper = {
       defined.scope = 3;
     }
 
-    //1: 'Include All'
-    if (1 == defined.scope) {
-      return true;
-    }
-
-    //2: 'Include only in Define'
-    else if (2 == defined.scope) {
-      return _.indexOf(defined.define || [], target) != -1;
-    }
-
-    //3: 'Exclude All'
-    else if (3 == defined.scope) {
-      return false;
-    }
-
-    //4: 'Exclude only in Define'
-    else if (4 == defined.scope) {
-      return _.indexOf(defined.define || [], target) == -1;
-    }
+    return inScope(defined, target);
   },
 
   ownIds: function(usr, property, target) {

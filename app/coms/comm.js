@@ -128,6 +128,32 @@ module.exports = function(scope, config) {
     4: 'Exclude only in Define'
   };
 
+  scope.inScope = function(defined, target) {
+    if (!(defined = defined || {}).scope) {
+      return false;
+    }
+
+    //1: 'Include All'
+    if (1 == defined.scope) {
+      return true;
+    }
+
+    //2: 'Include only in Define'
+    else if (2 == defined.scope) {
+      return _.indexOf(defined.define || [], target) != -1;
+    }
+
+    //3: 'Exclude All'
+    else if (3 == defined.scope) {
+      return false;
+    }
+
+    //4: 'Exclude only in Define'
+    else if (4 == defined.scope) {
+      return _.indexOf(defined.define || [], target) == -1;
+    }
+  };
+
   scope.moment = moment;
   scope.answer = answer;
   scope.json5s = json5s;

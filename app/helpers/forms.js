@@ -54,6 +54,23 @@ function getElement(fieldName, define, options, values, path) {
   var selOpts = [], elements = [];
 
   switch (define.type) {
+    case 'date':
+      element = datetimeField(fieldName, define, elLayout);
+      if (values) {
+        if ('' == path) {
+          if (fieldName) {
+            element.value = values[fieldName];
+          }
+        } else {
+          element.value = _.get(values, path + '.' + fieldName);
+        }
+      }
+
+      if ('' != path) {
+        element.parent = path;
+      }
+      elements.push(element);
+      break;
     case 'string':
       //select
       if (define.enum) {
@@ -379,6 +396,15 @@ function inputField(fieldName, define, elLayout, inputType) {
   return element;
 }
 
+function datetimeField(fieldName, define, elLayout) {
+  var element = inputField(fieldName, define, elLayout);
+  element.el = 'datetime';
+  element.attrs = _.extend({
+    datetype: getInputType(define, 'datetime')
+  }, element.attrs);
+  return element;
+}
+
 function checkboxField(fieldName, define, elLayout, selectOptions) {
   var element = inputField(fieldName, define, elLayout, 'checkbox');
   element.options = getMultiOptions(elLayout, selectOptions);
@@ -506,6 +532,7 @@ function form(elements, formOptions, excludeField) {
 
   var filter = [];
   excludeField.push('id');
+  excludeField.push('create_time');
   filterExclude(elements, excludeField, filter);
 
   return {

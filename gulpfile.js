@@ -14,10 +14,10 @@ var gulp 	= require('gulp'),
 loader.loadTasks(gulp, plugins, config);
 
 // this & 'gulp webpack' || this & 'npm run dev'
-gulp.task('default', ['build-style', 'serv-develop']);
+gulp.task('default', ['build-pickadate', 'build-style', 'serv-develop']);
 
 //this & 'gulp' || this & 'npm start'
 gulp.task("webpack", ['serv-webpack']);
 
 //production, export MONGOHQ_URL="mongodb://localhost:27017/lemon3"
-gulp.task("production", ['env-product', 'build-style', 'serv-product']);
+gulp.task("production", ['env-product', 'build-pickadate', 'build-style', 'serv-product']);

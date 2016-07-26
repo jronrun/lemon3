@@ -134,6 +134,60 @@
         </div>
     {{/is}}
 
+    {{#is el "==" "datetime"}}
+
+        {{#is attrs.datetype "in" "date,time"}}
+            <div class="form-group">
+                {{#if label}} <label class="control-label" for="{{attrs.id}}">{{{label}}}</label> {{/if}}
+                <input class="form-control underlined {{attrs.class}}"
+                    {{#each attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}
+                    {{#if value}}value="{{value}}"{{/if}}>
+                {{#if desc}}<small class="text-muted">{{{desc}}}</small>{{/if}}
+            </div>
+        {{/is}}
+        {{#is attrs.datetype "==" "datetime"}}
+          <div class="form-group">
+              {{#if label}} <label class="control-label" for="{{attrs.id}}">{{{label}}}</label> {{/if}}
+              <div class="row">
+                  <div class="col-xs-6">
+                      <input class="form-control underlined {{attrs.class}}"
+                          {{#each attrs}}
+                              {{#is @key "==" "class"}}
+                              {{else}}
+                                  {{#is @key "==" "datetype"}}
+                                      {{@key}}="date"
+                                  {{else}}
+                                      {{@key}}="{{this}}"
+                                  {{/is}}
+                              {{/is}}
+                          {{/each}}
+                          {{#if value}}value="{{value}}"{{/if}}>
+                  </div>
+                  <div class="col-xs-6">
+                      <input class="form-control underlined {{attrs.class}}"
+                          {{#each attrs}}
+                              {{#is @key "in" "class,datetype,id,name,shortname"}}
+                                  {{#is @key "==" "class"}}
+                                  {{/is}}
+                                  {{#is @key "==" "datetype"}}
+                                    {{@key}}="time"
+                                  {{/is}}
+                                  {{#is @key "in" "id,name,shortname"}}
+                                    {{@key}}="{{this}}_clock"
+                                  {{/is}}
+                              {{else}}
+                                  {{@key}}="{{this}}"
+                              {{/is}}
+                          {{/each}}
+                          {{#if value}}value="{{value}}"{{/if}}>
+                  </div>
+              </div>
+              {{#if desc}}<small class="text-muted">{{{desc}}}</small>{{/if}}
+          </div>
+        {{/is}}
+
+    {{/is}}
+
   {{/each}}
 
 <div class="form-group">

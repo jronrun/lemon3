@@ -26,6 +26,7 @@
     "jscroll": "^2.3.5",
     "blast-text": "^2.0.0",
     "velocity": "^1.2.3",
-    "screenfull": "^3.0.0"
+    "screenfull": "^3.0.0",
+    "pickadate": "^3.5.6"
   }
 }

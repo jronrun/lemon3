@@ -34,3 +34,5 @@ module.exports.task = function (gulp, plugins, config) {
     //this.stderr.pipe(process.stderr);
   });
 };
+
+module.exports.deps = [];

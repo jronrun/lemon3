@@ -33,6 +33,13 @@ module.exports = function (router, index, root) {
       },
       used_count: {
         label: 'Used Requested Count'
+      },
+
+      start_time: {
+        label: 'Start share time'
+      },
+      end_time: {
+        label: 'End share time'
       }
     }
   });
@@ -106,15 +113,13 @@ module.exports = function (router, index, root) {
   router.get(index.editor.do, function (req, res, next) {
     generic.editor({
       schemaExclude: ['create_by', 'state', 'used_count'],
-      defineElement: {
-        owner: {
-          selected: 1,
-          el: 'radio',
-          inline: 1
-        }
-      },
-      resultHandle: function(item, respData) {
-        respData.order = DEFAULT_ORDER;
+      formElHandle: function(forms) {
+        var scopeDefine = generic.textareaEl('share_to.define', {
+          label: 'Define',
+          desc: 'Client IP if Anonymous, User email if Login User'
+        });
+
+        forms.afterEl('share_to.scope', scopeDefine);
       }
     }, req, res, next);
   });

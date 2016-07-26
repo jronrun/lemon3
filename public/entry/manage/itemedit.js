@@ -1,7 +1,8 @@
 /**
  *
  */
-var mirror = require('../../js/codemirror');
+var mirror = require('../../js/codemirror')
+    picker = require('../../js/manage/pickadate');
 
 var editor = {
   ctx: {},
@@ -69,6 +70,10 @@ var editor = {
         lemon.store(chooseback.base, null);
       }
     }
+  },
+
+  datepick: function(dataset) {
+    picker('input[datetype]');
   },
 
   getParams: function() {
@@ -143,6 +148,7 @@ var editor = {
     editor.asCodemirror();
     editor.listChooseBtn();
     editor.listChooseBack(dataset);
+    editor.datepick(dataset);
 
     if (1 != dataset.buttons) {
       $(submitEl).remove();

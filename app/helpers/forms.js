@@ -616,6 +616,10 @@ module.exports = {
     return textareaField(name, false, options);
   },
 
+  datetimeEl: function(name, options) {
+    return datetimeField(name, false, options);
+  },
+
   codemirrorEl: function(name, options) {
     return codemirrorField(name, false, options);
   },

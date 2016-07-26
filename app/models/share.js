@@ -46,5 +46,62 @@ var model = schema({
 
 var share = model_bind('share', model);
 
+share.isAvailable = function(aShare, options) {
+  options = _.extend({
+    usr: {},
+    anonymous: true,
+    clientIP: ''
+  }, options || {});
+
+  if (options.usr.isAdmin) {
+    return answer.succ();
+  }
+
+  if (!aShare) {
+    return answer.fail('Invalid share');
+  }
+
+  //Canceled Sharing
+  if (2 == aShare.state) {
+    return answer.fail('Canceled sharing');
+  }
+
+  //-1 is Unlimited
+  if (-1 != aShare.count && ((aShare.used_count + 1) >= aShare.count)) {
+    return answer.fail('No more open count');
+  }
+
+  var now = new Date().getTime();
+  if (aShare.start_time.getTime() > now || aShare.end_time.getTime() < now) {
+    return answer.fail('Not in share date region');
+  }
+
+  var shareTo = aShare.share_to;
+  //anonymous
+  if (options.anonymous) {
+    if (1 != shareTo.anonymous) {
+      return answer.fail('Not allowed anonymous user');
+    }
+
+    if (!inScope(shareTo, options.clientIP)) {
+      return answer.fail(options.clientIP + ' not in sharing scope');
+    }
+  }
+  //login user
+  else {
+    if (!options.usr.id) {
+      return answer.fail('Invalid user');
+    }
+
+    //shareTo.anonymous
+
+    if (!inScope(shareTo, options.usr.id)) {
+      return answer.fail(options.usr.name + ' not in sharing scope');
+    }
+  }
+
+  return answer.succ();
+};
+
 module.exports = share;
 

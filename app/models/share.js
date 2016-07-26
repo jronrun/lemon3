@@ -4,21 +4,14 @@ var log = log_from('share');
 
 var model = schema({
   id: { type: 'integer', required: true },
+  title: { type: 'string' },
+  desc: { type: 'string' },
   type: { type: 'integer', enum: [1, 2], required: true, const: {
       1: 'API',
       2: 'API Capture',
       3: 'API History',
       4: 'Note',
       5: 'Blank Text'
-    }
-  },
-  share_to: {
-    type: 'object',
-    properties: {
-      anonymous: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Anonymous', 2: 'Login User'} },
-      scope: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: SCOPE_DEFINE },
-      //IP if Anonymous, User ID if Login User
-      define: { type: 'array', uniqueItems: true }
     }
   },
   read_write: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Readonly', 2: 'Read Write'} },
@@ -30,9 +23,19 @@ var model = schema({
   start_time: { type: 'date', required: true },
   //share expire time
   end_time: { type: 'date', required: true },
+  share_to: {
+    type: 'object',
+    properties: {
+      anonymous: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Anonymous', 2: 'Login User'} },
+      scope: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: SCOPE_DEFINE },
+      //IP if Anonymous, User email if Login User
+      define: { type: 'array', uniqueItems: true }
+    }
+  },
   //Reference ID if type is 1, 3, 4
   content: { type: 'string', allowEmpty: false },
-  user: {
+  state: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Sharing', 2: 'Canceled'} },
+  create_by: {
     type: 'object',
     properties: {
       id: { type: 'string', allowEmpty: false },
@@ -40,7 +43,6 @@ var model = schema({
       ip: { type: 'string', allowEmpty: false }
     }
   },
-  state: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Sharing', 2: 'Canceled'} },
   create_time: { type: 'date', required: true }
 });
 
@@ -89,14 +91,14 @@ share.isAvailable = function(aShare, options) {
   }
   //login user
   else {
-    if (!options.usr.id) {
+    if (!options.usr.email) {
       return answer.fail('Invalid user');
     }
 
     //shareTo.anonymous
 
-    if (!inScope(shareTo, options.usr.id)) {
-      return answer.fail(options.usr.name + ' not in sharing scope');
+    if (!inScope(shareTo, options.usr.email)) {
+      return answer.fail(options.usr.name + '(' + options.usr.email + ') not in sharing scope');
     }
   }
 

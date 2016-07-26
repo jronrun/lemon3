@@ -19,6 +19,8 @@ module.exports = function (app) {
   require('./inherit/servers')(router, index.server, index);
   require('./inherit/interfs')(router, index.interface, index);
   require('./inherit/histories')(router, index.history, index);
+
+  require('./inherit/shares')(router, index.share, index);
 };
 
 /**

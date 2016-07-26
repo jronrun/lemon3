@@ -175,6 +175,17 @@ var resource = [
           {id: 2000104, extend: 2000103, method: M.PUT, page: P.list, desc: 'Update'},
           {id: 2000105, extend: 2000103, method: M.DELETE, page: P.list, desc: 'Delete'}
         ]
+      },
+
+      {
+        id: 200011, name: 'share', desc: 'Share', action: '/manage/shares/:page', page: P.list, children: [
+        {id: 2000111, name: 'editor', action: '/manage/share', page: P.edit, desc: 'Editor'},
+        {id: 2000112, extend: 2000111, method: M.POST, page: P.list, desc: 'Create'},
+
+        {id: 2000113, name: 'retrieve', action: '/manage/share/:id', page: P.edit, desc: 'Retrieve'},
+        {id: 2000114, extend: 2000113, method: M.PUT, page: P.list, desc: 'Update'},
+        {id: 2000115, extend: 2000113, method: M.DELETE, page: P.list, desc: 'Delete'}
+      ]
       }
 
     ]
@@ -192,7 +203,8 @@ var menu = [
   {name: 'Dashboard', sourceId: 200000},
   {
     name: 'Users', children: [
-      {sourceId: 200003, args: '1'}
+      {sourceId: 200003, args: '1'},
+      {sourceId: 200011, args: '1'}
     ]
   },
   {
@@ -204,13 +216,14 @@ var menu = [
   },
   {
     name: 'Manual API', children: [
-    {sourceId: 200009, args: '1'},
-    {sourceId: 200005, args: '1'},
-    {sourceId: 200007, args: '1'},
-    {sourceId: 200006, args: '1'}
-    //{sourceId: 200008, args: '1'}
-  ]
+      {sourceId: 200009, args: '1'},
+      {sourceId: 200005, args: '1'},
+      {sourceId: 200007, args: '1'},
+      {sourceId: 200006, args: '1'}
+      //{sourceId: 200008, args: '1'}
+    ]
   }
+
 ];
 
 module.exports = {type: T, method: M, schema: Schema, items: resource, menu: menu};

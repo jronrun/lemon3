@@ -113,6 +113,7 @@ module.exports = function(model, index, defineForm) {
     element: forms.element,
     buttonEl: forms.buttonEl,
     textareaEl: forms.textareaEl,
+    datetimeEl: forms.datetimeEl,
     checkboxEl: forms.checkboxEl,
     radioEl: forms.radioEl,
     selectEl: forms.selectEl,

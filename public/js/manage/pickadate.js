@@ -19,8 +19,6 @@ module.exports = function(selector, options) {
 
   $(selector).each(function () {
     var dtype = $(this).attr('datetype'), thiz = this;
-      elId = '#' + $(this).attr('id'), clockId = elId + '_clock';
-
     switch (dtype) {
       case 'date':
         $(thiz).pickadate(dateOptions);
@@ -29,7 +27,6 @@ module.exports = function(selector, options) {
         $(thiz).pickatime(timeOptions);
         break;
       case 'datetime':
-
         break;
     }
   });

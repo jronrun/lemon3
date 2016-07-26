@@ -68,7 +68,7 @@ share.isAvailable = function(aShare, options) {
 
   //-1 is Unlimited
   if (-1 != aShare.count && ((aShare.used_count + 1) >= aShare.count)) {
-    return answer.fail('No more open count');
+    return answer.fail('No more request count');
   }
 
   var now = new Date().getTime();

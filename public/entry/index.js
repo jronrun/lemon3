@@ -690,7 +690,22 @@ lemon.register({
   isRootWin: function() {
     return window.top == window.self;
   },
-  preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl) {
+  /**
+   * Reusable preview
+   * @param text
+   * @param callback
+   * @param jsonOptions
+   * @param domReadyCallbackIfUrl
+   * @param modalOptions
+     * @returns {*}
+     */
+  previews: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
+    modalOptions = lemon.extend(modalOptions || {}, {
+      cache: true
+    });
+    return lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions);
+  },
+  preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
     if (jsonOptions) {
       jsonOptions = lemon.extend({
         mirror: null,
@@ -708,19 +723,28 @@ lemon.register({
       }
     }
 
-    var contextId = '#preview_full_' + lemon.uniqueId();
-    var previewM = lemon.modal({
+    modalOptions = lemon.extend({
+      cache: false,
       contentClose: true,
-      content: function() {
-        return '<div id="' + lemon.ltrim(contextId, '#') + '"></div>';
-      },
       modal: {
         backdrop: false,
         keyboard: false,
         show: true
       }
-    }, {
+    }, modalOptions || {}, {
+      content: function() {
+        return '<div id="' + lemon.ltrim(contextId, '#') + '"></div>';
+      }
+    });
+
+    var contextId = '#preview_full_' + lemon.uniqueId();
+    var previewM = lemon.modal(modalOptions, {
       shown: function(event, el) {
+        console.log(lemon.data(contextId, 'intl'));
+        if ('intl' == lemon.data(contextId, 'intl')) {
+          return;
+        }
+
         var viewport = {
           w: $(window).width(),
           h: $(window).height()
@@ -759,6 +783,7 @@ lemon.register({
         }
 
         lemon.isFunc(callback) && callback(view, previewM);
+        lemon.data(contextId, {intl: 'intl'});
       }
     });
 

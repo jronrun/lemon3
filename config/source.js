@@ -42,6 +42,13 @@ var resource = [
   },
 
   {
+    id: 31, name: 'share', desc: 'Create Share', method: M.POST, protect: false, children: [
+      {id: 31001, name: 'content', desc: 'Share Content', action: '/share/:content', protect: false},
+      {id: 31002, name: 'contents', desc: 'Share Content with Title', action: '/share/:content/:title', protect: false}
+    ]
+  },
+
+  {
     id: 50, name: 'api', desc: 'Manual API', protect: false, children: [
       {id: 50001, name: 'servers', desc: 'Servers', method: M.POST, protect: false},
       {id: 50002, name: 'interfaces', desc: 'Interfaces', method: M.POST, protect: false},

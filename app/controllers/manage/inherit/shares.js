@@ -217,6 +217,7 @@ module.exports = function (router, index, root) {
       resultHandle: function(item, def) {
         generic.setPickerDate(item, def, 'start_time');
         generic.setPickerDate(item, def, 'end_time');
+        def.content = crypto.decompress(def.content);
       }
     }, req, res, next);
   });

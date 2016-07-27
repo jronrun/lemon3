@@ -740,8 +740,7 @@ lemon.register({
     var contextId = '#preview_full_' + lemon.uniqueId();
     var previewM = lemon.modal(modalOptions, {
       shown: function(event, el) {
-        console.log(lemon.data(contextId, 'intl'));
-        if ('intl' == lemon.data(contextId, 'intl')) {
+        var tglable = 'toggleable'; if (tglable == lemon.data(contextId, tglable)) {
           return;
         }
 
@@ -782,8 +781,8 @@ lemon.register({
           pg.end();
         }
 
+        lemon.data(contextId, {toggleable: tglable});
         lemon.isFunc(callback) && callback(view, previewM);
-        lemon.data(contextId, {intl: 'intl'});
       }
     });
 

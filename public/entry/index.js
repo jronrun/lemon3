@@ -761,6 +761,8 @@ lemon.register({
         lemon.isFunc(callback) && callback(view, previewM);
       }
     });
+
+    return previewM;
   },
   modal: function(options, events) {
     options = lemon.extend({

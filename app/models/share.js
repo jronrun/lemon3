@@ -4,9 +4,9 @@ var log = log_from('share');
 
 var model = schema({
   id: { type: 'integer', required: true },
-  title: { type: 'string' },
+  title: { type: 'string', allowEmpty: false },
   desc: { type: 'string' },
-  type: { type: 'integer', enum: [1, 2], required: true, const: {
+  type: { type: 'integer', enum: [1, 2, 3, 4, 5, 6], required: true, const: {
       1: 'API',
       2: 'API Capture',
       3: 'API History',
@@ -76,8 +76,12 @@ share.isAvailable = function(aShare, options) {
   }
 
   var now = new Date().getTime();
-  if (aShare.start_time.getTime() > now || aShare.end_time.getTime() < now) {
-    return answer.fail('Not in share date region');
+  if (aShare.start_time && aShare.start_time.getTime() > now) {
+    return answer.fail('Not in share date region, share begin: ' + datefmt(aShare.start_time));
+  }
+
+  if (aShare.end_time && aShare.end_time.getTime() < now) {
+    return answer.fail('Not in share date region, share end: ' + datefmt(aShare.end_time));
   }
 
   var shareTo = aShare.share_to;

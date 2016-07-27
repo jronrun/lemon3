@@ -16,6 +16,9 @@ module.exports = function(model, index, defineForm) {
   var generic = {
     BREAK: BREAK,
 
+    getPickerDate: items.getPickerDate,
+    setPickerDate: items.setPickerDate,
+
     envOwnerQuery: items.envOwnerQuery,
     groupOwnerQuery: items.groupOwnerQuery,
 

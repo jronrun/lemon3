@@ -10,6 +10,70 @@ var types = {
 
 var helper = {
 
+  getPickerDate: function(item, propName) {
+    if (!item || !propName) {
+      return null;
+    }
+
+    var dateVal = _.get(item, propName) || '';
+    if (!dateVal || dateVal.length < 1) {
+      return null;
+    }
+
+    var timeVal = _.get(item, propName + '_clock') || '';
+    var target = dateVal + (timeVal.length > 0 ? (' ' + timeVal) : '');
+    return moment(target).toDate();
+  },
+
+  setPickerDate: function(item, def, propName, dateType) {
+    if (!item || !def || !propName) {
+      return false;
+    }
+
+    var originDate = _.get(item, propName), aDate = '';
+
+    if (_.isString(originDate)) {
+      aDate = originDate;
+    } else if (_.isDate(originDate)) {
+      aDate = datefmt(originDate);
+    } else {
+      return false;
+    }
+
+    var tmp = aDate.split(' ');
+    switch (dateType || 'datetime') {
+      case 'datetime':
+        if (tmp.length != 2) {
+          return false;
+        }
+
+        _.set(def, propName, tmp[0]);
+        _.set(def, propName + '_clock', _.beforeOccur(tmp[1], ':', 2));
+        break;
+      case 'date':
+        if (tmp.length == 1 || tmp.length == 2) {
+          _.set(def, propName, tmp[0]);
+        } else {
+          return false;
+        }
+        break;
+      case 'time':
+        var timeStr = '';
+        if (tmp.length == 1) {
+          timeStr = tmp[0];
+        } else if (tmp.length == 2) {
+          timeStr = tmp[1];
+        } else {
+          return false;
+        }
+
+        _.set(def, propName, _.beforeOccur(timeStr, ':', 2));
+        break;
+    }
+
+    return true;
+  },
+
   ownScope: function(usr, property, target) {
     usr = usr || {};
     if (usr.isAdmin) {
@@ -82,7 +146,7 @@ var helper = {
       return {
         $or:[
           { id: {$in: (defined.define || []) }},
-          { "create_by.id": aUser.id, owner: 2 }
+          { "create_by.id": aUser.id }
         ]
       };
     }
@@ -97,7 +161,7 @@ var helper = {
       return {
         $or:[
           { id: {$nin: (defined.define || []) }},
-          { "create_by.id": aUser.id, owner: 2 }
+          { "create_by.id": aUser.id }
         ]
       };
     }
@@ -113,7 +177,7 @@ var helper = {
     return {
       $or:[
         { id: {$in: itemIds }},
-        { "create_by.id": aUser.id, owner: 2 }
+        { "create_by.id": aUser.id }
       ]
     };
   },

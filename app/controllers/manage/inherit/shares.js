@@ -8,10 +8,10 @@ module.exports = function (router, index, root) {
   var generic = app_require('helpers/generic')(Share, index, {
     element: {
       title: {
-        label: 'Title <span class="text-silver">[Optional]</span>'
+        label: 'Title'
       },
       desc: {
-        label: 'Description <span class="text-silver">[Optional]</span>'
+        label: 'Description'
       },
       content: {
         label: 'Share Content',
@@ -61,6 +61,10 @@ module.exports = function (router, index, root) {
     item.type = parseInt(item.type);
     item.state = 1;
 
+    var time = null;
+    item.start_time = generic.getPickerDate(item, 'start_time');
+    item.end_time = generic.getPickerDate(item, 'end_time');
+
     item.create_by = {
       id: req.user.id,
       name: req.user.name,
@@ -74,31 +78,58 @@ module.exports = function (router, index, root) {
   router.get(index.do, function (req, res, next) {
     var defines = [
       {
-        title: 'Name',
+        title: 'Title',
         prop: function(item) {
-          return generic.title(item.name, getAction(root.share.retrieve, item._id), item.id);
+          return generic.title(item.title, getAction(root.share.retrieve, item._id), item.id);
         },
         clazz: 'fixed pull-left item-col-title'
       },
       {
-        title: 'Description',
-        prop: 'desc',
-        clazz: 'item-col-author'
-      },
-      {
-        title: 'Order',
-        prop: 'order',
-        clazz: 'item-col-author'
-      },
-      {
-        title: 'Owner',
+        title: 'Type',
         prop: function(item) {
-          switch (parseInt(item.owner)) {
-            case 1:
-              return generic.ownerPublic();
-            case 2:
-              return generic.ownerPrivate();
-          }
+          return generic.getSchema('type').const[item.type];
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Read Write',
+        prop: function(item) {
+          return generic.getSchema('read_write').const[item.read_write];
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Count',
+        prop: function(item) {
+          return item.used_count + ' / ' + item.count;
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Periods of Time',
+        prop: function(item) {
+          return datefmt(item.start_time, 'YYYY-MM-DD HH:mm') + ' to ' + datefmt(item.end_time, 'YYYY-MM-DD HH:mm');
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Share To',
+        prop: function(item) {
+          var text = [
+            '<span style="font-size: 70%">',
+            generic.getSchema('share_to.properties.anonymous').const[item.share_to.anonymous],
+            '<br/>',
+            generic.getSchema('share_to.properties.scope').const[item.share_to.scope],
+            '</span>'
+          ];
+          return text.join('');
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'State',
+        prop: function(item) {
+          return generic.getSchema('state').const[item.state];
         },
         clazz: 'item-col-author'
       },
@@ -106,15 +137,13 @@ module.exports = function (router, index, root) {
         title: 'Create By',
         prop: function(item) {
           var aUser = item.create_by;
-          return generic.info(getAction(root.users.retrieve, aUser.id), aUser.name);
+          return [
+            generic.info(getAction(root.users.retrieve, aUser.id), aUser.name),
+            '<br/>',
+            datefmt(item.create_time)
+          ].join('');
         },
         clazz: 'item-col-author'
-      },
-      {
-        title: 'Create',
-        prop: 'create_time',
-        clazz: 'item-col-date',
-        type: 'date'
       }
     ];
 
@@ -144,6 +173,13 @@ module.exports = function (router, index, root) {
         });
 
         forms.afterEl('share_to.scope', scopeDefine);
+      },
+      resultHandle: function(item, def) {
+        var now = moment().hours(0).minutes(0);
+        item.start_time = now.toDate();
+        item.end_time = now.clone().add(7, 'd').toDate();
+        generic.setPickerDate(item, def, 'start_time');
+        generic.setPickerDate(item, def, 'end_time');
       }
     }, req, res, next);
   });
@@ -154,7 +190,6 @@ module.exports = function (router, index, root) {
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
       sequenceId: 1,
-      checkExistsField: 'name',
       paramHandle: function(item) {
         paramHandleCU(item, req);
       }
@@ -166,7 +201,6 @@ module.exports = function (router, index, root) {
    */
   router.put(index.retrieve.do, function (req, res, next) {
     generic.update({
-      checkExistsField: 'name',
       paramHandle: function(item) {
         paramHandleCU(item, req);
       }
@@ -179,11 +213,9 @@ module.exports = function (router, index, root) {
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
       schemaExclude: ['create_by'],
-      defineElement: {
-        owner: {
-          el: 'radio',
-          inline: 1
-        }
+      resultHandle: function(item, def) {
+        generic.setPickerDate(item, def, 'start_time');
+        generic.setPickerDate(item, def, 'end_time');
       }
     }, req, res, next);
   });

@@ -708,11 +708,11 @@ lemon.register({
       }
     }
 
-    var contextId = '#preview_full';
+    var contextId = '#preview_full_' + lemon.uniqueId();
     var previewM = lemon.modal({
       contentClose: true,
       content: function() {
-        return '<div id="preview_full"></div>';
+        return '<div id="' + lemon.ltrim(contextId, '#') + '"></div>';
       },
       modal: {
         backdrop: false,

@@ -29,7 +29,7 @@ module.exports = function (router, index, root) {
       },
       count: {
         label: 'Allowed Max Request Count',
-        desc: 'Opened count if readonly, Requested count if read write'
+        desc: 'Opened count if readonly, Requested count if read write, Unlimited if count is -1'
       },
       used_count: {
         label: 'Used Requested Count'
@@ -43,6 +43,30 @@ module.exports = function (router, index, root) {
       }
     }
   });
+
+  var paramHandleCU = function(item, req) {
+    item.share_to.anonymous = parseInt(item.share_to.anonymous);
+    item.share_to.scope = parseInt(item.share_to.scope);
+    var shareToDefine = [];
+    _.each((item.share_to.define || '').split(','), function (v) {
+      if (v && v.length > 0) {
+        shareToDefine.push(v);
+      }
+    });
+    item.share_to.define = shareToDefine;
+
+    item.count = parseInt(item.count);
+    item.used_count = parseInt(item.used_count || '0');
+    item.read_write = parseInt(item.read_write);
+    item.type = parseInt(item.type);
+    item.state = 1;
+
+    item.create_by = {
+      id: req.user.id,
+      name: req.user.name,
+      ip: req.ip
+    }
+  };
 
   /**
    * Share list
@@ -132,12 +156,7 @@ module.exports = function (router, index, root) {
       sequenceId: 1,
       checkExistsField: 'name',
       paramHandle: function(item) {
-        item.owner = parseInt(item.owner);
-        item.order = parseInt(item.order);
-        item.create_by = {
-          id: req.user.id,
-          name: req.user.name
-        }
+        paramHandleCU(item, req);
       }
     }, req, res, next);
   });
@@ -149,8 +168,7 @@ module.exports = function (router, index, root) {
     generic.update({
       checkExistsField: 'name',
       paramHandle: function(item) {
-        item.owner = parseInt(item.owner);
-        item.order = parseInt(item.order);
+        paramHandleCU(item, req);
       }
     }, req, res, next);
   });

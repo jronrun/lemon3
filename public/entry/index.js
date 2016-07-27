@@ -700,10 +700,26 @@ lemon.register({
      * @returns {*}
      */
   previews: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
-    modalOptions = lemon.extend(modalOptions || {}, {
+    modalOptions = lemon.extend({
+      contentClose: false
+    }, modalOptions || {}, {
       cache: true
     });
-    return lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions);
+
+    var previewsDomReadyCallbackIfUrl = null;
+    if (lemon.isMediumUpView() && lemon.isUrl(text)) {
+      previewsDomReadyCallbackIfUrl = function(view, previewM) {
+        $('body', view.getDocument()).css({
+          'padding-top': '4.1rem'
+        });
+
+        lemon.isFunc(domReadyCallbackIfUrl) && domReadyCallbackIfUrl(view, previewM);
+      };
+    } else {
+      previewsDomReadyCallbackIfUrl = domReadyCallbackIfUrl;
+    }
+
+    return lemon.preview(text, callback, jsonOptions, previewsDomReadyCallbackIfUrl, modalOptions);
   },
   preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
     if (jsonOptions) {

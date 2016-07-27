@@ -68,6 +68,8 @@ var resource = [
     ]
   },
 
+  {id: 51, name: 'apis', desc: 'Multiple Manual API', protect: false},
+
   {
     id: 60, name: 'general', desc: 'General', protect: false, children: [
       {id: 60001, name: 'form', desc: 'Form', method: M.POST, protect: false},

@@ -710,7 +710,7 @@ lemon.register({
     if (lemon.isMediumUpView() && lemon.isUrl(text)) {
       previewsDomReadyCallbackIfUrl = function(view, previewM) {
         $('body', view.getDocument()).css({
-          'padding-top': '4.1rem'
+          'padding-top': '4.15rem'
         });
 
         lemon.isFunc(domReadyCallbackIfUrl) && domReadyCallbackIfUrl(view, previewM);

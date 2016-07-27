@@ -25,6 +25,8 @@ module.exports = function(model, index, defineForm) {
     serverOwnerQuery: items.serverOwnerQuery,
     interfaceOwnerQuery: items.interfaceOwnerQuery,
 
+    selfOwnerQuery: items.selfOwnerQuery,
+
     title: function(title, href, itemId) {
       var theId = '';
       if (itemId) {
@@ -286,6 +288,8 @@ module.exports = function(model, index, defineForm) {
           ownerQuery = generic.serverOwnerQuery(req);
         } else if ('interf' == model.modelName) {
           ownerQuery = generic.interfaceOwnerQuery(req);
+        } else {
+          ownerQuery = generic.selfOwnerQuery(req);
         }
 
         realQuery = _.extend(realQuery, ownerQuery);

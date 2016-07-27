@@ -182,6 +182,15 @@ var helper = {
     };
   },
 
+  selfOwnerQuery: function(req) {
+    var aUser = req.user || {};
+    if (aUser.isAdmin) {
+      return {};
+    }
+
+    return { "create_by.id": aUser.id };
+  },
+
   envOwnerQuery: function(req) {
     return helper.idsOwnerQuery(req, 'env');
   },

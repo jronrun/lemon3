@@ -111,7 +111,14 @@ var getResource = function(arg, method) {
       if (curModel.method == method) {
         var act = curModel.action;
         if (act.indexOf(':') != -1) {
-          return _.startsWith(action, _.beforeOccur(act, ':', 1));
+          if (!_.startsWith(action, _.beforeOccur(act, ':', 1))) {
+            return false;
+          }
+
+          var actLen = act.replace(/:/g, '').split('/').length - 1,
+              actionLen = action.split('/').length - 1;
+
+          return actLen == actionLen;
         }
 
         return act == action;

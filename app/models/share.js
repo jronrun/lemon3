@@ -43,6 +43,7 @@ var model = schema({
       ip: { type: 'string', allowEmpty: false }
     }
   },
+  last_modify_time: { type: 'date', required: true },
   create_time: { type: 'date', required: true }
 });
 

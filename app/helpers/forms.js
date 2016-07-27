@@ -533,6 +533,7 @@ function form(elements, formOptions, excludeField) {
   var filter = [];
   excludeField.push('id');
   excludeField.push('create_time');
+  excludeField.push('last_modify_time');
   filterExclude(elements, excludeField, filter);
 
   return {

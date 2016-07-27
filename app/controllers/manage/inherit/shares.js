@@ -60,6 +60,7 @@ module.exports = function (router, index, root) {
     item.read_write = parseInt(item.read_write);
     item.type = parseInt(item.type);
     item.state = 1;
+    item.content = crypto.compress(item.content);
 
     var time = null;
     item.start_time = generic.getPickerDate(item, 'start_time');

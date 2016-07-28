@@ -870,7 +870,6 @@ lemon.register({
     var headId = 'prevent_twice' + lemon.uniqueId();
     events = events || {};
     options = options || {title: null};
-    var isBlankTitle = lemon.isBlank(options.title);
     var thePopover = $(selector).popover(options = lemon.extend({
       title: '',
       trigger: 'click',
@@ -889,7 +888,7 @@ lemon.register({
       var el = $(this).data("bs.popover").tip;
       lemon.isFunc(events.show) && events.show(el, this);
     }).on('shown.bs.popover', function() {
-      if (isBlankTitle) {
+      if ($('#' + headId).length) {
         $('#' + headId).parent().hide();
       }
 

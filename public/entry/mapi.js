@@ -8,7 +8,7 @@ var mapis = {
     defaultId: 'default',
 
     autoId: function() {
-      return ('instance' + lemon.uniqueId());
+      return (lemon.now() + '' + lemon.uniqueId());
     },
 
     add: function(instanceId, view, preview) {

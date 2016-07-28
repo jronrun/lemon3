@@ -1,3 +1,18 @@
 {{#content "head" mode="append"}}
     <script src="/dist/mapi.js"></script>
 {{/content}}
+
+<div class="pos-f-t">
+    <div class="collapse" id="mapi-header">
+        <div class="container-fluid bg-inverse p-a-1">
+
+        </div>
+    </div>
+    <div class="navbar navbar-light bg-faded navbar-static-top">
+        <button class="navbar-toggler navbar-brand" type="button" data-toggle="collapse" data-target="#mapi-header" title="Multiple Manual API">
+          {{> logo}}
+        </button>
+    </div>
+
+    {{> tmpl/mapi_tmpl}}
+</div>

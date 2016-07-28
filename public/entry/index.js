@@ -706,20 +706,7 @@ lemon.register({
       cache: true
     });
 
-    var previewsDomReadyCallbackIfUrl = null;
-    if (lemon.isMediumUpView() && lemon.isUrl(text)) {
-      previewsDomReadyCallbackIfUrl = function(view, previewM) {
-        $('body', view.getDocument()).css({
-          'padding-top': '4.15rem'
-        });
-
-        lemon.isFunc(domReadyCallbackIfUrl) && domReadyCallbackIfUrl(view, previewM);
-      };
-    } else {
-      previewsDomReadyCallbackIfUrl = domReadyCallbackIfUrl;
-    }
-
-    return lemon.preview(text, callback, jsonOptions, previewsDomReadyCallbackIfUrl, modalOptions);
+    return lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions);
   },
   preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
     if (jsonOptions) {
@@ -815,7 +802,8 @@ lemon.register({
       footer: '',
       modal: null,
       size: '',     //lg, sm, default is normal size
-      cache: false
+      cache: false,
+      zIndex: 50000
     }, options || {});
 
     var modalId = lemon.startIf(options.id, '#');

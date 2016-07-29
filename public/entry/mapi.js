@@ -38,27 +38,36 @@ var mapis = {
       return mapis.instances[instanceId] || null;
     },
 
-    active: function(currentInstId) {
-      if (currentInstId) {
-        if (currentInstId == mapis.instance.current) {
+    isLive: function(instanceId) {
+      return null != mapis.instance.gets(instanceId);
+    },
+
+    active: function(instanceId) {
+      if (instanceId) {
+        if (instanceId == mapis.instance.current) {
           return;
         }
 
-        mapis.instance.invisibleBut(currentInstId);
+        mapis.instance.invisibleBut(instanceId);
 
         mapis.instance.previous = mapis.instance.current;
-        mapis.instance.current = currentInstId;
-        lemon.buttonTgl('#mapi_tab_' + currentInstId, 2);
+        mapis.instance.current = instanceId;
+        lemon.buttonTgl('#mapi_tab_' + instanceId, 2);
 
         if (mapis.instance.previous) {
           lemon.buttonTgl('#mapi_tab_' + mapis.instance.previous, 3);
         }
 
-        var inst = mapis.instance.gets(currentInstId);
+        var inst = mapis.instance.gets(instanceId);
         if (inst) {
           inst.preview.show();
         }
       }
+    },
+
+    activePrevious: function() {
+      mapis.instance.active(mapis.instance.isLive(
+        mapis.instance.previous) ? mapis.instance.previous : mapis.instance.defaultId);
     },
 
     setDefault: function(instanceId) {
@@ -129,7 +138,6 @@ var mapis = {
             });
           });
 
-          mapis.tool.refresh();
           $(el).slideDown();
         }
       });
@@ -182,6 +190,9 @@ var mapis = {
         var instId = lemon.data(this, 'instId');
         mapis.instance.destroy(instId);
         $('#mapi_tool_' + instId).remove();
+        if (mapis.instance.current == instId) {
+          mapis.instance.activePrevious();
+        }
       });
     }
   },

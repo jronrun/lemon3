@@ -977,6 +977,14 @@ function doTabHandle(e, type) {
 }
 
 lemon.register({
+  pubEvent: function(eventName, data) {
+    if (eventName && eventName.length > 0) {
+      lemon.pubMsg({
+        event: eventName,
+        data: data || {}
+      });
+    }
+  },
   pubMsg: function(cfg) {
     window.name = cfg;
     try {

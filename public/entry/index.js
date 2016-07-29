@@ -811,7 +811,7 @@ lemon.register({
       modal: null,
       size: '',     //lg, sm, default is normal size
       cache: false,
-      zIndex: 50000
+      zIndex: 10000
     }, options || {});
 
     var modalId = lemon.startIf(options.id, '#');

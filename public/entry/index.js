@@ -440,7 +440,17 @@ lemon.register({
     var iframe = document.createElement('iframe');
     var meta = {
       iframe: iframe,
+      getId: function() {
+        return meta.attr('id');
+      },
+      getName: function() {
+        return meta.attr('name');
+      },
       attr: function(options) {
+        if (lemon.isString(options)) {
+          return iframe.getAttribute(options);
+        }
+
         lemon.each(options, function(v, k) {
           if (!lemon.isNull(v)) { iframe.setAttribute(k, v); }
         });
@@ -479,6 +489,9 @@ lemon.register({
       },
       getDocument: function() {
         return iframe.contentDocument || iframe.contentWindow.document;
+      },
+      $: function(selector) {
+        return $(selector, $('#' + meta.getId()).contents());
       }
     };
 
@@ -830,15 +843,25 @@ lemon.register({
           lemon.isFunc(events.show) && events.show(e, this);
         })
         .on('shown.bs.modal', function(e) {
+          lemon.pubEvent('MODAL', {
+            show: 1,
+            modalId: modalId
+          });
           lemon.isFunc(events.shown) && events.shown(e, this);
         })
         .on('hide.bs.modal', function(e) {
           lemon.isFunc(events.hide) && events.hide(e, this);
         })
         .on('hidden.bs.modal', function(e) {
+          lemon.pubEvent('MODAL', {
+            show: 0,
+            modalId: modalId
+          });
+
           if (!options.cache) {
             $(modalId).remove();
           }
+
           lemon.isFunc(events.hidden) && events.hidden(e, this);
         })
         .on('loaded.bs.modal', function(e) {
@@ -992,16 +1015,22 @@ lemon.register({
   },
   /**
    * Publish message to parent window
-   * @param cfg
+   * @param data
      */
-  pubMsg: function(cfg) {
-    if (!lemon.isRootWin()) {
-      window.name = cfg;
+  pubMsg: function(data) {
+    if (data && !lemon.isRootWin()) {
+      var ifrEl = window.frameElement;
+      data.iframe = {
+        id: ifrEl.getAttribute("id"),
+        name: ifrEl.getAttribute("name")
+      };
+
+      window.name = data;
       try {
         var target = parent.postMessage ? parent : (parent.document.postMessage ? parent.document : undefined);
 
         if (typeof target != "undefined") {
-          target.postMessage(cfg, "*");
+          target.postMessage(data, "*");
         }
       } catch (e) {/**/}
     }

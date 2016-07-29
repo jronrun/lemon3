@@ -1719,6 +1719,15 @@ var mapi = {
     qry.init();
     mapi.renderNavbarHeader();
 
+    $('#navbar-header-tgl').click(function() {
+      lemon.delay(function () {
+        var show = $('#navbar-header').hasClass('in') ? 1 : 0;
+        lemon.pubEvent('HEADER', {
+          show: show
+        });
+      }, 600);
+    });
+
     lemon.subMsg(function (data) {
       var closePreview = function() {
         lemon.previewInstance && lemon.previewInstance.hide();

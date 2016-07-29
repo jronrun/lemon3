@@ -8,11 +8,13 @@ function $$(selector, instanceId) {
     return [];
   }
 
+  //jQuery $(selector, $('#iframe_id').contents())
   return $(selector, aInstance.view.getDocument())
 }
 
 var mapis = {
 
+  tglBalance: {},
   instances: {},
   instance: {
     previous: null,
@@ -61,6 +63,12 @@ var mapis = {
         var inst = mapis.instance.gets(instanceId);
         if (inst) {
           inst.preview.show();
+
+          if (mapis.tglBalance[inst.view.getId()].count > 0) {
+            mapis.tools.hide();
+          } else {
+            mapis.tools.show();
+          }
         }
       }
     },
@@ -209,12 +217,45 @@ var mapis = {
   },
 
   initialize: function() {
+    if (lemon.isMediumUpView()) {
+      lemon.console();
+    }
+
     mapis.createView(function(instId) {
       mapis.instance.setDefault(instId);
       if (lemon.isMediumUpView()) {
         mapis.tool.initialize();
       }
     }, 'Default');
+
+    lemon.subMsg(function (data) {
+      lemon.info(data, 'mapi subMsg');
+      if (data && data.event) {
+        switch (data.event) {
+          case 'MODAL':
+          case 'HEADER':
+            var viewId = data.iframe.id, view = mapis.tglBalance[viewId];
+            if (!view) {
+              view = mapis.tglBalance[viewId] = {
+                count: 0
+              };
+            }
+
+            if (1 == data.data.show) {
+              ++view.count;
+            } else {
+              --view.count;
+            }
+
+            if (view.count > 0) {
+              mapis.tools.hide();
+            } else {
+              mapis.tools.show();
+            }
+            break;
+        }
+      }
+    });
 
     //TODO remove
     global.mapis = mapis;

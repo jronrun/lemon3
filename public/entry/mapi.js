@@ -15,6 +15,8 @@ var mapis = {
 
   instances: {},
   instance: {
+    previous: null,
+    current: null,
     count: 0,
     defaultId: null,
 
@@ -36,8 +38,32 @@ var mapis = {
       return mapis.instances[instanceId] || null;
     },
 
+    active: function(currentInstId) {
+      if (currentInstId) {
+        if (currentInstId == mapis.instance.current) {
+          return;
+        }
+
+        mapis.instance.invisibleBut(currentInstId);
+
+        mapis.instance.previous = mapis.instance.current;
+        mapis.instance.current = currentInstId;
+        lemon.buttonTgl('#mapi_tab_' + currentInstId, 2);
+
+        if (mapis.instance.previous) {
+          lemon.buttonTgl('#mapi_tab_' + mapis.instance.previous, 3);
+        }
+
+        var inst = mapis.instance.gets(currentInstId);
+        if (inst) {
+          inst.preview.show();
+        }
+      }
+    },
+
     setDefault: function(instanceId) {
       mapis.instance.defaultId = instanceId;
+      mapis.instance.current = instanceId;
       mapis.instance.gets(instanceId).isDefault = 1;
     },
 
@@ -46,6 +72,14 @@ var mapis = {
       if (inst) {
         inst.name = name;
       }
+    },
+
+    invisibleBut: function(instanceId) {
+      lemon.each(mapis.instances, function (inst, instId) {
+        if (instId != instanceId) {
+          inst.preview.hide();
+        }
+      });
     },
 
     destroy: function(instanceId) {
@@ -88,9 +122,9 @@ var mapis = {
 
           $('#mapi_new').click(function () {
             var thiz = this; lemon.buttonTgl(thiz);
-
-            mapis.createView(function() {
+            mapis.createView(function(instanceId) {
               mapis.tool.refresh();
+              mapis.instance.active(instanceId);
               lemon.buttonTgl(thiz);
             });
           });
@@ -108,13 +142,14 @@ var mapis = {
         mapis: mapis.instances
       }));
 
-      $('button[id^="mapi_name_"]').click(function () {
+      $('button[id^="mapi_tab_"]').click(function () {
         var instId = lemon.data(this, 'instId');
+        mapis.instance.active(instId);
       });
 
       $('a[id^="mapi_title_"]').click(function () {
         var instId = lemon.data(this, 'instId'), inputTitleId = 'input_mapi_inst_title_' + instId,
-          originalTitle = lemon.trim($('#mapi_name_' + instId).text());
+          originalTitle = lemon.trim($('#mapi_tab_' + instId).text());
 
         lemon.modal({
           modal: {
@@ -136,7 +171,7 @@ var mapis = {
           hide: function() {
             var aTitle = $('#' + inputTitleId).val();
             if (aTitle && aTitle.length > 0) {
-              $('#mapi_name_' + instId).text(aTitle);
+              $('#mapi_tab_' + instId).text(aTitle);
               mapis.instance.setName(instId, aTitle);
             }
           }
@@ -165,7 +200,6 @@ var mapis = {
   initialize: function() {
     mapis.createView(function(instId) {
       mapis.instance.setDefault(instId);
-
       if (lemon.isMediumUpView()) {
         mapis.tool.initialize();
       }

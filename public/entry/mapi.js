@@ -150,11 +150,15 @@ var mapis = {
                 '</div>'
               ].join('')
             }, {
+              shown: function() {
+                $(mapis.toolsId).slideUp();
+              },
               hide: function() {
                 var aURL = $('#' + inputURLId).val();
                 if (lemon.isUrl(aURL)) {
                   mapis.addView(aURL);
                 }
+                $(mapis.toolsId).slideDown();
               }
             });
           });
@@ -195,6 +199,7 @@ var mapis = {
             if (originalTitle && originalTitle.length > 0) {
               $('#' + inputTitleId).val(originalTitle);
             }
+            $(mapis.toolsId).slideUp();
           },
           hide: function() {
             var aTitle = $('#' + inputTitleId).val();
@@ -202,6 +207,9 @@ var mapis = {
               $('#mapi_tab_' + instId).text(aTitle);
               mapis.instance.setName(instId, aTitle);
             }
+          },
+          hidden: function() {
+            $(mapis.toolsId).slideDown();
           }
         });
       });
@@ -253,7 +261,6 @@ var mapis = {
     });
 
     lemon.subMsg(function (data) {
-      lemon.info(data, 'mapi subMsg');
       if (data && data.event) {
         switch (data.event) {
           case 'MODAL':

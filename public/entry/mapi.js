@@ -28,7 +28,7 @@ var mapis = {
       preview.apiInstanceId = instanceId;
 
       mapis.instances[instanceId] = {
-        name: name || ('API ' + (++mapis.instance.count)),
+        name: name || ('#' + (++mapis.instance.count)),
         view: view,
         preview: preview
       };

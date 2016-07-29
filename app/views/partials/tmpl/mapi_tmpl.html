@@ -13,29 +13,34 @@
 <script type="text/html" id="mapi_tab_tmpl">
     <% lemon.each(mapis, function(inst, instId) { %>
         <li class="nav-item" id="mapi_tool_<%= instId %>">
-            <div class="btn-group">
-                <button type="button" class="btn btn-secondary text-muted" style="border: 0px;"
-                        id="mapi_tab_<%= instId %>" data-inst-id="<%= lemon.enc(instId) %>">
-                <%= inst.name %>
-                </button>
-                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split text-muted"
-                        style="border: 0px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu borderinfo">
-                    <a class="dropdown-item text-muted icondh" href="javascript:void(0);"
-                        id="mapi_title_<%= instId %>" data-inst-id="<%= lemon.enc(instId) %>">
-                        <em class="fa fa-pencil-square-o text-info"></em>&nbsp;&nbsp;Title
-                    </a>
-                    <% if (1 != inst.isDefault) { %>
+            <% if (1 != inst.isDefault) { %>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary text-muted" style="border: 0px;"
+                            id="mapi_tab_<%= instId %>" data-inst-id="<%= lemon.enc(instId) %>">
+                    <%= inst.name %>
+                    </button>
+                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split text-muted"
+                            style="border: 0px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu borderinfo">
+                        <a class="dropdown-item text-muted icondh" href="javascript:void(0);"
+                            id="mapi_title_<%= instId %>" data-inst-id="<%= lemon.enc(instId) %>">
+                            <em class="fa fa-pencil-square-o text-info"></em>&nbsp;&nbsp;Title
+                        </a>
                         <div class="dropdown-divider backgroundinfo"></div>
                         <a class="dropdown-item text-muted icondh" href="javascript:void(0);"
                             id="mapi_close_<%= instId %>" data-inst-id="<%= lemon.enc(instId) %>">
                             <em class="fa fa-close text-danger"></em>&nbsp;&nbsp;Close
                         </a>
-                    <% } %>
+                    </div>
                 </div>
-            </div>
+            <% } else { %>
+                <button type="button" class="btn btn-secondary icondh" style="border: 0px;" title="Default Manual API"
+                        id="mapi_tab_<%= instId %>" data-inst-id="<%= lemon.enc(instId) %>">
+                  <em class="fa fa-home text-silver"></em>
+                </button>
+            <% } %>
         </li>
     <% }); %>
 </script>

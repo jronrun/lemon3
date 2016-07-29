@@ -140,7 +140,7 @@ var mapis = {
 
           lemon.rightclick('#mapi_new', function() {
             var inputURLId = 'mapi_preview_url';
-            lemon.modal({
+            var mapinM = lemon.modal({
               modal: {
                 show: true
               },
@@ -151,13 +151,21 @@ var mapis = {
               ].join('')
             }, {
               shown: function() {
+                lemon.enter('#' + inputURLId, function () {
+                  mapinM.hide();
+                });
                 $(mapis.toolsId).slideUp();
               },
               hide: function() {
                 var aURL = $('#' + inputURLId).val();
+                if (!/^(http|ftp|https):\/\//.test(aURL)) {
+                  aURL = 'http://' + aURL;
+                }
+
                 if (lemon.isUrl(aURL)) {
                   mapis.addView(aURL);
                 }
+
                 $(mapis.toolsId).slideDown();
               }
             });
@@ -184,7 +192,7 @@ var mapis = {
         var instId = lemon.data(this, 'instId'), inputTitleId = 'input_mapi_inst_title_' + instId,
           originalTitle = lemon.trim($('#mapi_tab_' + instId).text());
 
-        lemon.modal({
+        var titleM = lemon.modal({
           modal: {
             show: true
           },
@@ -199,6 +207,9 @@ var mapis = {
             if (originalTitle && originalTitle.length > 0) {
               $('#' + inputTitleId).val(originalTitle);
             }
+            lemon.enter('#' + inputTitleId, function () {
+              titleM.hide();
+            });
             $(mapis.toolsId).slideUp();
           },
           hide: function() {

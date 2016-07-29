@@ -22,8 +22,12 @@
                         <h5 class="modal-title"><%= title %></h5>
                     </div>
                   <% } %>
+                  <% if (body && body.length > 0) { %>
                   <div class="modal-body borderinfo"> <%= body %></div>
+                  <% } %>
+                  <% if (footer && footer.length > 0) { %>
                   <div class="modal-footer borderinfo"> <%= footer %></div>
+                  <% } %>
               </div>
           <% } %>
       </div>

@@ -133,10 +133,29 @@ var mapis = {
 
           $('#mapi_new').click(function () {
             var thiz = this; lemon.buttonTgl(thiz);
-            mapis.createView(function(instanceId) {
-              mapis.tool.refresh();
-              mapis.instance.active(instanceId);
+            mapis.addView(false, function() {
               lemon.buttonTgl(thiz);
+            });
+          });
+
+          lemon.rightclick('#mapi_new', function() {
+            var inputURLId = 'mapi_preview_url';
+            lemon.modal({
+              modal: {
+                show: true
+              },
+              body: [
+                '<div class="input-group input-group-lg">',
+                '<input type="text" id="' + inputURLId + '" class="form-control" style="border: 0px;" placeholder="Enter an URL address">',
+                '</div>'
+              ].join('')
+            }, {
+              hide: function() {
+                var aURL = $('#' + inputURLId).val();
+                if (lemon.isUrl(aURL)) {
+                  mapis.addView(aURL);
+                }
+              }
             });
           });
 
@@ -168,8 +187,7 @@ var mapis = {
           title: 'Set Title',
           body: [
             '<div class="input-group input-group-lg">',
-            '<input type="text" id="' + inputTitleId + '" class="form-control" style="border: 0px;" placeholder="Set' +
-            ' Manual API Title">',
+            '<input type="text" id="' + inputTitleId + '" class="form-control" style="border: 0px;" placeholder="Set Manual API Title">',
             '</div>'
           ].join('')
         }, {
@@ -199,11 +217,23 @@ var mapis = {
     }
   },
 
-  createView: function(domReadyCallback, name) {
-    return lemon.previews((location.origin || '') + '/api', false, false, function(view, preview) {
-      $('body', view.getDocument()).css({
-        'padding-top': '4.15rem'
-      });
+  addView: function(theURL, callback) {
+    mapis.createView(function(instanceId) {
+      mapis.tool.refresh();
+      mapis.instance.active(instanceId);
+      lemon.isFunc(callback) && callback(instanceId);
+    }, theURL);
+  },
+
+  createView: function(domReadyCallback, theURL) {
+    var isAPI = lemon.isUndefined(theURL);
+    theURL = theURL || ((location.origin || '') + '/api');
+    return lemon.previews(theURL, false, false, function(view, preview) {
+      if (isAPI) {
+        $('body', view.getDocument()).css({
+          'padding-top': '4.15rem'
+        });
+      }
 
       var instanceId = mapis.instance.add(name, view, preview);
       lemon.isFunc(domReadyCallback) && domReadyCallback(instanceId, view, preview);
@@ -220,7 +250,7 @@ var mapis = {
       if (lemon.isMediumUpView()) {
         mapis.tool.initialize();
       }
-    }, 'Default');
+    });
 
     lemon.subMsg(function (data) {
       lemon.info(data, 'mapi subMsg');
@@ -251,9 +281,6 @@ var mapis = {
       }
     });
 
-    //TODO remove
-    global.mapis = mapis;
-    global.$$ = $$;
   }
 };
 

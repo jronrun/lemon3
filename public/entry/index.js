@@ -37,8 +37,8 @@ lemon.data = function(selector, target) {
   //get all
   if (lemon.isUndefined(target)) {
     var $el = $(selector), r = $el.data() || {}, rdata = {};
-    _.each(r, function(v, k) {
-      rdata[k] = lemon.deepDec($el.attr(prefix + target));
+    lemon.each(r, function(v, k) {
+      rdata[k] = lemon.deepDec($el.attr(prefix + lemon.deCase(k)));
     });
 
     return rdata;
@@ -46,13 +46,13 @@ lemon.data = function(selector, target) {
 
   //get
   if (lemon.isString(target)) {
-    return lemon.deepDec($(selector).attr(prefix + target));
+    return lemon.deepDec($(selector).attr(prefix + lemon.deCase(target)));
   }
 
   //set
   var theData = {};
   lemon.each(target, function (v, k) {
-    theData[prefix + k] = lemon.enc(v);
+    theData[prefix + lemon.deCase(k)] = lemon.enc(v);
   });
   $(selector).attr(theData);
 };
@@ -110,6 +110,14 @@ global.register = function(call) {
 
 var homeProgress = null;
 lemon.register({
+  /**
+   * Opposite of jQuery.camelCase
+   * @param target
+   * @returns {*}
+     */
+  deCase: function(target) {
+    return target.replace(/[A-Z]/g, function(a) {return '-' + a.toLowerCase()});
+  },
   blast: function(target, selector) {
     var blast = $(selector).blast({ search: target });
     blast.css({

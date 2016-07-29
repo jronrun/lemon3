@@ -63,12 +63,6 @@ var mapis = {
         var inst = mapis.instance.gets(instanceId);
         if (inst) {
           inst.preview.show();
-
-          if (mapis.tglBalance[inst.view.getId()].count > 0) {
-            mapis.tools.hide();
-          } else {
-            mapis.tools.show();
-          }
         }
       }
     },
@@ -110,6 +104,7 @@ var mapis = {
   },
 
   tools: null,
+  toolsId: '#mapi_tools_id',
   tool: {
 
     initialize: function() {
@@ -131,8 +126,7 @@ var mapis = {
             border: 0,
             top: -11,
             left: w
-          });
-
+          }).attr('id', lemon.ltrim(mapis.toolsId, '#'));
           $(el).find('.popover-content').css({
             'padding': 0
           });
@@ -248,9 +242,9 @@ var mapis = {
             }
 
             if (view.count > 0) {
-              mapis.tools.hide();
+              $(mapis.toolsId).slideUp();
             } else {
-              mapis.tools.show();
+              $(mapis.toolsId).slideDown();
             }
             break;
         }

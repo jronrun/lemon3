@@ -986,14 +986,16 @@ lemon.register({
     }
   },
   pubMsg: function(cfg) {
-    window.name = cfg;
-    try {
-      var target = parent.postMessage ? parent : (parent.document.postMessage ? parent.document : undefined);
+    if (!lemon.isRootWin()) {
+      window.name = cfg;
+      try {
+        var target = parent.postMessage ? parent : (parent.document.postMessage ? parent.document : undefined);
 
-      if (typeof target != "undefined") {
-        target.postMessage(cfg, "*");
-      }
-    } catch (e) {/**/}
+        if (typeof target != "undefined") {
+          target.postMessage(cfg, "*");
+        }
+      } catch (e) {/**/}
+    }
   },
 
   subMsg: function(callback, once) {

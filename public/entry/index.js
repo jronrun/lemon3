@@ -977,6 +977,11 @@ function doTabHandle(e, type) {
 }
 
 lemon.register({
+  /**
+   * Publish event to parent window
+   * @param eventName
+   * @param data
+     */
   pubEvent: function(eventName, data) {
     if (eventName && eventName.length > 0) {
       lemon.pubMsg({
@@ -985,6 +990,10 @@ lemon.register({
       });
     }
   },
+  /**
+   * Publish message to parent window
+   * @param cfg
+     */
   pubMsg: function(cfg) {
     if (!lemon.isRootWin()) {
       window.name = cfg;

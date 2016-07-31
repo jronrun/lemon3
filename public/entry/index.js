@@ -1092,7 +1092,7 @@ lemon.register({
       data.iframe = {
         id: ifrEl.getAttribute("id"),
         name: ifrEl.getAttribute("name"),
-        src: iframe.getAttribute('src')
+        src: ifrEl.getAttribute('src')
       };
 
       window.name = data;

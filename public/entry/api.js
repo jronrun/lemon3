@@ -1729,6 +1729,7 @@ var mapi = {
     });
 
     lemon.subMsg(function (data) {
+      lemon.info(data, 'API received msg');
       var closePreview = function() {
         lemon.previewInstance && lemon.previewInstance.hide();
       };

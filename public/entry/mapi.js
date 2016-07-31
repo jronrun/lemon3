@@ -299,6 +299,9 @@ var mapis = {
       }
     });
 
+    //TODO remove
+    global.mapis=mapis;
+    global.$$=$$;
   }
 };
 

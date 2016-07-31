@@ -24,10 +24,8 @@ var mapis = {
 
     add: function(view, preview, name) {
       var instanceId = (lemon.now() + '' + lemon.uniqueId());
-      view.apiInstanceId = instanceId;
-      preview.apiInstanceId = instanceId;
-
       mapis.instances[instanceId] = {
+        instanceId: instanceId,
         name: name || ('#' + (++mapis.instance.count)),
         view: view,
         preview: preview
@@ -259,6 +257,29 @@ var mapis = {
     });
   },
 
+  snapshoot: function() {
+    var anAPI = location.origin + '/api', asrc = null;
+    lemon.each(mapis.instances, function (inst) {
+      if (anAPI == (asrc = inst.view.attr('src'))) {
+        inst.view.tellEvent('SNAPSHOOT', {
+          tabName: inst.name,
+          isDefault: inst.instanceId == mapis.instance.defaultId
+        });
+      } else {
+        var shoot = {};
+        shoot[inst.view.getName()] = {
+          iframe: {
+            api: false,
+            isDefault: false,
+            name: inst.name,
+            src: asrc
+          }
+        };
+        lemon.persist('mapi_snapshoot', shoot);
+      }
+    });
+  },
+
   initialize: function() {
     if (lemon.isMediumUpView()) {
       lemon.console();
@@ -298,6 +319,10 @@ var mapis = {
             break;
         }
       }
+    });
+
+    $(window).on('beforeunload', function() {
+      mapis.snapshoot();
     });
 
     //TODO remove

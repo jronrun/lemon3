@@ -1744,8 +1744,20 @@ var mapi = {
             mapi.renderNavbarHeader();
             break;
           case 'SNAPSHOOT':
+            var shoot = {};
+            shoot[data.iframe.name] = {
+              iframe: {
+                api: true,
+                isDefault: data.data.isDefault,
+                name: data.data.tabName,
+                src: (data.iframe.src || '').replace(location.origin, '')
+              },
+              snapdata: mapi.snapshoot()
+            };
+            lemon.persist('mapi_snapshoot', shoot);
             break;
           case 'SNAPLOAD':
+            mapi.snapload(data.snapdata);
             break;
         }
       }

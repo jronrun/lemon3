@@ -490,6 +490,49 @@ lemon.register({
       getDocument: function() {
         return iframe.contentDocument || iframe.contentWindow.document;
       },
+      /**
+       * Post a message to this iframe
+       * @param data
+       * @param origin
+         */
+      tell: function(data, origin) {
+        if (data) {
+          try {
+            data.iframe = meta.getInfo();
+            iframe.contentWindow.postMessage(data, origin || '*');
+          } catch (e) {
+            lemon.warn(e.message, 'iframe.tell');
+          }
+        }
+      },
+      /**
+       * Publish a message to parent from this iframe
+       * @param data
+       * @param origin
+         */
+      reply: function(data, origin) {
+        if (data) {
+          window.name = data;
+          try {
+            data.iframe = meta.getInfo();
+            var theRoot = iframe.contentWindow.parent;
+            var target = theRoot.postMessage ? theRoot : (theRoot.document.postMessage ? theRoot.document : undefined);
+
+            if (typeof target != "undefined") {
+              target.postMessage(data, "*");
+            }
+          } catch (e) {
+            lemon.warn(e.message, 'iframe.reply');
+          }
+        }
+      },
+      getInfo: function() {
+        return {
+          id: iframe.getAttribute("id"),
+          name: iframe.getAttribute("name"),
+          src: iframe.getAttribute('src')
+        };
+      },
       $: function(selector) {
         return $(selector, $('#' + meta.getId()).contents());
       }
@@ -1022,7 +1065,8 @@ lemon.register({
       var ifrEl = window.frameElement;
       data.iframe = {
         id: ifrEl.getAttribute("id"),
-        name: ifrEl.getAttribute("name")
+        name: ifrEl.getAttribute("name"),
+        src: iframe.getAttribute('src')
       };
 
       window.name = data;

@@ -1743,6 +1743,10 @@ var mapi = {
             closePreview();
             mapi.renderNavbarHeader();
             break;
+          case 'SNAPSHOOT':
+            break;
+          case 'SNAPLOAD':
+            break;
         }
       }
     });

@@ -484,7 +484,7 @@ lemon.register({
         if (data && sender) {
           try {
             data.iframe = meta.getInfo();
-            sender.postMessage(data, origin || '*');
+            sender.postMessage(lemon.enc(data), origin || '*');
           } catch (e) {
             lemon.warn(e.message, 'iframe.post');
           }
@@ -534,7 +534,7 @@ lemon.register({
               if (once) {
                 $(aListener).unbind('message', _cb);
               }
-              callback(e.originalEvent.data, e);
+              callback(lemon.deepDec(e.originalEvent.data), e);
             };
 
             $(aListener).bind('message', _cb);

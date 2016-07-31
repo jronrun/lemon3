@@ -469,7 +469,7 @@ lemon.register({
         return iframe.contentDocument || iframe.contentWindow.document;
       },
       /**
-       * Post a message to this iframe
+       * Post a message to this iframe, parent -> iFrame
        * @param data
        * @param origin
        */
@@ -484,7 +484,7 @@ lemon.register({
         }
       },
       /**
-       * Publish a message to parent from this iframe
+       * Publish a message to parent from this iFrame, iFrame -> parent
        * @param data
        * @param origin
        */
@@ -503,32 +503,40 @@ lemon.register({
           }
         }
       },
-      replyEvent: function(eventName, data) {
-        if (eventName && eventName.length > 0) {
-          meta.reply({
+      event: function(eventName, data, sendFunction) {
+        if (sendFunction && eventName && eventName.length > 0) {
+          sendFunction({
             event: eventName,
             data: data || {}
           });
         }
       },
-      listenTell: function(callback, once) {
-        if (iframe.contentWindow && iframe.contentWindow.postMessage) {
+      tellEvent: function(eventName, data) {
+        meta.event(eventName, data, meta.tell);
+      },
+      replyEvent: function(eventName, data) {
+        meta.event(eventName, data, meta.reply);
+      },
+      listen: function(callback, once, aListener) {
+        if (aListener && aListener.postMessage) {
           if (lemon.isFunc(callback)) {
-            try {
-              var _cb = null;
-              _cb = function(e) {
-                if (once) {
-                  $(iframe.contentWindow).unbind('message', _cb);
-                }
-                callback(e.originalEvent.data, e);
-              };
+            var _cb = null;
+            _cb = function (e) {
+              if (once) {
+                $(aListener).unbind('message', _cb);
+              }
+              callback(e.originalEvent.data, e);
+            };
 
-              $(iframe.contentWindow).bind('message', _cb);
-            } catch (e) {
-              lemon.warn(e.message, 'iframe.listenTell');
-            }
+            $(aListener).bind('message', _cb);
           }
         }
+      },
+      listenTell: function(callback, once) {
+        meta.listen(callback, once, iframe.contentWindow);
+      },
+      listenReply: function(callback, once) {
+        meta.listen(callback, once, window);
       },
       getInfo: function() {
         return {
@@ -1074,66 +1082,18 @@ function doTabHandle(e, type) {
   handle && lemon.isFunc(handle[type]) && handle[type](cur, prev);
 }
 
+var aFrames = lemon.iframes();
 lemon.register({
-  /**
-   * Publish event to parent window
-   * @param eventName
-   * @param data
-     */
   pubEvent: function(eventName, data) {
-    if (eventName && eventName.length > 0) {
-      lemon.pubMsg({
-        event: eventName,
-        data: data || {}
-      });
-    }
+    aFrames.replyEvent(eventName, data);
   },
-  /**
-   * Publish message to parent window
-   * @param data
-     */
   pubMsg: function(data) {
     if (data && !lemon.isRootWin()) {
-      var ifrEl = window.frameElement;
-      data.iframe = {
-        id: ifrEl.getAttribute("id"),
-        name: ifrEl.getAttribute("name"),
-        src: ifrEl.getAttribute('src')
-      };
-
-      window.name = data;
-      try {
-        var target = parent.postMessage ? parent : (parent.document.postMessage ? parent.document : undefined);
-
-        if (typeof target != "undefined") {
-          target.postMessage(data, "*");
-        }
-      } catch (e) {/**/}
+      aFrames.reply(data);
     }
   },
-
   subMsg: function(callback, once) {
-    var _cb;
-    if (window.postMessage) {
-      if (lemon.isFunc(callback)) {
-        _cb = null;
-        _cb = function(e) {
-          if (once) {
-            $(window).unbind('message', _cb);
-          }
-          callback(e.originalEvent.data, e);
-        };
-
-        $(window).bind('message', _cb);
-      }
-    } else {
-      try {
-        var data = $('iframe').get(0).contentWindow.name || null;
-        if (data != null) {
-          callback(data);
-        }
-      } catch (e) {/**/}
-    }
+    aFrames.listen(callback, once, window);
   }
 });
 

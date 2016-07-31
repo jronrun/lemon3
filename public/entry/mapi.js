@@ -22,7 +22,7 @@ var mapis = {
     count: 0,
     defaultId: null,
 
-    add: function(name, view, preview) {
+    add: function(view, preview, name) {
       var instanceId = (lemon.now() + '' + lemon.uniqueId());
       view.apiInstanceId = instanceId;
       preview.apiInstanceId = instanceId;
@@ -254,7 +254,7 @@ var mapis = {
         });
       }
 
-      var instanceId = mapis.instance.add(name, view, preview);
+      var instanceId = mapis.instance.add(view, preview);
       lemon.isFunc(domReadyCallback) && domReadyCallback(instanceId, view, preview);
     });
   },

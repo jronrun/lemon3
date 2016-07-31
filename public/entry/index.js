@@ -512,7 +512,6 @@ lemon.register({
          */
       reply: function(data, origin) {
         if (data) {
-          window.name = data;
           try {
             data.iframe = meta.getInfo();
             var theRoot = iframe.contentWindow.parent;
@@ -523,6 +522,33 @@ lemon.register({
             }
           } catch (e) {
             lemon.warn(e.message, 'iframe.reply');
+          }
+        }
+      },
+      replyEvent: function(eventName, data) {
+        if (eventName && eventName.length > 0) {
+          meta.reply({
+            event: eventName,
+            data: data || {}
+          });
+        }
+      },
+      listenTell: function(callback, once) {
+        if (iframe.contentWindow && iframe.contentWindow.postMessage) {
+          if (lemon.isFunc(callback)) {
+            try {
+              var _cb = null;
+              _cb = function(e) {
+                if (once) {
+                  $(iframe.contentWindow).unbind('message', _cb);
+                }
+                callback(e.originalEvent.data, e);
+              };
+
+              $(iframe.contentWindow).bind('message', _cb);
+            } catch (e) {
+              lemon.warn(e.message, 'iframe.listenTell');
+            }
           }
         }
       },
@@ -1089,7 +1115,7 @@ lemon.register({
           if (once) {
             $(window).unbind('message', _cb);
           }
-          callback(e.originalEvent.data);
+          callback(e.originalEvent.data, e);
         };
 
         $(window).bind('message', _cb);

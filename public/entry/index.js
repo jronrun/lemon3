@@ -504,9 +504,13 @@ lemon.register({
        * @param origin
        */
       reply: function(data, origin) {
-        var sender = iframe.contentWindow.parent,
-          target = sender.postMessage ? sender : (sender.document.postMessage ? sender.document : undefined);
-        meta.post(data, origin, sender);
+        try {
+          var theRoot = iframe.contentWindow.parent,
+            target = theRoot.postMessage ? theRoot : (theRoot.document.postMessage ? theRoot.document : undefined);
+          meta.post(data, origin, target);
+        } catch (e) {
+          lemon.warn(e.message, 'iframe.reply');
+        }
       },
       event: function(eventName, data, sendFunction) {
         if (sendFunction && eventName && eventName.length > 0) {

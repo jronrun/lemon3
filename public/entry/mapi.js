@@ -234,15 +234,15 @@ var mapis = {
     }
   },
 
-  addView: function(theURL, callback) {
+  addView: function(theURL, callback, name) {
     mapis.createView(function(instanceId) {
       mapis.tool.refresh();
       mapis.instance.active(instanceId);
       lemon.isFunc(callback) && callback(instanceId);
-    }, theURL);
+    }, theURL, name);
   },
 
-  createView: function(domReadyCallback, theURL) {
+  createView: function(domReadyCallback, theURL, name) {
     var isAPI = lemon.isUndefined(theURL);
     theURL = theURL || ((location.origin || '') + '/api');
     return lemon.previews(theURL, false, false, function(view, preview) {
@@ -252,7 +252,7 @@ var mapis = {
         });
       }
 
-      var instanceId = mapis.instance.add(view, preview);
+      var instanceId = mapis.instance.add(view, preview, name);
       lemon.isFunc(domReadyCallback) && domReadyCallback(instanceId, view, preview);
     });
   },
@@ -285,12 +285,29 @@ var mapis = {
       lemon.console();
     }
 
-    mapis.createView(function(instId) {
-      mapis.instance.setDefault(instId);
-      if (lemon.isMediumUpView()) {
-        mapis.tool.initialize();
-      }
-    });
+    var mapiSnapdata = lemon.persist('mapi_snapshoot');
+    if (lemon.isBlank(mapiSnapdata)) {
+      mapis.createView(function(instId) {
+        mapis.instance.setDefault(instId);
+        if (lemon.isMediumUpView()) {
+          mapis.tool.initialize();
+        }
+      });
+    } else {
+      lemon.each(mapiSnapdata, function (inst) {
+        mapis.addView(inst.iframe.src, function (instId) {
+          if (inst.iframe.isDefault) {
+            mapis.instance.setDefault(instId);
+          }
+
+          mapis.instance.gets(instId).view.tellEvent('SNAPLOAD', {
+            snapdata: inst.snapdata
+          });
+        }, inst.iframe.name);
+      });
+      mapis.tool.initialize();
+      lemon.store('mapi_snapshoot', null);
+    }
 
     lemon.subMsg(function (data) {
       lemon.info(data, 'Multiple API received msg');

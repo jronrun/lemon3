@@ -1750,7 +1750,7 @@ var mapi = {
                 api: true,
                 isDefault: data.data.isDefault,
                 name: data.data.tabName,
-                src: (data.iframe.src || '').replace(location.origin, '')
+                src: data.iframe.src
               },
               snapdata: mapi.snapshoot()
             };

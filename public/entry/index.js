@@ -508,9 +508,7 @@ lemon.register({
           var theRoot = iframe.contentWindow.parent,
             target = theRoot.postMessage ? theRoot : (theRoot.document.postMessage ? theRoot.document : undefined);
           meta.post(data, origin, target);
-        } catch (e) {
-          lemon.warn(e.message, 'iframe.reply');
-        }
+        } catch (e) { /**/ }
       },
       event: function(eventName, data, sendFunction) {
         if (sendFunction && eventName && eventName.length > 0) {

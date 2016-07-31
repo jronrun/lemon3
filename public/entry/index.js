@@ -414,30 +414,8 @@ lemon.register({
 var holdMsgId = {};
 //bootstrap
 lemon.register({
-  iframe: function(options, selector) {
-    var uid = 'ifr_' + lemon.uniqueId();
-    options = lemon.extend({
-      id: uid,
-      name: uid,
-      align: null,
-      allowfullscreen: null,
-      frameborder: null,
-      height: null,
-      width: null,
-      longdesc: null,
-      marginheight: null,
-      marginwidth: null,
-      mozallowfullscreen: null,
-      webkitallowfullscreen: null,
-      referrerpolicy: null,
-      scrolling: null,
-      sandbox: null,
-      seamless: null,
-      src: null,
-      srcdoc: null
-    }, options || {});
-
-    var iframe = document.createElement('iframe');
+  iframes: function(iFrameElement) {
+    var iframe = iFrameElement || window.frameElement;
     var meta = {
       iframe: iframe,
       getId: function() {
@@ -478,7 +456,7 @@ lemon.register({
         meta.attr({
           src: url
         });
-        $('#' + options.id).load(function() {
+        $('#' + meta.getId()).load(function() {
           lemon.isFunc(onready) && onready(meta);
         });
         return meta;
@@ -494,7 +472,7 @@ lemon.register({
        * Post a message to this iframe
        * @param data
        * @param origin
-         */
+       */
       tell: function(data, origin) {
         if (data) {
           try {
@@ -509,7 +487,7 @@ lemon.register({
        * Publish a message to parent from this iframe
        * @param data
        * @param origin
-         */
+       */
       reply: function(data, origin) {
         if (data) {
           try {
@@ -564,12 +542,40 @@ lemon.register({
       }
     };
 
-    meta.attr(options);
+    return meta;
+  },
+  iframe: function(options, selector) {
+    var uid = 'ifr_' + lemon.uniqueId();
+    options = lemon.extend({
+      id: uid,
+      name: uid,
+      align: null,
+      allowfullscreen: null,
+      frameborder: null,
+      height: null,
+      width: null,
+      longdesc: null,
+      marginheight: null,
+      marginwidth: null,
+      mozallowfullscreen: null,
+      webkitallowfullscreen: null,
+      referrerpolicy: null,
+      scrolling: null,
+      sandbox: null,
+      seamless: null,
+      src: null,
+      srcdoc: null
+    }, options || {});
+
+    var iframe = document.createElement('iframe');
+    var iframes = lemon.iframes(iframe);
+    iframes.attr(options);
     $(selector || 'body').append(iframe);
 
-    meta.dom = $(window.frames[options.name].document).contents();
-    meta.doc = $(meta.getDocument());
-    return meta;
+    iframes.dom = $(window.frames[options.name].document).contents();
+    iframes.doc = $(iframes.getDocument());
+
+    return iframes;
   },
   msg: function(text, options) {
     options = lemon.extend({

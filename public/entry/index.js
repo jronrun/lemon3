@@ -416,6 +416,10 @@ var holdMsgId = {};
 lemon.register({
   iframes: function(iFrameElement) {
     var iframe = iFrameElement || window.frameElement;
+    if (!iframe) {
+      return {};
+    }
+
     var meta = {
       iframe: iframe,
       getId: function() {

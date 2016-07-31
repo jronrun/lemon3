@@ -414,14 +414,22 @@ lemon.register({
 var holdMsgId = {};
 //bootstrap
 lemon.register({
-  iframes: function(iFrameElement) {
-    var iframe = iFrameElement || window.frameElement;
-    if (!iframe) {
-      return {};
+  iframes: function(target) {
+    var iframe = null;
+    if (lemon.isString(target)) {
+      var selector = lemon.startWith(target, '#') ? target : ('iframe[name="' + target + '"]');
+      if ($(selector).length) {
+        iframe = $(selector)[0];
+      }
+    } else {
+      iframe = target || window.frameElement;
     }
 
     var meta = {
       iframe: iframe,
+      isAvailable: function() {
+        return null != iframe;
+      },
       getId: function() {
         return meta.attr('id');
       },

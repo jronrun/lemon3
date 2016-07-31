@@ -480,20 +480,23 @@ lemon.register({
       getDocument: function() {
         return iframe.contentDocument || iframe.contentWindow.document;
       },
+      post: function(data, origin, sender) {
+        if (data && sender) {
+          try {
+            data.iframe = meta.getInfo();
+            sender.postMessage(data, origin || '*');
+          } catch (e) {
+            lemon.warn(e.message, 'iframe.post');
+          }
+        }
+      },
       /**
        * Post a message to this iframe, parent -> iFrame
        * @param data
        * @param origin
        */
       tell: function(data, origin) {
-        if (data) {
-          try {
-            data.iframe = meta.getInfo();
-            iframe.contentWindow.postMessage(data, origin || '*');
-          } catch (e) {
-            lemon.warn(e.message, 'iframe.tell');
-          }
-        }
+        meta.post(data, origin, iframe.contentWindow);
       },
       /**
        * Publish a message to parent from this iFrame, iFrame -> parent
@@ -501,19 +504,9 @@ lemon.register({
        * @param origin
        */
       reply: function(data, origin) {
-        if (data) {
-          try {
-            data.iframe = meta.getInfo();
-            var theRoot = iframe.contentWindow.parent;
-            var target = theRoot.postMessage ? theRoot : (theRoot.document.postMessage ? theRoot.document : undefined);
-
-            if (typeof target != "undefined") {
-              target.postMessage(data, "*");
-            }
-          } catch (e) {
-            lemon.warn(e.message, 'iframe.reply');
-          }
-        }
+        var sender = iframe.contentWindow.parent,
+          target = sender.postMessage ? sender : (sender.document.postMessage ? sender.document : undefined);
+        meta.post(data, origin, sender);
       },
       event: function(eventName, data, sendFunction) {
         if (sendFunction && eventName && eventName.length > 0) {

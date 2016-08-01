@@ -284,10 +284,12 @@ var mapis = {
   },
 
   initialize: function() {
-    if (lemon.isMediumUpView()) {
-      lemon.console();
+    if (lemon.isSmallDownView()) {
+      lemon.href('/api');
+      return;
     }
 
+    lemon.console();
     var mapiSnapdata = lemon.persist('mapi_snapshoot');
     if (lemon.isBlank(mapiSnapdata)) {
       mapis.createView(function(instId) {
@@ -326,6 +328,7 @@ var mapis = {
           case 'MODAL':
           case 'HEADER':
           case 'MIRROR_FULL':
+          case 'BTN_TOGGLE':
             var viewId = data.iframe.id, view = mapis.tglBalance[viewId];
             if (!view) {
               view = mapis.tglBalance[viewId] = {

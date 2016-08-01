@@ -1673,6 +1673,17 @@ var mapi = {
         isDecode: true
       });
     });
+
+    var mapiToolTgl = '#btn_mapi_tool_tgl';
+    if (lemon.isRootWin()) {
+      $(mapiToolTgl).remove();
+    } else {
+      $(mapiToolTgl).click(function () {
+        lemon.pubEvent('BTN_TOGGLE', {
+          show: lemon.buttonTgl(this) ? 1 : 0
+        });
+      });
+    }
   },
   intlDD: function() {
     envs.render();

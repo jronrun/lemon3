@@ -1239,6 +1239,9 @@ var mapi = {
     var instance = mirror(elId, options, {
       fullscreen: function(isFullscreen) {
         $(mapi.navbarId).toggle(!isFullscreen);
+        lemon.pubEvent('MIRROR_FULL', {
+          show: isFullscreen
+        });
       }
     });
     mapi.mirrorSize(instance, sizeElId);

@@ -325,6 +325,7 @@ var mapis = {
         switch (data.event) {
           case 'MODAL':
           case 'HEADER':
+          case 'MIRROR_FULL':
             var viewId = data.iframe.id, view = mapis.tglBalance[viewId];
             if (!view) {
               view = mapis.tglBalance[viewId] = {

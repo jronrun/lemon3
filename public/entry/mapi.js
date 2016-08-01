@@ -311,8 +311,10 @@ var mapis = {
             snapdata: inst.snapdata
           });
 
-          mapis.tool.refresh();
-          mapis.instance.active(instId);
+          if (!inst.iframe.isDefault) {
+            mapis.tool.refresh();
+            mapis.instance.active(instId);
+          }
         }, inst.iframe.src, inst.iframe.name);
       });
       lemon.store('mapi_snapshoot', null);

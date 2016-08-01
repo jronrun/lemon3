@@ -24,6 +24,10 @@ var mapis = {
 
     add: function(view, preview, name) {
       var instanceId = (lemon.now() + '' + lemon.uniqueId());
+      if (name && name.length > 0) {
+        ++mapis.instance.count;
+      }
+
       mapis.instances[instanceId] = {
         instanceId: instanceId,
         name: name || ('#' + (++mapis.instance.count)),
@@ -301,7 +305,9 @@ var mapis = {
             mapis.instance.setDefault(instId);
           }
 
-          mapis.instance.gets(instId).view.tellEvent('SNAPLOAD', {
+          var anInst = mapis.instance.gets(instId);
+          anInst.view.tellEvent('SNAPLOAD', {
+            id: anInst.view.getId(),
             snapdata: inst.snapdata
           });
 

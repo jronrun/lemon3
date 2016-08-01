@@ -1674,9 +1674,11 @@ var mapi = {
   intlDD: function() {
     envs.render();
     apis.render();
-    lemon.delay(function () {
-      mapi.snapload();
-    }, 200);
+    if (lemon.isRootWin()) {
+      lemon.delay(function () {
+        mapi.snapload();
+      }, 200);
+    }
   },
   resize: function() {
     var interval = 34;  //$(mapi.gridId).offset().top - $(mapi.navbarId).height();
@@ -1757,7 +1759,13 @@ var mapi = {
             lemon.persist('mapi_snapshoot', shoot);
             break;
           case 'SNAPLOAD':
-            mapi.snapload(data.snapdata);
+            //if (!lemon.isRootWin()) {
+            //  if (data.data.id == lemon.iframes().getId()) {
+            //
+            //  }
+            //}
+
+            mapi.snapload(data.data.snapdata);
             break;
         }
       }

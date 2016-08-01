@@ -300,7 +300,7 @@ var mapis = {
     } else {
       mapis.tool.initialize();
       lemon.each(mapiSnapdata, function (inst) {
-        mapis.addView(inst.iframe.src, function (instId) {
+        mapis.createView(function (instId) {
           if (inst.iframe.isDefault) {
             mapis.instance.setDefault(instId);
           }
@@ -312,7 +312,8 @@ var mapis = {
           });
 
           mapis.tool.refresh();
-        }, inst.iframe.name);
+          mapis.instance.active(instId);
+        }, inst.iframe.src, inst.iframe.name);
       });
       lemon.store('mapi_snapshoot', null);
     }

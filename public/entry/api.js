@@ -1661,7 +1661,8 @@ var mapi = {
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);
 
-    $('#btn_preview').click(function () {
+    var btnPreviewId = '#btn_preview';
+    $(btnPreviewId).click(function () {
       if (mapi.resp.doc().somethingSelected()) {
         text = mapi.resp.doc().getSelection();
       } else {
@@ -1674,16 +1675,14 @@ var mapi = {
       });
     });
 
-    var mapiToolTgl = '#btn_mapi_tool_tgl';
-    if (lemon.isRootWin()) {
-      $(mapiToolTgl).remove();
-    } else {
-      $(mapiToolTgl).click(function () {
+    lemon.rightclick(btnPreviewId, function() {
+      if (!lemon.isRootWin()) {
         lemon.pubEvent('BTN_TOGGLE', {
-          show: lemon.buttonTgl(this) ? 1 : 0
+          show: lemon.buttonTgl(btnPreviewId) ? 1 : 0
         });
-      });
-    }
+      }
+    });
+
   },
   intlDD: function() {
     envs.render();

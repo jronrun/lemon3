@@ -321,7 +321,7 @@ var mapis = {
     }
 
     lemon.subMsg(function (data) {
-      lemon.info(data, 'Multiple API received msg');
+      //lemon.info(data, 'Multiple API received msg');
       if (data && data.event) {
         switch (data.event) {
           case 'MODAL':

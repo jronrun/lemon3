@@ -247,10 +247,9 @@ var mapis = {
   },
 
   createView: function(domReadyCallback, theURL, name) {
-    var isAPI = lemon.isUndefined(theURL);
     theURL = theURL || ((location.origin || '') + '/api');
     return lemon.previews(theURL, false, false, function(view, preview) {
-      if (isAPI) {
+      if (lemon.endWith(theURL, '/api')) {
         $('body', view.getDocument()).css({
           'padding-top': '4.15rem'
         });

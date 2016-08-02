@@ -43,8 +43,8 @@ var resource = [
 
   {
     id: 31, name: 'share', desc: 'Create Share', method: M.POST, protect: false, children: [
-      {id: 31001, name: 'content', desc: 'Share Content', action: '/share/:content', protect: false},
-      {id: 31002, name: 'contents', desc: 'Share Content with Title', action: '/share/:content/:title', protect: false}
+      {id: 31001, name: 'content', desc: 'Share', action: '/share/:content', page: 'share/index', protect: false},
+      {id: 31002, name: 'contents', desc: 'Shares', action: '/share/:content/:title', page: 'share/index', protect: false}
     ]
   },
 

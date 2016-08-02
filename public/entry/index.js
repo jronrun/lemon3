@@ -234,7 +234,9 @@ lemon.register({
     return pg;
   },
   progressEnd: function(selector) {
-    progressJs(selector).end();
+    try {
+      progressJs(selector).end();
+    } catch (e) { /**/ }
   },
 
   request: function(action, data, options) {

@@ -780,24 +780,28 @@ var qry = {
   },
 
   scrollPage: function() {
-    lemon.scroll(qry.contentId, function () {
-      if (!qry.apiEnd) {
-        var pg = lemon.progress(mapi.navbarId);
-        var pn = parseInt($(qry.partApiId).data('page')) + 1;
-        qry.searchAPI(qry.prevKey, pn, function() {
-          pg.end();
-          if (qry.apiEnd) {
-            qry.addHisBtn();
-          }
-        });
-      } else if (!qry.hisEnd) {
-        var pg = lemon.progress(mapi.navbarId);
-        var pn = parseInt($(qry.partHisId).data('page')) + 1;
-        qry.searchHis(qry.prevKey, pn, function() {
-          pg.end();
-        });
-      }
-    });
+    if ('1' != $(qry.contentId).attr('scrolled')) {
+      lemon.scroll(qry.contentId, function () {
+        if (!qry.apiEnd) {
+          var pg = lemon.progress(mapi.navbarId);
+          var pn = parseInt($(qry.partApiId).data('page')) + 1;
+          qry.searchAPI(qry.prevKey, pn, function() {
+            pg.end();
+            if (qry.apiEnd) {
+              qry.addHisBtn();
+            }
+          });
+        } else if (!qry.hisEnd) {
+          var pg = lemon.progress(mapi.navbarId);
+          var pn = parseInt($(qry.partHisId).data('page')) + 1;
+          qry.searchHis(qry.prevKey, pn, function() {
+            pg.end();
+          });
+        }
+      });
+
+      $(qry.contentId).attr('scrolled', 1);
+    }
   },
 
   toggleAPI: function(selector) {
@@ -1132,6 +1136,10 @@ var qry = {
 
         if (rdata.items.length < 1 && fp) {
           $(qry.partHisId).empty();
+        }
+
+        if (fp) {
+          qry.scrollPage();
         }
 
       } else {

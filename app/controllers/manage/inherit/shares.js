@@ -174,6 +174,8 @@ module.exports = function (router, index, root) {
         });
 
         forms.afterEl('share_to.scope', scopeDefine);
+
+        forms.remOption('type', [2, 5, 7]);
       },
       resultHandle: function(item, def) {
         var now = moment().hours(0).minutes(0);
@@ -214,6 +216,9 @@ module.exports = function (router, index, root) {
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
       schemaExclude: ['create_by'],
+      formElHandle: function(forms) {
+        forms.remOption('type', [2, 5, 7]);
+      },
       resultHandle: function(item, def) {
         generic.setPickerDate(item, def, 'start_time');
         generic.setPickerDate(item, def, 'end_time');

@@ -12,7 +12,8 @@ var model = schema({
       3: 'API History',
       4: 'Note',
       5: 'Note Capture',
-      6: 'Blank Text'
+      6: 'Blank Text',
+      7: 'APIs Capture'
     }
   },
   read_write: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Readonly', 2: 'Read Write'} },

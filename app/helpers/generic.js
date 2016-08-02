@@ -126,6 +126,7 @@ module.exports = function(model, index, defineForm) {
     codemirrorEl: forms.codemirrorEl,
     formEl: forms.formEl,
     schemaEl: forms.schemaEl,
+    newElOption: forms.newElOption,
 
     getSchema: function(field) {
       if (field) {

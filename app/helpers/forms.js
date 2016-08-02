@@ -659,6 +659,14 @@ module.exports = {
     }
     return getElement(name, define, opts, values, path || '');
   },
+  newElOption: function(showText, val, selected, desc) {
+    return {
+      tip: showText,              //option show text
+      val: val,                   //option value
+      desc: desc || '',           //option desc
+      selected: selected || 0     //0|1, 1 selected
+    };
+  },
 
   /**
    * Generate form element from json object
@@ -703,6 +711,41 @@ module.exports = {
             _.set(item || {}, name, value);
           }
           return getFormEl(formObject.items, name, value || _.get(item || {}, name));
+        },
+        isOptionsEl: function(name, anElement) {
+          var el = anElement || getFormEl(formObject.items, name);
+          if (el) {
+            if (el.el == 'input') {
+              if (['checkbox', 'radio'].indexOf(el.el.attrs.type) != -1) {
+                return el.el.attrs.type;
+              }
+            } else if (el.el == 'select') {
+              return el.el;
+            }
+          }
+
+          return false;
+        },
+        addOption: function(name, anOption) {
+          var el = getFormEl(formObject.items, name);
+          if (aHelper.isOptionsEl(name, el)) {
+            el.options.push(anOption);
+          }
+          return el;
+        },
+        remOption: function(name, values) {
+          var el = getFormEl(formObject.items, name);
+          if (aHelper.isOptionsEl(name, el)) {
+            var filter = [], values = _.isArray(values) ? values : [values], isNumber = _.isNumber(values[0]);
+            _.each(el.options, function(v) {
+              if (values.indexOf(isNumber ? parseInt(v.val) : v.val) == -1) {
+                filter.push(v);
+              }
+            });
+            el.options = filter;
+          }
+
+          return el;
         }
     };
 

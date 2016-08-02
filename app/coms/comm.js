@@ -154,6 +154,10 @@ module.exports = function(scope, config) {
     }
   };
 
+  scope.isAnswerSucc = function(anAnswer) {
+    return 0 == (anAnswer || {}).code;
+  };
+
   scope.moment = moment;
   scope.answer = answer;
   scope.json5s = json5s;
@@ -276,6 +280,14 @@ module.exports = function(scope, config) {
   scope.isURL = function(target) {
     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i;
     return regexp.test(target);
+  };
+
+  scope.requestInfo = function(req) {
+    return {
+      usr: req.user || {},
+      anonymous: req.anonymous,
+      clientIP: req.ip
+    };
   };
 
   scope.publishEvent = function(req, eventName, data) {

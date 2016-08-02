@@ -57,12 +57,12 @@ share.isAvailable = function(aShare, options) {
     clientIP: ''
   }, options || {});
 
-  if (options.usr.isAdmin) {
-    return answer.succ();
-  }
-
   if (!aShare) {
     return answer.fail('Invalid share');
+  }
+
+  if (options.usr.isAdmin) {
+    return answer.succ();
   }
 
   //Canceled Sharing

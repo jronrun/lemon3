@@ -27,6 +27,7 @@
     "blast-text": "^2.0.0",
     "velocity": "^1.2.3",
     "screenfull": "^3.0.0",
-    "pickadate": "^3.5.6"
+    "pickadate": "^3.5.6",
+    "summernote": "^0.8.1"
   }
 }

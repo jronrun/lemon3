@@ -32,7 +32,18 @@ function views(share, callback, requestInfo) {
 
   //API History
   if (3 == share.type) {
-    History.findById(share.content, function (err, aHis) {
+    var hisId = share.content, qry = {};
+    if (History.isObjectID(String(hisId))) {
+      qry = {
+        _id: History.toObjectID(hisId)
+      };
+    } else {
+      qry = {
+        id: parseInt(hisId)
+      };
+    }
+
+    History.find(qry).limit(1).next(function(err, aHis){
       if (err) {
         return callback(answer.fail(err.message));
       }
@@ -114,14 +125,14 @@ router.post(index.do, function (req, res, next) {
 /**
  * Share Preview
  */
-router.post(index.preview.do, function (req, res, next) {
+router.get(index.preview.do, function (req, res, next) {
   if (req.anonymous) {
     return res.render(index.preview, {
       ans: crypto.compress(answer.fail('anonymous'))
     });
   }
 
-  var ans = deepParse(req.body.data);
+  var ans = deepParse(req.param('data'));
   if (ans.isFail()) {
     return res.render(index.preview, {
       ans: crypto.compress(ans.target)

@@ -997,6 +997,22 @@ var qry = {
     });
   },
 
+  hisShare: function(selector) {
+    $(selector).click(function () {
+      var tmp = $(this).attr('id').split('_'), hisId = tmp[2], batchNo = tmp[1],
+        aHis = lemon.data('#ahis_' + hisId, 'his');
+
+      var data = {
+        type: 3,
+        content: aHis.id
+      };
+
+      lemon.preview(lemon.getUrl((location.origin || '') + '/share/preview', {
+        data: lemon.enc(data)
+      }));
+    });
+  },
+
   hisToggleComment: function(selector, preStyle, batchNo) {
     $(selector).click(function () {
       var hisId = $(this).attr('id').split('_')[2], thiz = this;
@@ -1124,6 +1140,7 @@ var qry = {
           qry.toggleItem(batchNo, 'histgl', 'histgl_', 'bhis_');
           qry.hisToggleComment(lemon.format('#s_his_table button[id^="commenttgl_{0}_"]', batchNo), preStyle, batchNo);
           qry.hisNote(lemon.format('button[id^="hisnote_{0}_"], button[id^="anote4his_{0}_"]', batchNo));
+          qry.hisShare(lemon.format('button[id^="hisshare_{0}_"]', batchNo));
 
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partHisId);

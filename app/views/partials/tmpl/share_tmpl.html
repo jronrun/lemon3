@@ -1,26 +1,87 @@
 
 <script type="text/html" id="share_his_tmpl">
+    <% var his = share.content; %>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card" style="border: 0px;">
                 <div class="card-block">
+                    <div class="card-title">
+                        <button class="navbar-toggler navbar-brand"> {{> logo}} </button>
+                    </div>
 
+                    <p class="card-title"><%= share.title || his.api.name %></p>
+                    <% if (share.desc && share.desc.length > 0) { %>
+                    <p class="card-text"><small class="text-muted"><%= share.desc %></small></p>
+                    <% } %>
+
+                    <% var hasNote = his.note && his.note.length > 0; %>
+                    <div class="alert alert-warning linebreak" role="alert" style="<%= hasNote ? '' : 'display: none;' %>border: 0px;font-size: 85%;">
+                        <% if (hasNote) { %>
+                        <%= his.note %>
+                        <% } %>
+                    </div>
+                    <footer class="blockquote-footer">
+                        <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
+                    </footer>
+                    <footer class="blockquote-footer">
+                        <% if (2 == his.api.mutation) { %>
+                        Mutation of
+                        <% } %>
+                        <span class="font-weight-bold"><%= his.api.name %></span>
+                        <cite style="font-size: 90%">
+                            <% if (2 == his.api.mutation) { %>
+                            <span class="text-success"><%= his.api.desc %></span>
+                            <% } else { %>
+                            <%= his.api.desc %>
+                            <% } %>
+                        </cite>
+                        <code><span class="text-<%= his.env.level %>"><%= his.serv.url %></span></code>
+                        <%= lemon.when.default(his.create_time) %>
+                    </footer>
+                    <% if (share.userl) { %>
+                        <footer class="blockquote-footer">
+                            Created by
+                            <% if (his.user.id) { %>
+                            <a href="/manage/user/<%= his.user.id %>" data-preview><%= (his.user.name || '') %></a>
+                            <% } else { %>
+                            <%= (his.user.name || '') %>
+                            <% } %>
+                            <cite><%= (his.user.ip || '') %></cite>
+                            ;&nbsp;&nbsp;
+                            Sharing from
+                            <% if (share.from.id) { %>
+                            <a href="/manage/user/<%= share.from.id %>" data-preview><%= (share.from.name || '') %></a>
+                            <% } else { %>
+                            <%= (share.from.name || '') %>
+                            <% } %>
+                            <cite><%= (share.from.ip || '') %></cite>
+                        </footer>
+                    <% } else { %>
+                    <footer class="blockquote-footer">
+                        Created by <%= (his.user.name || '') %>
+                        <cite><%= (his.user.ip || '') %></cite>
+                        ;&nbsp;&nbsp;
+                        Sharing from <%= (share.from.name || '') %>
+                        <cite><%= (share.from.ip || '') %></cite>
+                    </footer>
+                    <% } %>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="card" style="border: 0px;">
                 <div class="card-block">
-                    <%= highlight(share.content.api.request, 'Request') %>
+                    <%= highlight(his.api.request, 'Request') %>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card" style="border: 0px;">
                 <div class="card-block">
-                    <%= highlight(share.content.api.response || {}, 'Response') %>
+                    <%= highlight(his.api.response || {}, 'Response') %>
                 </div>
             </div>
         </div>

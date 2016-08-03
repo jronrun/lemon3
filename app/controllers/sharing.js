@@ -38,7 +38,8 @@ function shares(shareId, resultCall, requestInfo) {
           type: aShare.type,
           rw: aShare.read_write,
           content: aShare.content,
-          from: aShare.create_by.name
+          from: aShare.create_by || {},
+          userl: requestInfo.usr.isAdmin ? 1 : 0
         };
 
         callback(null, target);

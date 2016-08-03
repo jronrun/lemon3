@@ -145,6 +145,10 @@ router.get(index.preview.do, function (req, res, next) {
   }, share);
 
   views(share, function(anAnswer) {
+    _.extend(anAnswer.result, {
+      preview: 1
+    });
+
     res.render(index.preview, {
       ans: crypto.compress(anAnswer)
     });

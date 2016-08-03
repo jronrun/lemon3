@@ -9,7 +9,17 @@
                         <button class="navbar-toggler navbar-brand"> {{> logo}} </button>
                     </div>
 
-                    <p class="card-title"><%= share.title || his.api.name %></p>
+                    <% if (1 == share.preview) { %>
+                        <div class="card-title pull-right">
+                            <button type="button" class="btn btn-secondary text-info icondh" style="border: 0px;" id="share_this">
+                            <em class="fa fa-share-alt"></em>&nbsp;&nbsp;Share
+                            </button>
+                        </div>
+                    <% } %>
+
+                    <p class="card-title">
+                        <h5><%= share.title || his.api.name %></h5>
+                    </p>
                     <% if (share.desc && share.desc.length > 0) { %>
                     <p class="card-text"><small class="text-muted"><%= share.desc %></small></p>
                     <% } %>

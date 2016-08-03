@@ -78,13 +78,13 @@
     <tr>
         <th style="border: 0px;">
             <span class="text-muted">API &nbsp;&nbsp;</span>
-            <button class="btn btn-secondary btn-sm text-muted borderinfo hidden-sm-down" id="apitgl_apirequ" type="button">
+            <button class="btn btn-secondary btn-sm text-muted borderinfo" id="apitgl_apirequ" type="button">
                 Request
             </button>
-            <button class="btn btn-secondary btn-sm text-muted borderinfo hidden-sm-down" id="apitgl_apiresp" type="button">
+            <button class="btn btn-secondary btn-sm text-muted borderinfo" id="apitgl_apiresp" type="button">
                 Response
             </button>
-            <button class="btn btn-secondary btn-sm text-muted borderinfo hidden-sm-down" id="apitgl_group" type="button">
+            <button class="btn btn-secondary btn-sm text-muted borderinfo" id="apitgl_group" type="button">
                 Group
             </button>
         </th>
@@ -119,33 +119,64 @@
         <tr tgl-group="tgl" apigroupc="<%= group.info.id %>">
             <td clickable="<%= batchNo %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
-                    <% if (2 == api.mutation) { %>
-                      <span class="label label-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
-                      <h5 class="invisible"></h5>
-                    <% } %>
-                    <%= highlight(api.request_doc, 'Request', {
-                          'tgl-apirequ': 'tgl',
-                          id: ('bapi_' + batchNo + '_1_' + api.id)
-                    }) %>
+                <div class="row hidden-md-up">
+                    <span class="invisible">&nbsp;&nbsp;</span>
                     <% if (hasResp) { %>
-                      <%= highlight(api.response_doc, 'Response', {
-                          'tgl-apiresp': 'tgl',
-                          id: ('bapi_' + batchNo + '_2_' + api.id)
-                      }) %>
+                    <button class="btn btn-secondary btn-sm text-muted icondh" id="btgl_<%= batchNo %>_3_<%= api.id%>"
+                            title="Toggle <%= api.name %> Request & Response" style="border: 0px;" type="button">
+                        <em class="fa fa-eye"></em>
+                    </button>
+                    <h6 class="invisible"></h6>
                     <% } %>
-                    <footer class="blockquote-footer">
+                    <button class="btn btn-secondary btn-sm text-muted icondh"
+                            id="btgl_<%= batchNo %>_1_<%= api.id%>" title="Toggle <%= api.name %> Request" style="border: 0px;" type="button">
+                        <em class="fa fa-mail-reply"></em>
+                    </button>
+                    <% if (hasResp) { %>
+                    <h6 class="invisible"></h6>
+                    <button class="btn btn-secondary btn-sm text-muted icondh"
+                            id="btgl_<%= batchNo %>_2_<%= api.id%>" title="Toggle <%= api.name %> Response" style="border: 0px; " type="button">
+                        <em class="fa fa-mail-forward"></em>
+                    </button>
+                    <% } %>
+                    <% if (api.owner && 2 == api.owner) { %>
+                    <h6 class="invisible"></h6>
+                    <a class="btn btn-secondary btn-sm text-muted icondh" data-preview
+                       href="/manage/interface/<%= api._id %>"
+                       title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: 0px; " type="button">
+                        <em class="fa fa-pencil-square-o"></em>
+                    </a>
+                    <% } %>
+                </div>
+                <h6 class="invisible"></h6>
+
+                <% if (2 == api.mutation) { %>
+                  <span class="label label-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
+                  <h5 class="invisible"></h5>
+                <% } %>
+                <%= highlight(api.request_doc, 'Request', {
+                      'tgl-apirequ': 'tgl',
+                      id: ('bapi_' + batchNo + '_1_' + api.id)
+                }) %>
+                <% if (hasResp) { %>
+                  <%= highlight(api.response_doc, 'Response', {
+                      'tgl-apiresp': 'tgl',
+                      id: ('bapi_' + batchNo + '_2_' + api.id)
+                  }) %>
+                <% } %>
+                <footer class="blockquote-footer">
+                    <% if (2 == api.mutation) { %>
+                      Mutation of
+                    <% } %>
+                    <span class="font-weight-bold"><%= api.name %></span>
+                    <cite style="font-size: 90%">
                         <% if (2 == api.mutation) { %>
-                          Mutation of
+                            <span class="text-success"><%= api.desc %></span>
+                        <% } else { %>
+                            <%= api.desc %>
                         <% } %>
-                        <span class="font-weight-bold"><%= api.name %></span>
-                        <cite style="font-size: 90%">
-                            <% if (2 == api.mutation) { %>
-                                <span class="text-success"><%= api.desc %></span>
-                            <% } else { %>
-                                <%= api.desc %>
-                            <% } %>
-                        </cite>
-                    </footer>
+                    </cite>
+                </footer>
                 </blockquote>
             </td>
             <td class="hidden-sm-down">
@@ -187,13 +218,13 @@
         <tr>
             <th style="border: 0px;">
                 <span class="text-muted">Histories &nbsp;&nbsp;</span>
-                <button class="btn btn-secondary btn-sm text-muted borderinfo hidden-sm-down" id="histgl_requ" type="button">
+                <button class="btn btn-secondary btn-sm text-muted borderinfo" id="histgl_requ" type="button">
                     Request
                 </button>
-                <button class="btn btn-secondary btn-sm text-muted borderinfo hidden-sm-down" id="histgl_resp" type="button">
+                <button class="btn btn-secondary btn-sm text-muted borderinfo" id="histgl_resp" type="button">
                     Response
                 </button>
-                <button class="btn btn-secondary btn-sm text-muted borderinfo hidden-sm-down" id="histgl_timegroup" type="button">
+                <button class="btn btn-secondary btn-sm text-muted borderinfo" id="histgl_timegroup" type="button">
                     Time Group
                 </button>
             </th>
@@ -235,6 +266,34 @@
                   <h5 class="invisible"></h5>
               <% } %>
               <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
+                  <div class="row hidden-md-up">
+                      <span class="invisible">&nbsp;&nbsp;</span>
+                      <button class="btn btn-secondary btn-sm text-muted icondh" id="histgl_<%= batchNo %>_3_<%= his.id%>"
+                              title="Toggle <%= his.api.name %> Request & Response" style="border: 0px;" type="button">
+                          <em class="fa fa-eye"></em>
+                      </button>
+                      <button class="btn btn-secondary btn-sm text-muted icondh"
+                              id="histgl_<%= batchNo %>_1_<%= his.id%>" title="Toggle <%= his.api.name %> Request" style="border: 0px;" type="button">
+                          <em class="fa fa-mail-reply"></em>
+                      </button>
+                      <button class="btn btn-secondary btn-sm text-muted icondh"
+                              id="histgl_<%= batchNo %>_2_<%= his.id%>" title="Toggle <%= his.api.name %> Response" style="border: 0px; " type="button">
+                          <em class="fa fa-mail-forward"></em>
+                      </button>
+                      <button class="btn btn-secondary btn-sm text-muted icondh"
+                              id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API Document" style="border: 0px; " type="button">
+                          <em class="fa fa-comment"></em>
+                      </button>
+                      <button class="btn btn-secondary btn-sm text-muted icondh"
+                              id="hisnote_<%= batchNo %>_<%= his.id %>" title="Add Note for <%= his.api.name %>" style="border: 0px; " type="button">
+                          <em class="fa fa-sticky-note-o"></em>
+                      </button>
+                      <button class="btn btn-secondary btn-sm text-muted icondh"
+                              id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>" style="border: 0px; " type="button">
+                          <em class="fa fa-share-alt"></em>
+                      </button>
+                  </div>
+                  <h6 class="invisible"></h6>
                   <%= highlight(his.api.request, 'Request', {
                       'tgl-requ': 'tgl',
                       id: ('bhis_' + batchNo + '_1_' + his.id)
@@ -300,9 +359,15 @@
                       id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API Document" style="border: 0px; " type="button">
                   <em class="fa fa-comment"></em>
               </button>
+              <h6 class="invisible"></h6>
               <button class="btn btn-secondary btn-sm text-muted icondh"
                       id="hisnote_<%= batchNo %>_<%= his.id %>" title="Add Note for <%= his.api.name %>" style="border: 0px; " type="button">
                   <em class="fa fa-sticky-note-o"></em>
+              </button>
+              <h6 class="invisible"></h6>
+              <button class="btn btn-secondary btn-sm text-muted icondh"
+                      id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>" style="border: 0px; " type="button">
+                  <em class="fa fa-share-alt"></em>
               </button>
           </td>
       </tr>

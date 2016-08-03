@@ -306,6 +306,35 @@ module.exports = function(scope, config) {
     };
   };
 
+  scope.deepParse = function(target) {
+    var theAns = {};
+    try {
+      var item = crypto.decompress(target);
+      item = convertData(json5s.parse(item));
+      theAns =  answer.succ(item);
+    } catch (e) {
+      theAns = answer.fail(e.message);
+    }
+
+    var res = {
+      target: theAns,
+      isSucc: function() {
+        return isAnswerSucc(res.target);
+      },
+      isFail: function() {
+        return !res.isSucc();
+      },
+      failMsg: function() {
+        return res.target.msg;
+      },
+      get: function() {
+        return res.target.result;
+      }
+    };
+
+    return res;
+  };
+
   scope.publishEvent = function(req, eventName, data) {
     req.session.customEvent = {
       event: eventName,

@@ -11,9 +11,52 @@ module.exports = function (app) {
   app.use(index.action, router);
 };
 
+function views(share, callback, requestInfo) {
+  share = _.extend({
+    type: null,
+    content: null,
+    title: '',
+    desc: '',
+    rw: null,
+    from: {
+      id: requestInfo.usr.id,
+      name: requestInfo.usr.name,
+      ip: requestInfo.clientIP
+    },
+    userl: requestInfo.usr.isAdmin ? 1 : 0
+  }, share || {});
+
+  if (!share.type || !share.content || !share.rw) {
+    return callback(answer.fail('invalid share'));
+  }
+
+  //API History
+  if (3 == share.type) {
+    History.findById(share.content, function (err, aHis) {
+      if (err) {
+        return callback(answer.fail(err.message));
+      }
+
+      if (!aHis) {
+        return callback(answer.fail('share API history not exists'));
+      }
+
+      _.extend(share, {
+        content: crypto.compress(aHis)
+      });
+
+      callback(answer.succ(share));
+    });
+  }
+  //Unknown
+  else {
+    return callback(answer.fail('unknown share type ' + share.type));
+  }
+}
+
 function shares(shareId, resultCall, requestInfo) {
   if (!shareId || shareId.length < 1) {
-    return resultCall(answer.fail('invalid share ID'));
+    return resultCall(answer.fail('invalid share id'));
   }
 
   async.waterfall([
@@ -37,7 +80,7 @@ function shares(shareId, resultCall, requestInfo) {
           desc: aShare.desc || '',
           type: aShare.type,
           rw: aShare.read_write,
-          content: aShare.content,
+          content: crypto.decompress(aShare.content),
           from: aShare.create_by || {},
           userl: requestInfo.usr.isAdmin ? 1 : 0
         };
@@ -47,27 +90,13 @@ function shares(shareId, resultCall, requestInfo) {
     },
 
     function(target, callback) {
-
-      //API History
-      if (3 == target.type) {
-        var hisId = crypto.decompress(target.content);
-        History.findById(hisId, function (err, aHis) {
-          if (err) {
-            return resultCall(answer.fail(err.message));
-          }
-
-          if (!aHis) {
-            return resultCall(answer.fail('share API history not exists'));
-          }
-
-          _.extend(target, {
-            content: crypto.compress(aHis)
-          });
-
-          callback(null, target);
-        });
-      }
-
+      views(target, function (viewAns) {
+        if (isAnswerSucc(viewAns)) {
+          callback(null, viewAns.result);
+        } else {
+          return resultCall(viewAns);
+        }
+      }, requestInfo);
     }
   ], function(err, result) {
     resultCall(answer.succ(result));
@@ -83,13 +112,42 @@ router.post(index.do, function (req, res, next) {
 });
 
 /**
+ * Share Preview
+ */
+router.post(index.preview.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.render(index.preview, {
+      ans: crypto.compress(answer.fail('anonymous'))
+    });
+  }
+
+  var ans = deepParse(req.body.data);
+  if (ans.isFail()) {
+    return res.render(index.preview, {
+      ans: crypto.compress(ans.target)
+    });
+  }
+
+  var share = ans.get();
+  share = _.extend({
+    rw: 2
+  }, share);
+
+  views(share, function(anAnswer) {
+    res.render(index.preview, {
+      ans: crypto.compress(anAnswer)
+    });
+  }, requestInfo(req));
+});
+
+/**
  * Share content
  */
 router.get(index.content.do, function (req, res, next) {
   var shareId = crypto.decompress(req.params.content || '');
-  shares(shareId, function(answer) {
+  shares(shareId, function(anAnswer) {
     res.render(index.content, {
-      ans: crypto.compress(answer)
+      ans: crypto.compress(anAnswer)
     });
   }, requestInfo(req));
 });
@@ -99,9 +157,9 @@ router.get(index.content.do, function (req, res, next) {
  */
 router.get(index.contents.do, function (req, res, next) {
   var shareId = crypto.decompress(req.params.content || '');
-  shares(shareId, function(answer) {
+  shares(shareId, function(anAnswer) {
     res.render(index.contents, {
-      ans: crypto.compress(answer)
+      ans: crypto.compress(anAnswer)
     });
   }, requestInfo(req));
 });

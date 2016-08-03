@@ -20,6 +20,10 @@ function entries (globPath) {
     if (['index', 'boot'].indexOf(index) != -1) {
       entries[index] = [entries[index], 'bootstrap-loader'];
     }
+
+    else if (['style'].indexOf(index) != -1) {
+      entries[index] = [entries[index], 'bootstrap/dist/css/bootstrap.css'];
+    }
   }
 
   console.log(entries);

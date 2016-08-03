@@ -74,14 +74,16 @@
         <div class="col-md-6">
             <div class="card" style="border: 0px;">
                 <div class="card-block">
-                    <%= highlight(his.api.request, 'Request') %>
+                    <%= highlight(his.api.request, button('Request', ('share_his_requ_tgl_' + his.id), 1), false, {
+                        id: ('share_his_requ_' + his.id)
+                    }) %>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card" style="border: 0px;">
                 <div class="card-block">
-                    <%= highlight(his.api.response || {}, 'Response') %>
+                    <%= highlight(his.api.response || {}, button('Response', ('share_hisdoc_resp_' + his.id))) %>
                 </div>
             </div>
         </div>

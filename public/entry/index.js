@@ -307,11 +307,11 @@ lemon.register({
   live: function(events, selector, handler, data) {
     if (data) {
       $(document).on(events, selector, data, function(eventObject){
-        lemon.isFunc(handler) && handler(eventObject);
+        lemon.isFunc(handler) && handler(eventObject, eventObject.originalEvent.target);
       });
     } else {
       $(document).on(events, selector, function(eventObject){
-        lemon.isFunc(handler) && handler(eventObject);
+        lemon.isFunc(handler) && handler(eventObject, eventObject.originalEvent.target);
       });
     }
   },

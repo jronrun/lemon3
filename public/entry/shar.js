@@ -81,8 +81,8 @@ var shar = {
 
       $(shar.id).html(html);
 
-      lemon.live('click', lemon.format('#share_his_requ_tgl_{0}', share.content.id), function(evt) {
-        shar.his.tglComment(share, evt.originalEvent.target);
+      lemon.live('click', lemon.format('#share_his_requ_tgl_{0}', share.content.id), function(evt, el) {
+        shar.his.tglComment(share, el);
       });
     }
   }

@@ -35,7 +35,7 @@ var shar = {
         }
       }));
 
-      lemon.previews(html);
+      $(shar.id).html(html);
     }
   }
 };

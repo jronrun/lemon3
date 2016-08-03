@@ -4,40 +4,74 @@ var express = require('express'),
   router = express.Router(),
   log = log_from('sharing'),
   Share = app_require('models/share'),
+  History = app_require('models/api/history'),
   index = routes.share;
 
 module.exports = function (app) {
   app.use(index.action, router);
 };
 
-function shares(shareId, callback, requestInfo) {
+function shares(shareId, resultCall, requestInfo) {
   if (!shareId || shareId.length < 1) {
-    return callback(answer.fail('invalid share ID'));
+    return resultCall(answer.fail('invalid share ID'));
   }
 
-  Share.findById(shareId, function (err, aShare) {
-    if (err) {
-      return callback(answer.fail(err.message));
-    }
+  async.waterfall([
+    function(callback) {
+      Share.findById(shareId, function (err, aShare) {
+        if (err) {
+          return resultCall(answer.fail(err.message));
+        }
 
-    if (!aShare) {
-      return callback(answer.fail('share not exists'));
-    }
+        if (!aShare) {
+          return resultCall(answer.fail('share not exists'));
+        }
 
-    var ans = Share.isAvailable(aShare, requestInfo);
-    if (!isAnswerSucc(ans)) {
-      return callback(ans);
-    }
+        var ans = Share.isAvailable(aShare, requestInfo);
+        if (!isAnswerSucc(ans)) {
+          return resultCall(ans);
+        }
 
-    callback(answer.succ({
-      title: aShare.title || '',
-      desc: aShare.desc || '',
-      type: aShare.type,
-      rw: aShare.read_write,
-      content: aShare.content,
-      from: aShare.create_by.name
-    }));
+        var target = {
+          title: aShare.title || '',
+          desc: aShare.desc || '',
+          type: aShare.type,
+          rw: aShare.read_write,
+          content: aShare.content,
+          from: aShare.create_by.name
+        };
+
+        callback(null, target);
+      });
+    },
+
+    function(target, callback) {
+
+      //API History
+      if (3 == target.type) {
+        var hisId = crypto.decompress(target.content);
+        History.findById(hisId, function (err, aHis) {
+          if (err) {
+            return resultCall(answer.fail(err.message));
+          }
+
+          if (!aHis) {
+            return resultCall(answer.fail('share API history not exists'));
+          }
+
+          _.extend(target, {
+            content: crypto.compress(aHis)
+          });
+
+          callback(null, target);
+        });
+      }
+
+    }
+  ], function(err, result) {
+    resultCall(answer.succ(result));
   });
+
 }
 
 /**

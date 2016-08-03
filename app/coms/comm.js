@@ -15,6 +15,22 @@ var path = require('path'),
   format = require('util').format
   ;
 
+/**
+ async.waterfall([
+   function(callback) {
+        var target = {};
+        callback(null, target);
+      },
+
+   function(target, callback) {
+        var result = {};
+        callback(null, result);
+      }
+   ], function(err, result) {
+
+ });
+ */
+
 var CONSTANT = {
   ADMIN_ROLE: 0,
   DEFAULT_PAGESIZE: 30,

@@ -17,7 +17,7 @@ function entries (globPath) {
     index = index.replace('public/entry/', '');
 
     entries[index] = './' + entry;
-    if ('index' === index) {
+    if (['index', 'boot'].indexOf(index) != -1) {
       entries[index] = [entries[index], 'bootstrap-loader'];
     }
   }

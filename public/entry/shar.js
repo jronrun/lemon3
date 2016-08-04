@@ -70,6 +70,24 @@ var shar = {
         $(hisRequDocId).hide();
       }
     },
+    create: function(share, callback) {
+      var pg = lemon.progress('#share_this'), data = {
+        title: 'API History' + (share.content.api.name ? (' of ' + share.content.api.name) : ''),
+        type: share.type,
+        content: share.content.id
+      };
+
+      $.post('/share', {
+        data: lemon.enc(data)
+      }).done(function (resp) {
+        if (0 == resp.code) {
+          lemon.isFunc(callback) && callback(resp.result);
+        } else {
+          lemon.warn(resp.msg);
+        }
+        pg.end();
+      });
+    },
     render: function(share) {
       var html = (lemon.tmpl($('#share_his_tmpl').html(), {
         share: share,
@@ -83,6 +101,19 @@ var shar = {
 
       lemon.live('click', lemon.format('#share_his_requ_tgl_{0}', share.content.id), function(evt, el) {
         shar.his.tglComment(share, el);
+      });
+
+      $('#share_this').click(function () {
+        shar.his.create(share, function (data) {
+          var sharedLink = (location.origin || '') + data.link;
+          lemon.warn(sharedLink);
+        });
+      });
+
+      lemon.rightclick('#share_this', function() {
+        shar.his.create(share, function (data) {
+          lemon.preview((location.origin || '') + '/manage/share/' + data.edit);
+        });
       });
     }
   }

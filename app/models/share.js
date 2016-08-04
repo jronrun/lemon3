@@ -112,5 +112,63 @@ share.isAvailable = function(aShare, options) {
   return answer.succ();
 };
 
+share.fastShare = function(params, callback, requestInfo) {
+  var now = moment().hours(0).minutes(0);
+  var startTime = now.toDate(), endTime = now.clone().add(7, 'd').toDate();
+
+  var aShare = _.extend({
+    type: null,
+    content: null,
+
+    title: '',
+    desc: '',
+    read_write: 1,
+    count: 30,
+
+    used_count: 0,
+    start_time: startTime,
+    end_time: endTime,
+    share_to: {
+      anonymous: 1,
+      scope: 1,
+      define: []
+    },
+    state: 1,
+    create_by: {
+      id: requestInfo.usr.id,
+      name: requestInfo.usr.name,
+      ip: requestInfo.clientIP
+    },
+    last_modify_time: new Date(),
+    create_time: new Date()
+  }, params || {});
+
+  aShare.title = _.trim(aShare.title);
+  aShare.content = crypto.compress(aShare.content);
+
+  share.nextId(function (id) {
+    aShare.id = id;
+
+    var check = share.validate(aShare);
+    if (!check.valid) {
+      return callback(answer.fail(check.msg));
+    }
+
+    share.insertOne(aShare, function(err, result) {
+      if (err) {
+        return callback(answer.fail(err.message));
+      }
+
+      if (1 != result.insertedCount) {
+        return callback(answer.fail('create fail'));
+      }
+
+      aShare._id = result.insertedId.toString();
+      callback(answer.succ(aShare));
+    });
+  });
+
+};
+
 module.exports = share;
 

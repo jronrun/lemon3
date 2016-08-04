@@ -119,7 +119,36 @@ function shares(shareId, resultCall, requestInfo) {
  * Share Create
  */
 router.post(index.do, function (req, res, next) {
-  //result.insertedId.toString()
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  var ans = deepParse(req.body.data);
+  if (ans.isFail()) {
+    return res.json(ans.target);
+  }
+
+  var params = ans.get();
+  if (!params.type || !params.content) {
+    return res.json(answer.fail('invalid params'));
+  }
+
+  Share.fastShare(params, function(fastAnswer) {
+    if (!isAnswerSucc(fastAnswer)) {
+      return res.json(fastAnswer);
+    }
+
+    var aShare = fastAnswer.result, link = '/share/' + crypto.compress(aShare._id);
+    if (aShare.title && aShare.title.length > 0) {
+      link = link + '/' + aShare.title.replace(/\s/g, '-');
+    }
+
+    return res.json(answer.succ({
+      edit: aShare._id,
+      link: link
+    }));
+  }, requestInfo(req));
+
 });
 
 /**

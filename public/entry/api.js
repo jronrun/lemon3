@@ -1583,17 +1583,7 @@ var mapi = {
                   }
                 });
 
-                $(copyEl).focus(function() {
-                  var $this = $(this); $this.select();
-
-                  // Work around Chrome's little problem
-                  $this.mouseup(function() {
-                    // Prevent further mouseup intervention
-                    $this.unbind("mouseup");
-                    return false;
-                  });
-                });
-
+                lemon.focusSelectAll(copyEl);
                 if (lemon.isSmallDownView()) {
                   $(copyEl).css({
                     width: $(mapi.requCardId).width() * 0.8,

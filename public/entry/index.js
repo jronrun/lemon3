@@ -718,6 +718,18 @@ lemon.register({
 });
 
 lemon.register({
+  focusSelectAll: function(selector) {
+    $(selector).focus(function() {
+      var $this = $(this); $this.select();
+
+      // Work around Chrome's little problem
+      $this.mouseup(function() {
+        // Prevent further mouseup intervention
+        $this.unbind("mouseup");
+        return false;
+      });
+    });
+  },
   enter: function(selector, options) {
     if (lemon.isFunc(options)) {
       options = {enter: options};

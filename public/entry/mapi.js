@@ -212,6 +212,7 @@ var mapis = {
             lemon.enter('#' + inputTitleId, function () {
               titleM.hide();
             });
+            lemon.focusSelectAll('#' + inputTitleId);
             $(mapis.toolsId).slideUp();
           },
           hide: function() {

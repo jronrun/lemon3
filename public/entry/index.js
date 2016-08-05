@@ -7,6 +7,7 @@ require('../css/style.styl');
 //require('velocity/velocity');
 //require('velocity/velocity.ui');
 require('blast-text');
+require('imports?$=jquery!jquery-qrcode');
 var screenfull = require('screenfull');
 
 var handlePageCall = {},
@@ -117,6 +118,16 @@ lemon.register({
      */
   deCase: function(target) {
     return target.replace(/[A-Z]/g, function(a) {return '-' + a.toLowerCase()});
+  },
+  qrcode: function(selector, options) {
+    if (!lemon.isString(options)) {
+      options = lemon.extend({
+        width: 64,
+        height: 64,
+        text: ''
+      }, options || {});
+    }
+    $(selector).qrcode(options);
   },
   blast: function(target, selector) {
     var blast = $(selector).blast({ search: target });

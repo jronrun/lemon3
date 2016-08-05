@@ -2,16 +2,19 @@
  *
  */
 
+//require('imports?$=jquery!jquery-qrcode');
+
 var layout = '#sharing-layout',
   copyURL = '#sharing_view_url',
   btn_edit = '#sharing_edit',
   btn_qrcode = '#sharing_qrcode';
 
-module.exports = function(aShare) {
+var sharing = function(aShare) {
   var viewport = {
     w: $(window).width(),
     h: $(window).height()
-  }, sharedLink = (location.origin || '') + aShare.link;
+  }, sharedLink = (location.origin || '') + aShare.link,
+    qrcodeLink = (location.origin || '') + aShare.qrcLink;
 
   lemon.modal({
     title: lemon.tmpl($('#sharing_title_tmpl').html(), {}),
@@ -44,7 +47,23 @@ module.exports = function(aShare) {
         lemon.preview((location.origin || '') + '/manage/share/' + aShare.edit);
       });
 
+      lemon.qrcode('#sharing_qrcode_img', qrcodeLink);
+
+      $(btn_qrcode).click(function () {
+        if (lemon.buttonTgl(this)) {
+          lemon.tabShow('#tab-tri-sharing-tab2');
+        } else {
+          lemon.tabShow('#tab-tri-sharing-tab1');
+        }
+      });
+
       $(el).slideDown();
     }
   });
 };
+
+sharing.qrcode = function() {
+
+};
+
+module.exports = sharing;

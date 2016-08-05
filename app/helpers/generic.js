@@ -59,6 +59,17 @@ module.exports = function(model, index, defineForm) {
       return '<em class="fa fa-' + icon + '"></em> ' + (text || '');
     },
 
+    previewHref: function(href, text, title) {
+      var html = [
+        format('<a class="btn btn-secondary text-info icondh" data-preview title="%s" href="%s" ' +
+          'style="border: 0px;" type="button">', title || '', href || ''),
+        text || '',
+        '</a>'
+      ];
+
+      return html.join('');
+    },
+
     listChooseBtn: function(options) {
       options = _.extend({
         buttonEm: '',

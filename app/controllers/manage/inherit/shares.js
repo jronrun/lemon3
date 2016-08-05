@@ -145,6 +145,17 @@ module.exports = function (router, index, root) {
           ].join('');
         },
         clazz: 'item-col-author'
+      },
+      {
+        title: 'Manual',
+        prop: function(item) {
+          var html = [
+            generic.previewHref('/share/' + crypto.compress(item._id.toString()), generic.em('eye'), 'View ' + item.title)
+          ];
+
+          return html.join('');
+        },
+        clazz: 'item-col-author'
       }
     ];
 

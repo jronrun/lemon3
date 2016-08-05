@@ -322,7 +322,8 @@ lemon.register({
       });
     } else {
       $(document).on(events, selector, function(eventObject){
-        lemon.isFunc(handler) && handler(eventObject, eventObject.originalEvent.target);
+        var aTarget = ((eventObject.originalEvent || {}).target) || eventObject.target;
+        lemon.isFunc(handler) && handler(eventObject, aTarget);
       });
     }
   },
@@ -681,7 +682,7 @@ lemon.register({
     return lemon.isButtonActive(selector);
   },
   /**
-   *
+   * lemon.tabEventListen first
    * @param selector  tab content id
    * trigger must has property data-target='#{tab content id}' same as property href
    * @param options

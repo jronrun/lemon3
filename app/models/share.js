@@ -164,6 +164,7 @@ share.fastShare = function(params, resultCall, requestInfo) {
           }
 
           if (existShare) {
+            existShare._id = existShare._id.toString();
             resultCall(answer.succ(existShare));
           } else {
             callback(null, aShare);

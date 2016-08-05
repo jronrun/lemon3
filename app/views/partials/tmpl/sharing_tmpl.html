@@ -1,0 +1,36 @@
+
+<script type="text/html" id="sharing_title_tmpl">
+    Share
+    <div class="pull-right">
+        <button type="button" class="btn btn-secondary icondh text-info" style="border: 0px;" id="sharing_edit">
+            <em class="fa fa-pencil-square"></em>
+        </button>
+        <button type="button" class="btn btn-secondary icondh text-info" style="border: 0px;" id="sharing_qrcode">
+            <em class="fa fa-qrcode"></em>
+        </button>
+    </div>
+</script>
+<script type="text/html" id="sharing_tmpl">
+    <ul class="nav nav-tabs" style="display: none;" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" id="tab-tri-sharing-tab1" data-toggle="tab" data-target="#tab-sharing-tab1" href="#tab-sharing-tab1" role="tab">LINK</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-tri-sharing-tab2" data-toggle="tab" data-target="#tab-sharing-tab2" href="#tab-sharing-tab2" role="tab">QRCode</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="sharing-layout">
+        <div class="tab-pane active" id="tab-sharing-tab1" role="tabpanel">
+            <div class="card" style="border: 0px;">
+                <div class="card-block">
+                    <div class="card-text" style="border: 0px;">
+                        <textarea id="sharing_view_url" rows="5" style="border:0px solid #ffffff;"><%= link %></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab-sharing-tab2" role="tabpanel">
+
+        </div>
+    </div>
+</script>

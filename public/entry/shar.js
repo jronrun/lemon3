@@ -1,7 +1,8 @@
 /**
  *
  */
-var mirror = require('../js/codemirror');
+var mirror = require('../js/codemirror'),
+  sharing =  require('../js/sharing');
 
 var shar = {
   id: '#share',
@@ -105,8 +106,7 @@ var shar = {
 
       $('#share_this').click(function () {
         shar.his.create(share, function (data) {
-          var sharedLink = (location.origin || '') + data.link;
-          lemon.warn(sharedLink);
+          sharing(data);
         });
       });
 

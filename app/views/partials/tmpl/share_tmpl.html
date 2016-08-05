@@ -33,6 +33,7 @@
                     <footer class="blockquote-footer">
                         <span class="text-<%= his.env.level %>"><%= his.env.name %>  <%= his.group.name %> - <%= his.serv.name %></span>
                     </footer>
+                    <h6 class="invisible"></h6>
                     <footer class="blockquote-footer">
                         <% if (2 == his.api.mutation) { %>
                         Mutation of
@@ -49,6 +50,7 @@
                         <%= lemon.when.default(his.create_time) %>
                     </footer>
                     <% if (share.userl) { %>
+                        <h6 class="invisible"></h6>
                         <footer class="blockquote-footer">
                             Created by
                             <% if (his.user.id) { %>
@@ -67,6 +69,7 @@
                             <cite><%= (share.from.ip || '') %></cite>
                         </footer>
                     <% } else { %>
+                    <h6 class="invisible"></h6>
                     <footer class="blockquote-footer">
                         Created by <%= (his.user.name || '') %>
                         <cite><%= (his.user.ip || '') %></cite>

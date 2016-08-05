@@ -43,7 +43,7 @@ function views(share, callback, requestInfo) {
       };
     }
 
-    History.find(qry).limit(1).next(function(err, aHis){
+    History.find(qry).limit(1).next(function(err, aHis) {
       if (err) {
         return callback(answer.fail(err.message));
       }

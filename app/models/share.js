@@ -112,7 +112,7 @@ share.isAvailable = function(aShare, options) {
   return answer.succ();
 };
 
-share.fastShare = function(params, callback, requestInfo) {
+share.fastShare = function(params, resultCall, requestInfo) {
   var now = moment().hours(0).minutes(0);
   var startTime = now.toDate(), endTime = now.clone().add(7, 'd').toDate();
 
@@ -143,29 +143,62 @@ share.fastShare = function(params, callback, requestInfo) {
     create_time: new Date()
   }, params || {});
 
+  if (!aShare.type || !aShare.content) {
+    return resultCall(answer.fail('invalid type or content'));
+  }
+
+  aShare.type = parseInt(aShare.type);
   aShare.title = _.trim(aShare.title);
   aShare.content = crypto.compress(aShare.content);
 
-  share.nextId(function (id) {
-    aShare.id = id;
+  async.waterfall([
+    function(callback) {
+      if ([1, 3, 4].indexOf(aShare.type)) {
+        share.find({
+          type: aShare.type,
+          content: aShare.content,
+          'create_by.id': aShare.create_by.id
+        }).limit(1).next(function(err, existShare) {
+          if (err) {
+            return resultCall(answer.fail(err.message));
+          }
 
-    var check = share.validate(aShare);
-    if (!check.valid) {
-      return callback(answer.fail(check.msg));
+          if (existShare) {
+            resultCall(answer.succ(existShare));
+          } else {
+            callback(null, aShare);
+          }
+        });
+      } else {
+        callback(null, aShare);
+      }
+    },
+
+    function(target, callback) {
+      share.nextId(function (id) {
+        target.id = id;
+
+        var check = share.validate(target);
+        if (!check.valid) {
+          return resultCall(answer.fail(check.msg));
+        }
+
+        share.insertOne(target, function(err, result) {
+          if (err) {
+            return resultCall(answer.fail(err.message));
+          }
+
+          if (1 != result.insertedCount) {
+            return resultCall(answer.fail('create fail'));
+          }
+
+          target._id = result.insertedId.toString();
+          callback(null, answer.succ(target));
+        });
+      });
     }
-
-    share.insertOne(aShare, function(err, result) {
-      if (err) {
-        return callback(answer.fail(err.message));
-      }
-
-      if (1 != result.insertedCount) {
-        return callback(answer.fail('create fail'));
-      }
-
-      aShare._id = result.insertedId.toString();
-      callback(answer.succ(aShare));
-    });
+  ], function(err, result) {
+    resultCall(result);
   });
 
 };

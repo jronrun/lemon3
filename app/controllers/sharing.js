@@ -138,16 +138,7 @@ router.post(index.do, function (req, res, next) {
       return res.json(fastAnswer);
     }
 
-    var aShare = fastAnswer.result, qrcLink = '/share/' + crypto.compress(aShare._id), link = qrcLink;
-    if (aShare.title && aShare.title.length > 0) {
-      link = link + '/' + aShare.title.replace(/\s/g, '-');
-    }
-
-    return res.json(answer.succ({
-      edit: aShare._id,
-      qrcLink: qrcLink,
-      link: link
-    }));
+    return res.json(answer.succ(Share.shareData(fastAnswer.result)));
   }, requestInfo(req));
 
 });

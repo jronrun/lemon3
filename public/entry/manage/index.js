@@ -1,6 +1,7 @@
 'use strict';
 
 require('metisMenu/dist/metisMenu.css');
+var sharing =  require('../../js/sharing');
 //Comment follow code  public/components/metisMenu/dist/metisMenu.js line 227
 //if (this._transitioning || $(element).hasClass(this._config.collapsingClass)) {
 //  return;
@@ -138,6 +139,17 @@ var manage = {
   initialize: function() {
     manage.sidebar();
     manage.nav();
+
+    lemon.live('click', 'a[data-share]', function (evt, el) {
+      evt.preventDefault();
+      var anEl = null;
+      if ('A' == el.tagName) {
+        anEl = el;
+      } else {
+        anEl = $(el).parent();
+      }
+      sharing(lemon.data(anEl, 'share'));
+    });
   }
 };
 

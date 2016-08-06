@@ -73,6 +73,22 @@ module.exports = function (router, index, root) {
     }
   };
 
+  function shareHref(item, readonly) {
+    var sData = crypto.compress(Share.shareData(item, readonly));
+    var html = [
+      format('<a class="btn btn-secondary text-info icondh" data-share="%s" title="Share Link" href="javascript:void(0);" ' +
+        'style="border: 0px;" type="button">', sData),
+      generic.em('share-alt'),
+      '</a>'
+    ];
+
+    return html.join('');
+  }
+
+  function previewHref(item) {
+    return generic.previewHref('/share/' + crypto.compress(item._id.toString()), generic.em('eye'), 'View ' + item.title);
+  }
+
   /**
    * Share list
    */
@@ -150,7 +166,8 @@ module.exports = function (router, index, root) {
         title: 'Manual',
         prop: function(item) {
           var html = [
-            generic.previewHref('/share/' + crypto.compress(item._id.toString()), generic.em('eye'), 'View ' + item.title)
+            previewHref(item),
+            shareHref(item)
           ];
 
           return html.join('');
@@ -229,6 +246,12 @@ module.exports = function (router, index, root) {
       schemaExclude: ['create_by'],
       formElHandle: function(forms) {
         forms.remOption('type', [2, 5, 7]);
+
+        var theTitle = forms.get('title');
+        theTitle.label = [
+          'Title',
+          previewHref(forms.item),
+          shareHref(forms.item, true)].join(' ');
       },
       resultHandle: function(item, def) {
         generic.setPickerDate(item, def, 'start_time');

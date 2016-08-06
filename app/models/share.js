@@ -112,6 +112,20 @@ share.isAvailable = function(aShare, options) {
   return answer.succ();
 };
 
+share.shareData = function(aShare, readonly) {
+  var qrcLink = '/share/' + crypto.compress(aShare._id), link = qrcLink;
+  if (aShare.title && aShare.title.length > 0) {
+    link = link + '/' + aShare.title.replace(/\s/g, '-');
+  }
+
+  return {
+    readonly: readonly || false,
+    edit: aShare._id,
+    qrcLink: qrcLink,
+    link: link
+  };
+};
+
 share.fastShare = function(params, resultCall, requestInfo) {
   var now = moment().hours(0).minutes(0);
   var startTime = now.toDate(), endTime = now.clone().add(7, 'd').toDate();

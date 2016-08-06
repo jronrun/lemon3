@@ -43,9 +43,13 @@ var sharing = function(aShare) {
         width: $(layout).width() * 0.93
       });
 
-      $(btn_edit).click(function () {
-        lemon.preview((location.origin || '') + '/manage/share/' + aShare.edit);
-      });
+      if (aShare.readonly) {
+        $(btn_edit).remove();
+      } else {
+        $(btn_edit).click(function () {
+          lemon.preview((location.origin || '') + '/manage/share/' + aShare.edit);
+        });
+      }
 
       lemon.qrcode('#sharing_qrcode_img', qrcodeLink);
 

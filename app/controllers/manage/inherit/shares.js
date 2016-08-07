@@ -247,14 +247,19 @@ module.exports = function (router, index, root) {
       formElHandle: function(forms) {
         forms.remOption('type', [2, 5, 7]);
 
-        var theTitle = forms.get('title');
-        theTitle.label = [
-          'Title',
+        var theContent = forms.get('content');
+        if (6 != forms.item.type) {
+          theContent.el = 'input';
+          theContent.attrs.type = 'hidden';
+          theContent.desc = '';
+        }
+        theContent.label = [
+          'Share Content',
           previewHref(forms.item),
           shareHref(forms.item, true)
         ].join(' ');
 
-        forms.disable(['type', 'used_count', 'content']);
+        forms.disable(['type', 'used_count']);
       },
       resultHandle: function(item, def) {
         generic.setPickerDate(item, def, 'start_time');

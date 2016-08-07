@@ -140,6 +140,9 @@ lemon.register({
   isUrl: function(text) {
     return /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/.test(text);
   },
+  fullUrl: function(anURI) {
+    return (location.origin || '') + anURI;
+  },
   inlineTip: function(selector, msg, delay) {
     var tipSel = selector + ' .inlinetip';
     var isBtn = $(selector).get(0).tagName == 'BUTTON';
@@ -1155,7 +1158,7 @@ $(function () {
     }
 
     if (href && href.length > 0) {
-      lemon.preview((location.origin || '') + href, function(theIframe, thePreview) {
+      lemon.preview(lemon.fullUrl(href), function(theIframe, thePreview) {
         lemon.previewInstance = thePreview;
       });
     }

@@ -112,7 +112,7 @@ var shar = {
 
       lemon.rightclick('#share_this', function() {
         shar.his.create(share, function (data) {
-          lemon.preview((location.origin || '') + '/manage/share/' + data.edit);
+          lemon.preview(lemon.fullUrl('/manage/share/' + data.edit));
         });
       });
     }

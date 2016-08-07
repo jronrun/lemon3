@@ -1007,7 +1007,7 @@ var qry = {
         content: aHis.id
       };
 
-      lemon.preview(lemon.getUrl((location.origin || '') + '/share/preview', {
+      lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
         data: lemon.enc(data)
       }));
     });

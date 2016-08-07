@@ -13,8 +13,8 @@ var sharing = function(aShare) {
   var viewport = {
     w: $(window).width(),
     h: $(window).height()
-  }, sharedLink = (location.origin || '') + aShare.link,
-    qrcodeLink = (location.origin || '') + aShare.qrcLink;
+  }, sharedLink = lemon.fullUrl(aShare.link),
+    qrcodeLink = lemon.fullUrl(aShare.qrcLink);
 
   lemon.modal({
     title: lemon.tmpl($('#sharing_title_tmpl').html(), {}),
@@ -47,7 +47,7 @@ var sharing = function(aShare) {
         $(btn_edit).remove();
       } else {
         $(btn_edit).click(function () {
-          lemon.preview((location.origin || '') + '/manage/share/' + aShare.edit);
+          lemon.preview(lemon.fullUrl('/manage/share/' + aShare.edit));
         });
       }
 

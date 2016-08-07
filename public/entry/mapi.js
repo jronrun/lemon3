@@ -248,7 +248,7 @@ var mapis = {
   },
 
   createView: function(domReadyCallback, theURL, name) {
-    theURL = theURL || ((location.origin || '') + '/api');
+    theURL = theURL || lemon.fullUrl('/api');
     return lemon.previews(theURL, false, false, function(view, preview) {
       if (lemon.endWith(theURL, '/api')) {
         $('body', view.getDocument()).css({

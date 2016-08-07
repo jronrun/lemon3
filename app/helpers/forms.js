@@ -712,6 +712,29 @@ module.exports = {
           }
           return getFormEl(formObject.items, name, value || _.get(item || {}, name));
         },
+        readonly: function(name) {
+          var arr = _.isArray(target) ? target : [target];
+          _.each(arr, function (propName) {
+            var anEl = aHelper.get(propName);
+            if (anEl) {
+              _.extend(anEl.attrs, {
+                readonly: 'readonly'
+              });
+            }
+          });
+        },
+        disable: function(target) {
+          var arr = _.isArray(target) ? target : [target];
+          _.each(arr, function (propName) {
+            var anEl = aHelper.get(propName);
+            if (anEl) {
+              _.extend(anEl.attrs, {
+                readonly: 'readonly',
+                disabled: 'disabled'
+              });
+            }
+          });
+        },
         isOptionsEl: function(name, anElement) {
           var el = anElement || getFormEl(formObject.items, name);
           if (el) {

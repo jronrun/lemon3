@@ -251,7 +251,10 @@ module.exports = function (router, index, root) {
         theTitle.label = [
           'Title',
           previewHref(forms.item),
-          shareHref(forms.item, true)].join(' ');
+          shareHref(forms.item, true)
+        ].join(' ');
+
+        forms.disable(['type', 'used_count', 'content']);
       },
       resultHandle: function(item, def) {
         generic.setPickerDate(item, def, 'start_time');

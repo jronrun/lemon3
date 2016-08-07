@@ -17,7 +17,7 @@ function views(share, callback, requestInfo) {
     content: null,
     title: '',
     desc: '',
-    rw: null,
+    read_write: null,
     from: {
       id: requestInfo.usr.id,
       name: requestInfo.usr.name,
@@ -26,7 +26,7 @@ function views(share, callback, requestInfo) {
     userl: requestInfo.usr.isAdmin ? 1 : 0
   }, share || {});
 
-  if (!share.type || !share.content || !share.rw) {
+  if (!share.type || !share.content || !share.read_write) {
     return callback(answer.fail('invalid share'));
   }
 
@@ -90,7 +90,7 @@ function shares(shareId, resultCall, requestInfo) {
           title: aShare.title || '',
           desc: aShare.desc || '',
           type: aShare.type,
-          rw: aShare.read_write,
+          read_write: aShare.read_write,
           content: crypto.decompress(aShare.content),
           from: aShare.create_by || {},
           userl: requestInfo.usr.isAdmin ? 1 : 0
@@ -162,7 +162,7 @@ router.get(index.preview.do, function (req, res, next) {
 
   var share = ans.get();
   share = _.extend({
-    rw: 2
+    read_write: 1
   }, share);
 
   views(share, function(anAnswer) {

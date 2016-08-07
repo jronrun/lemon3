@@ -113,14 +113,14 @@ share.isAvailable = function(aShare, options) {
 };
 
 share.shareData = function(aShare, readonly) {
-  var qrcLink = '/share/' + crypto.compress(aShare._id), link = qrcLink;
+  var qrcLink = '/share/' + crypto.compress(aShare._id.toString()), link = qrcLink;
   if (aShare.title && aShare.title.length > 0) {
     link = link + '/' + aShare.title.replace(/\s/g, '-');
   }
 
   return {
     readonly: readonly || false,
-    edit: aShare._id,
+    edit: aShare._id.toString(),
     qrcLink: qrcLink,
     link: link
   };

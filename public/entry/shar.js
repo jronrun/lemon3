@@ -107,9 +107,11 @@ var shar = {
 
       $(shar.id).html(html);
 
-      lemon.live('click', lemon.format('#share_his_requ_tgl_{0}', share.content.id), function(evt, el) {
+      var requRightId = lemon.format('#share_his_requ_tgl_{0}', share.content.id);
+      lemon.live('click', requRightId, function(evt, el) {
         shar.his.tglComment(share, el);
       });
+      $(requRightId).click();
 
       $('#share_this').click(function () {
         shar.his.create(share, function (data) {

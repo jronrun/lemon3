@@ -245,6 +245,12 @@ module.exports = function (router, index, root) {
     generic.retrieve({
       schemaExclude: ['create_by'],
       formElHandle: function(forms) {
+        var scopeDefine = generic.textareaEl('share_to.define', {
+          label: 'Define',
+          desc: 'Client IP if Anonymous, User email if Login User'
+        });
+
+        forms.afterEl('share_to.scope', scopeDefine);
         forms.remOption('type', [2, 5, 7]);
 
         var theContent = forms.get('content');

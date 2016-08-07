@@ -92,7 +92,14 @@ share.isAvailable = function(aShare, options) {
       return answer.fail('Not allowed anonymous user');
     }
 
-    if (!inScope(shareTo, options.clientIP)) {
+    var cloneShare = _.cloneDeep(shareTo);
+    var theDefine = [];
+    _.each(cloneShare.define || [], function (anIP) {
+      theDefine.push(anIP.substr(anIP.lastIndexOf(':') + 1));
+    });
+
+    cloneShare.define = theDefine;
+    if (!inScope(cloneShare, options.clientIP)) {
       return answer.fail(options.clientIP + ' not in sharing scope');
     }
   }

@@ -1795,6 +1795,10 @@ var mapi = {
 
             mapi.snapload(data.data.snapdata);
             break;
+          case 'SHARE_HIS':
+            history.set(data.data.content);
+            $('#btn-tgl-comment').click();
+            break;
         }
       }
     });

@@ -90,6 +90,13 @@ var shar = {
       });
     },
     render: function(share) {
+      if (2 == share.read_write) {
+        lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
+          view.tellEvent('SHARE_HIS', share);
+        });
+        return;
+      }
+
       var html = (lemon.tmpl($('#share_his_tmpl').html(), {
         share: share,
         highlight: function(target, tip, css, attrs) {

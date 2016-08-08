@@ -1672,9 +1672,30 @@ var mapi = {
       });
     });
 
-    $('#btn-terminal').click(function () {
+    if (lemon.isMediumUpView()) {
+      lemon.tabEventOnce('#tab-terminal', {
+        shown: function(elId) {
+          var terminalId = '#console';
+          if (!$(terminalId).length) {
+            $(elId).append(lemon.tmpl($('#requ_terminal_tmpl').html(), {
 
-    });
+            }));
+            $(terminalId).css({
+              height: $(mapi.requCardId).height() - 97,
+              width: $(mapi.requCardId).width() - 46
+            });
+            global.test = lemon.consoles(terminalId);
+          }
+        }
+      });
+      $('#btn-terminal').click(function () {
+        if (lemon.buttonTgl(this)) {
+          lemon.tabShow('#tab-tri-terminal');
+        } else {
+          lemon.tabShow('#tab-tri-mirror');
+        }
+      });
+    }
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);

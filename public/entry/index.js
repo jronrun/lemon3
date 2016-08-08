@@ -8,7 +8,7 @@ require('../css/style.styl');
 //require('velocity/velocity.ui');
 require('blast-text');
 require('jquery-qrcode');
-require('jq-console');
+require('jquery-console/jquery.console');
 var screenfull = require('screenfull');
 
 var handlePageCall = {},
@@ -129,6 +129,45 @@ lemon.register({
       }, options || {});
     }
     $(selector).qrcode(options);
+  },
+  consoles: function(selector, options) {
+    options = lemon.extend({
+      completeHandle: null,
+      commandValidate: function (line) {
+        return '' != line;
+      },
+      commandHandle: function (line, report) {
+        try {
+          var ret = eval(line);
+          if (!lemon.isUndefined(ret)) {
+            return [
+              {
+                msg: ret.toString(),
+                className: 'text-success'
+              }
+            ];
+          } else {
+            return true;
+          }
+        } catch (e) {
+          return [
+            {
+              msg: e.toString(),
+              className: 'text-danger'
+            }
+          ];
+        }
+      },
+      promptLabel: '> ',
+      autofocus: true,
+      animateScroll: true,
+      promptHistory: true,
+      historyPreserveColumn: true,
+      welcomeMessage: ''
+    }, options || {});
+
+    var aConsole = $(selector).console(options);
+    return aConsole;
   },
   blast: function(target, selector) {
     var blast = $(selector).blast({ search: target });

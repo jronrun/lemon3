@@ -7,7 +7,7 @@ require('../css/style.styl');
 //require('velocity/velocity');
 //require('velocity/velocity.ui');
 require('blast-text');
-require('imports?$=jquery!jquery-qrcode');
+require('jquery-qrcode');
 var screenfull = require('screenfull');
 
 var handlePageCall = {},

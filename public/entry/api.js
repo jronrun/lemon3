@@ -1672,6 +1672,9 @@ var mapi = {
       });
     });
 
+    $('#btn-terminal').click(function () {
+
+    });
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);

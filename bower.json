@@ -29,6 +29,7 @@
     "screenfull": "^3.0.0",
     "pickadate": "^3.5.6",
     "summernote": "^0.8.1",
-    "jquery-qrcode": "*"
+    "jquery-qrcode": "*",
+    "jq-console": "^2.13.2"
   }
 }

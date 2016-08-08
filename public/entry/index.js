@@ -132,30 +132,28 @@ lemon.register({
   },
   consoles: function(selector, options) {
     options = lemon.extend({
+      executor: null,
       completeHandle: null,
+      defines: {
+        clear: function(target, report) {
+          target.clearScreen();
+          return true;
+        }
+      },
       commandValidate: function (line) {
         return '' != line;
       },
       commandHandle: function (line, report) {
         try {
-          var ret = eval(line);
-          if (!lemon.isUndefined(ret)) {
-            return [
-              {
-                msg: ret.toString(),
-                className: 'text-success'
-              }
-            ];
-          } else {
-            return true;
+          var aDefine = null;
+          if (lemon.isFunc(aDefine = options.defines[line])) {
+            return aDefine(options.target, report);
           }
+
+          var ret = lemon.isFunc(options.executor) ? options.executor(line, options.target, report) : undefined;
+          return lemon.isUndefined(ret) ? true : [{ msg: ret.toString(), className: 'text-success'}];
         } catch (e) {
-          return [
-            {
-              msg: e.toString(),
-              className: 'text-danger'
-            }
-          ];
+          return [{ msg: e.toString(), className: 'text-danger'}];
         }
       },
       promptLabel: '> ',
@@ -164,9 +162,10 @@ lemon.register({
       promptHistory: true,
       historyPreserveColumn: true,
       welcomeMessage: ''
-    }, options || {});
+    }, options);
 
     var aConsole = $(selector).console(options);
+    options.target = aConsole;
     return aConsole;
   },
   blast: function(target, selector) {

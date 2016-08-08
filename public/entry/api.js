@@ -1684,7 +1684,7 @@ var mapi = {
               height: $(mapi.requCardId).height() - 97,
               width: $(mapi.requCardId).width() - 46
             });
-            global.test = lemon.consoles(terminalId);
+            lemon.consoles(terminalId);
           }
         }
       });

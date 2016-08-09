@@ -1001,8 +1001,19 @@ var qry = {
 
   apiShare: function(selector) {
     $(selector).click(function () {
-      var tmp = $(this).attr('id').split('_'), hisId = tmp[2], batchNo = tmp[1],
-        anAPI = lemon.data('#anapi_' + hisId, 'api');
+      var tmp = $(this).attr('id').split('_'), apiId = tmp[2],
+        anAPI = lemon.data('#anapi_' + apiId, 'api');
+      var shareData = {
+        title: 'API ' + (anAPI.name || ''),
+        type: 1,
+        content: anAPI._id
+      };
+      sharing.createAndShow(shareData);
+    });
+
+    lemon.rightclick(selector, function(event) {
+      var tmp = $(event.target).parent().attr('id').split('_'), apiId = tmp[2], batchNo = tmp[1],
+        anAPI = lemon.data('#anapi_' + apiId, 'api');
 
       var data = {
         type: 1,
@@ -1031,14 +1042,14 @@ var qry = {
     });
 
     lemon.rightclick(selector, function(event) {
-      var btnId = $(event.target).parent().attr('id'), tmp = btnId.split('_'), hisId = tmp[2],
+      var tmp = $(event.target).parent().attr('id').split('_'), hisId = tmp[2],
         aHis = lemon.data('#ahis_' + hisId, 'his');
-        var shareData = {
-          title: 'API History' + (aHis.api.name ? (' of ' + aHis.api.name) : ''),
-          type: 3,
-          content: aHis.id
-        };
-        sharing.createAndShow(shareData);
+      var shareData = {
+        title: 'API History' + (aHis.api.name ? (' of ' + aHis.api.name) : ''),
+        type: 3,
+        content: aHis.id
+      };
+      sharing.createAndShow(shareData);
     });
   },
 
@@ -1231,6 +1242,8 @@ var homes = {
 };
 
 var mapi = {
+  share: '#share_this',
+
   navbarId: '#navbar-layout',
   gridId: '#grid-layout',
   apiLayoutId: '#api-layout',
@@ -1856,6 +1869,31 @@ var mapi = {
           case 'SHARE_HIS':
             history.set(data.data.content);
             $('#btn-tgl-comment').click();
+            break;
+          case 'SHARE_API':
+            var content = data.data.content;
+            apis.doChoose(content.group, content.api, true);
+            mapi.setCur(null, null, null, content.group, content.api);
+
+            if (1 == data.data.preview) {
+              $(mapi.share).show({
+                complete: function() {
+                  $(mapi.share).click(function() {
+                    var shareData = {
+                      title: 'API ' + (content.api.name || ''),
+                      type: 1,
+                      content: content.api._id
+                    };
+                    sharing.createAndShow(shareData);
+                  });
+                }
+              });
+            }
+
+            if (1 == data.data.read_write) {
+              $(requs.id).replaceWith($(requs.id).clone());
+              lemon.disable(requs.id);
+            }
             break;
         }
       }

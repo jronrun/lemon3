@@ -174,7 +174,7 @@ share.fastShare = function(params, resultCall, requestInfo) {
 
   async.waterfall([
     function(callback) {
-      if ([1, 3, 4].indexOf(aShare.type)) {
+      if ([1, 3, 4].indexOf(aShare.type) != -1) {
         share.find({
           type: aShare.type,
           content: aShare.content,

@@ -30,29 +30,14 @@ var shar = {
 
   api: {
     render: function(share) {
-      //shar.api.create(share, function (data) {
-      //  sharing(data);
-      //});
-    },
-
-    create: function(share, callback) {
-      var pg = lemon.homeProgress(), data = {
-        title: 'API ' + (share.content.api.name || ''),
-        type: share.type,
-        content: share.content.api._id
-      };
-
-      $.post('/share', {
-        data: lemon.enc(data)
-      }).done(function (resp) {
-        if (0 == resp.code) {
-          lemon.isFunc(callback) && callback(resp.result);
-        } else {
-          lemon.warn(resp.msg);
-        }
-        pg.end();
+      lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
+        $('body', view.getDocument()).css({
+          'padding-top': '4.15rem'
+        });
+        view.tellEvent('SHARE_API', share);
       });
     }
+
   },
 
   his: {

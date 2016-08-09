@@ -202,10 +202,10 @@ lemon.register({
     return $(selector).attr('disabled');
   },
   disable: function(selector) {
-    $(selector).attr({disabled: true});
+    $(selector).attr({disabled: true}).addClass('disabled');
   },
   enable: function(selector) {
-    $(selector).removeAttr('disabled');
+    $(selector).removeAttr('disabled').removeClass('disabled');
   },
   existsEl: function(selector) {
     return $(selector).length > 0;

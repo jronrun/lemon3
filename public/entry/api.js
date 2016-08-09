@@ -1,7 +1,8 @@
 /**
  *
  */
-var mirror = require('../js/codemirror');
+var mirror = require('../js/codemirror'),
+  sharing =  require('../js/sharing');
 
 var _current = {};
 function current(data) {
@@ -884,6 +885,7 @@ var qry = {
           qry.toggleAPI('#s_api_table button[id^="apitgl_"]');
 
           qry.toggleItem(batchNo, 'btgl', 'btgl_', 'bapi_');
+          qry.apiShare(lemon.format('button[id^="apishare_{0}_"]', batchNo));
 
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partApiId);
@@ -997,6 +999,22 @@ var qry = {
     });
   },
 
+  apiShare: function(selector) {
+    $(selector).click(function () {
+      var tmp = $(this).attr('id').split('_'), hisId = tmp[2], batchNo = tmp[1],
+        anAPI = lemon.data('#anapi_' + hisId, 'api');
+
+      var data = {
+        type: 1,
+        content: anAPI._id
+      };
+
+      lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+        data: lemon.enc(data)
+      }));
+    });
+  },
+
   hisShare: function(selector) {
     $(selector).click(function () {
       var tmp = $(this).attr('id').split('_'), hisId = tmp[2], batchNo = tmp[1],
@@ -1010,6 +1028,17 @@ var qry = {
       lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
         data: lemon.enc(data)
       }));
+    });
+
+    lemon.rightclick(selector, function(event) {
+      var btnId = $(event.target).parent().attr('id'), tmp = btnId.split('_'), hisId = tmp[2],
+        aHis = lemon.data('#ahis_' + hisId, 'his');
+        var shareData = {
+          title: 'API History' + (aHis.api.name ? (' of ' + aHis.api.name) : ''),
+          type: 3,
+          content: aHis.id
+        };
+        sharing.createAndShow(shareData);
     });
   },
 

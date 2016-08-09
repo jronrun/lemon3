@@ -117,7 +117,7 @@
           var hasResp = (api.response_doc || '').length > 0;
       %>
         <tr tgl-group="tgl" apigroupc="<%= group.info.id %>">
-            <td clickable="<%= batchNo %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
+            <td clickable="<%= batchNo %>" id="anapi_<%= api.id %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
                 <div class="row hidden-md-up">
                     <span class="invisible">&nbsp;&nbsp;</span>
@@ -147,6 +147,10 @@
                         <em class="fa fa-pencil-square-o"></em>
                     </a>
                     <% } %>
+                    <button class="btn btn-secondary btn-sm text-muted icondh"
+                            id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border: 0px; " type="button">
+                        <em class="fa fa-share-alt"></em>
+                    </button>
                 </div>
                 <h6 class="invisible"></h6>
 
@@ -206,6 +210,10 @@
                     <em class="fa fa-pencil-square-o"></em>
                     </a>
                 <% } %>
+                <button class="btn btn-secondary btn-sm text-muted icondh"
+                        id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border: 0px; " type="button">
+                    <em class="fa fa-share-alt"></em>
+                </button>
             </td>
         </tr>
       <% }); %>

@@ -5,7 +5,12 @@ var express = require('express'),
   log = log_from('sharing'),
   Share = app_require('models/share'),
   History = app_require('models/api/history'),
+  Group = app_require('models/api/group'),
+  Interface = app_require('models/api/interf'),
+  apiRequest = require('../helpers/api_request'),
   index = routes.share;
+
+var requs = apiRequest();
 
 module.exports = function (app) {
   app.use(index.action, router);
@@ -30,8 +35,45 @@ function views(share, callback, requestInfo) {
     return callback(answer.fail('invalid share'));
   }
 
+  //API
+  if (1 == share.type) {
+    Interface.findById(share.content, function (err, anInterf) {
+      if (err) {
+        return callback(answer.fail(err.message));
+      }
+
+      if (!anInterf) {
+        return callback(answer.fail('share API not exists'));
+      }
+
+      Group.find({id : anInterf.group_id}).limit(1).next(function(err, aGroup) {
+        if (err) {
+          return callback(answer.fail(err.message));
+        }
+
+        if (!aGroup) {
+          return callback(answer.fail('share API Group not exists'));
+        }
+
+        var infos = {
+          api: requs.getRespAPI(anInterf, requestInfo.usr),
+          group: {
+            id: aGroup.id,
+            name: aGroup.name,
+            desc: aGroup.desc
+          }
+        };
+
+        _.extend(share, {
+          content: crypto.compress(infos)
+        });
+
+        callback(answer.succ(share));
+      });
+    });
+  }
   //API History
-  if (3 == share.type) {
+  else if (3 == share.type) {
     var hisId = share.content, qry = {};
     if (History.isObjectID(String(hisId))) {
       qry = {

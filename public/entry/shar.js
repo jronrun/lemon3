@@ -20,10 +20,38 @@ var shar = {
     if (0 == ans.code) {
       ans.result.content = lemon.deepDec(ans.result.content);
       switch (ans.result.type) {
+        case 1: shar.api.render(ans.result); break;
         case 3: shar.his.render(ans.result); break;
       }
     } else {
       lemon.warn(ans.msg);
+    }
+  },
+
+  api: {
+    render: function(share) {
+      //shar.api.create(share, function (data) {
+      //  sharing(data);
+      //});
+    },
+
+    create: function(share, callback) {
+      var pg = lemon.homeProgress(), data = {
+        title: 'API ' + (share.content.api.name || ''),
+        type: share.type,
+        content: share.content.api._id
+      };
+
+      $.post('/share', {
+        data: lemon.enc(data)
+      }).done(function (resp) {
+        if (0 == resp.code) {
+          lemon.isFunc(callback) && callback(resp.result);
+        } else {
+          lemon.warn(resp.msg);
+        }
+        pg.end();
+      });
     }
   },
 
@@ -71,24 +99,6 @@ var shar = {
         $(hisRequDocId).hide();
       }
     },
-    create: function(share, callback) {
-      var pg = lemon.progress('#share_this'), data = {
-        title: 'API History' + (share.content.api.name ? (' of ' + share.content.api.name) : ''),
-        type: share.type,
-        content: share.content.id
-      };
-
-      $.post('/share', {
-        data: lemon.enc(data)
-      }).done(function (resp) {
-        if (0 == resp.code) {
-          lemon.isFunc(callback) && callback(resp.result);
-        } else {
-          lemon.warn(resp.msg);
-        }
-        pg.end();
-      });
-    },
     render: function(share) {
       if (2 == share.read_write) {
         lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
@@ -113,14 +123,18 @@ var shar = {
       });
       $(requRightId).click();
 
+      var shareData = {
+        title: 'API History' + (share.content.api.name ? (' of ' + share.content.api.name) : ''),
+        type: share.type,
+        content: share.content.id
+      };
+
       $('#share_this').click(function () {
-        shar.his.create(share, function (data) {
-          sharing(data);
-        });
+        sharing.createAndShow(shareData);
       });
 
       lemon.rightclick('#share_this', function() {
-        shar.his.create(share, function (data) {
+        sharing.create(shareData, function (data) {
           lemon.preview(lemon.fullUrl('/manage/share/' + data.edit));
         });
       });

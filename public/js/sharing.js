@@ -66,8 +66,33 @@ var sharing = function(aShare) {
   });
 };
 
-sharing.qrcode = function() {
+sharing.create = function(share, callback, selector) {
+  var pg = null;
+  try {
+    pg = lemon.progress(selector || '#share_this');
+  } catch (e) {/**/}
+  share = lemon.extend({
+    title: '',
+    type: 0,
+    content: ''
+  }, share || {});
 
+  $.post('/share', {
+    data: lemon.enc(share)
+  }).done(function (resp) {
+    if (0 == resp.code) {
+      lemon.isFunc(callback) && callback(resp.result);
+    } else {
+      lemon.warn(resp.msg);
+    }
+    pg && pg.end();
+  });
+};
+
+sharing.createAndShow = function(share, selector) {
+  sharing.create(share, function (data) {
+    sharing(data);
+  }, selector);
 };
 
 module.exports = sharing;

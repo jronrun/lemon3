@@ -232,7 +232,7 @@ lemon.register({
       if (event.which == 3) {
         event.stopPropagation();
         event.preventDefault();
-        lemon.isFunc(callback) && callback(selector, event)
+        lemon.isFunc(callback) && callback(event, selector);
       }
     });
   },

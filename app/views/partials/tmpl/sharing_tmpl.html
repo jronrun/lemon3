@@ -25,12 +25,25 @@
                 <div class="card-block">
                     <div class="card-text" style="border: 0px;">
                         <textarea id="sharing_view_url" rows="5" style="border:0px solid #ffffff;"><%= link %></textarea>
+                        <% if (share.original) { %>
+                          <small class="text-muted">
+                              This is a sharing of already exists.
+                              {{!--
+                              <a href="/manage/share/<%= share.edit %>" data-preview class="btn btn-sm btn-secondary text-info" style="border: 0px;" title="Edit Share">
+                                  Edit This
+                              </a>
+                              --}}
+                              <button type="button" class="btn btn-sm btn-secondary icondh text-info" style="border: 0px;" id="sharing_new">
+                                  Create New
+                              </button>
+                          </small>
+                        <% } %>
                     </div>
                 </div>
             </div>
         </div>
         <div class="tab-pane" id="tab-sharing-tab2" role="tabpanel">
-            <center id="sharing_qrcode_img"></center>
+            <div id="sharing_qrcode_img" style="text-align: center;"></div>
         </div>
     </div>
 </script>

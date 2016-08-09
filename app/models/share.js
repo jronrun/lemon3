@@ -126,6 +126,7 @@ share.shareData = function(aShare, readonly) {
   }
 
   return {
+    original: aShare.original,
     readonly: readonly || false,
     edit: aShare._id.toString(),
     qrcLink: qrcLink,
@@ -161,7 +162,9 @@ share.fastShare = function(params, resultCall, requestInfo) {
       ip: requestInfo.clientIP
     },
     last_modify_time: new Date(),
-    create_time: new Date()
+    create_time: new Date(),
+
+    check: 1    //check exists, 1 check 0 uncheck
   }, params || {});
 
   if (!aShare.type || !aShare.content) {
@@ -174,18 +177,23 @@ share.fastShare = function(params, resultCall, requestInfo) {
 
   async.waterfall([
     function(callback) {
-      if ([1, 3, 4].indexOf(aShare.type) != -1) {
+      if (1 == aShare.check && ([1, 3, 4].indexOf(aShare.type) != -1)) {
         share.find({
           type: aShare.type,
           content: aShare.content,
           'create_by.id': aShare.create_by.id
-        }).limit(1).next(function(err, existShare) {
+        }).sort({id: -1}).limit(1).next(function(err, existShare) {
           if (err) {
             return resultCall(answer.fail(err.message));
           }
 
           if (existShare) {
             existShare._id = existShare._id.toString();
+            existShare.original = {
+              title: existShare.title,
+              type: existShare.type,
+              content: crypto.decompress(existShare.content)
+            };
             resultCall(answer.succ(existShare));
           } else {
             callback(null, aShare);
@@ -200,6 +208,7 @@ share.fastShare = function(params, resultCall, requestInfo) {
       share.nextId(function (id) {
         target.id = id;
 
+        delete target.check;
         var check = share.validate(target);
         if (!check.valid) {
           return resultCall(answer.fail(check.msg));
@@ -215,6 +224,7 @@ share.fastShare = function(params, resultCall, requestInfo) {
           }
 
           target._id = result.insertedId.toString();
+          target.original = false;
           callback(null, answer.succ(target));
         });
       });

@@ -7,7 +7,8 @@
 var layout = '#sharing-layout',
   copyURL = '#sharing_view_url',
   btn_edit = '#sharing_edit',
-  btn_qrcode = '#sharing_qrcode';
+  btn_qrcode = '#sharing_qrcode',
+  btn_new = '#sharing_new';
 
 var sharing = function(aShare) {
   var viewport = {
@@ -16,13 +17,14 @@ var sharing = function(aShare) {
   }, sharedLink = lemon.fullUrl(aShare.link),
     qrcodeLink = lemon.fullUrl(aShare.qrcLink);
 
-  lemon.modal({
+  var shareM = lemon.modal({
     title: lemon.tmpl($('#sharing_title_tmpl').html(), {}),
     modal: {
       show: true
     },
     body: function() {
       return lemon.tmpl($('#sharing_tmpl').html(), {
+        share: aShare,
         link: sharedLink
       });
     }
@@ -60,6 +62,15 @@ var sharing = function(aShare) {
           lemon.tabShow('#tab-tri-sharing-tab1');
         }
       });
+
+      if (aShare.original) {
+        $(btn_new).click(function () {
+          shareM.hide();
+          sharing.createAndShow(lemon.extend(aShare.original, {
+            check: 0
+          }));
+        });
+      }
 
       $(el).slideDown();
     }

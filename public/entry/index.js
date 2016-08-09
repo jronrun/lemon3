@@ -133,8 +133,17 @@ lemon.register({
   consoles: function(selector, options) {
     options = lemon.extend({
       executor: null,
-      completeHandle: null,
       defines: {},
+      linebreak: true,
+      //type 1 success, 2 error
+      clazz: function(type) {
+        var lb = (options.linebreak ? ' linebreak' : '');
+        switch (type) {
+          case 1: return 'text-success' + lb;
+          case 2: return 'text-danger' + lb;
+        }
+      },
+
       commandValidate: function (line) {
         return '' != line;
       },
@@ -142,15 +151,16 @@ lemon.register({
         try {
           var aDefine = null;
           if (lemon.isFunc(aDefine = options.defines[line])) {
-            return aDefine(options.target, report);
+            return aDefine(options.target, report, options);
           }
 
           var ret = lemon.isFunc(options.executor) ? options.executor(line, options.target, report) : undefined;
-          return lemon.isUndefined(ret) ? true : [{ msg: ret.toString(), className: 'text-success'}];
+          return lemon.isUndefined(ret) ? true : [{ msg: ret.toString(), className: options.clazz(1)}];
         } catch (e) {
-          return [{ msg: e.toString(), className: 'text-danger'}];
+          return [{ msg: e.toString(), className: options.clazz(2)}];
         }
       },
+      completeHandle: null,
       promptLabel: '> ',
       autofocus: true,
       animateScroll: true,
@@ -162,6 +172,9 @@ lemon.register({
     options.defines = lemon.extend({
       clear: function (target, report) {
         target.clearScreen(); target.reset(); return true;
+      },
+      linebreak: function(target, report, instOptions) {
+        instOptions.linebreak = !instOptions.linebreak; return 'linebreak is ' + instOptions.linebreak;
       }
     }, options.defines);
 

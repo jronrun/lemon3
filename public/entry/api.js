@@ -1688,7 +1688,7 @@ var mapi = {
             });
 
             $(terminalId + ' .jquery-console-inner').css({
-              height: $(mapi.requCardId).height() - 112
+              height: $(mapi.requCardId).height() - 57
             });
           }
         }

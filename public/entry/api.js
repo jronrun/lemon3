@@ -1681,11 +1681,14 @@ var mapi = {
 
             }));
             $(terminalId).css({
-              height: $(mapi.requCardId).height() - 97,
               width: $(mapi.requCardId).width() - 46
             });
             lemon.consoles(terminalId, {
               executor: eval
+            });
+
+            $(terminalId + ' .jquery-console-inner').css({
+              height: $(mapi.requCardId).height() - 112
             });
           }
         }

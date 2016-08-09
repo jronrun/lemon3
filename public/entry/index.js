@@ -161,12 +161,7 @@ lemon.register({
 
     options.defines = lemon.extend({
       clear: function (target, report) {
-        target.clearScreen();
-        return true;
-      },
-      reset: function (target, report) {
-        target.reset();
-        return true;
+        target.clearScreen(); target.reset(); return true;
       }
     }, options.defines);
 

@@ -134,12 +134,7 @@ lemon.register({
     options = lemon.extend({
       executor: null,
       completeHandle: null,
-      defines: {
-        clear: function(target, report) {
-          target.clearScreen();
-          return true;
-        }
-      },
+      defines: {},
       commandValidate: function (line) {
         return '' != line;
       },
@@ -163,6 +158,17 @@ lemon.register({
       historyPreserveColumn: true,
       welcomeMessage: ''
     }, options);
+
+    options.defines = lemon.extend({
+      clear: function (target, report) {
+        target.clearScreen();
+        return true;
+      },
+      reset: function (target, report) {
+        target.reset();
+        return true;
+      }
+    }, options.defines);
 
     var aConsole = $(selector).console(options);
     options.target = aConsole;

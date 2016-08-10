@@ -314,7 +314,7 @@ var mapis = {
     });
   },
 
-  loadsnap: function(mapiSnapdata, callback, rw) {
+  loadsnap: function(mapiSnapdata, callback, shared) {
     if (lemon.isBlank(mapiSnapdata)) {
       return;
     }
@@ -346,8 +346,10 @@ var mapis = {
           mapis.instance.active(instId);
         }
 
-        if (rw && 1 == rw) {
-          anInst.view.tellEvent('DISABLE_REQUEST');
+        if (shared) {
+          var evtData = lemon.clone(shared);
+          delete evtData.content;
+          anInst.view.tellEvent('SHARE_APIs', evtData);
         }
 
         loadInst(insts.shift());
@@ -447,7 +449,7 @@ var mapis = {
               if (1 == data.data.read_write) {
                 $(mapis.newId).remove();
               }
-            }, data.data.read_write);
+            }, data.data);
             break;
         }
       }

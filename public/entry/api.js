@@ -1949,8 +1949,11 @@ var mapi = {
               mapi.disableRequest();
             }
             break;
-          case 'DISABLE_REQUEST':
-            mapi.disableRequest();
+          case 'SHARE_APIs':
+            if (1 == data.data.read_write) {
+              $(mapi.viewUrlId).remove();
+              mapi.disableRequest();
+            }
             break;
         }
       }

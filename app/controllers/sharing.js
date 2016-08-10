@@ -143,7 +143,8 @@ function shares(shareId, resultCall, requestInfo) {
           read_write: aShare.read_write,
           content: crypto.decompress(aShare.content),
           from: aShare.create_by || {},
-          userl: requestInfo.usr.isAdmin ? 1 : 0
+          userl: requestInfo.usr.isAdmin ? 1 : 0,
+          source: aShare._id.toString()
         };
 
         callback(null, target);

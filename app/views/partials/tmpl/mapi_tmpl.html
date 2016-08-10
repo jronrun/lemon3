@@ -20,7 +20,8 @@
                     <%= inst.name %>
                     </button>
                     <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split text-muted"
-                            style="border: 0px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            style="border: 0px;padding-right: 1px; padding-left: 1px;"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <div class="dropdown-menu borderinfo">
@@ -43,4 +44,9 @@
             <% } %>
         </li>
     <% }); %>
+    <li class="nav-item">
+        <button type="button" id="mapi-share" class="btn btn-secondary-outline icondh" style="border: 0px;">
+            <em class="fa fa-share-alt" title="Share"></em>
+        </button>
+    </li>
 </script>

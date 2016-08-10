@@ -15,6 +15,9 @@ function $$(selector, instanceId) {
 
 var mapis = {
 
+  isSharing: false,
+  newId: '#mapi_new',
+
   tglBalance: {},
   instances: {},
   instance: {
@@ -134,14 +137,14 @@ var mapis = {
             'padding': 0
           });
 
-          $('#mapi_new').click(function () {
+          $(mapis.newId).click(function () {
             var thiz = this; lemon.buttonTgl(thiz);
             mapis.addView(false, function() {
               lemon.buttonTgl(thiz);
             });
           });
 
-          lemon.rightclick('#mapi_new', function() {
+          lemon.rightclick(mapis.newId, function() {
             var inputURLId = 'mapi_preview_url';
             var mapinM = lemon.modal({
               modal: {
@@ -181,7 +184,7 @@ var mapis = {
       mapis.tools.show();
     },
 
-    refresh: function() {
+    refresh: function(callback) {
       $('#mapi_tabs').empty().html(lemon.tmpl($('#mapi_tab_tmpl').html(), {
         mapis: mapis.instances
       }));
@@ -238,34 +241,55 @@ var mapis = {
         }
       });
 
-      $('#mapi-share').click(function () {
-        lemon.store('mapi_snapshoot', null);
-        mapis.snapshoot();
-        lemon.delay(function () {
-          var snapData = lemon.persist('mapi_snapshoot'), shareData = {
-            title: 'APIs Snapshot',
-            type: 7,
-            content: snapData
-          };
-          sharing.createAndShow(shareData);
-        }, 500);
-      });
+      var shareBtn = '#mapi-share';
+      if (!mapis.isSharing) {
+        $(shareBtn).click(function () {
+          var pg = lemon.progress(shareBtn);
+          lemon.store('mapi_snapshoot', null);
+          mapis.snapshoot();
+          lemon.delay(function () {
+            var snapData = lemon.persist('mapi_snapshoot'), shareData = {
+              title: 'APIs Snapshot',
+              type: 7,
+              content: snapData
+            };
+            sharing.createAndShow(shareData);
+            pg.end();
+          }, 500);
+        });
 
-      lemon.rightclick('#mapi-share', function () {
-        lemon.store('mapi_snapshoot', null);
-        mapis.snapshoot();
-        lemon.delay(function () {
-          var snapData = lemon.persist('mapi_snapshoot'), data = {
-            type: 7,
-            content: snapData
-          };
+        lemon.rightclick(shareBtn, function () {
+          var pg = lemon.progress(shareBtn);
+          lemon.store('mapi_snapshoot', null);
+          mapis.snapshoot();
+          lemon.delay(function () {
+            var snapData = lemon.persist('mapi_snapshoot'), data = {
+              type: 7,
+              content: snapData
+            };
 
-          lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
-            data: lemon.enc(data)
-          }));
-        }, 500);
-      });
+            lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+              data: lemon.enc(data)
+            }));
+            pg.end();
+          }, 500);
+        });
+      } else {
+        $(shareBtn).hide();
+      }
+
+      lemon.isFunc(callback) && callback();
     }
+  },
+
+  shareShow: function(shareData) {
+    var shareThisBtn = '#share_this'; $(shareThisBtn).show({
+      complete: function() {
+        $(shareThisBtn).click(function() {
+          sharing.createAndShow(shareData);
+        });
+      }
+    });
   },
 
   addView: function(theURL, callback, name) {
@@ -290,7 +314,7 @@ var mapis = {
     });
   },
 
-  loadsnap: function(mapiSnapdata) {
+  loadsnap: function(mapiSnapdata, callback, rw) {
     if (lemon.isBlank(mapiSnapdata)) {
       return;
     }
@@ -301,7 +325,11 @@ var mapis = {
     });
 
     var loadInst = function(inst) {
-      if (!inst) { return; }
+      if (!inst) {
+        lemon.isFunc(callback) && callback();
+        return;
+      }
+
       mapis.createView(function (instId) {
         if (inst.iframe.isDefault) {
           mapis.instance.setDefault(instId);
@@ -314,8 +342,12 @@ var mapis = {
         });
 
         if (!inst.iframe.isDefault) {
-          mapis.tool.refresh();
+          mapis.tool.refresh(mapiSnapdata);
           mapis.instance.active(instId);
+        }
+
+        if (rw && 1 == rw) {
+          anInst.view.tellEvent('DISABLE_REQUEST');
         }
 
         loadInst(insts.shift());
@@ -399,9 +431,23 @@ var mapis = {
             }
             break;
           case 'SHARE_APIs_SNAPSHOT':
+            mapis.isSharing = true;
             var snapData = data.data.content;
             mapis.tool.initialize();
-            mapis.loadsnap(snapData);
+            mapis.loadsnap(snapData, function() {
+              if (1 == data.data.preview) {
+                $(mapis.newId).remove();
+                mapis.shareShow({
+                  title: 'APIs Snapshot',
+                  type: 7,
+                  content: snapData
+                });
+              }
+
+              if (1 == data.data.read_write) {
+                $(mapis.newId).remove();
+              }
+            }, data.data.read_write);
             break;
         }
       }

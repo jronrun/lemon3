@@ -251,7 +251,6 @@ module.exports = function (router, index, root) {
         });
 
         forms.afterEl('share_to.scope', scopeDefine);
-        forms.remOption('type', [2, 5, 7]);
 
         var theContent = forms.get('content');
         if (6 != forms.item.type) {

@@ -1936,6 +1936,9 @@ var mapi = {
               mapi.disableRequest();
             }
             break;
+          case 'DISABLE_REQUEST':
+            mapi.disableRequest();
+            break;
         }
       }
     });

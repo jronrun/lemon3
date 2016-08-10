@@ -234,20 +234,28 @@ lemon.register({
   },
   disableRightclick: function(selector) {
     //forbiden right click context menu
-    $(selector).bind('contextmenu', function() {
+    $(selector).on('contextmenu', function (e) {
+      e.preventDefault();
       return false;
     });
   },
   rightclick: function(selector, callback) {
-    lemon.disableRightclick(selector);
-    $(selector).mousedown(function (event) {
-      //1 left 2 middle 3 right
-      if (event.which == 3) {
-        event.stopPropagation();
-        event.preventDefault();
-        lemon.isFunc(callback) && callback(event, selector);
-      }
+    $(selector).contextmenu(function (e) {
+      lemon.isFunc(callback) && callback(event, selector);
+      e.preventDefault();
+      return false;
     });
+    /*
+     lemon.disableRightclick(selector);
+     $(selector).mousedown(function (event) {
+     //1 left 2 middle 3 right
+     if (event.which == 3) {
+     event.stopPropagation();
+     event.preventDefault();
+     lemon.isFunc(callback) && callback(event, selector);
+     }
+     });
+     */
   },
   homeProgress: function() {
     return (homeProgress = progressJs().start().autoIncrease(5, 100));

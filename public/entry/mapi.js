@@ -1,6 +1,7 @@
 /**
  *
  */
+var sharing =  require('../js/sharing');
 
 function $$(selector, instanceId) {
   var aInstance = mapis.instance.gets(instanceId || mapis.instance.defaultId);
@@ -236,6 +237,34 @@ var mapis = {
           mapis.instance.activePrevious();
         }
       });
+
+      $('#mapi-share').click(function () {
+        lemon.store('mapi_snapshoot', null);
+        mapis.snapshoot();
+        lemon.delay(function () {
+          var snapData = lemon.persist('mapi_snapshoot'), shareData = {
+            title: 'APIs Snapshot',
+            type: 7,
+            content: snapData
+          };
+          sharing.createAndShow(shareData);
+        }, 500);
+      });
+
+      lemon.rightclick('#mapi-share', function () {
+        lemon.store('mapi_snapshoot', null);
+        mapis.snapshoot();
+        lemon.delay(function () {
+          var snapData = lemon.persist('mapi_snapshoot'), data = {
+            type: 7,
+            content: snapData
+          };
+
+          lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+            data: lemon.enc(data)
+          }));
+        }, 500);
+      });
     }
   },
 
@@ -261,6 +290,41 @@ var mapis = {
     });
   },
 
+  loadsnap: function(mapiSnapdata) {
+    if (lemon.isBlank(mapiSnapdata)) {
+      return;
+    }
+
+    var insts = [];
+    lemon.each(mapiSnapdata, function (inst) {
+      insts.push(inst);
+    });
+
+    var loadInst = function(inst) {
+      if (!inst) { return; }
+      mapis.createView(function (instId) {
+        if (inst.iframe.isDefault) {
+          mapis.instance.setDefault(instId);
+        }
+
+        var anInst = mapis.instance.gets(instId);
+        anInst.view.tellEvent('SNAPLOAD', {
+          id: anInst.view.getId(),
+          snapdata: inst.snapdata
+        });
+
+        if (!inst.iframe.isDefault) {
+          mapis.tool.refresh();
+          mapis.instance.active(instId);
+        }
+
+        loadInst(insts.shift());
+      }, inst.iframe.src, inst.iframe.name);
+    };
+
+    loadInst(insts.shift());
+    lemon.store('mapi_snapshoot', null);
+  },
   snapshoot: function() {
     var anAPI = location.origin + '/api', asrc = null;
     lemon.each(mapis.instances, function (inst) {
@@ -291,35 +355,20 @@ var mapis = {
     }
 
     lemon.console();
-    var mapiSnapdata = lemon.persist('mapi_snapshoot');
-    if (lemon.isBlank(mapiSnapdata)) {
-      mapis.createView(function(instId) {
-        mapis.instance.setDefault(instId);
-        if (lemon.isMediumUpView()) {
-          mapis.tool.initialize();
-        }
-      });
-    } else {
-      mapis.tool.initialize();
-      lemon.each(mapiSnapdata, function (inst) {
-        mapis.createView(function (instId) {
-          if (inst.iframe.isDefault) {
-            mapis.instance.setDefault(instId);
-          }
 
-          var anInst = mapis.instance.gets(instId);
-          anInst.view.tellEvent('SNAPLOAD', {
-            id: anInst.view.getId(),
-            snapdata: inst.snapdata
-          });
-
-          if (!inst.iframe.isDefault) {
-            mapis.tool.refresh();
-            mapis.instance.active(instId);
+    if (lemon.isRootWin()) {
+      var mapiSnapdata = lemon.persist('mapi_snapshoot');
+      if (lemon.isBlank(mapiSnapdata)) {
+        mapis.createView(function(instId) {
+          mapis.instance.setDefault(instId);
+          if (lemon.isMediumUpView()) {
+            mapis.tool.initialize();
           }
-        }, inst.iframe.src, inst.iframe.name);
-      });
-      lemon.store('mapi_snapshoot', null);
+        });
+      } else {
+        mapis.tool.initialize();
+        mapis.loadsnap(mapiSnapdata);
+      }
     }
 
     lemon.subMsg(function (data) {
@@ -349,17 +398,20 @@ var mapis = {
               $(mapis.toolsId).slideDown();
             }
             break;
+          case 'SHARE_APIs_SNAPSHOT':
+            var snapData = data.data.content;
+            mapis.tool.initialize();
+            mapis.loadsnap(snapData);
+            break;
         }
       }
     });
 
     $(window).on('beforeunload', function() {
-      mapis.snapshoot();
+      if (lemon.isRootWin()) {
+        mapis.snapshoot();
+      }
     });
-
-    //TODO remove
-    global.mapis=mapis;
-    global.$$=$$;
   }
 };
 

@@ -23,6 +23,7 @@ var shar = {
         case 1: shar.api.render(ans.result); break;
         case 2: shar.api.snapshotRender(ans.result); break;
         case 3: shar.his.render(ans.result); break;
+        case 7: shar.api.apisSnapshotRender(ans.result); break;
       }
     } else {
       lemon.warn(ans.msg);
@@ -45,6 +46,12 @@ var shar = {
           'padding-top': '4.15rem'
         });
         view.tellEvent('SHARE_API_SNAPSHOT', share);
+      });
+    },
+
+    apisSnapshotRender: function(share) {
+      lemon.previews(lemon.fullUrl('/apis'), false, false, function(view) {
+        view.tellEvent('SHARE_APIs_SNAPSHOT', share);
       });
     }
 

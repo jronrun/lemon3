@@ -6,7 +6,7 @@ var model = schema({
   id: { type: 'integer', required: true },
   title: { type: 'string', allowEmpty: false },
   desc: { type: 'string' },
-  type: { type: 'integer', enum: [1, 2, 3, 4, 5, 6], required: true, const: {
+  type: { type: 'integer', enum: [1, 2, 3, 4, 5, 6, 7], required: true, const: {
       1: 'API',
       2: 'API Capture',
       3: 'API History',

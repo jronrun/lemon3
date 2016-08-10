@@ -72,8 +72,8 @@ function views(share, callback, requestInfo) {
       });
     });
   }
-  //API Snapshot
-  else if (2 == share.type) {
+  //API Snapshot, APIs Snapshot
+  else if (2 == share.type || 7 == share.type) {
     _.extend(share, {
       content: crypto.compress(share.content)
     });

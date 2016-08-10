@@ -16,7 +16,7 @@ var model = schema({
       7: 'APIs Capture'
     }
   },
-  read_write: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Readonly', 2: 'Read Write'} },
+  read_write: { type: 'integer', enum: [1, 2, 3], required: true, const: { 1: 'Readonly', 2: 'User Power', 3: 'Execute Power'} },
   //Allow count, Unlimited if count is -1
   //Opened count if readonly
   //Requested count if read write

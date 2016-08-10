@@ -1243,6 +1243,7 @@ var homes = {
 
 var mapi = {
   share: '#share_this',
+  shareSnap: '#btn-share-snap',
 
   navbarId: '#navbar-layout',
   gridId: '#grid-layout',
@@ -1743,7 +1744,7 @@ var mapi = {
         }
       });
 
-      $('#btn-share-snap').click(function () {
+      $(mapi.shareSnap).click(function () {
         var snapData = mapi.snapshoot(), shareData = {
           title: 'API Snapshot' + ((snapData.cur && snapData.cur.api) ? (' of ' + snapData.cur.api.name) : ''),
           type: 2,
@@ -1752,7 +1753,7 @@ var mapi = {
         sharing.createAndShow(shareData);
       });
 
-      lemon.rightclick('#btn-share-snap', function(event) {
+      lemon.rightclick(mapi.shareSnap, function(event) {
         var snapData = mapi.snapshoot(), data = {
           type: 2,
           content: snapData
@@ -1901,10 +1902,12 @@ var mapi = {
             mapi.snapload(data.data.snapdata);
             break;
           case 'SHARE_HIS':
+            $(mapi.shareSnap).remove();
             history.set(data.data.content);
             $('#btn-tgl-comment').click();
             break;
           case 'SHARE_API':
+            $(mapi.shareSnap).remove();
             var content = data.data.content;
             apis.doChoose(content.group, content.api, true);
             mapi.setCur(null, null, null, content.group, content.api);
@@ -1922,6 +1925,7 @@ var mapi = {
             }
             break;
           case 'SHARE_API_SNAPSHOT':
+            $(mapi.shareSnap).remove();
             var snapData = data.data.content;
             mapi.snapload(snapData);
             if (1 == data.data.preview) {

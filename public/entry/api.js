@@ -104,6 +104,7 @@ var apis = {
     $(apis.id).data('page', page);
 
     $.post('/api/interfaces', {
+      source: mapi.source(),
       page: page
     }, function (resp) {
       if (0 == resp.code) {
@@ -318,6 +319,7 @@ var envs = {
     $(envs.id).data('page', page);
 
     $.post('/api/servers', {
+      source: mapi.source(),
       page: page
     }, function (resp) {
       if (0 == resp.code) {

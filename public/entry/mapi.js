@@ -342,7 +342,7 @@ var mapis = {
         });
 
         if (!inst.iframe.isDefault) {
-          mapis.tool.refresh(mapiSnapdata);
+          mapis.tool.refresh();
           mapis.instance.active(instId);
         }
 

@@ -1245,7 +1245,7 @@ var mapi = {
   share: '#share_this',
   shareSnap: '#btn-share-snap',
 
-  viewUrlId: '#request_view_url',
+  viewUrlId: '#btn-show-url',
   tglCommentId: '#btn-tgl-comment',
 
   navbarId: '#navbar-layout',
@@ -1586,7 +1586,7 @@ var mapi = {
       }
     });
 
-    $('#btn-show-url').click(function () {
+    $(mapi.viewUrlId).click(function () {
       if (lemon.buttonTgl(this)) {
         var choosed = current();
         if (!choosed.env || !choosed.envGroup || !choosed.serv) {
@@ -1615,7 +1615,7 @@ var mapi = {
 
             lemon.tabEventOnce('#tab-requ-tab3', {
               shown: function(elId) {
-                var copyEl = mapi.viewUrlId,
+                var copyEl = '#request_view_url',
                   aURL = lemon.format('{0}?{1}', rdata.path, decodeURIComponent($.param(rdata.data)));
                 $(elId).html(lemon.tmpl($('#api_view_url_tmpl').html(), {
                   aURL: aURL

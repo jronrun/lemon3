@@ -444,6 +444,10 @@ var requs = {
         startRequ();
       }
     });
+
+    lemon.rightclick(requs.id, function () {
+
+    });
   },
 
   request: function(callback) {

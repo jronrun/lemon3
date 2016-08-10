@@ -1839,6 +1839,13 @@ var mapi = {
     });
   },
   shares: function(share) {
+    if ([2, 3, 7].indexOf(share.type) != -1) {
+      var choosed = current();
+      if (mapi.requ.isJson() && choosed.serv) {
+        $(mapi.tglCommentId).click();
+      }
+    }
+
     if (1 == share.read_write) {
       mapi.disableRequest();
       $(mapi.viewUrlId).remove();
@@ -1928,7 +1935,6 @@ var mapi = {
           case 'SHARE_HIS':
             $(mapi.shareSnap).remove();
             history.set(data.data.content);
-            $(mapi.tglCommentId).click();
 
             mapi.shares(data.data);
             break;

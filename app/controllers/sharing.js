@@ -72,6 +72,14 @@ function views(share, callback, requestInfo) {
       });
     });
   }
+  //API Snapshot
+  else if (2 == share.type) {
+    _.extend(share, {
+      content: crypto.compress(share.content)
+    });
+
+    callback(answer.succ(share));
+  }
   //API History
   else if (3 == share.type) {
     var hisId = share.content, qry = {};

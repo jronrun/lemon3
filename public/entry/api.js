@@ -1742,6 +1742,26 @@ var mapi = {
           lemon.tabShow('#tab-tri-mirror');
         }
       });
+
+      $('#btn-share-snap').click(function () {
+        var snapData = mapi.snapshoot(), shareData = {
+          title: 'API Snapshot' + ((snapData.cur && snapData.cur.api) ? (' of ' + snapData.cur.api.name) : ''),
+          type: 2,
+          content: snapData
+        };
+        sharing.createAndShow(shareData);
+      });
+
+      lemon.rightclick('#btn-share-snap', function(event) {
+        var snapData = mapi.snapshoot(), data = {
+          type: 2,
+          content: snapData
+        };
+
+        lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+          data: lemon.enc(data)
+        }));
+      });
     }
   },
   intlResp: function () {
@@ -1791,6 +1811,20 @@ var mapi = {
     if (mapi.resp) {
       mapi.mirrorSize(mapi.resp, mapi.respCardId);
     }
+  },
+
+  disableRequest: function() {
+    $(requs.id).replaceWith($(requs.id).clone());
+    lemon.disable(requs.id);
+  },
+  shareShow: function(shareData) {
+    $(mapi.share).show({
+      complete: function() {
+        $(mapi.share).click(function() {
+          sharing.createAndShow(shareData);
+        });
+      }
+    });
   },
   initialize: function() {
     lemon.homeProgress();
@@ -1876,23 +1910,30 @@ var mapi = {
             mapi.setCur(null, null, null, content.group, content.api);
 
             if (1 == data.data.preview) {
-              $(mapi.share).show({
-                complete: function() {
-                  $(mapi.share).click(function() {
-                    var shareData = {
-                      title: 'API ' + (content.api.name || ''),
-                      type: 1,
-                      content: content.api._id
-                    };
-                    sharing.createAndShow(shareData);
-                  });
-                }
+              mapi.shareShow({
+                title: 'API ' + (content.api.name || ''),
+                type: 1,
+                content: content.api._id
               });
             }
 
             if (1 == data.data.read_write) {
-              $(requs.id).replaceWith($(requs.id).clone());
-              lemon.disable(requs.id);
+              mapi.disableRequest();
+            }
+            break;
+          case 'SHARE_API_SNAPSHOT':
+            var snapData = data.data.content;
+            mapi.snapload(snapData);
+            if (1 == data.data.preview) {
+              mapi.shareShow({
+                title: 'API Snapshot' + ((snapData.cur && snapData.cur.api) ? (' of ' + snapData.cur.api.name) : ''),
+                type: 2,
+                content: snapData
+              });
+            }
+
+            if (1 == data.data.read_write) {
+              mapi.disableRequest();
             }
             break;
         }

@@ -21,6 +21,7 @@ var shar = {
       ans.result.content = lemon.deepDec(ans.result.content);
       switch (ans.result.type) {
         case 1: shar.api.render(ans.result); break;
+        case 2: shar.api.snapshotRender(ans.result); break;
         case 3: shar.his.render(ans.result); break;
       }
     } else {
@@ -35,6 +36,15 @@ var shar = {
           'padding-top': '4.15rem'
         });
         view.tellEvent('SHARE_API', share);
+      });
+    },
+
+    snapshotRender: function(share) {
+      lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
+        $('body', view.getDocument()).css({
+          'padding-top': '4.15rem'
+        });
+        view.tellEvent('SHARE_API_SNAPSHOT', share);
       });
     }
 

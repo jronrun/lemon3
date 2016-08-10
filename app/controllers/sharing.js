@@ -144,7 +144,7 @@ function shares(shareId, resultCall, requestInfo) {
           content: crypto.decompress(aShare.content),
           from: aShare.create_by || {},
           userl: requestInfo.usr.isAdmin ? 1 : 0,
-          source: aShare._id.toString()
+          source: crypto.compress(aShare._id.toString())
         };
 
         callback(null, target);

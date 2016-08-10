@@ -1245,6 +1245,9 @@ var mapi = {
   share: '#share_this',
   shareSnap: '#btn-share-snap',
 
+  viewUrlId: '#request_view_url',
+  tglCommentId: '#btn-tgl-comment',
+
   navbarId: '#navbar-layout',
   gridId: '#grid-layout',
   apiLayoutId: '#api-layout',
@@ -1501,7 +1504,7 @@ var mapi = {
 
     });
 
-    $('#btn-tgl-comment').click(function () {
+    $(mapi.tglCommentId).click(function () {
       if (!mapi.requ.isJson()) {
         return lemon.msg('The Request Data is not a Valid JSON.');
       }
@@ -1612,7 +1615,7 @@ var mapi = {
 
             lemon.tabEventOnce('#tab-requ-tab3', {
               shown: function(elId) {
-                var copyEl = '#request_view_url',
+                var copyEl = mapi.viewUrlId,
                   aURL = lemon.format('{0}?{1}', rdata.path, decodeURIComponent($.param(rdata.data)));
                 $(elId).html(lemon.tmpl($('#api_view_url_tmpl').html(), {
                   aURL: aURL
@@ -1904,7 +1907,11 @@ var mapi = {
           case 'SHARE_HIS':
             $(mapi.shareSnap).remove();
             history.set(data.data.content);
-            $('#btn-tgl-comment').click();
+            $(mapi.tglCommentId).click();
+
+            if (1 == data.data.read_write) {
+              $(mapi.viewUrlId).remove();
+            }
             break;
           case 'SHARE_API':
             $(mapi.shareSnap).remove();
@@ -1922,6 +1929,7 @@ var mapi = {
 
             if (1 == data.data.read_write) {
               mapi.disableRequest();
+              $(mapi.viewUrlId).remove();
             }
             break;
           case 'SHARE_API_SNAPSHOT':
@@ -1937,6 +1945,7 @@ var mapi = {
             }
 
             if (1 == data.data.read_write) {
+              $(mapi.viewUrlId).remove();
               mapi.disableRequest();
             }
             break;

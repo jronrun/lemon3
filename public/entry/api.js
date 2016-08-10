@@ -1830,6 +1830,19 @@ var mapi = {
       }
     });
   },
+  shares: function(share) {
+    if (1 == share.read_write) {
+      mapi.disableRequest();
+      $(mapi.viewUrlId).remove();
+    }
+
+    lemon.data('body', {
+      source: share.source
+    });
+  },
+  source: function() {
+    return lemon.data('body', 'source');
+  },
   initialize: function() {
     lemon.homeProgress();
     if (lemon.isSmallDownView()) {
@@ -1909,9 +1922,7 @@ var mapi = {
             history.set(data.data.content);
             $(mapi.tglCommentId).click();
 
-            if (1 == data.data.read_write) {
-              $(mapi.viewUrlId).remove();
-            }
+            mapi.shares(data.data);
             break;
           case 'SHARE_API':
             $(mapi.shareSnap).remove();
@@ -1927,10 +1938,7 @@ var mapi = {
               });
             }
 
-            if (1 == data.data.read_write) {
-              mapi.disableRequest();
-              $(mapi.viewUrlId).remove();
-            }
+            mapi.shares(data.data);
             break;
           case 'SHARE_API_SNAPSHOT':
             $(mapi.shareSnap).remove();
@@ -1944,16 +1952,10 @@ var mapi = {
               });
             }
 
-            if (1 == data.data.read_write) {
-              $(mapi.viewUrlId).remove();
-              mapi.disableRequest();
-            }
+            mapi.shares(data.data);
             break;
           case 'SHARE_APIs':
-            if (1 == data.data.read_write) {
-              $(mapi.viewUrlId).remove();
-              mapi.disableRequest();
-            }
+            mapi.shares(data.data);
             break;
         }
       }

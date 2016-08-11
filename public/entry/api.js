@@ -1803,9 +1803,9 @@ var mapi = {
 
   },
   intlDD: function() {
-    envs.render();
-    apis.render();
     if (lemon.isRootWin()) {
+      envs.render();
+      apis.render();
       lemon.delay(function () {
         mapi.snapload();
       }, 200);
@@ -1854,6 +1854,9 @@ var mapi = {
     lemon.data('body', {
       source: share.source
     });
+
+    envs.render();
+    apis.render();
   },
   source: function() {
     return lemon.data('body', 'source');

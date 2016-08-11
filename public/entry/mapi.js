@@ -336,19 +336,22 @@ var mapis = {
         }
 
         var anInst = mapis.instance.gets(instId);
-        anInst.view.tellEvent('SNAPLOAD', {
-          id: anInst.view.getId(),
-          snapdata: inst.snapdata
-        });
+        if (inst.iframe.api) {
+          anInst.view.tellEvent('SNAPLOAD', {
+            id: anInst.view.getId(),
+            snapdata: inst.snapdata
+          });
+        }
 
         if (!inst.iframe.isDefault) {
           mapis.tool.refresh();
           mapis.instance.active(instId);
         }
 
-        if (shared) {
+        if (inst.iframe.api && shared) {
           var evtData = lemon.clone(shared);
           delete evtData.content;
+          evtData.instanceId = inst.id;
           anInst.view.tellEvent('SHARE_APIs', evtData);
         }
 
@@ -364,12 +367,14 @@ var mapis = {
     lemon.each(mapis.instances, function (inst) {
       if (anAPI == (asrc = inst.view.attr('src'))) {
         inst.view.tellEvent('SNAPSHOOT', {
+          id: inst.instanceId,
           tabName: inst.name,
           isDefault: inst.instanceId == mapis.instance.defaultId
         });
       } else {
         var shoot = {};
         shoot[inst.view.getName()] = {
+          id: inst.instanceId,
           iframe: {
             api: false,
             isDefault: false,
@@ -460,6 +465,9 @@ var mapis = {
         mapis.snapshoot();
       }
     });
+
+
+    global.mapis=mapis;
   }
 };
 

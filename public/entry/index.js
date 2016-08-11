@@ -49,6 +49,13 @@ lemon.data = function(selector, target) {
   //get
   if (lemon.isString(target)) {
     return lemon.deepDec($(selector).attr(prefix + lemon.deCase(target)));
+  } else if (lemon.isArray(target)) {
+    var ar = {};
+    lemon.each(target, function (tkey) {
+      ar[tkey] = lemon.deepDec($(selector).attr(prefix + lemon.deCase(tkey)));
+    });
+
+    return ar;
   }
 
   //set

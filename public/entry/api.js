@@ -1852,6 +1852,7 @@ var mapi = {
     }
 
     lemon.data('body', {
+      sid: share.instanceId,
       source: share.source
     });
 
@@ -1859,7 +1860,7 @@ var mapi = {
     apis.render();
   },
   source: function() {
-    return lemon.data('body', 'source');
+    return lemon.data('body', ['sid', 'source']);
   },
   initialize: function() {
     lemon.homeProgress();
@@ -1916,6 +1917,7 @@ var mapi = {
           case 'SNAPSHOOT':
             var shoot = {};
             shoot[data.iframe.name] = {
+              id: data.data.id,
               iframe: {
                 api: true,
                 isDefault: data.data.isDefault,

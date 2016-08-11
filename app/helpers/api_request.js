@@ -600,7 +600,7 @@ module.exports = function(commOptions) {
 
     /**
      *
-     * @param params   { serv: 1, requ: {}, api: 1}
+     * @param params   { serv: 1, requ: {}, api: 1, notGetHostIfMutation: 0}
      * @param resultCall
      * @returns {*}
        */
@@ -702,6 +702,7 @@ module.exports = function(commOptions) {
         function(anAnswer, callback) {
           var apiItem = anAnswer.result.item;
           if (0 == anAnswer.code
+            && 1 != (params.notGetHostIfMutation || 0)
             && null != apiItem
             && 2 == apiItem.mutation
             && apiItem.mutation_host > 0) {

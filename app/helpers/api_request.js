@@ -39,6 +39,33 @@ function getRespAPI(api, usr) {
   return respAPI;
 }
 
+function parseExecutableAPICapture(apiCapture) {
+  var parseR = { env: 0, group: 0, serv: 0, api: 0 }, cur = null;
+  if (!(cur = apiCapture.cur)) {
+    return parseR;
+  }
+
+  if (cur.env && cur.env.id) {
+    parseR.env = cur.env;
+  }
+
+  if (cur.serv && cur.serv.id) {
+    parseR.serv = cur.serv;
+  }
+
+  if (cur.apiGroup && cur.apiGroup.id) {
+    parseR.group = cur.apiGroup;
+  } else if (cur.envGroup && cur.envGroup.id) {
+    parseR.group = cur.envGroup;
+  }
+
+  if (cur.api && cur.api.id) {
+    parseR.api = cur.api;
+  }
+
+  return parseR;
+}
+
 module.exports = function(commOptions) {
   var permission = 'There is no authority for %s';
   commOptions = _.extend({}, commOptions || {});
@@ -469,11 +496,20 @@ module.exports = function(commOptions) {
           }
           //API Capture
           else if (2 == share.type) {
+            var apicAns = deepParse(share.content);
+            if (apicAns.isFail()) {
+              return resultCall(apicAns);
+            }
 
-          }
-          //APIs Capture
-          else if (7 == share.type) {
+            var apicR = parseExecutableAPICapture(apicAns.get());
+            _.extend(target, {
+              env: apicR.env.id,
+              group: apicR.group.id,
+              serv: apicR.serv.id,
+              api: apicR.api.id
+            });
 
+            callback(null, target);
           }
 
         }
@@ -508,8 +544,8 @@ module.exports = function(commOptions) {
               return resultCall(answer.fail('not executable share source'));
             }
 
-            if ([1, 2, 3, 7].indexOf(aShare.type) == -1) {
-              return resultCall(answer.fail('not api about share source'));
+            if ([1, 2, 3].indexOf(aShare.type) == -1) {
+              return resultCall(answer.fail('not single api about share source'));
             }
 
             var ans = Share.isAvailable(aShare, requestInfo);

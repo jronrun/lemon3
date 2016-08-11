@@ -82,7 +82,10 @@ router.post(index.define.do, function (req, res, next) {
  * API comment
  */
 router.post(index.comment.do, function (req, res, next) {
-  var params = req.body.params;
+  var params = _.extend(req.body.params || {}, {
+    notGetHostIfMutation: 1
+  });
+
   requs.apiDefine(params, function(answer) {
     var aDef = answer.result.item;
     if (null != aDef) {

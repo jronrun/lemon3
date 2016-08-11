@@ -16,7 +16,7 @@ var model = schema({
       7: 'APIs Capture'
     }
   },
-  read_write: { type: 'integer', enum: [1, 2, 3], required: true, const: { 1: 'Readonly', 2: 'User Power', 3: 'Execute Power'} },
+  read_write: { type: 'integer', enum: [1, 2, 3], required: true, const: { 1: 'Readonly', 2: 'User Power', 3: 'Executable'} },
   //Allow count, Unlimited if count is -1
   //Opened count if readonly
   //Requested count if read write
@@ -51,18 +51,18 @@ var model = schema({
 
 var share = model_bind('share', model);
 
-share.isAvailable = function(aShare, options) {
-  options = _.extend({
+share.isAvailable = function(aShare, requestInfo) {
+  requestInfo = _.extend({
     usr: {},
     anonymous: true,
     clientIP: ''
-  }, options || {});
+  }, requestInfo || {});
 
   if (!aShare) {
     return answer.fail('Invalid share');
   }
 
-  if (options.usr.isAdmin) {
+  if (requestInfo.usr.isAdmin) {
     return answer.succ();
   }
 
@@ -87,7 +87,7 @@ share.isAvailable = function(aShare, options) {
 
   var shareTo = aShare.share_to;
   //anonymous
-  if (options.anonymous) {
+  if (requestInfo.anonymous) {
     if (1 != shareTo.anonymous) {
       return answer.fail('Not allowed anonymous user');
     }
@@ -99,20 +99,20 @@ share.isAvailable = function(aShare, options) {
     });
 
     cloneShare.define = theDefine;
-    if (!inScope(cloneShare, options.clientIP)) {
-      return answer.fail(options.clientIP + ' not in sharing scope');
+    if (!inScope(cloneShare, requestInfo.clientIP)) {
+      return answer.fail(requestInfo.clientIP + ' not in sharing scope');
     }
   }
   //login user
   else {
-    if (!options.usr.email) {
+    if (!requestInfo.usr.email) {
       return answer.fail('Invalid user');
     }
 
     //shareTo.anonymous
 
-    if (!inScope(shareTo, options.usr.email)) {
-      return answer.fail(options.usr.name + '(' + options.usr.email + ') not in sharing scope');
+    if (!inScope(shareTo, requestInfo.usr.email)) {
+      return answer.fail(requestInfo.usr.name + '(' + requestInfo.usr.email + ') not in sharing scope');
     }
   }
 

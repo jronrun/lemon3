@@ -84,13 +84,9 @@ function views(share, callback, requestInfo) {
   else if (3 == share.type) {
     var hisId = share.content, qry = {};
     if (History.isObjectID(String(hisId))) {
-      qry = {
-        _id: History.toObjectID(hisId)
-      };
+      qry = { _id: History.toObjectID(hisId)};
     } else {
-      qry = {
-        id: parseInt(hisId)
-      };
+      qry = { id: parseInt(hisId)};
     }
 
     History.find(qry).limit(1).next(function(err, aHis) {

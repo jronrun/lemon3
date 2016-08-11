@@ -4,6 +4,7 @@ var log = log_from('api_request'),
   qs = require('qs'),
   request = require('request'),
   items = require('./items'),
+  Share = app_require('models/share'),
   Environment = app_require('models/api/env'),
   Group = app_require('models/api/group'),
   Server = app_require('models/api/server'),
@@ -389,6 +390,142 @@ module.exports = function(commOptions) {
           items: result.items,
           hasNext: result.page.hasNext
         }));
+      });
+    },
+
+    getExecutableAPIShareSource: function(source, resultCall, requestInfo) {
+      async.waterfall([
+        function(callback) {
+          var detectAns = apiRequest.isExecutableAPIShareSource(source, resultCall, requestInfo);
+          if (!isAnswerSucc(detectAns)) {
+            return resultCall(detectAns);
+          }
+
+          var target = {
+            share: detectAns.result.share
+          };
+          callback(null, target);
+        },
+
+        function(target, callback) {
+          var share = target.share;
+
+          //API
+          if (1 == share.type) {
+            Interface.findById(crypto.decompress(share.content), function (err, anInterf) {
+              if (err) {
+                return resultCall(answer.fail(err.message));
+              }
+
+              if (!anInterf) {
+                return resultCall(answer.fail('share API not exists'));
+              }
+
+              Group.find({id : anInterf.group_id}).limit(1).next(function(err, aGroup) {
+                if (err) {
+                  return resultCall(answer.fail(err.message));
+                }
+
+                if (!aGroup) {
+                  return resultCall(answer.fail('share API Group not exists'));
+                }
+
+                _.extend(target, {
+                  group: aGroup.id,
+                  api: anInterf.id
+                });
+
+                callback(null, target);
+              });
+            });
+          }
+          //API History
+          else if (3 == share.type) {
+            var hisId = crypto.decompress(share.content), qry = {};
+            if (History.isObjectID(String(hisId))) {
+              qry = { _id: History.toObjectID(hisId)};
+            } else {
+              qry = { id: parseInt(hisId)};
+            }
+
+            History.find(qry).limit(1).next(function(err, aHis) {
+              if (err) {
+                return resultCall(answer.fail(err.message));
+              }
+
+              if (!aHis) {
+                return resultCall(answer.fail('share API history not exists'));
+              }
+
+              _.extend(target, {
+                env: aHis.env.id,
+                group: aHis.group.id,
+                serv: aHis.serv.id,
+                api: aHis.api.id
+              });
+
+              callback(null, target);
+            });
+          }
+          //API Capture
+          else if (2 == share.type) {
+
+          }
+          //APIs Capture
+          else if (7 == share.type) {
+
+          }
+
+        }
+      ], function(err, result) {
+        result.env = result.env || 0;
+        result.group = result.group || 0;
+        result.serv = result.serv || 0;
+        result.api = result.api || 0;
+
+        return resultCall(answer.succ(result));
+      });
+    },
+
+    isExecutableAPIShareSource: function(source, resultCall, requestInfo) {
+      source = crypto.decompress(source);
+      if (!source || source.length < 1) {
+        return resultCall(answer.fail('none share source'));
+      }
+
+      async.waterfall([
+        function(callback) {
+          Share.findById(source, function (err, aShare) {
+            if (err) {
+              return resultCall(answer.fail(err.message));
+            }
+
+            if (!aShare) {
+              return resultCall(answer.fail('share source not exists.'));
+            }
+
+            if ([1, 2].indexOf(aShare.read_write) != -1) {
+              return resultCall(answer.fail('not executable share source'));
+            }
+
+            if ([1, 2, 3, 7].indexOf(aShare.type) == -1) {
+              return resultCall(answer.fail('not api about share source'));
+            }
+
+            var ans = Share.isAvailable(aShare, requestInfo);
+            if (!isAnswerSucc(ans)) {
+              return resultCall(ans);
+            }
+
+            var target = {
+              share: aShare
+            };
+
+            callback(null, target);
+          });
+        }
+      ], function(err, result) {
+        return resultCall(answer.succ(result));
       });
     },
 

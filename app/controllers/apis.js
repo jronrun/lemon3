@@ -71,7 +71,11 @@ router.post(index.request.do, function (req, res, next) {
  * API define
  */
 router.post(index.define.do, function (req, res, next) {
-  requs.apiDefine(req.body.params, function(answer) {
+  var params = _.extend(req.body.params || {}, {
+    getHostIfMutation: 1
+  });
+
+  requs.apiDefine(params, function(answer) {
 
     answer.result = crypto.compress(answer.result);
     return res.json(answer);
@@ -82,10 +86,7 @@ router.post(index.define.do, function (req, res, next) {
  * API comment
  */
 router.post(index.comment.do, function (req, res, next) {
-  var params = _.extend(req.body.params || {}, {
-    notGetHostIfMutation: 1
-  });
-
+  var params = req.body.params || {};
   requs.apiDefine(params, function(answer) {
     var aDef = answer.result.item;
     if (null != aDef) {

@@ -307,6 +307,8 @@ var mapis = {
         $('body', view.getDocument()).css({
           'padding-top': '4.15rem'
         });
+
+        view.tellEvent('INST_RENDER');
       }
 
       var instanceId = mapis.instance.add(view, preview, name);

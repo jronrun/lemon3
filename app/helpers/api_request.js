@@ -421,7 +421,16 @@ module.exports = function(commOptions) {
       });
     },
 
-    getExecutableAPIShareSource: function(sourceData, resultCall, requestInfo) {
+    /**
+     * @param requData
+     * @see apiRequest.apiDefine  params
+     * @param sourceData {source: '', sid: ''}
+       */
+    getExecutableAPIShareSource: function(requData, sourceData, resultCall, requestInfo) {
+      if (!requData || !requData.serv || !requData.requ) {
+        return resultCall(answer.fail('invalid request data'));
+      }
+
       async.waterfall([
         function(callback) {
           var detectAns = apiRequest.isExecutableAPIShareSource(sourceData, resultCall, requestInfo);
@@ -542,13 +551,29 @@ module.exports = function(commOptions) {
             callback(null, target);
           }
 
+        },
+
+        function(target, callback) {
+          target.env = target.env || 0;
+          target.group = target.group || 0;
+          target.serv = target.serv || 0;
+          target.api = target.api || 0;
+
+          var theRequData = _.extend({}, requData, {
+            checkServAndAPIGroupMatch: 1
+          });
+
+          apiRequest.apiDefine(theRequData, function(answer) {
+            var anAPI = answer.result.item;
+
+          }, true, requestInfo.usr);
+
+          //env match
+          //serv match
+          //group match
+          //api match
         }
       ], function(err, result) {
-        result.env = result.env || 0;
-        result.group = result.group || 0;
-        result.serv = result.serv || 0;
-        result.api = result.api || 0;
-
         return resultCall(answer.succ(result));
       });
     },
@@ -601,7 +626,7 @@ module.exports = function(commOptions) {
 
     /**
      *
-     * @param params   { serv: 1, requ: {}, api: 1, getHostIfMutation: 0}
+     * @param params   { serv: 1, requ: {}, api: 1, getHostIfMutation: 0, checkServAndAPIGroupMatch: 0}
      * @param resultCall
      * @returns {*}
        */
@@ -652,7 +677,10 @@ module.exports = function(commOptions) {
             if (!target.api) {
               return resultCall(defineNone);
             } else {
-              callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
+              callback(null, answer.succ({
+                serv: target.serv,
+                item: getRespAPI(target.api, usr)
+              }));
             }
           }
           //Multi-interface
@@ -660,7 +688,10 @@ module.exports = function(commOptions) {
             //choose & editor match
             if (target.api && target.requ
               && (_.get(target.requ, servRequ.interf_prop) == _.get(target.api.request, servRequ.interf_prop))) {
-              callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
+              callback(null, answer.succ({
+                serv: target.serv,
+                item: getRespAPI(target.api, usr)
+              }));
             } else {
               var cmdFromRequ = _.get(target.requ, servRequ.interf_prop);
               //editor
@@ -668,14 +699,20 @@ module.exports = function(commOptions) {
                 Interface.find({name: cmdFromRequ}).limit(1).next(function(err, api) {
                   //editor
                   if (api) {
-                    callback(null, answer.succ({ item: getRespAPI(api, usr) }));
+                    callback(null, answer.succ({
+                      serv: target.serv,
+                      item: getRespAPI(api, usr)
+                    }));
                   }
                   //choose
                   else if (target.api) {
                     if (notUseChooseIfRequNoDefine) {
                       return resultCall(defineNone);
                     } else {
-                      callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
+                      callback(null, answer.succ({
+                        serv: target.serv,
+                        item: getRespAPI(target.api, usr)
+                      }));
                     }
                   }
                   //none match
@@ -689,7 +726,10 @@ module.exports = function(commOptions) {
                 if (notUseChooseIfRequNoDefine) {
                   return resultCall(defineNone);
                 } else {
-                  callback(null, answer.succ({ item: getRespAPI(target.api, usr) }));
+                  callback(null, answer.succ({
+                    serv: target.serv,
+                    item: getRespAPI(target.api, usr)
+                  }));
                 }
               }
               //none match
@@ -702,6 +742,12 @@ module.exports = function(commOptions) {
 
         function(anAnswer, callback) {
           var apiItem = anAnswer.result.item;
+          if (1 == (params.checkServAndAPIGroupMatch || 0)) {
+            if (apiItem.group_id != anAnswer.result.serv.group_id) {
+              return resultCall(defineNone);
+            }
+          }
+
           if (0 == anAnswer.code
             && 1 == (params.getHostIfMutation || 0)
             && null != apiItem

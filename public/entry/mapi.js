@@ -353,6 +353,10 @@ var mapis = {
           delete evtData.content;
           evtData.instanceId = inst.id;
           anInst.view.tellEvent('SHARE_APIs', evtData);
+
+          $$('body', instId).css({
+            'padding-top': '3.78rem'
+          });
         }
 
         loadInst(insts.shift());

@@ -348,15 +348,21 @@ var mapis = {
           mapis.instance.active(instId);
         }
 
-        if (inst.iframe.api && shared) {
-          var evtData = lemon.clone(shared);
-          delete evtData.content;
-          evtData.instanceId = inst.id;
-          anInst.view.tellEvent('SHARE_APIs', evtData);
+        if (shared) {
+          if (inst.iframe.api) {
+            var evtData = lemon.clone(shared);
+            delete evtData.content;
+            evtData.instanceId = inst.id;
+            anInst.view.tellEvent('SHARE_APIs', evtData);
 
-          $$('body', instId).css({
-            'padding-top': '3.78rem'
-          });
+            $$('body', instId).css({
+              'padding-top': '3.78rem'
+            });
+          }
+        } else {
+          if (inst.iframe.api) {
+            anInst.view.tellEvent('INST_RENDER');
+          }
         }
 
         loadInst(insts.shift());

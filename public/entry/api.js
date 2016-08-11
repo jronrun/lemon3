@@ -1976,6 +1976,10 @@ var mapi = {
           case 'SHARE_APIs':
             mapi.shares(data.data);
             break;
+          case 'INST_RENDER':
+            envs.render();
+            apis.render();
+            break;
         }
       }
     });

@@ -573,7 +573,7 @@ module.exports = function(commOptions) {
               return resultCall(answer.fail('share source not exists.'));
             }
 
-            if ([1, 2].indexOf(aShare.read_write) != -1) {
+            if (3 != aShare.read_write) {
               return resultCall(answer.fail('not executable share source'));
             }
 

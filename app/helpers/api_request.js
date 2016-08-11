@@ -420,10 +420,10 @@ module.exports = function(commOptions) {
       });
     },
 
-    getExecutableAPIShareSource: function(source, resultCall, requestInfo) {
+    getExecutableAPIShareSource: function(sourceData, resultCall, requestInfo) {
       async.waterfall([
         function(callback) {
-          var detectAns = apiRequest.isExecutableAPIShareSource(source, resultCall, requestInfo);
+          var detectAns = apiRequest.isExecutableAPIShareSource(sourceData, resultCall, requestInfo);
           if (!isAnswerSucc(detectAns)) {
             return resultCall(detectAns);
           }
@@ -511,6 +511,35 @@ module.exports = function(commOptions) {
 
             callback(null, target);
           }
+          //APIs Capture
+          else if (7 == share.type) {
+            if (!sourceData.sid) {
+              return resultCall(answer.fail('none source id'));
+            }
+
+            var apiscAns = deepParse(share.content);
+            if (apiscAns.isFail()) {
+              return resultCall(apiscAns);
+            }
+
+            var apisCapture = null;
+            _.each(apiscAns.get(), function (inst) {
+              if (inst.id.toString() == sourceData.sid.toString) {
+                apisCapture = inst.snapdata;
+                return false;
+              }
+            });
+
+            var apicR = parseExecutableAPICapture(apisCapture);
+            _.extend(target, {
+              env: apicR.env.id,
+              group: apicR.group.id,
+              serv: apicR.serv.id,
+              api: apicR.api.id
+            });
+
+            callback(null, target);
+          }
 
         }
       ], function(err, result) {
@@ -523,8 +552,12 @@ module.exports = function(commOptions) {
       });
     },
 
-    isExecutableAPIShareSource: function(source, resultCall, requestInfo) {
-      source = crypto.decompress(source);
+    isExecutableAPIShareSource: function(sourceData, resultCall, requestInfo) {
+      if (!sourceData || !sourceData.source) {
+        return resultCall(answer.fail('none share source data'));
+      }
+
+      var source = crypto.decompress(sourceData.source);
       if (!source || source.length < 1) {
         return resultCall(answer.fail('none share source'));
       }
@@ -544,7 +577,7 @@ module.exports = function(commOptions) {
               return resultCall(answer.fail('not executable share source'));
             }
 
-            if ([1, 2, 3].indexOf(aShare.type) == -1) {
+            if ([1, 2, 3, 7].indexOf(aShare.type) == -1) {
               return resultCall(answer.fail('not single api about share source'));
             }
 

@@ -316,8 +316,12 @@ module.exports = function(scope, config) {
       theAns = answer.fail(e.message);
     }
 
+    return ansWrap(theAns);
+  };
+
+  scope.ansWrap = function(theAnswer) {
     var res = {
-      target: theAns,
+      target: theAnswer,
       isSucc: function() {
         return isAnswerSucc(res.target);
       },

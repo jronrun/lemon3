@@ -10,6 +10,39 @@ var types = {
 
 var helper = {
 
+  grantExecutableShare: function(anonymous, usr, shared) {
+    var aUser = anonymous ? {
+      env: [],
+      group: [],
+      server: {
+        scope: 2,
+        define: []
+      },
+      interface: {
+        scope: 2,
+        define: []
+      }
+    } : usr;
+
+    if (shared.env) {
+      aUser.env.push(shared.env);
+    }
+
+    if (shared.group) {
+      aUser.group.push(shared.group);
+    }
+
+    if (shared.serv) {
+      aUser.server.define.push(shared.serv);
+    }
+
+    if (shared.api) {
+      aUser.interface.define.push(shared.api);
+    }
+
+    return aUser;
+  },
+
   getPickerDate: function(item, propName) {
     if (!item || !propName) {
       return null;
@@ -131,7 +164,7 @@ var helper = {
       return {};
     }
 
-    var defined = aUser[defined] || {};
+    var defined = aUser[property] || {};
     if (!defined.scope) {
       defined.scope = 3;
     }

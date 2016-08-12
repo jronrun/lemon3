@@ -306,11 +306,22 @@ router.post(index.history.query.do, function (req, res, next) {
  * API Servers (Environment)
  */
 router.post(index.servers.do, function (req, res, next) {
-  if (req.anonymous) {
-    return res.json(answer.succ({ envs: []}));
-  }
-
   async.waterfall([
+    function (callback) {
+      requs.isExecutableAPIShareSource(req.body.source, function(shareAns) {
+        var executable = ansWrap(shareAns);
+        if (executable.isSucc()) {
+          req.user = items.grantExecutableShare(req.anonymous, req.user, executable.get());
+          callback(null);
+        } else {
+          if (req.anonymous) {
+            return res.json(answer.succ({ envs: []}));
+          }
+
+          callback(null);
+        }
+      }, requestInfo(req));
+    },
     function (callback) {
       Environment.find(items.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
         var envData = {}; _.each(items, function (item) {
@@ -439,11 +450,22 @@ router.post(index.servers.do, function (req, res, next) {
  * API Interfaces (Which API)
  */
 router.post(index.interfaces.do, function (req, res, next) {
-  if (req.anonymous) {
-    return res.json(answer.succ({items: []}));
-  }
-
   async.waterfall([
+    function (callback) {
+      requs.isExecutableAPIShareSource(req.body.source, function(shareAns) {
+        var executable = ansWrap(shareAns);
+        if (executable.isSucc()) {
+          req.user = items.grantExecutableShare(req.anonymous, req.user, executable.get());
+          callback(null);
+        } else {
+          if (req.anonymous) {
+            return res.json(answer.succ({items: []}));
+          }
+
+          callback(null);
+        }
+      }, requestInfo(req));
+    },
     function(callback) {
       Group.find(items.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
         var groupData = {}; _.each(items, function (item) {

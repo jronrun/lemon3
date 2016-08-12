@@ -1960,16 +1960,13 @@ var mapi = {
             break;
           case 'SHARE_HIS':
             $(mapi.shareSnap).remove();
-            history.set(data.data.content);
-
-            mapi.shares(data.data);
+            mapi.shares(data.data, function() {
+              history.set(data.data.content);
+            });
             break;
           case 'SHARE_API':
             $(mapi.shareSnap).remove();
             var content = data.data.content;
-            apis.doChoose(content.group, content.api, true);
-            mapi.setCur(null, null, null, content.group, content.api);
-
             if (1 == data.data.preview) {
               mapi.shareShow({
                 title: 'API ' + (content.api.name || ''),
@@ -1978,7 +1975,10 @@ var mapi = {
               });
             }
 
-            mapi.shares(data.data);
+            mapi.shares(data.data, function() {
+              apis.doChoose(content.group, content.api, true);
+              mapi.setCur(null, null, null, content.group, content.api);
+            });
             break;
           case 'SHARE_API_SNAPSHOT':
             $(mapi.shareSnap).remove();

@@ -1074,10 +1074,10 @@ lemon.register({
   },
   popover: function(selector, options, events) {
     var popoverTemplate = [
-      '<div class="popover borderinfo" role="tooltip">',
+      '<div class="popover boxshadow" style="border: 0px;" role="tooltip">',
       '<div class="popover-arrow" style="border-bottom-color: #d9edf7;"></div>',
-      '<h3 class="popover-title borderinfo"></h3>',
-      '<div class="popover-content borderinfo"></div>',
+      '<h3 class="popover-title"></h3>',
+      '<div class="popover-content"></div>',
       '</div>'
     ].join('');
 

@@ -179,6 +179,11 @@ var apis = {
                     });
                   }
                 });
+
+                lemon.rightclick(apiElId, function() {
+                  apis.choose(interf.id);
+                  $(mapi.requDocId).click();
+                });
               }
             }
           });
@@ -1266,6 +1271,7 @@ var mapi = {
 
   requToolId: '#requ-tool',
   requCardId: '#requ-card',
+  requDocId: '#btn-doc',
 
   respToolId: '#resp-tool',
   respCardId: '#resp-card',
@@ -1345,7 +1351,7 @@ var mapi = {
       '</span>'
     ].join('');
 
-    mapi.docPopover = lemon.popover('#btn-doc', {
+    mapi.docPopover = lemon.popover(mapi.requDocId, {
       title: title,
       placement: 'right',
       trigger: 'manual',
@@ -1436,7 +1442,7 @@ var mapi = {
       });
     }
 
-    $('#btn-doc').click(function () {
+    $(mapi.requDocId).click(function () {
       if (!mapi.requ.isJson()) {
         return lemon.msg('The Request Data is not a Valid JSON.');
       }

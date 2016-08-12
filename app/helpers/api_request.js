@@ -84,7 +84,8 @@ module.exports = function(commOptions) {
 
       requestOptions = _.extend({
         ip: '',
-        opt: 0                // 1 {path: '', data: {}, 'param_name'}
+        opt: 0,                // 1 {path: '', data: {}, 'param_name'}
+        checkGroup: 0          // 0 uncheck, 1 check server and api group match
       }, requestOptions || {});
 
       async.waterfall([
@@ -167,6 +168,16 @@ module.exports = function(commOptions) {
         },
 
         function(target, callback) {
+          if (1 == requestOptions.checkGroup) {
+            if (!target.api) {
+              return resultCall(answer.fail('please choose an api'));
+            }
+
+            if (target.serv.group_id != target.api.group_id) {
+              return resultCall(answer.fail('make sure the chosen enviroment and chosen api are the same group'));
+            }
+          }
+
           var servRequ = target.serv.request, theResp = {};
           target.isChosenAPI = false;
 

@@ -1146,7 +1146,7 @@ var qry = {
       }
     } else {
       lemon.extend(data, {
-        query: key
+        query: lemon.enc(key)
       });
     }
 

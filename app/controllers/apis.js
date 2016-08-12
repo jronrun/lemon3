@@ -200,8 +200,9 @@ router.post(index.history.prev.do, function (req, res, next) {
  * Query History
  */
 router.post(index.history.query.do, function (req, res, next) {
+  var noneQueryResult = answer.succ(crypto.compress({ items: [] }));
   if (req.anonymous) {
-    return res.json(answer.succ(crypto.compress({ items: [] })));
+    return res.json(noneQueryResult);
   }
 
   var query = {}, pn = parseInt(req.body.page || '1'), ps = false,
@@ -228,7 +229,13 @@ router.post(index.history.query.do, function (req, res, next) {
       ]
     };
   } else if (req.body.query) {
-    var paramQry = req.body.query;
+    var queryParse = deepParse(req.body.query);
+    if (queryParse.isFail()) {
+      noneQueryResult.msg = queryParse.failMsg();
+      return res.json(noneQueryResult);
+    }
+
+    var paramQry = queryParse.get();
     if (paramQry.env && paramQry.env.length > 0) {
       _.extend(query, {
         'env.id': parseInt(paramQry.env)

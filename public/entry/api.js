@@ -1857,9 +1857,9 @@ var mapi = {
       }
     }
 
+    $(mapi.viewUrlId).remove();
     if (1 == share.read_write) {
       mapi.disableRequest();
-      $(mapi.viewUrlId).remove();
     }
 
     lemon.data('body', {

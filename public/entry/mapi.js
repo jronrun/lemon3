@@ -116,6 +116,7 @@ var mapis = {
     initialize: function() {
       mapis.tools = lemon.popover('#mapi_tool', {
         arrow: false,
+        shadow: false,
         trigger: 'manual',
         content: function() {
           return lemon.tmpl($('#mapi_tool_tmpl').html(), {});

@@ -1095,7 +1095,8 @@ lemon.register({
       template: popoverTemplate,
       placement: "bottom",
       html: true,
-      arrow: true
+      arrow: true,
+      shadow: true
     }, options || {}, {
       //Prevent popover content function is executed twice
       title: options.title || ('<div id="' + headId + '">&nbsp;</div>')
@@ -1104,6 +1105,9 @@ lemon.register({
       events.inserted && events.inserted(el, this);
     }).on('show.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;
+      if (!options.shadow) {
+        $(el).removeClass('boxshadow');
+      }
       lemon.isFunc(events.show) && events.show(el, this);
     }).on('shown.bs.popover', function() {
       if ($('#' + headId).length) {

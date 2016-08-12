@@ -1102,12 +1102,12 @@ lemon.register({
       title: options.title || ('<div id="' + headId + '">&nbsp;</div>')
     })).on('inserted.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;
-      events.inserted && events.inserted(el, this);
-    }).on('show.bs.popover', function() {
-      var el = $(this).data("bs.popover").tip;
       if (!options.shadow) {
         $(el).removeClass('boxshadow');
       }
+      events.inserted && events.inserted(el, this);
+    }).on('show.bs.popover', function() {
+      var el = $(this).data("bs.popover").tip;
       lemon.isFunc(events.show) && events.show(el, this);
     }).on('shown.bs.popover', function() {
       if ($('#' + headId).length) {

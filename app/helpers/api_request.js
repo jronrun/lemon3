@@ -444,15 +444,96 @@ module.exports = function(commOptions) {
 
       async.waterfall([
         function(callback) {
-          var detectAns = apiRequest.isExecutableAPIShareSource(sourceData, resultCall, requestInfo);
-          if (!isAnswerSucc(detectAns)) {
-            return resultCall(detectAns);
+          var detectAns = ansWrap(apiRequest.isExecutableAPIShareSource(sourceData, resultCall, requestInfo));
+          if (detectAns.isFail()) {
+            return resultCall(detectAns.target);
           }
 
-          var target = {
-            share: detectAns.result.share
-          };
-          callback(null, target);
+          callback(null, detectAns.get());
+        },
+
+        function(target, callback) {
+          target.env = target.env || 0;
+          target.group = target.group || 0;
+          target.serv = target.serv || 0;
+          target.api = target.api || 0;
+
+          if (!target.env || !target.group || !target.serv || !target.api) {
+            return resultCall(answer.fail('invalid executable share source'));
+          }
+
+          var theRequData = _.extend({}, requData, {
+            checkServAndAPIGroupMatch: 1
+          });
+
+          apiRequest.apiDefine(theRequData, function(answer) {
+            var anAPI = answer.result.item, anServ = answer.result.serv;
+            if (target.env != anServ.env_id) {
+              return resultCall(answer.fail('not the share environment'));
+            }
+
+            if (target.group != anServ.group_id) {
+              return resultCall(answer.fail('not the share group'));
+            }
+
+            if (target.serv != anServ.id) {
+              return resultCall(answer.fail('not the share server'));
+            }
+
+            if (target.api != anAPI.id) {
+              return resultCall(answer.fail('not the share api'));
+            }
+
+            callback(null, target);
+
+          }, true, requestInfo.usr);
+
+        }
+      ], function(err, result) {
+        return resultCall(answer.succ(result));
+      });
+    },
+
+    isExecutableAPIShareSource: function(sourceData, resultCall, requestInfo) {
+      if (!sourceData || !sourceData.source) {
+        return resultCall(answer.fail('none share source data'));
+      }
+
+      var source = crypto.decompress(sourceData.source);
+      if (!source || source.length < 1) {
+        return resultCall(answer.fail('none share source'));
+      }
+
+      async.waterfall([
+        function(callback) {
+          Share.findById(source, function (err, aShare) {
+            if (err) {
+              return resultCall(answer.fail(err.message));
+            }
+
+            if (!aShare) {
+              return resultCall(answer.fail('share source not exists.'));
+            }
+
+            if (3 != aShare.read_write) {
+              return resultCall(answer.fail('not executable share source'));
+            }
+
+            if ([1, 2, 3, 7].indexOf(aShare.type) == -1) {
+              return resultCall(answer.fail('not single api about share source'));
+            }
+
+            var ans = Share.isAvailable(aShare, requestInfo);
+            if (!isAnswerSucc(ans)) {
+              return resultCall(ans);
+            }
+
+            var target = {
+              share: aShare
+            };
+
+            callback(null, target);
+          });
         },
 
         function(target, callback) {
@@ -562,90 +643,6 @@ module.exports = function(commOptions) {
             callback(null, target);
           }
 
-        },
-
-        function(target, callback) {
-          target.env = target.env || 0;
-          target.group = target.group || 0;
-          target.serv = target.serv || 0;
-          target.api = target.api || 0;
-
-          if (!target.env || !target.group || !target.serv || !target.api) {
-            return resultCall(answer.fail('invalid executable share source'));
-          }
-
-          var theRequData = _.extend({}, requData, {
-            checkServAndAPIGroupMatch: 1
-          });
-
-          apiRequest.apiDefine(theRequData, function(answer) {
-            var anAPI = answer.result.item, anServ = answer.result.serv;
-            if (target.env != anServ.env_id) {
-              return resultCall(answer.fail('not the share environment'));
-            }
-
-            if (target.group != anServ.group_id) {
-              return resultCall(answer.fail('not the share group'));
-            }
-
-            if (target.serv != anServ.id) {
-              return resultCall(answer.fail('not the share server'));
-            }
-
-            if (target.api != anAPI.id) {
-              return resultCall(answer.fail('not the share api'));
-            }
-
-            callback(null, target);
-
-          }, true, requestInfo.usr);
-
-        }
-      ], function(err, result) {
-        return resultCall(answer.succ(result));
-      });
-    },
-
-    isExecutableAPIShareSource: function(sourceData, resultCall, requestInfo) {
-      if (!sourceData || !sourceData.source) {
-        return resultCall(answer.fail('none share source data'));
-      }
-
-      var source = crypto.decompress(sourceData.source);
-      if (!source || source.length < 1) {
-        return resultCall(answer.fail('none share source'));
-      }
-
-      async.waterfall([
-        function(callback) {
-          Share.findById(source, function (err, aShare) {
-            if (err) {
-              return resultCall(answer.fail(err.message));
-            }
-
-            if (!aShare) {
-              return resultCall(answer.fail('share source not exists.'));
-            }
-
-            if (3 != aShare.read_write) {
-              return resultCall(answer.fail('not executable share source'));
-            }
-
-            if ([1, 2, 3, 7].indexOf(aShare.type) == -1) {
-              return resultCall(answer.fail('not single api about share source'));
-            }
-
-            var ans = Share.isAvailable(aShare, requestInfo);
-            if (!isAnswerSucc(ans)) {
-              return resultCall(ans);
-            }
-
-            var target = {
-              share: aShare
-            };
-
-            callback(null, target);
-          });
         }
       ], function(err, result) {
         return resultCall(answer.succ(result));

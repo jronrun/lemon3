@@ -488,7 +488,7 @@ router.post(index.interfaces.do, function (req, res, next) {
           group_id: {
             $in: groupData.sort
           }
-        }, items.serverOwnerQuery(req));
+        }, items.interfaceOwnerQuery(req));
       }
 
       //Param Query

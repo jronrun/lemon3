@@ -1849,7 +1849,7 @@ var mapi = {
       }
     });
   },
-  shares: function(share) {
+  shares: function(share, callback) {
     if ([2, 3, 7].indexOf(share.type) != -1) {
       var choosed = current();
       if (mapi.requ.isJson() && choosed.serv) {
@@ -1867,8 +1867,18 @@ var mapi = {
       source: share.source
     });
 
-    envs.render();
-    apis.render();
+    if (lemon.isFunc(callback)) {
+      envs.render(1, function() {
+        apis.render(1, function() {
+          lemon.delay(function () {
+            callback();
+          }, 100);
+        });
+      });
+    } else {
+      envs.render();
+      apis.render();
+    }
   },
   source: function() {
     return lemon.data('body', ['sid', 'source']);
@@ -1973,7 +1983,6 @@ var mapi = {
           case 'SHARE_API_SNAPSHOT':
             $(mapi.shareSnap).remove();
             var snapData = data.data.content;
-            mapi.snapload(snapData);
             if (1 == data.data.preview) {
               mapi.shareShow({
                 title: 'API Snapshot' + ((snapData.cur && snapData.cur.api) ? (' of ' + snapData.cur.api.name) : ''),
@@ -1982,7 +1991,9 @@ var mapi = {
               });
             }
 
-            mapi.shares(data.data);
+            mapi.shares(data.data, function() {
+              mapi.snapload(snapData);
+            });
             break;
           case 'SHARE_APIs':
             mapi.shares(data.data);

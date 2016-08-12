@@ -442,14 +442,26 @@ module.exports = function(commOptions) {
         return resultCall(answer.fail('invalid request data'));
       }
 
+      var shareRequData = _.cloneDeep(requData), requDataRequAns = deepParse(requData.requ);
+      if (requDataRequAns.isFail()) {
+        return resultCall(requDataRequAns.target);
+      }
+
+      _.extend(shareRequData, {
+        requ: requDataRequAns.get(),
+        checkServAndAPIGroupMatch: 1
+      });
+
       async.waterfall([
         function(callback) {
-          var detectAns = ansWrap(apiRequest.isExecutableAPIShareSource(sourceData, resultCall, requestInfo));
-          if (detectAns.isFail()) {
-            return resultCall(detectAns.target);
-          }
+          apiRequest.isExecutableAPIShareSource(sourceData, function(execIsAns) {
+            var execIsAnsWrap = ansWrap(execIsAns);
+            if (execIsAnsWrap.isFail()) {
+              return resultCall(execIsAnsWrap.target);
+            }
 
-          callback(null, detectAns.get());
+            callback(null, execIsAnsWrap.get());
+          }, requestInfo);
         },
 
         function(target, callback) {
@@ -462,11 +474,7 @@ module.exports = function(commOptions) {
             return resultCall(answer.fail('invalid executable share source'));
           }
 
-          var theRequData = _.extend({}, requData, {
-            checkServAndAPIGroupMatch: 1
-          });
-
-          apiRequest.apiDefine(theRequData, function(answer) {
+          apiRequest.apiDefine(shareRequData, function(answer) {
             var anAPI = answer.result.item, anServ = answer.result.serv;
             if (target.env != anServ.env_id) {
               return resultCall(answer.fail('not the share environment'));
@@ -488,6 +496,11 @@ module.exports = function(commOptions) {
 
           }, true, requestInfo.usr);
 
+        },
+
+        function(target, callback) {
+          //add use count
+          callback(null, target);
         }
       ], function(err, result) {
         return resultCall(answer.succ(result));

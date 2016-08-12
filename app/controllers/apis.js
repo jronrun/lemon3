@@ -48,23 +48,45 @@ router.post(index.header.do, function (req, res, next) {
  * API Request
  */
 router.post(index.request.do, function (req, res, next) {
-  if (req.anonymous) {
-    return res.json(answer.resp(401));
-  }
+  var requestData = {
+    envId: req.body.env,
+    groupId: req.body.group,
+    servId: req.body.serv,
+    apiId: req.body.api,
+    requ: req.body.requ
+  }, requestOptions = {
+    ip: req.ip
+  };
 
-  requs.request({
-      envId: req.body.env,
-      groupId: req.body.group,
-      servId: req.body.serv,
-      apiId: req.body.api,
-      requ: req.body.requ
-    }, function(answer) {
-      answer.result = crypto.compress(answer.result);
-      return res.json(answer);
-    }, req.user, {
-      ip: req.ip
+  requs.executeAPIShareSource({
+    serv: requestData.servId,
+    requ: requestData.requ,
+    api: requestData.apiId
+  }, req.body.source, function(shareAns) {
+    var executable = ansWrap(shareAns);
+    if (executable.isSucc()) {
+      req.user = items.grantExecutableShare(req.anonymous, req.user, executable.get());
+
+      _.extend(requestOptions, {
+        checkGroup: 1
+      });
+
+      requs.request(requestData, function(requAns) {
+        requAns.result = crypto.compress(requAns.result);
+        return res.json(requAns);
+      }, req.user, requestOptions);
+    } else {
+
+      if (req.anonymous) {
+        return res.json(answer.resp(401, {}, executable.failMsg()));
+      }
+
+      requs.request(requestData, function(requAns) {
+        requAns.result = crypto.compress(requAns.result);
+        return res.json(requAns);
+      }, req.user, requestOptions);
     }
-  );
+  }, requestInfo(req));
 });
 
 /**

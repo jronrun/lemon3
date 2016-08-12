@@ -2007,7 +2007,9 @@ var mapi = {
     });
 
     lemon.unload(function () {
-      leave();
+      if (lemon.isRootWin()) {
+        leave();
+      }
     });
 
     $(window).resize(mapi.resize);

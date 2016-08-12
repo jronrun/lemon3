@@ -473,7 +473,7 @@ var mapis = {
       }
     });
 
-    $(window).on('beforeunload', function() {
+    lemon.unload(function () {
       if (lemon.isRootWin()) {
         mapis.snapshoot();
       }

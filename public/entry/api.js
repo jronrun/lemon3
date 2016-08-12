@@ -2006,9 +2006,7 @@ var mapi = {
       }
     });
 
-    //http://stackoverflow.com/questions/9626059/window-onbeforeunload-in-chrome-what-is-the-most-recent-fix
-    $(window).on('beforeunload', function() {
-      //var x =logout(); return x;
+    lemon.unload(function () {
       leave();
     });
 

@@ -458,6 +458,14 @@ lemon.register({
     return location.href.replace(location.origin, '');
   },
 
+  unload: function(callback) {
+    //http://stackoverflow.com/questions/9626059/window-onbeforeunload-in-chrome-what-is-the-most-recent-fix
+    $(window).on('beforeunload', function() {
+      //var x =logout(); return x;
+      lemon.isFunc(callback) && callback();
+    });
+  },
+
   getVal: function(json, prop) {
     prop = prop || '';
     var val = json, props = prop.indexOf('.') > 0 ? prop.split('.') : [prop];

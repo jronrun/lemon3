@@ -172,6 +172,11 @@ var apis = {
                       'max-width': viewport.w * 0.5,
                       'max-height': viewport.h
                     });
+                  },
+                  shown: function(el) {
+                    $(el).offset({
+                      left: $(apis.id).offset().left + $(apis.id).width() + 10
+                    });
                   }
                 });
               }

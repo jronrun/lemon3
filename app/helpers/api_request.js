@@ -41,7 +41,7 @@ function getRespAPI(api, usr) {
 }
 
 function parseExecutableAPICapture(apiCapture) {
-  var parseR = { env: 0, group: 0, serv: 0, api: 0 }, cur = null;
+  var parseR = { env: {}, group: {}, serv: {}, api: {} }, cur = null;
   if (!(cur = apiCapture.cur)) {
     return parseR;
   }
@@ -174,7 +174,7 @@ module.exports = function(commOptions) {
             }
 
             if (target.serv.group_id != target.api.group_id) {
-              return resultCall(answer.fail('make sure the chosen enviroment and chosen api are the same group'));
+              return resultCall(answer.fail('make sure the chosen environment and chosen api are the same group'));
             }
           }
 
@@ -437,7 +437,7 @@ module.exports = function(commOptions) {
      * @see apiRequest.apiDefine  params
      * @param sourceData {source: '', sid: ''}
        */
-    getExecutableAPIShareSource: function(requData, sourceData, resultCall, requestInfo) {
+    executeAPIShareSource: function(requData, sourceData, resultCall, requestInfo) {
       if (!requData || !requData.serv || !requData.requ) {
         return resultCall(answer.fail('invalid request data'));
       }
@@ -570,19 +570,36 @@ module.exports = function(commOptions) {
           target.serv = target.serv || 0;
           target.api = target.api || 0;
 
+          if (!target.env || !target.group || !target.serv || !target.api) {
+            return resultCall(answer.fail('invalid executable share source'));
+          }
+
           var theRequData = _.extend({}, requData, {
             checkServAndAPIGroupMatch: 1
           });
 
           apiRequest.apiDefine(theRequData, function(answer) {
-            var anAPI = answer.result.item;
+            var anAPI = answer.result.item, anServ = answer.result.serv;
+            if (target.env != anServ.env_id) {
+              return resultCall(answer.fail('not the share environment'));
+            }
+
+            if (target.group != anServ.group_id) {
+              return resultCall(answer.fail('not the share group'));
+            }
+
+            if (target.serv != anServ.id) {
+              return resultCall(answer.fail('not the share server'));
+            }
+
+            if (target.api != anAPI.id) {
+              return resultCall(answer.fail('not the share api'));
+            }
+
+            callback(null, target);
 
           }, true, requestInfo.usr);
 
-          //env match
-          //serv match
-          //group match
-          //api match
         }
       ], function(err, result) {
         return resultCall(answer.succ(result));

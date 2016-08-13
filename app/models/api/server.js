@@ -11,6 +11,7 @@ var model = schema({
   name: { type: 'string', required: true, allowEmpty: false },
   desc: { type: 'string' },
   url: { type: 'string', required: true, allowEmpty: false, format: 'url' },
+  home_url: { type: 'string'},
   owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   request: {
     type: 'object',

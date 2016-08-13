@@ -9,6 +9,13 @@ module.exports = function (router, index, root) {
 
   var generic = app_require('helpers/generic')(Server, index, {
     element: {
+      url: {
+        label: 'Request URL'
+      },
+      home_url: {
+        label: 'Login URL',
+        desc: 'Home or Login URL'
+      },
       request: {
         param_name: {
           label: 'Parameter Name'
@@ -229,7 +236,7 @@ module.exports = function (router, index, root) {
             options: result.group
           });
 
-          form.afterEl('url', theEnv);
+          form.afterEl('home_url', theEnv);
           form.afterEl('env_id', theGroup);
         }
       }, req, res, next);
@@ -255,6 +262,11 @@ module.exports = function (router, index, root) {
         };
         if (2 == item.request.type && '' == item.request.param_name) {
           res.json(answer.fail('Parameter name must provide if Multi-interface'));
+          return generic.BREAK;
+        }
+
+        if (item.home_url && !isURL(item.home_url)) {
+          res.json(answer.fail('The login URL is not valid'));
           return generic.BREAK;
         }
 
@@ -306,6 +318,11 @@ module.exports = function (router, index, root) {
         };
         if (2 == item.request.type && '' == item.request.param_name) {
           res.json(answer.fail('Parameter name must provide if Multi-interface'));
+          return generic.BREAK;
+        }
+
+        if (item.home_url && !isURL(item.home_url)) {
+          res.json(answer.fail('The login URL is not valid'));
           return generic.BREAK;
         }
 
@@ -406,7 +423,7 @@ module.exports = function (router, index, root) {
             options: result.group
           });
 
-          form.afterEl('url', theEnv);
+          form.afterEl('home_url', theEnv);
           form.afterEl('env_id', theGroup);
         },
         additionHandle: function(item, addition) {

@@ -317,6 +317,18 @@ var envs = {
     envs.msg(servMsg.join('&nbsp;&nbsp;'), env.level);
     apis.refresh(group.id);
     envs.refresh(group.id, serv.id);
+
+    if (serv.grant && serv.grant.length > 0) {
+      lemon.data(mapi.grantId, {
+        grant: serv.grant
+      });
+      $(mapi.grantId).show();
+    } else {
+      lemon.data(mapi.grantId, {
+        grant: ''
+      });
+      $(mapi.grantId).hide();
+    }
   },
 
   render: function(page, callback) {
@@ -1264,6 +1276,7 @@ var mapi = {
 
   viewUrlId: '#btn-show-url',
   tglCommentId: '#btn-tgl-comment',
+  grantId: '#server_signin',
 
   navbarId: '#navbar-layout',
   gridId: '#grid-layout',
@@ -1789,6 +1802,13 @@ var mapi = {
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);
+
+    $(mapi.grantId).click(function () {
+      var grant = lemon.dec(lemon.data(mapi.grantId, 'grant'));
+      if (grant || grant.length > 0) {
+        lemon.preview(grant);
+      }
+    });
 
     var btnPreviewId = '#btn_preview';
     $(btnPreviewId).click(function () {

@@ -295,7 +295,7 @@ module.exports = function(scope, config) {
 
   scope.isURL = function(target) {
     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i;
-    return regexp.test(target);
+    return regexp.test(target || '');
   };
 
   scope.requestInfo = function(req) {

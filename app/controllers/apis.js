@@ -446,6 +446,7 @@ router.post(index.servers.do, function (req, res, next) {
           if (serv && envId == serv.env_id && groupId == serv.group_id) {
             var aServer = {
               id: serv.id,
+              grant: (isURL(serv.home_url || '') ? crypto.compress(serv.home_url) : ''),
               name: serv.name,
               desc: serv.desc
             };

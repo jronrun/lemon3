@@ -146,6 +146,7 @@ function shares(shareId, resultCall, requestInfo) {
 
         if (1 == aShare.read_write) {
           ShareAccess.add({
+            share_read_write: aShare.read_write,
             share: shareId.toString()
           }, function (accessAns) {
             if (!isAnswerSucc(accessAns)) {

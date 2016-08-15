@@ -85,7 +85,7 @@ module.exports = function(commOptions) {
 
       requestOptions = _.extend({
         ip: '',
-        shareId: null,         // share id
+        share: null,           // share
         opt: 0,                // 1 {path: '', data: {}, 'param_name'}
         checkGroup: 0          // 0 uncheck, 1 check server and api group match
       }, requestOptions || {});
@@ -343,11 +343,12 @@ module.exports = function(commOptions) {
 
         function(answer, callback) {
           // is share execute
-          if (requestOptions.shareId && requestOptions.shareId.length > 0) {
+          if (requestOptions.share) {
             ShareAccess.add({
               type: 2,
               history: answer.result.hisId,
-              share: requestOptions.shareId
+              share: requestOptions.share._id.toString(),
+              share_read_write: requestOptions.share.read_write
             }, function (accessAns) {
               if (!isAnswerSucc(accessAns)) {
                 log.warn(accessAns.msg, 'ShareAccess.add');

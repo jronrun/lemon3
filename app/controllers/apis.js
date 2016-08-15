@@ -69,7 +69,7 @@ router.post(index.request.do, function (req, res, next) {
       req.user = items.grantExecutableShare(req.anonymous, req.user, shared);
 
       _.extend(requestOptions, {
-        shareId: shared.share._id.toString(),
+        share: shared.share,
         checkGroup: 1
       });
 

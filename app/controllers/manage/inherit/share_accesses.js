@@ -60,6 +60,7 @@ module.exports = function (router, index, root) {
 
           var data = crypto.compress({
             type: 3,
+            preview: 0,
             content: item.history
           });
           return generic.info('/share/preview?data=' + data, 'Execute ' + item.history, 'preview');

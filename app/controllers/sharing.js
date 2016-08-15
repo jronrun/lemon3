@@ -235,9 +235,9 @@ router.get(index.preview.do, function (req, res, next) {
   }, share);
 
   views(share, function(anAnswer) {
-    _.extend(anAnswer.result, {
+    anAnswer.result = _.extend({
       preview: 1
-    });
+    }, anAnswer.result);
 
     res.render(index.preview, {
       ans: crypto.compress(anAnswer)

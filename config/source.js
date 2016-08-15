@@ -189,16 +189,18 @@ var resource = [
 
       {
         id: 200011, name: 'share', desc: 'Share', action: '/manage/shares/:page', page: P.list, children: [
-        {id: 2000111, name: 'editor', action: '/manage/share', page: P.edit, desc: 'Editor'},
-        {id: 2000112, extend: 2000111, method: M.POST, page: P.list, desc: 'Create'},
+          {id: 2000111, name: 'editor', action: '/manage/share', page: P.edit, desc: 'Editor'},
+          {id: 2000112, extend: 2000111, method: M.POST, page: P.list, desc: 'Create'},
 
-        {id: 2000113, name: 'retrieve', action: '/manage/share/:id', page: P.edit, desc: 'Retrieve'},
-        {id: 2000114, extend: 2000113, method: M.PUT, page: P.list, desc: 'Update'},
-        {id: 2000115, extend: 2000113, method: M.DELETE, page: P.list, desc: 'Delete'}
-      ]
-      }
+          {id: 2000113, name: 'retrieve', action: '/manage/share/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000114, extend: 2000113, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000115, extend: 2000113, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
+      },
 
-    ]
+      { id: 200012, name: 'share-access', desc: 'Share Access', action: '/manage/share-access/:page', page: P.list }
+
+  ]
   }
 ];
 

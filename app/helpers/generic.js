@@ -191,6 +191,7 @@ module.exports = function(model, index, defineForm) {
         ownerQuery: 0,
         queryHandle: false,
         listName: index.desc,
+        itemAction: 1,
 
         //inner use
         listchoose: {
@@ -322,12 +323,13 @@ module.exports = function(model, index, defineForm) {
           list: items.asShowData(options.defines, result.items),
           page: result.page,
           action: actionWrap(index.action).base,
-          retrieveAction: actionWrap(index.retrieve.action).base,
+          retrieveAction: index.retrieve ? actionWrap(index.retrieve.action).base : '',
           desc: options.listName,
           search: options.search,
           searchLastEl: options.search.length - 1,
           searchLenCeil: searchLenCeil,
           queryStr: queryStr,
+          itemAction: options.itemAction,
           listchoose: options.listchoose
         });
       });

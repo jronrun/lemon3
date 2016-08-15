@@ -21,6 +21,7 @@ module.exports = function (app) {
   require('./inherit/histories')(router, index.history, index);
 
   require('./inherit/shares')(router, index.share, index);
+  require('./inherit/share_accesses')(router, index['share-access'], index);
 };
 
 /**

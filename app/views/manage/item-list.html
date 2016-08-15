@@ -100,7 +100,9 @@
                           <div><span>{{title}}</span></div>
                       </div>
                   {{/each}}
-                    <div class="item-col item-col-header fixed item-col-actions-dropdown"></div>
+                  {{#is itemAction "==" 1}}
+                      <div class="item-col item-col-header fixed item-col-actions-dropdown"></div>
+                  {{/is}}
                 </div>
             </li>
 
@@ -114,34 +116,37 @@
                         </div>
                     {{/each}}
 
-                    <div class="item-col fixed item-col-actions-dropdown" id="list-tool-{{numId}}">
-                        {{!--
-                        {{#is ../listchoose.has "==" 1}}
-                            <p class="text-primary icondh">
-                            <em class="fa {{#is numId "in" ../listchoose.ids}}fa-check-square-o{{else}}fa-square-o{{/is}}" id="listchoose-chk-{{numId}}"></em>
-                            </p>
-                        {{/is}}
-                        --}}
-                        <div class="item-actions-dropdown">
-                            <a class="item-actions-toggle-btn">
-                                <span class="inactive"> <i class="fa fa-cog"></i> </span>
-                                <span class="active"> <i class="fa fa-chevron-circle-right"></i> </span>
-                            </a>
-                            <div class="item-actions-block">
-                                <ul class="item-actions-list">
-                                    <li>
-                                        <a class="remove" href="#" data-toggle="modal" data-target="#confirm-modal"
-                                           data-biz-type="item-rem" data-href="{{../retrieveAction}}{{id}}" data-item-id="{{id}}">
-                                        <i class="fa fa-trash-o "></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="edit" data-pjax href="{{../retrieveAction}}{{id}}"> <i class="fa fa-pencil"></i> </a>
-                                    </li>
-                                </ul>
+                    {{#is ../itemAction "==" 1}}
+                        <div class="item-col fixed item-col-actions-dropdown" id="list-tool-{{numId}}">
+                            {{!--
+                            {{#is ../listchoose.has "==" 1}}
+                                <p class="text-primary icondh">
+                                <em class="fa {{#is numId "in" ../listchoose.ids}}fa-check-square-o{{else}}fa-square-o{{/is}}" id="listchoose-chk-{{numId}}"></em>
+                                </p>
+                            {{/is}}
+                            --}}
+                            <div class="item-actions-dropdown">
+                                <a class="item-actions-toggle-btn">
+                                    <span class="inactive"> <i class="fa fa-cog"></i> </span>
+                                    <span class="active"> <i class="fa fa-chevron-circle-right"></i> </span>
+                                </a>
+                                <div class="item-actions-block">
+                                    <ul class="item-actions-list">
+                                        <li>
+                                            <a class="remove" href="#" data-toggle="modal" data-target="#confirm-modal"
+                                               data-biz-type="item-rem" data-href="{{../retrieveAction}}{{id}}" data-item-id="{{id}}">
+                                            <i class="fa fa-trash-o "></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="edit" data-pjax href="{{../retrieveAction}}{{id}}"> <i class="fa fa-pencil"></i> </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {{/is}}
+
                   </div>
               </li>
           {{/each}}

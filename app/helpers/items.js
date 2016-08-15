@@ -28,20 +28,22 @@ var helper = {
       return aUser;
     }
 
-    if (shared.env) {
-      aUser.env.push(shared.env);
-    }
+    if (3 == shared.share.read_write) {
+      if (shared.env) {
+        aUser.env.push(shared.env);
+      }
 
-    if (shared.group) {
-      aUser.group.push(shared.group);
-    }
+      if (shared.group) {
+        aUser.group.push(shared.group);
+      }
 
-    if (shared.serv) {
-      aUser.server.define.push(shared.serv);
-    }
+      if (shared.serv) {
+        aUser.server.define.push(shared.serv);
+      }
 
-    if (shared.api) {
-      aUser.interface.define.push(shared.api);
+      if (shared.api) {
+        aUser.interface.define.push(shared.api);
+      }
     }
 
     return aUser;

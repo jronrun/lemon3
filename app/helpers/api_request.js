@@ -496,11 +496,6 @@ module.exports = function(commOptions) {
         },
 
         function(target, callback) {
-          target.env = target.env || 0;
-          target.group = target.group || 0;
-          target.serv = target.serv || 0;
-          target.api = target.api || 0;
-
           if (!target.env || !target.group || !target.serv || !target.api) {
             return resultCall(answer.fail('invalid executable share source'));
           }
@@ -554,8 +549,12 @@ module.exports = function(commOptions) {
               return resultCall(answer.fail('share source not exists.'));
             }
 
-            if (3 != aShare.read_write) {
+            if ([2, 3].indexOf(aShare.read_write) == -1) {
               return resultCall(answer.fail('not executable share source'));
+            }
+
+            if (2 == aShare.read_write && requestInfo.anonymous) {
+              return resultCall(answer.fail('user power share source need login'));
             }
 
             if ([1, 2, 3, 7].indexOf(aShare.type) == -1) {
@@ -682,6 +681,44 @@ module.exports = function(commOptions) {
             callback(null, target);
           }
 
+        },
+
+        function(target, callback) {
+          var share = target.share;
+          target.env = target.env || 0;
+          target.group = target.group || 0;
+          target.serv = target.serv || 0;
+          target.api = target.api || 0;
+
+          //user power
+          if (2 == share.read_write) {
+            var tip = 'user ' + requestInfo.usr.name + ' has no authority for shared %s';
+            if (target.env) {
+              if (!items.ownEnv(requestInfo.usr, target.env)) {
+                return resultCall(answer.fail(format(permission, 'environment')));
+              }
+            }
+
+            if (target.group) {
+              if (!items.ownGroup(requestInfo.usr, target.group)) {
+                return resultCall(answer.fail(format(permission, 'group')));
+              }
+            }
+
+            if (target.serv) {
+              if (!items.ownServer(requestInfo.usr, target.serv)) {
+                return resultCall(answer.fail(format(permission, 'server')));
+              }
+            }
+
+            if (target.api) {
+              if (!items.ownInterface(requestInfo.usr, target.api)) {
+                return resultCall(answer.fail(format(permission, 'interface')));
+              }
+            }
+          }
+
+          callback(null, target);
         }
       ], function(err, result) {
         return resultCall(answer.succ(result));

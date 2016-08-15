@@ -24,6 +24,10 @@ var helper = {
       }
     } : usr;
 
+    if (aUser.isAdmin) {
+      return aUser;
+    }
+
     if (shared.env) {
       aUser.env.push(shared.env);
     }

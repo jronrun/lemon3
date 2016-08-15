@@ -76,7 +76,7 @@ router.post(index.request.do, function (req, res, next) {
       requs.request(requestData, function(requAns) {
         requAns.result = crypto.compress(requAns.result);
         return res.json(requAns);
-      }, req.user, requestOptions);
+      }, requestInfo(req), requestOptions);
     } else {
 
       if (req.anonymous) {
@@ -86,7 +86,7 @@ router.post(index.request.do, function (req, res, next) {
       requs.request(requestData, function(requAns) {
         requAns.result = crypto.compress(requAns.result);
         return res.json(requAns);
-      }, req.user, requestOptions);
+      }, requestInfo(req), requestOptions);
     }
   }, requestInfo(req));
 });
@@ -156,7 +156,7 @@ router.post(index.viewurl.do, function (req, res, next) {
     }, function(answer) {
       answer.result = crypto.compress(answer.result);
       return res.json(answer);
-    }, req.user, {
+    }, requestInfo(req), {
       opt: 1
     }
   );

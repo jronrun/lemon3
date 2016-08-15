@@ -74,7 +74,8 @@ module.exports = function(commOptions) {
 
   var apiRequest = {
     getRespAPI: getRespAPI,
-    request: function(options, resultCall, usr, requestOptions) {
+    request: function(options, resultCall, requestInfo, requestOptions) {
+      var usr = requestInfo.usr;
       options = _.extend({
         envId: null,
         groupId: null,
@@ -344,17 +345,18 @@ module.exports = function(commOptions) {
         function(answer, callback) {
           // is share execute
           if (requestOptions.share) {
+            var shareId = requestOptions.share._id.toString();
             ShareAccess.add({
               type: 2,
               history: answer.result.hisId,
-              share: requestOptions.share._id.toString(),
+              share: shareId,
               share_read_write: requestOptions.share.read_write
             }, function (accessAns) {
               if (!isAnswerSucc(accessAns)) {
                 log.warn(accessAns.msg, 'ShareAccess.add');
               }
 
-              Share.addUseCount(requestOptions.shareId, function(adducAns) {
+              Share.addUseCount(shareId, function(adducAns) {
                 if (!isAnswerSucc(adducAns)) {
                   log.warn(adducAns.msg, 'Share.addUseCount');
                 }

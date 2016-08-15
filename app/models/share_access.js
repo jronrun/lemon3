@@ -44,7 +44,7 @@ shareAccess.add = function(access, resultCall, requestInfo) {
     },
 
     function(target, callback) {
-      share.nextId(function (id) {
+      shareAccess.nextId(function (id) {
         target.id = id;
 
         var check = shareAccess.validate(target);
@@ -52,7 +52,7 @@ shareAccess.add = function(access, resultCall, requestInfo) {
           return resultCall(answer.fail(check.msg));
         }
 
-        share.insertOne(target, function(err, result) {
+        shareAccess.insertOne(target, function(err, result) {
           if (err) {
             return resultCall(answer.fail(err.message));
           }

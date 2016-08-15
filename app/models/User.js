@@ -29,7 +29,11 @@ var user = model_bind('user', model);
   * @returns {{}}
   */
  function scopeMerge(scopes, excludeDefine, includeDefine) {
-   var mergeResult = {};
+   var mergeResult = {
+     scope: 2,
+     define: []
+   };
+
    //1. Exclude All
    if (scopes.indexOf(3) != -1) {
      mergeResult = {

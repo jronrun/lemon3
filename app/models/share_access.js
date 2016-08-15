@@ -4,7 +4,7 @@ var log = log_from('share_access');
 
 var model = schema({
   id: { type: 'integer', required: true },
-  share: { type: 'integer', required: true },
+  share: { type: 'string', allowEmpty: false, required: true },
   history: { type: 'integer' },
 
   type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Open', 2: 'Execute'} },
@@ -22,7 +22,7 @@ var model = schema({
 
 var shareAccess = model_bind('share_access', model);
 
-shareAccess.newAccess = function(access, resultCall, requestInfo) {
+shareAccess.add = function(access, resultCall, requestInfo) {
   async.waterfall([
     function(callback) {
       var target = _.extend({

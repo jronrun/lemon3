@@ -4,6 +4,7 @@ var express = require('express'),
   router = express.Router(),
   log = log_from('sharing'),
   Share = app_require('models/share'),
+  ShareAccess = app_require('models/share_access'),
   History = app_require('models/api/history'),
   Group = app_require('models/api/group'),
   Interface = app_require('models/api/interf'),
@@ -143,7 +144,24 @@ function shares(shareId, resultCall, requestInfo) {
           source: crypto.compress(aShare._id.toString())
         };
 
-        callback(null, target);
+        if (1 == aShare.read_write) {
+          ShareAccess.add({
+            share: shareId.toString()
+          }, function (accessAns) {
+            if (!isAnswerSucc(accessAns)) {
+              return resultCall(accessAns);
+            }
+
+            Share.addUseCount(shareId, function(adducAns) {
+              if (!isAnswerSucc(adducAns)) {
+                return resultCall(adducAns);
+              }
+
+              callback(null, target);
+            });
+
+          }, requestInfo);
+        }
       });
     },
 

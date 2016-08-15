@@ -5,6 +5,7 @@ var log = log_from('api_request'),
   request = require('request'),
   items = require('./items'),
   Share = app_require('models/share'),
+  ShareAccess = app_require('models/share_access'),
   Environment = app_require('models/api/env'),
   Group = app_require('models/api/group'),
   Server = app_require('models/api/server'),
@@ -84,6 +85,7 @@ module.exports = function(commOptions) {
 
       requestOptions = _.extend({
         ip: '',
+        shareId: null,         // share id
         opt: 0,                // 1 {path: '', data: {}, 'param_name'}
         checkGroup: 0          // 0 uncheck, 1 check server and api group match
       }, requestOptions || {});
@@ -337,6 +339,32 @@ module.exports = function(commOptions) {
           } else {
             callback(null, answer);
           }
+        },
+
+        function(answer, callback) {
+          // is share execute
+          if (requestOptions.shareId && requestOptions.shareId.length > 0) {
+            ShareAccess.add({
+              type: 2,
+              history: answer.result.hisId,
+              share: requestOptions.shareId
+            }, function (accessAns) {
+              if (!isAnswerSucc(accessAns)) {
+                log.warn(accessAns.msg, 'ShareAccess.add');
+              }
+
+              Share.addUseCount(requestOptions.shareId, function(adducAns) {
+                if (!isAnswerSucc(adducAns)) {
+                  log.warn(adducAns.msg, 'Share.addUseCount');
+                }
+
+                callback(null, answer);
+              });
+
+            }, requestInfo);
+          } else {
+            callback(null, answer);
+          }
         }
       ], function(err, result) {
         resultCall(result);
@@ -496,11 +524,6 @@ module.exports = function(commOptions) {
 
           }, true, requestInfo.usr);
 
-        },
-
-        function(target, callback) {
-          //add use count
-          callback(null, target);
         }
       ], function(err, result) {
         return resultCall(answer.succ(result));

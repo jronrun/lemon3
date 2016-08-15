@@ -134,6 +134,20 @@ share.shareData = function(aShare, readonly) {
   };
 };
 
+share.addUseCount = function(shareId, resultCall) {
+  share.updateById(shareId, {
+    $inc: {
+      used_count: 1
+    }
+  }, function (err) {
+    if (err) {
+      return resultCall(answer.fail(err.message));
+    }
+
+    resultCall(answer.succ());
+  });
+};
+
 share.fastShare = function(params, resultCall, requestInfo) {
   var now = moment().hours(0).minutes(0);
   var startTime = now.toDate(), endTime = now.clone().add(7, 'd').toDate();

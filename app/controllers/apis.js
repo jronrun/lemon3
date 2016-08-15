@@ -65,9 +65,11 @@ router.post(index.request.do, function (req, res, next) {
   }, req.body.source, function(shareAns) {
     var executable = ansWrap(shareAns);
     if (executable.isSucc()) {
-      req.user = items.grantExecutableShare(req.anonymous, req.user, executable.get());
+      var shared = executable.get();
+      req.user = items.grantExecutableShare(req.anonymous, req.user, shared);
 
       _.extend(requestOptions, {
+        shareId: shared.share._id.toString(),
         checkGroup: 1
       });
 

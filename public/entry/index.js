@@ -1014,6 +1014,7 @@ lemon.register({
       id: 'a_modal_' + lemon.uniqueId(),
       content: false,
       contentClose: false,
+      contentCloseTop: 0,
       title: '',
       titleClose: false,
       body: '',

@@ -349,6 +349,7 @@ module.exports = function(commOptions) {
             ShareAccess.add({
               type: 2,
               history: answer.result.hisId,
+              share_id: requestOptions.share.id,
               share: shareId,
               share_read_write: requestOptions.share.read_write
             }, function (accessAns) {

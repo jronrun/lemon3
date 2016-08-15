@@ -150,6 +150,18 @@ var manage = {
       }
       sharing(lemon.data(anEl, 'share'));
     });
+
+    lemon.live('click', 'a[data-share-access]', function (evt, el) {
+      evt.preventDefault();
+      var anEl = 'A' == el.tagName ? el : $(el).parent();
+
+      lemon.preview(lemon.getUrl(lemon.fullUrl('/manage/share-access/1'), {
+        urlqry: lemon.enc({
+          share: lemon.data(anEl, 'shareAccess')
+        })
+      }));
+    });
+
   }
 };
 

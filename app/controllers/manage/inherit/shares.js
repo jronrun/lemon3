@@ -77,6 +77,18 @@ module.exports = function (router, index, root) {
     }
   };
 
+  function accessHref(item) {
+    var sData = crypto.compress(item._id.toString());
+    var html = [
+      format('<a class="btn btn-secondary text-info icondh" data-share-access="%s" title="Share Access" href="javascript:void(0);" ' +
+        'style="border: 0px;" type="button">', sData),
+      generic.em('tasks'),
+      '</a>'
+    ];
+
+    return html.join('');
+  }
+
   function shareHref(item, readonly) {
     var sData = crypto.compress(Share.shareData(item, readonly));
     var html = [
@@ -171,7 +183,8 @@ module.exports = function (router, index, root) {
         prop: function(item) {
           var html = [
             previewHref(item),
-            shareHref(item)
+            shareHref(item),
+            accessHref(item)
           ];
 
           return html.join('');

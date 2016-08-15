@@ -37,7 +37,11 @@
                           {{#each search}}
                               <div class="input-group" style="height: 38px;">
                                 {{#is 1 "==" type}}
-                                    <input type="text" name="{{name}}" class="form-control boxed rounded-s" placeholder="{{tip}}">
+                                    {{#is 1 "==" isHide}}
+                                        <input type="hidden" name="{{name}}"/>
+                                    {{else}}
+                                        <input type="text" name="{{name}}" class="form-control boxed rounded-s" placeholder="{{tip}}">
+                                    {{/is}}
                                 {{/is}}
                                 {{#is 2 "==" type}}
                                     <select class="form-control boxed rounded-s" name="{{name}}">
@@ -60,7 +64,11 @@
                               {{#each search}}
                                 {{#is 1 "==" type}}
                                     <div class="form-group">
-                                        <input type="text" class="form-control" style="border: 0px;" name="{{name}}" placeholder="{{tip}}">
+                                      {{#is 1 "==" isHide}}
+                                          <input type="hidden" name="{{name}}"/>
+                                      {{else}}
+                                          <input type="text" class="form-control" style="border: 0px;" name="{{name}}" placeholder="{{tip}}">
+                                      {{/is}}
                                     </div>
                                 {{else}}
                                     <div class="form-group">
@@ -101,7 +109,7 @@
                       </div>
                   {{/each}}
                   {{#is itemAction "==" 1}}
-                      <div class="item-col item-col-header fixed item-col-actions-dropdown"></div>
+                    <div class="item-col item-col-header fixed item-col-actions-dropdown"></div>
                   {{/is}}
                 </div>
             </li>

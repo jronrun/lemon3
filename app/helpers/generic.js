@@ -46,8 +46,8 @@ module.exports = function(model, index, defineForm) {
       return '<span class="text-warning"><em class="fa fa-shield"></em> ' + (text || 'Private') + '</span>';
     },
 
-    info: function(href, text) {
-      return format('<a href="%s" data-pjax><em class="fa fa-info-circle"></em> %s</a>', href, text || '');
+    info: function(href, text, dataset) {
+      return format('<a href="%s" data-%s><em class="fa fa-info-circle"></em> %s</a>', href, dataset || 'pjax', text || '');
     },
 
     label: function(text, clazz) {
@@ -100,11 +100,12 @@ module.exports = function(model, index, defineForm) {
         'class="btn btn-primary-outline btn-sm icondh" %s><em class="fa fa-%s"></em> %s</button>', props.join(' '), em, text);
     },
 
-    searchInput: function(name, placeholder) {
+    searchInput: function(name, placeholder, isHide) {
       return {
         type: 1,
         tip: placeholder,
-        name: name
+        name: name,
+        isHide: isHide || 0     //1 hide
       };
     },
 
@@ -201,7 +202,7 @@ module.exports = function(model, index, defineForm) {
         }
       }, options || {});
 
-      var queryStr = req.header('query') || '', query = {}, realQuery = {};
+      var queryStr = req.header('query') || req.param('urlqry') || '', query = {}, realQuery = {};
       if (queryStr.length > 0) {
         query = crypto.decompress(queryStr);
         try {

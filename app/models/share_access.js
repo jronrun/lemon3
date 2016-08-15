@@ -5,6 +5,7 @@ var log = log_from('share_access');
 var model = schema({
   id: { type: 'integer', required: true },
   share: { type: 'string', allowEmpty: false, required: true },
+  share_id: { type: 'integer', required: true },
   share_read_write: { type: 'integer', enum: [1, 2, 3], required: true, const: { 1: 'Readonly', 2: 'User Power', 3: 'Executable'} },
   history: { type: 'integer' },
 

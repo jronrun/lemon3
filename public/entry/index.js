@@ -327,7 +327,8 @@ lemon.register({
       type: options.type || 'GET',
       async: true,
       url: action,
-      data: data || {}
+      data: data || {},
+      headers: {}
     }, options));
 
     return req;

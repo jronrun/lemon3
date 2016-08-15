@@ -44,7 +44,7 @@ module.exports = function (router, index, root) {
     }
   });
 
-  var paramHandleCU = function(item, req) {
+  var paramHandleCU = function(item, req, isCreate) {
     item.share_to.anonymous = parseInt(item.share_to.anonymous);
     item.share_to.scope = parseInt(item.share_to.scope);
     var shareToDefine = [];
@@ -56,7 +56,11 @@ module.exports = function (router, index, root) {
     item.share_to.define = shareToDefine;
 
     item.count = parseInt(item.count);
-    item.used_count = parseInt(item.used_count || '0');
+    if (isCreate) {
+      item.used_count = 0;
+    } else {
+      delete item.used_count;
+    }
     item.read_write = parseInt(item.read_write);
     item.type = parseInt(item.type);
     item.state = 1;
@@ -222,7 +226,7 @@ module.exports = function (router, index, root) {
     generic.create({
       sequenceId: 1,
       paramHandle: function(item) {
-        paramHandleCU(item, req);
+        paramHandleCU(item, req, true);
       }
     }, req, res, next);
   });

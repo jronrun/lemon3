@@ -502,6 +502,7 @@ var requs = {
 
           $.post('/api/history', {
             hisId: rdata.hisId,
+            source: mapi.source(),
             resp: lemon.enc(data)
           }).done(function (resp) {
             lemon.info(resp);

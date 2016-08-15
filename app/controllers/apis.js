@@ -166,14 +166,25 @@ router.post(index.viewurl.do, function (req, res, next) {
  * Fill History Response
  */
 router.post(index.history.do, function (req, res, next) {
-  if (req.anonymous) {
-    return res.json(answer.resp(401));
-  }
-
   var hisId = parseInt(req.body.hisId), resp = req.body.resp;
-  requs.setHisResp(hisId, resp, function() {
-    return res.json(answer.succ());
-  });
+
+  requs.isExecutableAPIShareSource(req.body.source, function(shareAns) {
+    var executable = ansWrap(shareAns);
+    if (executable.isSucc()) {
+      requs.setHisResp(hisId, resp, function() {
+        return res.json(answer.succ());
+      });
+    } else {
+      if (req.anonymous) {
+        return res.json(answer.resp(401));
+      }
+
+      requs.setHisResp(hisId, resp, function() {
+        return res.json(answer.succ());
+      });
+    }
+  }, requestInfo(req));
+
 });
 
 /**

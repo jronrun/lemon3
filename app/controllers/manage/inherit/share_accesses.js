@@ -10,7 +10,8 @@ module.exports = function (router, index, root) {
   });
 
   function previewHref(item) {
-    return generic.previewHref('/share/' + crypto.compress(item.share), generic.em('eye') + ' ' + item.share_id, 'View Share');
+    return generic.previewHref('/share/' + crypto.compress(item.share),
+      generic.em('eye') + ' ' + item.share_id, 'View Share').replace('data-preview', '');
   }
 
   /**
@@ -63,7 +64,7 @@ module.exports = function (router, index, root) {
             preview: 0,
             content: item.history
           });
-          return generic.info('/share/preview?data=' + data, 'Execute ' + item.history, 'preview');
+          return generic.info('/share/preview?data=' + data, 'Execute ' + item.history, 'none');
         },
         clazz: 'item-col-author'
       },

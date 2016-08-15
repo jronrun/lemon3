@@ -11,7 +11,7 @@ module.exports = function (router, index, root) {
 
   function previewHref(item) {
     return generic.previewHref('/share/' + crypto.compress(item.share),
-      generic.em('eye') + ' ' + item.share_id, 'View Share').replace('data-preview', '');
+      generic.em('eye') + ' ' + (item.share_id || ''), 'View Share').replace('data-preview', '');
   }
 
   /**
@@ -56,16 +56,25 @@ module.exports = function (router, index, root) {
       {
         title: 'Content',
         prop: function(item) {
-          if (1 == item.share_read_write || !item.history) {
-            return '';
-          }
+          switch (item.type) {
+            case 1:
+              return '';
+            case 2:
+              var data = crypto.compress({
+                type: 3,
+                preview: 0,
+                content: item.history
+              });
+              return generic.info('/share/preview?data=' + data, 'Execute ' + item.history, 'none');
+            case 3:
+            case 4:
+              return [
+                '<span style="font-size: 70%">',
+                item.fail,
+                '</span>'
+              ].join('');
 
-          var data = crypto.compress({
-            type: 3,
-            preview: 0,
-            content: item.history
-          });
-          return generic.info('/share/preview?data=' + data, 'Execute ' + item.history, 'none');
+          }
         },
         clazz: 'item-col-author'
       },
@@ -85,9 +94,18 @@ module.exports = function (router, index, root) {
       });
     });
 
+    var typeQryOptions = [];
+    _.each(generic.getSchema('type.const'), function (v, k) {
+      typeQryOptions.push({
+        val: k,
+        text: v
+      });
+    });
+
     var search = [
       generic.searchInput('share', '', 1),
-      generic.searchSelect('share_read_write', 'All Access', rwQryOptions)
+      generic.searchSelect('share_read_write', 'All Access', rwQryOptions),
+      generic.searchSelect('type', 'All Type', typeQryOptions)
     ];
 
     generic.list({
@@ -98,6 +116,10 @@ module.exports = function (router, index, root) {
       queryHandle: function(realQry, qry) {
         if (realQry['share_read_write']) {
           realQry['share_read_write'] = parseInt(qry['share_read_write']);
+        }
+
+        if (realQry['type']) {
+          realQry['type'] = parseInt(qry['type']);
         }
       }
     }, req, res, next);

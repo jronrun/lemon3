@@ -469,7 +469,37 @@ module.exports = function(commOptions) {
      * @see apiRequest.apiDefine  params
      * @param sourceData {source: '', sid: ''}
        */
-    executeAPIShareSource: function(requData, sourceData, resultCall, requestInfo) {
+    executeAPIShareSource: function(requData, sourceData, execResultCall, requestInfo) {
+      var resultCall = function (execAns) {
+        if (isAnswerSucc(execAns)) {
+          execResultCall(execAns);
+        } else {
+          if (sourceData && sourceData.source) {
+            var source = crypto.decompress(sourceData.source);
+            if (source && source.length > 0) {
+              ShareAccess.add({
+                type: 4,
+                fail: execAns.msg,
+                share_id: 0,
+                share_read_write: 4,
+                share: source
+              }, function (accessAns) {
+                if (!isAnswerSucc(accessAns)) {
+                  log.warn(accessAns.msg, 'Try Execute ShareAccess.add');
+                }
+
+                execResultCall(execAns);
+              }, requestInfo);
+            } else {
+              execResultCall(execAns);
+            }
+          } else {
+            execResultCall(execAns);
+          }
+
+        }
+      };
+
       if (!requData || !requData.serv || !requData.requ) {
         return resultCall(answer.fail('invalid request data'));
       }

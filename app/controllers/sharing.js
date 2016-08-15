@@ -112,10 +112,30 @@ function views(share, callback, requestInfo) {
   }
 }
 
-function shares(shareId, resultCall, requestInfo) {
+function shares(shareId, sharesResultCall, requestInfo) {
   if (!shareId || shareId.length < 1) {
-    return resultCall(answer.fail('invalid share id'));
+    return sharesResultCall(answer.fail('invalid share id'));
   }
+
+  var resultCall = function (sharesAns) {
+    if (isAnswerSucc(sharesAns)) {
+      sharesResultCall(sharesAns);
+    } else {
+      ShareAccess.add({
+        type: 3,
+        fail: sharesAns.msg,
+        share_id: 0,
+        share_read_write: 4,
+        share: shareId.toString()
+      }, function (accessAns) {
+        if (!isAnswerSucc(accessAns)) {
+          log.warn(accessAns.msg, 'Try Open ShareAccess.add');
+        }
+
+        sharesResultCall(sharesAns);
+      }, requestInfo);
+    }
+  };
 
   async.waterfall([
     function(callback) {

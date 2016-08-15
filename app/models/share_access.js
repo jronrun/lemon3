@@ -6,10 +6,22 @@ var model = schema({
   id: { type: 'integer', required: true },
   share: { type: 'string', allowEmpty: false, required: true },
   share_id: { type: 'integer', required: true },
-  share_read_write: { type: 'integer', enum: [1, 2, 3], required: true, const: { 1: 'Readonly', 2: 'User Power', 3: 'Executable'} },
+  share_read_write: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: {
+      1: 'Readonly',
+      2: 'User Power',
+      3: 'Executable',
+      4: 'Unknown'
+    }
+  },
   history: { type: 'integer' },
-
-  type: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Open', 2: 'Execute'} },
+  fail: {type: 'string' },
+  type: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: {
+      1: 'Opened',
+      2: 'Executed',
+      3: 'Try Open',
+      4: 'Try Execute'
+    }
+  },
   create_by: {
     type: 'object',
     properties: {
@@ -34,12 +46,17 @@ shareAccess.add = function(access, resultCall, requestInfo) {
           name: requestInfo.anonymous ? 'anonymous' : requestInfo.usr.name,
           ip: requestInfo.clientIP
         },
+        fail: '',
         last_modify_time: new Date(),
         create_time: new Date()
       }, access || {});
 
       if (2 == target.type && !target.history) {
         return resultCall(answer.fail('execute access must provide history id'));
+      }
+
+      if ([3, 4].indexOf(target.type) != -1 && !target.fail) {
+        return resultCall(answer.fail('try access must provide fail message'));
       }
 
       callback(null, target);

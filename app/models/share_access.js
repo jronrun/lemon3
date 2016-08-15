@@ -30,8 +30,8 @@ shareAccess.add = function(access, resultCall, requestInfo) {
       var target = _.extend({
         type: 1,
         create_by: {
-          id: requestInfo.usr.id,
-          name: requestInfo.usr.name,
+          id: requestInfo.anonymous ? '-1' : requestInfo.usr.id,
+          name: requestInfo.anonymous ? 'anonymous' : requestInfo.usr.name,
           ip: requestInfo.clientIP
         },
         last_modify_time: new Date(),

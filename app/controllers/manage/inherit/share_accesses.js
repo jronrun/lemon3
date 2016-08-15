@@ -44,7 +44,8 @@ module.exports = function (router, index, root) {
         title: 'Access By',
         prop: function(item) {
           var aUser = item.create_by;
-          if (aUser.name && aUser.id) {
+          if (aUser.name && 'anonymous' != aUser.name
+            && aUser.id && '-1' != aUser.id) {
             return generic.info(getAction(root.users.retrieve, aUser.id), aUser.name);
           }
 

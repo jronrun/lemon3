@@ -11,7 +11,7 @@ module.exports = function (router, index, root) {
 
   function previewHref(item) {
     return generic.previewHref('/share/' + crypto.compress(item.share),
-      generic.em('eye') + ' ' + (item.share_id || ''), 'View Share').replace('data-preview', '');
+      generic.em('eye') + ' ' + (item.share_id || ''), 'View Share ' + item.share).replace('data-preview', '');
   }
 
   /**

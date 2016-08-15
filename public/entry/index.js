@@ -1009,6 +1009,7 @@ lemon.register({
     return previewM;
   },
   modal: function(options, events) {
+    var autoZIndex = 10000 + lemon.uniqueId();
     options = lemon.extend({
       id: 'a_modal_' + lemon.uniqueId(),
       content: false,
@@ -1020,7 +1021,7 @@ lemon.register({
       modal: null,
       size: '',     //lg, sm, default is normal size
       cache: false,
-      zIndex: 10000
+      zIndex: autoZIndex
     }, options || {});
 
     var modalId = lemon.startIf(options.id, '#');

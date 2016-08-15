@@ -162,6 +162,8 @@ function shares(shareId, resultCall, requestInfo) {
             });
 
           }, requestInfo);
+        } else {
+          callback(null, target);
         }
       });
     },

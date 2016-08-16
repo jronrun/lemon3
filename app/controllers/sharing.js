@@ -174,7 +174,7 @@ function shares(shareId, sharesResultCall, requestInfo) {
           }
 
           if (1 == aShare.read_write) {
-            Share.addUseCount(shareId, function(adducAns) {
+            Share.addUseCount(aShare, function(adducAns) {
               if (!isAnswerSucc(adducAns)) {
                 return resultCall(adducAns);
               }

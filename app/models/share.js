@@ -66,6 +66,10 @@ share.isAvailable = function(aShare, requestInfo) {
     return answer.succ();
   }
 
+  if (aShare.create_by.id == requestInfo.usr.id) {
+    return answer.succ();
+  }
+
   //Canceled Sharing
   if (2 == aShare.state) {
     return answer.fail('Canceled sharing');
@@ -128,12 +132,12 @@ share.shareData = function(aShare, readonly) {
   };
 };
 
-share.addUseCount = function(shareId, resultCall, requestInfo) {
+share.addUseCount = function(aShare, resultCall, requestInfo) {
   if (requestInfo.usr.isAdmin) {
     return resultCall(answer.succ());
   }
 
-  share.updateById(shareId, {
+  share.updateById(aShare._id.toString(), {
     $inc: {
       used_count: 1
     }

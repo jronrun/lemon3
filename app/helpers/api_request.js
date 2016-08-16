@@ -357,7 +357,7 @@ module.exports = function(commOptions) {
                 log.warn(accessAns.msg, 'ShareAccess.add');
               }
 
-              Share.addUseCount(shareId, function(adducAns) {
+              Share.addUseCount(requestOptions.share, function(adducAns) {
                 if (!isAnswerSucc(adducAns)) {
                   log.warn(adducAns.msg, 'Share.addUseCount');
                 }

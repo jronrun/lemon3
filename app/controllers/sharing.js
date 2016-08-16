@@ -180,7 +180,7 @@ function shares(shareId, sharesResultCall, requestInfo) {
               }
 
               callback(null, target);
-            });
+            }, requestInfo);
           } else {
             callback(null, target);
           }

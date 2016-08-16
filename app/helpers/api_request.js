@@ -363,7 +363,7 @@ module.exports = function(commOptions) {
                 }
 
                 callback(null, answer);
-              });
+              }, requestInfo);
 
             }, requestInfo);
           } else {

@@ -128,7 +128,11 @@ share.shareData = function(aShare, readonly) {
   };
 };
 
-share.addUseCount = function(shareId, resultCall) {
+share.addUseCount = function(shareId, resultCall, requestInfo) {
+  if (!requestInfo.anonymous && requestInfo.usr.isAdmin) {
+    return resultCall(answer.succ());
+  }
+
   share.updateById(shareId, {
     $inc: {
       used_count: 1

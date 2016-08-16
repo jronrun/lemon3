@@ -282,6 +282,7 @@ module.exports = function(commOptions) {
                   theBody = response.body;
                 }
 
+                theResp.requestH = headers;
                 if (200 == response.statusCode) {
                   theResp.data = theBody;
                 } else {
@@ -342,6 +343,12 @@ module.exports = function(commOptions) {
                 json: true,
                 response: theResp.data
               });
+
+              if (theResp.requestH) {
+                _.extend(history.api.request, {
+                  headers: theResp.requestH
+                });
+              }
             }
 
             if (target.isChosenAPI) {

@@ -278,14 +278,16 @@ module.exports = function (router, index, root) {
         theContent.label = [
           'Share Content',
           previewHref(forms.item),
-          shareHref(forms.item, true)
+          shareHref(forms.item, true),
+          accessHref(forms.item)
         ].join(' ');
 
         var theTitle = forms.get('title');
         theTitle.label = [
           'Share Content',
           previewHref(forms.item),
-          shareHref(forms.item, true)
+          shareHref(forms.item, true),
+          accessHref(forms.item)
         ].join(' ');
 
         forms.disable(['type', 'used_count']);

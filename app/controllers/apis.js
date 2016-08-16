@@ -60,8 +60,8 @@ router.post(index.request.do, function (req, res, next) {
     apiId: params.api,
     requ: params.requ,
     advance: {
-      headers: params.advance.headers || {},
-      params: params.advance.params || {}
+      headers: params.advance.headers,
+      params: params.advance.params
     }
   }, requestOptions = {
     ip: req.ip

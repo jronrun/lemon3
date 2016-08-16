@@ -195,7 +195,7 @@ module.exports = function(commOptions) {
 
           _.extend(target.requ, servRequ.add_params || {});
 
-          var theParam = {};
+          var theParam = {}, theHeaders = {};
           switch (servRequ.type) {
             //Single interface
             case 1:
@@ -211,11 +211,15 @@ module.exports = function(commOptions) {
               break;
           }
 
+          _.extend(theParam, (options.advance || {}).params || {});
+          _.extend(theHeaders, (options.advance || {}).headers || {});
+
           //{path: '', data: {}, param_name: ''}
           if (1 == requestOptions.opt) {
             _.extend(theResp, {
               path: target.serv.url,
-              data: theParam
+              data: theParam,
+              headers: theHeaders
             });
 
             callback(null, target, answer.succ(theResp));
@@ -227,6 +231,7 @@ module.exports = function(commOptions) {
               _.extend(theResp, {
                 path: target.serv.url,
                 data: theParam,
+                headers: theHeaders,
                 param_name: servRequ.param_name
               });
 
@@ -235,6 +240,7 @@ module.exports = function(commOptions) {
             //Other method
             else {
               var headers = {}, reqOptions = {};
+              _.extend(headers, theHeaders);
 
               _.extend(reqOptions, {
                 url: target.serv.url,

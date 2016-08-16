@@ -164,16 +164,16 @@ function shares(shareId, sharesResultCall, requestInfo) {
           source: crypto.compress(aShare._id.toString())
         };
 
-        if (1 == aShare.read_write) {
-          ShareAccess.add({
-            share_id: aShare.id,
-            share_read_write: aShare.read_write,
-            share: shareId.toString()
-          }, function (accessAns) {
-            if (!isAnswerSucc(accessAns)) {
-              return resultCall(accessAns);
-            }
+        ShareAccess.add({
+          share_id: aShare.id,
+          share_read_write: aShare.read_write,
+          share: shareId.toString()
+        }, function (accessAns) {
+          if (!isAnswerSucc(accessAns)) {
+            return resultCall(accessAns);
+          }
 
+          if (1 == aShare.read_write) {
             Share.addUseCount(shareId, function(adducAns) {
               if (!isAnswerSucc(adducAns)) {
                 return resultCall(adducAns);
@@ -181,11 +181,11 @@ function shares(shareId, sharesResultCall, requestInfo) {
 
               callback(null, target);
             });
+          } else {
+            callback(null, target);
+          }
 
-          }, requestInfo);
-        } else {
-          callback(null, target);
-        }
+        }, requestInfo);
       });
     },
 

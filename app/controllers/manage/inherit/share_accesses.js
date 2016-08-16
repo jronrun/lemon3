@@ -11,7 +11,7 @@ module.exports = function (router, index, root) {
 
   function previewHref(item) {
     return generic.previewHref('/share/' + crypto.compress(item.share),
-      generic.em('eye') + ' ' + (item.share_id || ''), 'View Share ' + item.share).replace('data-preview', '');
+      generic.em('eye') + ' ' + (item.share_id || ''), 'View Share ' + item.share);
   }
 
   /**
@@ -73,7 +73,7 @@ module.exports = function (router, index, root) {
                 preview: 0,
                 content: item.history
               });
-              return generic.info('/share/preview?data=' + data, 'Execute ' + item.history, 'none');
+              return generic.info('/share/preview?data=' + data, 'Execute ' + item.history, 'preview');
             case 3:
             case 4:
               return [

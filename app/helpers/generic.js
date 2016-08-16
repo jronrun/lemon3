@@ -202,7 +202,7 @@ module.exports = function(model, index, defineForm) {
         }
       }, options || {});
 
-      var queryStr = req.header('query') || req.param('urlqry') || '', query = {}, realQuery = {};
+      var queryStr = req.header('query') || req.param('q') || '', query = {}, realQuery = {};
       if (queryStr.length > 0) {
         query = crypto.decompress(queryStr);
         try {

@@ -427,8 +427,45 @@ var requs = {
       requs.doBefore();
     });
 
-    lemon.rightclick(requs.id, function () {
+    global.mapi=mapi;
 
+    requs.advRequestM = lemon.modal({
+      id: 'adv_request',
+      cache: true,
+      body: lemon.tmpl($('#advrequ_body_tmpl').html(), {}),
+      footer: lemon.tmpl($('#advrequ_footer_tmpl').html(), {}),
+      modal: {
+        backdrop: 'static',
+        keyboard: false
+      }
+    }, {
+      shown: function(evt, el) {
+        var advId = '#do_advrequ_request';
+        if ('1' != $(advId).attr('clicked')) {
+          requs.advRequestMirror = mapi.mirror('#advrequ_mirror', false, {
+            gutters: [],
+            cust: {
+              escKey: false
+            }
+          });
+          requs.advRequestMirror.val(lemon.dec($(advId).data('advinit')));
+
+          $(advId).attr('clicked', 1);
+          $(advId).click(function () {
+            if (requs.advRequestMirror.isJson()) {
+
+            } else {
+              lemon.msg('Not a valid JSON', {
+                containerId: '#advrequ_form'
+              });
+            }
+          });
+        }
+      }
+    });
+
+    lemon.rightclick(requs.id, function () {
+      requs.advRequestM.show();
     });
   },
 

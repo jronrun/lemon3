@@ -100,7 +100,7 @@ share.isAvailable = function(aShare, requestInfo) {
   //login user
   else {
     if (!requestInfo.usr.email) {
-      return answer.fail('Invalid user');
+      return answer.fail('Invalid user email');
     }
 
     //shareTo.anonymous

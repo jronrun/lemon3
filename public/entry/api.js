@@ -423,55 +423,70 @@ var requs = {
   id: '#api_request',
 
   init: function() {
-    $(requs.id).click(function () {
-      var choosed = current();
-      if (!choosed.env || !choosed.envGroup || !choosed.serv) {
-        return lemon.msg('Please choose an Environment first.');
-      }
-
-      //chosen API
-      if (choosed.apiGroup && choosed.api) {
-        //if (choosed.envGroup.id != choosed.apiGroup.id) {
-        //  var tip = 'The chosen {0} server {1} does not support the {2} {3}';
-        //  return lemon.msg(lemon.format(tip, choosed.envGroup.name, choosed.serv.name, choosed.apiGroup.name, choosed.api.name));
-        //}
-      }
-      //unchosen API
-      else {
-
-      }
-
-      if (!mapi.requ.isJson()) {
-        return lemon.msg('The Request Data is not a Valid JSON.');
-      }
-
-      if (lemon.isDisable(requs.id)) {
-        return;
-      }
-
-      lemon.disable(requs.id);
-      var startRequ = function () {
-        var pg = lemon.progress(mapi.navbarId);
-        requs.request(function() {
-          lemon.enable(requs.id);
-          pg.end();
-        });
-      };
-
-      if (envs.isDanger()) {
-        var env = choosed.env,
-          tip = '<h5>Are you sure ?</h5> <span class="text-warning">{0} !!!</span>';
-        lemon.confirm(lemon.format(tip, env.desc || env.name) , startRequ, function() {
-          lemon.enable(requs.id);
-        });
-      } else {
-        startRequ();
-      }
+    $(requs.id).click(function() {
+      requs.doBefore();
     });
 
     lemon.rightclick(requs.id, function () {
 
     });
+  },
+
+  doBefore: function () {
+    var choosed = null;
+    if (!(choosed = requs.check())) {
+      return false;
+    }
+
+    lemon.disable(requs.id);
+    var startRequ = function () {
+      var pg = lemon.progress(mapi.navbarId);
+      requs.request(function() {
+        lemon.enable(requs.id);
+        pg.end();
+      });
+    };
+
+    if (envs.isDanger()) {
+      var env = choosed.env,
+        tip = '<h5>Are you sure ?</h5> <span class="text-warning">{0} !!!</span>';
+      lemon.confirm(lemon.format(tip, env.desc || env.name) , startRequ, function() {
+        lemon.enable(requs.id);
+      });
+    } else {
+      startRequ();
+    }
+  },
+
+  check: function() {
+    var choosed = current();
+    if (!choosed.env || !choosed.envGroup || !choosed.serv) {
+      lemon.msg('Please choose an Environment first.');
+      return false;
+    }
+
+    //chosen API
+    if (choosed.apiGroup && choosed.api) {
+      //if (choosed.envGroup.id != choosed.apiGroup.id) {
+      //  var tip = 'The chosen {0} server {1} does not support the {2} {3}';
+      //  return lemon.msg(lemon.format(tip, choosed.envGroup.name, choosed.serv.name, choosed.apiGroup.name, choosed.api.name));
+      //}
+    }
+    //unchosen API
+    else {
+
+    }
+
+    if (!mapi.requ.isJson()) {
+      lemon.msg('The Request Data is not a Valid JSON.');
+      return false;
+    }
+
+    if (lemon.isDisable(requs.id)) {
+      return false;
+    }
+
+    return choosed;
   },
 
   request: function(callback) {

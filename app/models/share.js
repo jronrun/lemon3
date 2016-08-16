@@ -133,7 +133,7 @@ share.shareData = function(aShare, readonly) {
 };
 
 share.addUseCount = function(aShare, resultCall, requestInfo) {
-  if (requestInfo.usr.isAdmin) {
+  if (requestInfo.usr.isAdmin || aShare.create_by.id == requestInfo.usr.id) {
     return resultCall(answer.succ());
   }
 

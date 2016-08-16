@@ -200,6 +200,9 @@ module.exports = function(commOptions) {
             //Single interface
             case 1:
               theParam = target.requ;
+              if (target.api) {
+                target.isChosenAPI = true;
+              }
               break;
 
             //Multi-interface
@@ -357,7 +360,7 @@ module.exports = function(commOptions) {
                 log.warn(accessAns.msg, 'ShareAccess.add');
               }
 
-              Share.addUseCount(requestOptions.share, function(adducAns) {
+              Share.addUseCount(shareId, function(adducAns) {
                 if (!isAnswerSucc(adducAns)) {
                   log.warn(adducAns.msg, 'Share.addUseCount');
                 }

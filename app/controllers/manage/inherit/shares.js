@@ -296,6 +296,11 @@ module.exports = function (router, index, root) {
         generic.setPickerDate(item, def, 'start_time');
         generic.setPickerDate(item, def, 'end_time');
         def.content = crypto.decompress(def.content);
+
+        def.share_to = {
+          scope: item.share_to.scope,
+          define: _.join(item.share_to.define || [], ',')
+        };
       }
     }, req, res, next);
   });

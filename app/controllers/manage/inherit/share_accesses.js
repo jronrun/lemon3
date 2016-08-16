@@ -104,6 +104,8 @@ module.exports = function (router, index, root) {
 
     var search = [
       generic.searchInput('share', '', 1),
+      generic.searchInput('create_by.ip', 'User IP'),
+      generic.searchInput('create_by.name', 'User Name'),
       generic.searchSelect('share_read_write', 'All Access', rwQryOptions),
       generic.searchSelect('type', 'All Type', typeQryOptions)
     ];

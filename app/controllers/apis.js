@@ -58,7 +58,11 @@ router.post(index.request.do, function (req, res, next) {
     groupId: params.group,
     servId: params.serv,
     apiId: params.api,
-    requ: params.requ
+    requ: params.requ,
+    advance: {
+      headers: params.advance.headers || {},
+      params: params.advance.params || {}
+    }
   }, requestOptions = {
     ip: req.ip
   };

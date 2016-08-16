@@ -195,7 +195,7 @@ module.exports = function(commOptions) {
 
           _.extend(target.requ, servRequ.add_params || {});
 
-          var theParam = {}, theHeaders = {};
+          var theParam = {}; target.headers = {};
           switch (servRequ.type) {
             //Single interface
             case 1:
@@ -212,14 +212,14 @@ module.exports = function(commOptions) {
           }
 
           _.extend(theParam, (options.advance || {}).params || {});
-          _.extend(theHeaders, (options.advance || {}).headers || {});
+          _.extend(target.headers, (options.advance || {}).headers || {});
 
           //{path: '', data: {}, param_name: ''}
           if (1 == requestOptions.opt) {
             _.extend(theResp, {
               path: target.serv.url,
               data: theParam,
-              headers: theHeaders
+              headers: target.headers
             });
 
             callback(null, target, answer.succ(theResp));
@@ -231,7 +231,7 @@ module.exports = function(commOptions) {
               _.extend(theResp, {
                 path: target.serv.url,
                 data: theParam,
-                headers: theHeaders,
+                headers: target.headers,
                 param_name: servRequ.param_name
               });
 
@@ -239,13 +239,10 @@ module.exports = function(commOptions) {
             }
             //Other method
             else {
-              var headers = {}, reqOptions = {};
-              _.extend(headers, theHeaders);
-
-              _.extend(reqOptions, {
+              var reqOptions = {}; _.extend(reqOptions, {
                 url: target.serv.url,
                 method: servRequ.method,
-                headers: headers
+                headers: target.headers
               });
 
               if (_.indexOf(['PATCH', 'POST', 'PUT'], servRequ.method) != -1) {
@@ -282,7 +279,6 @@ module.exports = function(commOptions) {
                   theBody = response.body;
                 }
 
-                theResp.requestH = headers;
                 if (200 == response.statusCode) {
                   theResp.data = theBody;
                 } else {
@@ -336,6 +332,10 @@ module.exports = function(commOptions) {
               create_time: new Date()
             };
 
+            _.extend(history.api.request, {
+              headers: target.headers
+            });
+
             //Already has response
             if (2 == requestAns.code) {
               var theResp = requestAns.result;
@@ -343,12 +343,6 @@ module.exports = function(commOptions) {
                 json: true,
                 response: theResp.data
               });
-
-              if (theResp.requestH) {
-                _.extend(history.api.request, {
-                  headers: theResp.requestH
-                });
-              }
             }
 
             if (target.isChosenAPI) {

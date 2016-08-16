@@ -306,10 +306,10 @@ module.exports = function(scope, config) {
     };
   };
 
-  scope.deepParse = function(target) {
+  scope.deepParse = function(target, donotDecompress) {
     var theAns = {};
     try {
-      var item = crypto.decompress(target);
+      var item = donotDecompress ? target : crypto.decompress(target);
       item = convertData(json5s.parse(item));
       theAns =  answer.succ(item);
     } catch (e) {

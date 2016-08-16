@@ -265,8 +265,29 @@ module.exports = function(commOptions) {
                   return resultCall(answer.fail(error.message, error));
                 }
 
+                if (!response) {
+                  return resultCall(answer.fail('none response'));
+                }
+
+                var theBody = {}, bodyParse = deepParse(response.body, true);
+                if (bodyParse.isSucc()) {
+                  theBody = bodyParse.get();
+                } else {
+                  theBody = response.body;
+                }
+
+                if (200 == response.statusCode) {
+                  theResp.data = theBody;
+                } else {
+                  theResp.data = {
+                    statusCode: response.statusCode,
+                    body: theBody,
+                    headers: response.headers,
+                    request: response.request.toJSON()
+                  };
+                }
+
                 log.info('response', JSON.stringify(response));
-                log.info('body', JSON.stringify(body));
 
                 callback(null, target, answer.resp(2, theResp));
               });
@@ -277,7 +298,7 @@ module.exports = function(commOptions) {
 
         },
 
-        function(target, answer, callback) {
+        function(target, requestAns, callback) {
           if (0 == requestOptions.opt) {
             var servRequ = target.serv.request, history = {
               env: {
@@ -304,6 +325,15 @@ module.exports = function(commOptions) {
               },
               create_time: new Date()
             };
+
+            //Already has response
+            if (2 == requestAns.code) {
+              var theResp = requestAns.result;
+              _.extend(history.api, {
+                json: true,
+                response: theResp.data
+              });
+            }
 
             if (target.isChosenAPI) {
               if (target.api) {
@@ -336,22 +366,22 @@ module.exports = function(commOptions) {
                   return resultCall(answer.fail('Request fail, Try again?'));
                 }
 
-                answer.result.hisId = id;
-                callback(null, answer);
+                requestAns.result.hisId = id;
+                callback(null, requestAns);
               });
             });
           } else {
-            callback(null, answer);
+            callback(null, requestAns);
           }
         },
 
-        function(answer, callback) {
+        function(theAns, callback) {
           // is share execute
           if (requestOptions.share) {
             var shareId = requestOptions.share._id.toString();
             ShareAccess.add({
               type: 2,
-              history: answer.result.hisId,
+              history: theAns.result.hisId,
               share_id: requestOptions.share.id,
               share: shareId,
               share_read_write: requestOptions.share.read_write
@@ -365,12 +395,12 @@ module.exports = function(commOptions) {
                   log.warn(adducAns.msg, 'Share.addUseCount');
                 }
 
-                callback(null, answer);
+                callback(null, theAns);
               }, requestInfo);
 
             }, requestInfo);
           } else {
-            callback(null, answer);
+            callback(null, theAns);
           }
         }
       ], function(err, result) {
@@ -449,8 +479,8 @@ module.exports = function(commOptions) {
             }));
           });
         }
-      ], function (err, answer) {
-        callback(answer);
+      ], function (err, theAns) {
+        callback(theAns);
       });
     },
 
@@ -534,8 +564,8 @@ module.exports = function(commOptions) {
             return resultCall(answer.fail('invalid executable share source'));
           }
 
-          apiRequest.apiDefine(shareRequData, function(answer) {
-            var anAPI = answer.result.item, anServ = answer.result.serv;
+          apiRequest.apiDefine(shareRequData, function(theAns) {
+            var anAPI = theAns.result.item, anServ = theAns.result.serv;
             if (target.env != anServ.env_id) {
               return resultCall(answer.fail('not the share environment'));
             }

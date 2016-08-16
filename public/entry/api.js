@@ -485,10 +485,10 @@ var requs = {
     };
 
     $.post('/api/request', data).done(function (resp) {
+      var rdata = lemon.deepDec(resp.result || {});
       if (401 == resp.code) {
         lemon.isFunc(callback) && callback();
       } else if (0 == resp.code) {
-        var rdata = lemon.deepDec(resp.result);
         lemon.jsonp(rdata.path, rdata.data).done(function (data, textStatus, jqXHR) {
           lemon.info(textStatus, 'request status');
           lemon.info(data, 'response');
@@ -523,11 +523,20 @@ var requs = {
           lemon.isFunc(callback) && callback();
         });
       } else if (2 == resp.code) {
-
+        if (lemon.isString(rdata.data)) {
+          mapi.resp.val(rdata.data);
+        } else {
+          mapi.resp.json(rdata.data);
+        }
 
         lemon.isFunc(callback) && callback();
       } else {
         lemon.msg(resp.msg);
+        if (lemon.isBlank(rdata)) {
+          lemon.warn(resp.msg);
+        } else {
+          lemon.warn(rdata, resp.msg);
+        }
 
         lemon.isFunc(callback) && callback();
       }

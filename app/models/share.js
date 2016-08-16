@@ -129,7 +129,7 @@ share.shareData = function(aShare, readonly) {
 };
 
 share.addUseCount = function(shareId, resultCall, requestInfo) {
-  if (!requestInfo.anonymous && requestInfo.usr.isAdmin) {
+  if (requestInfo.usr.isAdmin) {
     return resultCall(answer.succ());
   }
 

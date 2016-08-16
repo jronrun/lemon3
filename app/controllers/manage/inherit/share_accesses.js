@@ -9,9 +9,8 @@ module.exports = function (router, index, root) {
     element: {}
   });
 
-  function previewHref(item) {
-    return generic.previewHref('/share/' + crypto.compress(item.share),
-      generic.em('eye') + ' ' + (item.share_id || ''), 'View Share ' + item.share);
+  function shareHref(shareId) {
+    return generic.previewHref('/share/' + crypto.compress(shareId), generic.em('eye') + ' Share', 'View Share');
   }
 
   /**
@@ -19,13 +18,6 @@ module.exports = function (router, index, root) {
    */
   router.get(index.do, function (req, res, next) {
     var defines = [
-      {
-        title: 'Share',
-        prop: function(item) {
-          return previewHref(item);
-        },
-        clazz: 'item-col-author'
-      },
       {
         title: 'Type',
         prop: function(item) {
@@ -123,10 +115,26 @@ module.exports = function (router, index, root) {
       ownerQuery: 1,
       defines: defines,
       search: search,
-      queryHandle: function(realQry, qry) {
-        if (!realQry['share'] || realQry['share'].length < 1) {
-          realQry['share'] = '-1';
+      queryHandle: function(realQry, qry, options) {
+        var shareId = qry['share'], backHref = '/manage/shares/1';
+        var listName = [
+          'Share Access',
+          '<h4 class="invisible"></h4>',
+          format('<a class="btn btn-primary btn-sm icondh" data-pjax href="%s" role="button">', backHref),
+          '<em class="fa fa-chevron-left"></em>',
+          '</a>'
+        ];
+
+        if (!shareId || shareId.length < 1) {
+          shareId = '-1';
+        } else {
+          if (req.reference && req.reference.length > 0 && req.reference.indexOf('/share/') > 0) {
+            backHref = '/manage/share/' + shareId;
+          }
+
+          listName.push(shareHref(shareId));
         }
+        options.listName = listName.join('');
 
         if (realQry['share_read_write']) {
           realQry['share_read_write'] = parseInt(qry['share_read_write']);

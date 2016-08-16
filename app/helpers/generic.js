@@ -288,7 +288,7 @@ module.exports = function(model, index, defineForm) {
       }
 
       if (_.isFunction(options.queryHandle)) {
-        if (BREAK == options.queryHandle(realQuery, query)) {
+        if (BREAK == options.queryHandle(realQuery, query, options)) {
           return;
         }
       }

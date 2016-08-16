@@ -206,7 +206,8 @@ module.exports = function(model, index, defineForm) {
       if (queryStr.length > 0) {
         query = crypto.decompress(queryStr);
         try {
-          query = convertData(json5s.parse(query));
+          //query = convertData(json5s.parse(query));
+          query = json5s.parse(query);
         } catch (e) {
           throw Error('invalid query parameters: ' + e.message);
         }

@@ -46,7 +46,15 @@ module.exports = function (router, index, root) {
           var aUser = item.create_by;
           if (aUser.name && 'anonymous' != aUser.name
             && aUser.id && '-1' != aUser.id) {
-            return generic.info(getAction(root.users.retrieve, aUser.id), aUser.name);
+            var html = [
+              generic.info(getAction(root.users.retrieve, aUser.id), aUser.name),
+            ];
+
+            if (aUser.ip && aUser.ip.length > 0) {
+              html.push(' <span style="font-size: 70%;">(' + aUser.ip + ')</span>');
+            }
+
+            return html.join('');
           }
 
           return aUser.ip;

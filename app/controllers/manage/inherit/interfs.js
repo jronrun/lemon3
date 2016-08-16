@@ -10,6 +10,9 @@ module.exports = function (router, index, root) {
 
   var generic = app_require('helpers/generic')(Interface, index, {
     element: {
+      name: {
+        desc: 'Unique interface alphanumeric name'
+      },
       desc: {
         label: 'Description'
       }
@@ -185,6 +188,11 @@ module.exports = function (router, index, root) {
           item.mutation_host = options.mutation_host
         }
 
+        if (!new RegExp('^[0-9a-zA-Z_]{1,}$').test(item.name)) {
+          res.json(answer.fail('Name is not valid alphanumeric string'));
+          return generic.BREAK;
+        }
+
         item.mutation = options.mutation;
         item.owner = parseInt(item.owner);
         item.group_id = parseInt(item.group_id);
@@ -276,6 +284,11 @@ module.exports = function (router, index, root) {
           else {
             theOptions.checkExistsField = false;
           }
+        }
+
+        if (!new RegExp('^[0-9a-zA-Z_]{1,}$').test(item.name)) {
+          res.json(answer.fail('Name is not valid alphanumeric string'));
+          return generic.BREAK;
         }
 
         item.owner = parseInt(item.owner);

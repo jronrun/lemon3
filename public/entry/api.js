@@ -440,20 +440,19 @@ var requs = {
       }
     }, {
       shown: function(evt, el) {
-        var advId = '#do_advrequ_request';
-        if ('1' != $(advId).attr('clicked')) {
-          requs.advRequestMirror = mapi.mirror('#advrequ_mirror', false, {
+        var advId = '#do_advrequ_request'; if ('1' != $(advId).attr('clicked')) {
+          requs.advRequMirror = mapi.mirror('#advrequ_mirror', false, {
             gutters: [],
             cust: {
               escKey: false
             }
           });
-          requs.advRequestMirror.val(lemon.dec($(advId).data('advinit')));
+          requs.advRequMirror.val(lemon.dec($(advId).data('advinit')));
 
           $(advId).attr('clicked', 1);
           $(advId).click(function () {
-            if (requs.advRequestMirror.isJson()) {
-
+            if (requs.advRequMirror.isJson()) {
+              requs.doBefore(requs.advRequMirror.json());
             } else {
               lemon.msg('Not a valid JSON', {
                 containerId: '#advrequ_form'
@@ -469,7 +468,7 @@ var requs = {
     });
   },
 
-  doBefore: function () {
+  doBefore: function (advance) {
     var choosed = null;
     if (!(choosed = requs.check())) {
       return false;
@@ -481,7 +480,7 @@ var requs = {
       requs.request(function() {
         lemon.enable(requs.id);
         pg.end();
-      });
+      }, advance);
     };
 
     if (envs.isDanger()) {
@@ -526,17 +525,18 @@ var requs = {
     return choosed;
   },
 
-  request: function(callback) {
+  request: function(callback, advance) {
     var choosed = current(), data = {
       source: mapi.source(),
       env: choosed.env.id,
       group: choosed.envGroup.id,
       serv: choosed.serv.id,
       api: choosed.api ? choosed.api.id : -1,
-      requ: lemon.enc(mapi.requ.json())
+      requ: lemon.enc(mapi.requ.json()),
+      advance: advance || {}
     };
 
-    $.post('/api/request', data).done(function (resp) {
+    $.post('/api/request', { data: lemon.enc(data)}).done(function (resp) {
       var rdata = lemon.deepDec(resp.result || {});
       if (401 == resp.code) {
         lemon.isFunc(callback) && callback();

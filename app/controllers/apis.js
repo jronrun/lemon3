@@ -48,12 +48,17 @@ router.post(index.header.do, function (req, res, next) {
  * API Request
  */
 router.post(index.request.do, function (req, res, next) {
-  var requestData = {
-    envId: req.body.env,
-    groupId: req.body.group,
-    servId: req.body.serv,
-    apiId: req.body.api,
-    requ: req.body.requ
+  var requParse = deepParse(req.body.data), params = {};
+  if (requParse.isFail()) {
+    return res.json(requParse.target);
+  }
+
+  var params = requParse.get(), requestData = {
+    envId: params.env,
+    groupId: params.group,
+    servId: params.serv,
+    apiId: params.api,
+    requ: params.requ
   }, requestOptions = {
     ip: req.ip
   };
@@ -62,7 +67,7 @@ router.post(index.request.do, function (req, res, next) {
     serv: requestData.servId,
     requ: requestData.requ,
     api: requestData.apiId
-  }, req.body.source, function(shareAns) {
+  }, params.source, function(shareAns) {
     var executable = ansWrap(shareAns);
     if (executable.isSucc()) {
       var shared = executable.get();

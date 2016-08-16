@@ -126,7 +126,7 @@ module.exports = function (router, index, root) {
         ];
 
         if (!shareId || shareId.length < 1) {
-          shareId = '-1';
+          realQry['share'] = '-1';
         } else {
           if (req.reference && req.reference.length > 0 && req.reference.indexOf('/share/') > 0) {
             backHref = '/manage/share/' + shareId;

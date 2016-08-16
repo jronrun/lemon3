@@ -313,7 +313,10 @@ module.exports = function(commOptions) {
               serv: {
                 id: target.serv.id,
                 name: target.serv.name,
-                url: target.serv.url
+                url: target.serv.url,
+                type: servRequ.type,
+                method: servRequ.method,
+                add_params: servRequ.add_params
               },
               api: {
                 request: target.requ

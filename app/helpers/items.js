@@ -222,7 +222,7 @@ var helper = {
   },
 
   selfOwnerQuery: function(req) {
-    var aUser = req.user || {};
+    var aUser = req.user || { id: '-1' };
     if (aUser.isAdmin) {
       return {};
     }

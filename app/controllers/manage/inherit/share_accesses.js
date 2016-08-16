@@ -124,6 +124,10 @@ module.exports = function (router, index, root) {
       defines: defines,
       search: search,
       queryHandle: function(realQry, qry) {
+        if (!realQry['share'] || realQry['share'].length < 1) {
+          realQry['share'] = '-1';
+        }
+
         if (realQry['share_read_write']) {
           realQry['share_read_write'] = parseInt(qry['share_read_write']);
         }

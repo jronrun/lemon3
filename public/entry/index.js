@@ -1247,13 +1247,21 @@ $(function () {
     }
   });
 
+  /**
+   * <a data-pjax data-query="{{selector}}" data-queries="{{encode json data}}" href="{{href}}"> {{text}} </a>
+   */
   $(document).on('pjax:beforeSend', function(event, xhr, options) {
-    var target = event.relatedTarget, ds = target ? (target.dataset || {}) : {};
+    var target = event.relatedTarget, ds = target ? (target.dataset || {}) : {}, qryData = {};
     if (ds.query && ds.query.length) {
-      var qryData = lemon.getParam(ds.query);
-      if (!lemon.isBlank(qryData)) {
-        xhr.setRequestHeader('query', lemon.enc(JSON.stringify(qryData)));
-      }
+      lemon.extend(qryData, lemon.getParam(ds.query));
+    }
+
+    if (ds.queries && ds.queries.length) {
+      lemon.extend(qryData, lemon.deepDec(ds.queries));
+    }
+
+    if (!lemon.isBlank(qryData)) {
+      xhr.setRequestHeader('query', lemon.enc(JSON.stringify(qryData)));
     }
 
     var origin = location.origin;

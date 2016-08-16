@@ -78,13 +78,13 @@ module.exports = function (router, index, root) {
   };
 
   function accessHref(item) {
-    var href = '/manage/share-access/1?q=' + crypto.compress({
+    var href = '/manage/share-access/1', data = crypto.compress({
         share: item._id.toString()
       });
 
     var html = [
       format('<a class="btn btn-secondary text-info icondh" data-pjax title="Share Access" href="%s" ' +
-        'style="border: 0px;" type="button">', href),
+        'style="border: 0px;" data-queries="%s" type="button">', href, data),
       generic.em('tasks'),
       '</a>'
     ];

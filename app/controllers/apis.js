@@ -119,9 +119,14 @@ router.post(index.define.do, function (req, res, next) {
  * API comment
  */
 router.post(index.comment.do, function (req, res, next) {
-  var params = req.body.params || {};
-  requs.apiDefine(params, function(answer) {
-    var aDef = answer.result.item;
+  var paramsParse = deepParse(req.body.params);
+  if (paramsParse.isFail()) {
+    return res.json(paramsParse.target);
+  }
+
+  var params = paramsParse.get();
+  requs.apiDefine(params, function(defineAns) {
+    var aDef = defineAns.result.item;
     if (null != aDef) {
       var doc = [
         '/**',
@@ -130,7 +135,7 @@ router.post(index.comment.do, function (req, res, next) {
         ' */'
       ];
 
-      var complex = answer.result.complex;
+      var complex = defineAns.result.complex;
       if (complex && complex.length > 0) {
         doc.push('{\n"' + complex + '": ' + crypto.decompress(aDef.request_doc) + "\n}");
       } else {
@@ -138,13 +143,13 @@ router.post(index.comment.do, function (req, res, next) {
       }
 
       var aResult = json5update(doc.join('\n'), params.requ);
-      answer.result = json5s.format(aResult);
+      defineAns.result = json5s.format(aResult);
     } else {
-      answer.result = '';
+      defineAns.result = '';
     }
 
-    answer.result = crypto.compress(answer.result);
-    return res.json(answer);
+    defineAns.result = crypto.compress(defineAns.result);
+    return res.json(defineAns);
   }, true, req.user);
 });
 

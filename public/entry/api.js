@@ -1184,7 +1184,7 @@ var qry = {
           };
 
           lemon.progress(mapi.navbarId);
-          $.post('/api/comment', { params: data }).done(function (resp) {
+          $.post('/api/comment', { params: lemon.enc(data) }).done(function (resp) {
             if (0 == resp.code) {
               var rdata = lemon.dec(resp.result);
               if (rdata && rdata.length > 0) {
@@ -1645,7 +1645,7 @@ var mapi = {
           });
         }
 
-        $.post('/api/comment', { params: data }).done(function (resp) {
+        $.post('/api/comment', { params: lemon.enc(data) }).done(function (resp) {
           if (0 == resp.code) {
             var rdata = lemon.dec(resp.result);
             if (rdata && rdata.length > 0) {

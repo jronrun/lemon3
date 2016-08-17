@@ -272,8 +272,8 @@ module.exports = function(commOptions) {
                   return resultCall(answer.fail('none response'));
                 }
 
-                var theBody = {}, bodyParse = deepParse(response.body, true);
-                if (bodyParse.isSucc()) {
+                var theBody = {}, bodyParse = deepParse(response.body, true), jsonBody = false;
+                if (jsonBody = bodyParse.isSucc()) {
                   theBody = bodyParse.get();
                 } else {
                   theBody = {
@@ -286,7 +286,7 @@ module.exports = function(commOptions) {
                 } else {
                   theResp.data = {
                     statusCode: response.statusCode,
-                    body: theBody,
+                    body: jsonBody ? theBody : theBody.body,
                     headers: response.headers,
                     request: response.request.toJSON()
                   };

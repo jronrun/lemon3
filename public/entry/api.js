@@ -427,8 +427,6 @@ var requs = {
       requs.doBefore();
     });
 
-    global.mapi=mapi;
-
     requs.advRequestM = lemon.modal({
       id: 'adv_request',
       cache: true,

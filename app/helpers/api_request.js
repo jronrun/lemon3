@@ -195,7 +195,7 @@ module.exports = function(commOptions) {
 
           _.extend(target.requ, servRequ.add_params || {});
 
-          var theParam = {}; target.headers = {};
+          var theParam = {}; target.headers = {}, target.requData = {};
           switch (servRequ.type) {
             //Single interface
             case 1:
@@ -203,15 +203,26 @@ module.exports = function(commOptions) {
               if (target.api) {
                 target.isChosenAPI = true;
               }
+
+              _.extend(target.requData, target.requ);
               break;
 
             //Multi-interface
             case 2:
-              theParam[servRequ.param_name] = JSON.stringify(target.requ);
+              if (!target.requ[servRequ.param_name]) {
+                theParam[servRequ.param_name] = JSON.stringify(target.requ);
+                target.requData[servRequ.param_name] = target.requ;
+              } else {
+                theParam = _.cloneDeep(target.requ);
+                theParam[servRequ.param_name] = JSON.stringify(theParam[servRequ.param_name]);
+                _.extend(target.requData, target.requ);
+              }
               break;
           }
 
-          _.extend(theParam, (options.advance || {}).params || {});
+          var addParams = (options.advance || {}).params || {};
+          _.extend(target.requData, addParams);
+          _.extend(theParam, addParams);
           _.extend(target.headers, (options.advance || {}).headers || {});
 
           if (!_.isEmpty(target.requ.headers || {})) {
@@ -328,7 +339,7 @@ module.exports = function(commOptions) {
                 add_params: servRequ.add_params
               },
               api: {
-                request: target.requ
+                request: target.requData
               },
               user: {
                 id: usr.id,

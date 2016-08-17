@@ -137,6 +137,9 @@ lemon.register({
     }
     $(selector).qrcode(options);
   },
+  exe: function(data) {
+    return (new Function('return ' + data ))();
+  },
   consoles: function(selector, options) {
     options = lemon.extend({
       executor: null,

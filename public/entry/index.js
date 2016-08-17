@@ -323,20 +323,12 @@ lemon.register({
 
   request: function(action, data, options) {
     options = options || {};
-    var theHeaders = options.headers || {};
-    delete options.headers;
-
     var req = $.ajax(lemon.extend({
       type: options.type || 'GET',
       async: true,
       url: action,
       data: data || {},
-      headers: {},
-      beforeSend: function (request) {
-        lemon.each(theHeaders, function (v, k) {
-          request.setRequestHeader(k, v);
-        });
-      }
+      headers: {}
     }, options));
 
     return req;

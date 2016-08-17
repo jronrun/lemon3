@@ -475,7 +475,7 @@ var requs = {
             choosed.serv.name
           ].join('&nbsp;&nbsp;');
           aTip = '<span class="text-' + choosed.env.level + '">' + aTip + '</span>';
-          $tip.html(lemon.format('Additional request header cannot work for the server {0}', aTip));
+          $tip.html(lemon.format('Headers cannot work for {0}', aTip));
         } else {
           $tip.html('');
         }

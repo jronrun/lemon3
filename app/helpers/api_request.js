@@ -276,7 +276,9 @@ module.exports = function(commOptions) {
                 if (bodyParse.isSucc()) {
                   theBody = bodyParse.get();
                 } else {
-                  theBody = response.body;
+                  theBody = {
+                    body: response.body
+                  };
                 }
 
                 if (200 == response.statusCode) {

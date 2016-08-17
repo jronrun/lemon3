@@ -130,15 +130,14 @@ router.post(index.comment.do, function (req, res, next) {
         ' */'
       ];
 
-      var aResult = null, complex = answer.result.complex;
+      var complex = answer.result.complex;
       if (complex && complex.length > 0) {
         doc.push('{\n"' + complex + '": ' + crypto.decompress(aDef.request_doc) + "\n}");
-        aResult = json5update(doc.join('\n'), params.requ);
       } else {
         doc.push(crypto.decompress(aDef.request_doc));
-        aResult = json5update(doc.join('\n'), params.requ);
       }
 
+      var aResult = json5update(doc.join('\n'), params.requ);
       answer.result = json5s.format(aResult);
     } else {
       answer.result = '';

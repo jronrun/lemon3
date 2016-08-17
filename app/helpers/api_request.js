@@ -853,7 +853,7 @@ module.exports = function(commOptions) {
 
             var target = {
               serv: serv,
-              requ: params.requ
+              requ: _.cloneDeep(params.requ)
             };
             callback(null, target);
           });
@@ -889,10 +889,26 @@ module.exports = function(commOptions) {
           }
           //Multi-interface
           else if (2 == servRequ.type) {
+            //defined interface property
+            var hasOtherParams = false;
+            if (servRequ.interf_prop && servRequ.interf_prop.length > 0) {
+              if (target.requ[servRequ.interf_prop] && target.requ[servRequ.param_name]) {
+
+              } else {
+                hasOtherParams = true;
+              }
+            }
+
+            var complex = hasOtherParams ? servRequ.param_name : '';
+            if (hasOtherParams) {
+              target.requ = target.requ[servRequ.param_name];
+            }
+
             //choose & editor match
             if (target.api && target.requ
               && (_.get(target.requ, servRequ.interf_prop) == _.get(target.api.request, servRequ.interf_prop))) {
               callback(null, answer.succ({
+                complex: complex,
                 serv: target.serv,
                 item: getRespAPI(target.api, usr)
               }));
@@ -904,6 +920,7 @@ module.exports = function(commOptions) {
                   //editor
                   if (api) {
                     callback(null, answer.succ({
+                      complex: complex,
                       serv: target.serv,
                       item: getRespAPI(api, usr)
                     }));
@@ -914,6 +931,7 @@ module.exports = function(commOptions) {
                       return resultCall(defineNone);
                     } else {
                       callback(null, answer.succ({
+                        complex: complex,
                         serv: target.serv,
                         item: getRespAPI(target.api, usr)
                       }));
@@ -931,6 +949,7 @@ module.exports = function(commOptions) {
                   return resultCall(defineNone);
                 } else {
                   callback(null, answer.succ({
+                    complex: complex,
                     serv: target.serv,
                     item: getRespAPI(target.api, usr)
                   }));

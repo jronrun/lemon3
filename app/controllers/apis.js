@@ -127,13 +127,23 @@ router.post(index.comment.do, function (req, res, next) {
         '/**',
         ' * API - ' + (2 == aDef.mutation ? 'Mutation of ' : '') + aDef.name,
         ' * ' + aDef.desc || '',
-        ' */',
-        crypto.decompress(aDef.request_doc)
-      ].join('\n');
-      answer.result = json5update(doc, params.requ);
+        ' */'
+      ];
+
+      var aResult = null, complex = answer.result.complex;
+      if (complex && complex.length > 0) {
+        doc.push('{\n"' + complex + '": ' + crypto.decompress(aDef.request_doc) + "\n}");
+        aResult = json5update(doc.join('\n'), params.requ);
+      } else {
+        doc.push(crypto.decompress(aDef.request_doc));
+        aResult = json5update(doc.join('\n'), params.requ);
+      }
+
+      answer.result = json5s.format(aResult);
     } else {
       answer.result = '';
     }
+
     answer.result = crypto.compress(answer.result);
     return res.json(answer);
   }, true, req.user);

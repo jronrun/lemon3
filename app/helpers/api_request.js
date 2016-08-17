@@ -209,13 +209,23 @@ module.exports = function(commOptions) {
 
             //Multi-interface
             case 2:
-              if (!target.requ[servRequ.param_name]) {
-                theParam[servRequ.param_name] = JSON.stringify(target.requ);
-                target.requData[servRequ.param_name] = target.requ;
-              } else {
+              //defined interface property
+              var hasOtherParams = false;
+              if (servRequ.interf_prop && servRequ.interf_prop.length > 0) {
+                if (target.requ[servRequ.interf_prop] && target.requ[servRequ.param_name]) {
+
+                } else {
+                  hasOtherParams = true;
+                }
+              }
+
+              if (hasOtherParams) {
                 theParam = _.cloneDeep(target.requ);
                 theParam[servRequ.param_name] = JSON.stringify(theParam[servRequ.param_name]);
                 _.extend(target.requData, target.requ);
+              } else {
+                theParam[servRequ.param_name] = JSON.stringify(target.requ);
+                target.requData[servRequ.param_name] = target.requ;
               }
               break;
           }

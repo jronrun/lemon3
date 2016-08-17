@@ -452,7 +452,10 @@ var requs = {
           $(advId).attr('clicked', 1);
           $(advId).click(function () {
             if (requs.advRequMirror.isJson()) {
-              requs.doBefore(requs.advRequMirror.json());
+              requs.doBefore(requs.advRequMirror.json(), function() {
+                requs.advRequestM.show();
+              });
+              requs.advRequestM.hide();
             } else {
               lemon.msg('Not a valid JSON', {
                 containerId: '#advrequ_form'
@@ -468,7 +471,7 @@ var requs = {
     });
   },
 
-  doBefore: function (advance) {
+  doBefore: function (advance, cancelCallback) {
     var choosed = null;
     if (!(choosed = requs.check())) {
       return false;
@@ -488,6 +491,7 @@ var requs = {
         tip = '<h5>Are you sure ?</h5> <span class="text-warning">{0} !!!</span>';
       lemon.confirm(lemon.format(tip, env.desc || env.name) , startRequ, function() {
         lemon.enable(requs.id);
+        lemon.isFunc(cancelCallback) && cancelCallback();
       });
     } else {
       startRequ();

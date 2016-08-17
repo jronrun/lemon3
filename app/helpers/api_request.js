@@ -214,6 +214,10 @@ module.exports = function(commOptions) {
           _.extend(theParam, (options.advance || {}).params || {});
           _.extend(target.headers, (options.advance || {}).headers || {});
 
+          if (!_.isEmpty(target.requ.headers || {})) {
+            _.extend(target.headers, target.requ.headers);
+          }
+
           //{path: '', data: {}, param_name: ''}
           if (1 == requestOptions.opt) {
             _.extend(theResp, {

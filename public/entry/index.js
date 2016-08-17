@@ -323,12 +323,20 @@ lemon.register({
 
   request: function(action, data, options) {
     options = options || {};
+    var theHeaders = options.headers || {};
+    delete options.headers;
+
     var req = $.ajax(lemon.extend({
       type: options.type || 'GET',
       async: true,
       url: action,
       data: data || {},
-      headers: {}
+      headers: {},
+      beforeSend: function (request) {
+        lemon.each(theHeaders, function (v, k) {
+          request.setRequestHeader(k, v);
+        });
+      }
     }, options));
 
     return req;
@@ -875,9 +883,9 @@ lemon.register({
     });
   },
   confirm: function(text, okCallback, cancelCallback, title) {
-    var okId = 'ok_id_' + lemon.uniqueId();
+    var okId = 'ok_id_' + lemon.uniqueId(), cid = 'cancel_id_' + lemon.uniqueId();
     var footer = [
-      '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
+      lemon.format('<button type="button" id="{0}" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>', cid),
       lemon.format('<button type="button" id="{0}" class="btn btn-primary" data-dismiss="modal">OK</button>', okId)
     ].join('');
 
@@ -894,7 +902,6 @@ lemon.register({
         show: true
       }
     }, {
-      hidden: cancelCallback,
       shown: function() {
         $('#' + okId).focus();
       }
@@ -902,6 +909,10 @@ lemon.register({
 
     $('#' + okId).click(function(e) {
       lemon.isFunc(okCallback) && okCallback(e);
+    });
+
+    $('#' + cid).click(function(e) {
+      lemon.isFunc(cancelCallback) && cancelCallback(e);
     });
   },
   isRootWin: function() {

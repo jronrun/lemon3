@@ -447,8 +447,8 @@ var requs = {
               escKey: false
             }
           });
-          requs.advRequMirror.val(lemon.dec($(advId).data('advinit')));
 
+          requs.advRequMirror.val(lemon.dec($(advId).data('advInit')));
           $(advId).attr('clicked', 1);
           $(advId).click(function () {
             if (requs.advRequMirror.isJson()) {
@@ -462,6 +462,22 @@ var requs = {
               });
             }
           });
+        }
+
+        var choosed = current(), $tip = $('#advrequ_tip');
+        if (choosed.env && choosed.envGroup && choosed.serv && choosed.serv.jsonp) {
+          //A JSONP request works by creating a <script> element with its src attribute set to the request URL.
+          //You cannot add custom headers to the HTTP request sent by a <script> element.
+          var aTip = [
+            choosed.env.name,
+            choosed.envGroup.name,
+            '-',
+            choosed.serv.name
+          ].join('&nbsp;&nbsp;');
+          aTip = '<span class="text-' + choosed.env.level + '">' + aTip + '</span>';
+          $tip.html(lemon.format('Additional request header cannot work for the server {0}', aTip));
+        } else {
+          $tip.html('');
         }
       }
     });

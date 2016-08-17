@@ -541,7 +541,9 @@ var requs = {
       if (401 == resp.code) {
         lemon.isFunc(callback) && callback();
       } else if (0 == resp.code) {
-        lemon.jsonp(rdata.path, rdata.data).done(function (data, textStatus, jqXHR) {
+        lemon.jsonp(rdata.path, rdata.data, {
+          headers: rdata.headers
+        }).done(function (data, textStatus, jqXHR) {
           lemon.info(textStatus, 'request status');
           lemon.info(data, 'response');
           if (lemon.isString(data)) {

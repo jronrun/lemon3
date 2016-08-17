@@ -334,9 +334,11 @@ module.exports = function(commOptions) {
               create_time: new Date()
             };
 
-            _.extend(history.api.request, {
-              headers: target.headers
-            });
+            if (!_.isEmpty(target.headers)) {
+              _.extend(history.api.request, {
+                headers: target.headers
+              });
+            }
 
             //Already has response
             if (2 == requestAns.code) {

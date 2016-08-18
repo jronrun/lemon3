@@ -72,32 +72,29 @@ function btnsTrigger(buttons, shareM, el) {
 }
 
 sharing.shows = function(options) {
-  var layout = '#sharing-layout', copyURL = '#sharing_view_url', btn_qrcode = '#sharing_qrcode';
+  var layout = '#sharing-layout', copyURL = '#sharing_view_url', btn_qrcode = '#sharing_qrcode',
+    t1 = '#tab-tri-sharing-tab1', t2 = '#tab-tri-sharing-tab2', qrcodeId = '#sharing_qrcode_img';
   options = lemon.extend({
     title: 'Share',
-    link: '',
-    qrclink: '',      //url, QRCode will not change with the input if provide
-    headBtns: [
-      /*
-       {
-         icon: '',
-         text: '',
-         onClick: false
-       }
-       */
-    ],
-    footBtns: [],
+    link: '',          //url || text
+    qrclink: '',       //url || text, QRCode will not change with the input if provide
+    headBtns: [ /* { icon: '', text: '', onClick: false } */ ],
+    footBtns: [ /* { icon: '', text: '', onClick: false } */ ],
+    qrctab: false,     //show QRCode tab first
+    isURL: true,
     desc: false,       //text or function
     onShown: false
   }, options || {});
 
-  options.link = links(options.link);
-  options.qrclink = links(options.qrclink);
+  if (options.isURL) {
+    options.link = links(options.link);
+    options.qrclink = links(options.qrclink);
+  }
 
   var viewport = {
       w: $(window).width(),
       h: $(window).height()
-  }, hasQrclink = lemon.isUrl(options.qrclink), qrcodeId = '#sharing_qrcode_img';
+  }, hasQrclink = !lemon.isBlank(options.qrclink);
 
   options.headBtns = btnsIntl(options.headBtns);
   options.footBtns = btnsIntl(options.footBtns);
@@ -131,14 +128,18 @@ sharing.shows = function(options) {
         lemon.qrcode(qrcodeId, options.qrclink);
       }
 
+      if (options.qrctab) {
+        lemon.tabShow(t2);
+      }
+
       $(btn_qrcode).click(function () {
         if (lemon.buttonTgl(this)) {
           if (!hasQrclink) {
             lemon.qrcode(qrcodeId, $(copyURL).val());
           }
-          lemon.tabShow('#tab-tri-sharing-tab2');
+          lemon.tabShow(t2);
         } else {
-          lemon.tabShow('#tab-tri-sharing-tab1');
+          lemon.tabShow(t1);
         }
       });
 

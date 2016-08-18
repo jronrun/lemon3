@@ -1,10 +1,15 @@
 
 <script type="text/html" id="sharing_title_tmpl">
-    Share
+    <%= title %>
     <div class="pull-right">
-        <button type="button" class="btn btn-secondary icondh text-info" style="border: 0px;" id="sharing_edit">
-            <em class="fa fa-pencil-square"></em>
-        </button>
+        <% lemon.each(headBtns, function(btn) { %>
+            <button type="button" class="btn btn-secondary icondh text-info" style="border: 0px;" id="<%= btn.id %>">
+                <% if (btn.icon) { %>
+                    <em class="fa fa-<%= btn.icon %>"></em>
+                <% } %>
+                <%= btn.text %>
+            </button>
+        <% }); %>
         <button type="button" class="btn btn-secondary icondh text-info" style="border: 0px;" id="sharing_qrcode">
             <em class="fa fa-qrcode"></em>
         </button>
@@ -25,17 +30,18 @@
                 <div class="card-block">
                     <div class="card-text" style="border: 0px;">
                         <textarea id="sharing_view_url" rows="5" style="border:0px solid #ffffff;"><%= link %></textarea>
-                        <% if (share.original) { %>
-                          <small class="text-muted">
-                              This is a sharing of already exists.
-                              {{!--
-                              <a href="/manage/share/<%= share.edit %>" data-preview class="btn btn-sm btn-secondary text-info" style="border: 0px;" title="Edit Share">
-                                  Edit This
-                              </a>
-                              --}}
-                              <button type="button" class="btn btn-sm btn-secondary icondh text-info" style="border: 0px;" id="sharing_new">
-                                  Create New
-                              </button>
+                        <% if (desc && desc.length > 0) { %>
+                          <small class="text-muted icondh">
+                              <em class="fa fa-info">&nbsp;</em>
+                              <%= desc %>
+                              <% lemon.each(footBtns, function(btn) { %>
+                                  <button type="button" class="btn btn-sm btn-secondary icondh text-info" style="border: 0px;" id="<%= btn.id %>">
+                                      <% if (btn.icon) { %>
+                                          <em class="fa fa-<%= btn.icon %> text-info"></em>
+                                      <% } %>
+                                      <%= btn.text %>
+                                  </button>
+                              <% }); %>
                           </small>
                         <% } %>
                     </div>

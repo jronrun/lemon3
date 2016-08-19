@@ -3,7 +3,7 @@
     <%= title %>
     <div class="pull-right">
         <% lemon.each(headBtns, function(btn) { %>
-            <button type="button" class="btn btn-secondary icondh text-info" style="border: 0px;" id="<%= btn.id %>">
+            <button type="button" class="btn btn-secondary icondh text-info" style="border: 0px;" id="<%= btn.id %>" title="<%= btn.title %>">
                 <% if (btn.icon) { %>
                     <em class="fa fa-<%= btn.icon %>"></em>
                 <% } %>
@@ -35,7 +35,7 @@
                               <em class="fa fa-info">&nbsp;</em>
                               <%= desc %>
                               <% lemon.each(footBtns, function(btn) { %>
-                                  <button type="button" class="btn btn-sm btn-secondary icondh text-info" style="border: 0px;" id="<%= btn.id %>">
+                                  <button type="button" class="btn btn-sm btn-secondary icondh text-info" style="border: 0px;" id="<%= btn.id %>" title="<%= btn.title %>">
                                       <% if (btn.icon) { %>
                                           <em class="fa fa-<%= btn.icon %> text-info"></em>
                                       <% } %>

@@ -19,8 +19,8 @@ var sharing = function(aShare) {
     desc = 'This is a sharing of already exists.';
     footBtns.push({
       text: 'Create New',
-      onClick: function(shareM) {
-        shareM.hide();
+      onClick: function(target) {
+        target.shareM.hide();
         sharing.createAndShow(lemon.extend(aShare.original, {
           check: 0
         }));
@@ -48,6 +48,7 @@ function btnsIntl(buttons) {
   var btns = []; lemon.each(buttons, function (btn) {
     btn = lemon.extend({
       id: '',
+      title: '',
       icon: '',
       text: '',
       onClick: false
@@ -63,16 +64,21 @@ function btnsIntl(buttons) {
   return btns;
 }
 
-function btnsTrigger(buttons, shareM, el) {
+function btnsTrigger(buttons, shareM, el, textId) {
   lemon.each(buttons, function (btn) {
-    $('#' + btn.id).click(function () {
-      lemon.isFunc(btn.onClick) && btn.onClick(shareM, el);
+    var bid = '#' + btn.id; $(bid).click(function () {
+      lemon.isFunc(btn.onClick) && btn.onClick({
+        id: bid,
+        shareM: shareM,
+        el: el,
+        textId: textId
+      });
     });
   });
 }
 
 sharing.shows = function(options) {
-  var layout = '#sharing-layout', copyURL = '#sharing_view_url', btn_qrcode = '#sharing_qrcode',
+  var layout = '#sharing-layout', textId = '#sharing_view_url', btn_qrcode = '#sharing_qrcode',
     t1 = '#tab-tri-sharing-tab1', t2 = '#tab-tri-sharing-tab2', qrcodeId = '#sharing_qrcode_img';
   options = lemon.extend({
     title: 'Share',
@@ -119,8 +125,8 @@ sharing.shows = function(options) {
         });
       }
 
-      lemon.focusSelectAll(copyURL);
-      $(copyURL).css({
+      lemon.focusSelectAll(textId);
+      $(textId).css({
         width: $(layout).width() * 0.93
       });
 
@@ -135,7 +141,7 @@ sharing.shows = function(options) {
       $(btn_qrcode).click(function () {
         if (lemon.buttonTgl(this)) {
           if (!hasQrclink) {
-            lemon.qrcode(qrcodeId, $(copyURL).val());
+            lemon.qrcode(qrcodeId, $(textId).val());
           }
           lemon.tabShow(t2);
         } else {
@@ -143,10 +149,10 @@ sharing.shows = function(options) {
         }
       });
 
-      btnsTrigger(options.headBtns, shareM, el);
-      btnsTrigger(options.footBtns, shareM, el);
+      btnsTrigger(options.headBtns, shareM, el, textId);
+      btnsTrigger(options.footBtns, shareM, el, textId);
 
-      lemon.isFunc(options.onShown) && options.onShown(shareM, el);
+      lemon.isFunc(options.onShown) && options.onShown(shareM, el, textId);
       $(el).slideDown();
     }
   });

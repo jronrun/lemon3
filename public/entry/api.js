@@ -1700,73 +1700,57 @@ var mapi = {
     });
 
     $(mapi.viewUrlId).click(function () {
-      if (lemon.buttonTgl(this)) {
-        var choosed = current();
-        if (!choosed.env || !choosed.envGroup || !choosed.serv) {
-          return lemon.msg('Please choose an Environment first.');
-        }
-
-        var choosed = current(), data = {
-          source: mapi.source(),
-          env: choosed.env.id,
-          group: choosed.envGroup.id,
-          serv: choosed.serv.id
-        };
-
-        lemon.progress(mapi.requToolId);
-        var theAPI = {};
-        if (mapi.requ.isJson()) {
-          theAPI = mapi.requ.json();
-        }
-
-        lemon.extend(data, {
-          requ: lemon.enc(theAPI)
-        });
-
-        $.post('/api/viewurl', data).done(function (resp) {
-          if (0 == resp.code) {
-            var rdata = lemon.deepDec(resp.result);
-
-            lemon.tabEventOnce('#tab-requ-tab3', {
-              shown: function(elId) {
-                var copyEl = '#request_view_url',
-                  aURL = lemon.format('{0}?{1}', rdata.path, decodeURIComponent($.param(rdata.data)));
-                $(elId).html(lemon.tmpl($('#api_view_url_tmpl').html(), {
-                  aURL: aURL
-                }));
-
-                $('#tgl_view_url').click(function () {
-                  if (lemon.buttonTgl(this)) {
-                    $(copyEl).val(lemon.format('{0}?{1}', rdata.path, $.param(rdata.data)));
-                  } else {
-                    $(copyEl).val(aURL);
-                  }
-                });
-
-                lemon.focusSelectAll(copyEl);
-                if (lemon.isSmallDownView()) {
-                  $(copyEl).css({
-                    width: $(mapi.requCardId).width() * 0.8,
-                    height: $(mapi.requCardId).height() * 0.6
-                  });
-                } else {
-                  $(copyEl).css({
-                    width: $(mapi.requCardId).width() * 0.85,
-                    height: $(mapi.requCardId).height() * 0.75
-                  });
-                }
-              }
-            });
-            lemon.tabShow('#tab-tri-requ-tab3');
-          } else {
-            lemon.msg(resp.msg);
-          }
-
-          lemon.progressEnd(mapi.requToolId);
-        });
-      } else {
-        lemon.tabShow('#tab-tri-mirror');
+      var choosed = current();
+      if (!choosed.env || !choosed.envGroup || !choosed.serv) {
+        return lemon.msg('Please choose an Environment first.');
       }
+
+      var choosed = current(), data = {
+        source: mapi.source(),
+        env: choosed.env.id,
+        group: choosed.envGroup.id,
+        serv: choosed.serv.id
+      };
+
+      lemon.progress(mapi.requToolId);
+      var theAPI = {};
+      if (mapi.requ.isJson()) {
+        theAPI = mapi.requ.json();
+      }
+
+      lemon.extend(data, {
+        requ: lemon.enc(theAPI)
+      });
+
+      $.post('/api/viewurl', data).done(function (resp) {
+        if (0 == resp.code) {
+          var rdata = lemon.deepDec(resp.result), headBtns = [],
+            aURL = lemon.format('{0}?{1}', rdata.path, decodeURIComponent($.param(rdata.data)));
+
+          headBtns.push({
+            icon: 'pencil-square',
+            title: 'Toggle request URL encode & decode',
+            onClick: function (target) {
+              if (lemon.buttonTgl(target.id)) {
+                $(target.textId).val(lemon.format('{0}?{1}', rdata.path, $.param(rdata.data)));
+              } else {
+                $(target.textId).val(aURL);
+              }
+            }
+          });
+
+          sharing.shows({
+            title: 'Request URL',
+            link: aURL,
+            headBtns: headBtns
+          });
+        } else {
+          lemon.msg(resp.msg);
+        }
+
+        lemon.progressEnd(mapi.requToolId);
+      });
+
     });
 
     var fromUrlModal = lemon.modal({

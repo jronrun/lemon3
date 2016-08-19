@@ -25,7 +25,7 @@
         </li>
     </ul>
     <div class="tab-content" id="sharing-layout">
-        <div class="tab-pane active" id="tab-sharing-tab1" role="tabpanel">
+        <div class="tab-pane <%= ((1 == tab) ? 'active' : '') %>" id="tab-sharing-tab1" role="tabpanel">
             <div class="card" style="border: 0px;">
                 <div class="card-block">
                     <div class="card-text" style="border: 0px;">
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane" id="tab-sharing-tab2" role="tabpanel">
+        <div class="tab-pane <%= ((2 == tab) ? 'active' : '') %>" id="tab-sharing-tab2" role="tabpanel">
             <div id="sharing_qrcode_img" style="text-align: center;"></div>
         </div>
     </div>

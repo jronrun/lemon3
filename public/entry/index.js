@@ -135,7 +135,7 @@ lemon.register({
         text: ''
       }, options || {});
     }
-    $(selector).qrcode(options);
+    $(selector).empty().qrcode(options);
   },
   exe: function(data) {
     return (new Function('return ' + data ))();

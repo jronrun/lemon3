@@ -86,7 +86,7 @@ sharing.shows = function(options) {
     qrclink: '',       //url || text, QRCode will not change with the input if provide
     headBtns: [ /* { icon: '', text: '', onClick: false } */ ],
     footBtns: [ /* { icon: '', text: '', onClick: false } */ ],
-    qrctab: false,     //show QRCode tab first
+    tab: 1,     //1 text tab, 2 QRCode tab
     isURL: true,
     desc: false,       //text or function
     onShown: false
@@ -130,14 +130,7 @@ sharing.shows = function(options) {
         width: $(layout).width() * 0.93
       });
 
-      if (hasQrclink) {
-        lemon.qrcode(qrcodeId, options.qrclink);
-      }
-
-      if (options.qrctab) {
-        lemon.tabShow(t2);
-      }
-
+      lemon.qrcode(qrcodeId, hasQrclink ? options.qrclink : options.link);
       $(btn_qrcode).click(function () {
         if (lemon.buttonTgl(this)) {
           if (!hasQrclink) {
@@ -148,6 +141,10 @@ sharing.shows = function(options) {
           lemon.tabShow(t1);
         }
       });
+
+      if (2 == options.tab) {
+        lemon.buttonTgl(btn_qrcode, 2);
+      }
 
       btnsTrigger(options.headBtns, shareM, el, textId);
       btnsTrigger(options.footBtns, shareM, el, textId);

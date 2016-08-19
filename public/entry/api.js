@@ -1742,6 +1742,7 @@ var mapi = {
           sharing.shows({
             title: 'Request URL',
             link: aURL,
+            qrclink: aURL,
             headBtns: headBtns
           });
         } else {
@@ -1751,6 +1752,21 @@ var mapi = {
         lemon.progressEnd(mapi.requToolId);
       });
 
+    });
+
+    lemon.rightclick(mapi.viewUrlId, function () {
+      var text = ''; if (mapi.requ.doc().somethingSelected()) {
+        text = mapi.requ.doc().getSelection();
+      } else {
+        text = mapi.requ.val();
+      }
+
+      sharing.shows({
+        title: 'QRCode',
+        tab: 2,
+        isURL: false,
+        link: text
+      });
     });
 
     var fromUrlModal = lemon.modal({

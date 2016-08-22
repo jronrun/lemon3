@@ -2,8 +2,8 @@
 
 var format = require('util').format;
 
-var host = '10.0.4.35';
-//var host = '192.168.20.19';
+//var host = '10.0.4.35';
+var host = '192.168.20.19';
 //var host = 'localhost';
 //var host = '192.168.1.105';
 

@@ -197,14 +197,32 @@ module.exports = function (router, index, root) {
     ];
 
     var search = [
-      generic.searchInput('id', 'search id...'),
-      generic.searchInput('title', 'search share...')
+      generic.searchInput('_id', 'search by share url...'),
+      //generic.searchInput('id', 'search id...'),
+      generic.searchInput('title', 'search share title...')
     ];
 
     generic.list({
       ownerQuery: 1,
       defines: defines,
-      search: search
+      search: search,
+      queryHandle: function(realQuery, query, options) {
+        var urlQry = query['_id'];
+        if (urlQry) {
+          if (urlQry.indexOf('share/') != -1) {
+            urlQry = urlQry.substr(urlQry.indexOf('share/') + 6);
+          }
+          if (urlQry.indexOf('/') != -1) {
+            urlQry = urlQry.substr(0, urlQry.indexOf('/'));
+          }
+
+          var theId = crypto.decompress(urlQry);
+          if (!theId) {
+            theId = urlQry;
+          }
+          realQuery['_id'] = Share.toObjectID(theId);
+        }
+      }
     }, req, res, next);
 
   });

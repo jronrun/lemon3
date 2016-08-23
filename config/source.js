@@ -27,7 +27,10 @@ var setting = require('./resource/setting'), T = setting.type, P = setting.page,
 var resource = [
   {id: 10, name: 'home', action: '/', desc: 'Home', page: 'index', protect: false},
 
-  {id: 20, name: 'notebook', desc: 'Notebook'},
+  {id: 20, name: 'note', desc: 'Notebook', children: [
+
+    ]
+  },
 
   {
     id: 30, name: 'user', desc: 'User', children: [

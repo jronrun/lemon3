@@ -4,7 +4,7 @@ var express = require('express'),
   router = express.Router(),
   note = require('../models/note'),
   log = log_from('notebook'),
-  index = routes.notebook;
+  index = routes.note;
 
 module.exports = function (app) {
   app.use(index.action, router);

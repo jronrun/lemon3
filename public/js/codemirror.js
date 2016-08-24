@@ -154,7 +154,7 @@ var helper = function(cm, events) {
 
       th = lemon.startWith(th, 'solarized') ? 'solarized' : th;
       if (loadedTheme.indexOf(th) == -1) {
-        lemon.css(lemon.fullUrl(lemon.format('/components/codemirror/theme/{0}.css', th)));
+        mirror.css(lemon.format('/theme/{0}.css', th));
         loadedTheme.push(th);
       }
 

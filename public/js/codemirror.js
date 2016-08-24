@@ -252,4 +252,5 @@ mirror.showJson = function(target, output) {
   mirror.highlight(target, 'application/ld+json', output);
 };
 
+mirror.target = CodeMirror;
 module.exports = mirror;

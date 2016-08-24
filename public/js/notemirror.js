@@ -1,8 +1,12 @@
 /**
  *
  */
+var mirror = require('./codemirror')
+  ;
 
 /*
+ require('codemirror/lib/codemirror.css');
+ require('codemirror/lib/codemirror');
  require('codemirror/addon/comment/comment');
  require('codemirror/addon/comment/continuecomment');
  require('codemirror/addon/dialog/dialog.css');
@@ -12,13 +16,11 @@
  require('codemirror/addon/display/fullscreen');
  require('codemirror/addon/display/panel');
  require('codemirror/addon/display/placeholder');
- require('codemirror/addon/display/rulers');
  require('codemirror/addon/edit/closebrackets');
  require('codemirror/addon/edit/closetag');
  require('codemirror/addon/edit/continuelist');
  require('codemirror/addon/edit/matchbrackets');
  require('codemirror/addon/edit/matchtags');
- require('codemirror/addon/edit/trailingspace');
  require('codemirror/addon/fold/brace-fold');
  require('codemirror/addon/fold/comment-fold');
  require('codemirror/addon/fold/foldcode');
@@ -35,29 +37,6 @@
  require('codemirror/addon/hint/show-hint');
  require('codemirror/addon/hint/sql-hint');
  require('codemirror/addon/hint/xml-hint');
- require('codemirror/addon/lint/coffeescript-lint');
- require('codemirror/addon/lint/css-lint');
- require('codemirror/addon/lint/html-lint');
- require('codemirror/addon/lint/javascript-lint');
- require('codemirror/addon/lint/json-lint');
- require('codemirror/addon/lint/lint.css');
- require('codemirror/addon/lint/lint');
- require('codemirror/addon/lint/yaml-lint');
- require('codemirror/addon/merge/merge.css');
- require('codemirror/addon/merge/merge');
- require('codemirror/addon/mode/loadmode');
- require('codemirror/addon/mode/multiplex');
- require('codemirror/addon/mode/multiplex_test');
- require('codemirror/addon/mode/overlay');
- require('codemirror/addon/mode/simple');
- require('codemirror/addon/runmode/colorize');
- require('codemirror/addon/runmode/runmode');
- require('codemirror/addon/runmode/runmode/node');
- require('codemirror/addon/runmode/runmode-standalone');
- require('codemirror/addon/scroll/annotatescrollbar');
- require('codemirror/addon/scroll/scrollpastend');
- require('codemirror/addon/scroll/simplescrollbars.css');
- require('codemirror/addon/scroll/simplescrollbars');
  require('codemirror/addon/search/jump-to-line');
  require('codemirror/addon/search/match-highlighter');
  require('codemirror/addon/search/matchesonscrollbar.css');
@@ -67,13 +46,54 @@
  require('codemirror/addon/selection/active-line');
  require('codemirror/addon/selection/mark-selection');
  require('codemirror/addon/selection/selection-pointer');
+ require('codemirror/addon/wrap/hardwrap');
+
+ require('codemirror/addon/scroll/annotatescrollbar');
+
+ require('codemirror/addon/runmode/runmode');
+
+ //unload in codemirror
+
+
+ require('codemirror/addon/mode/loadmode');
+ require('codemirror/addon/mode/multiplex');
+ require('codemirror/addon/mode/multiplex_test');
+
+ require('codemirror/addon/mode/overlay');
+ require('codemirror/addon/mode/simple');
+
+ require('codemirror/addon/runmode/colorize');
+ require('codemirror/addon/runmode/runmode/node');
+ require('codemirror/addon/runmode/runmode-standalone');
+
+ require('codemirror/addon/scroll/scrollpastend');
+ require('codemirror/addon/scroll/simplescrollbars.css');
+ require('codemirror/addon/scroll/simplescrollbars');
+
  require('codemirror/addon/tern/tern.css');
  require('codemirror/addon/tern/tern');
  require('codemirror/addon/tern/worker');
- require('codemirror/addon/wrap/hardwrap');
+
  require('codemirror/keymap/emacs');
  require('codemirror/keymap/sublime');
- require('codemirror/keymap/vim');
- require('codemirror/lib/codemirror.css');
- require('codemirror/lib/codemirror');
  */
+
+require('codemirror/addon/display/rulers');
+require('codemirror/addon/edit/trailingspace');
+
+require('codemirror/addon/lint/coffeescript-lint');
+require('codemirror/addon/lint/css-lint');
+require('codemirror/addon/lint/html-lint');
+require('codemirror/addon/lint/javascript-lint');
+require('codemirror/addon/lint/json-lint');
+require('codemirror/addon/lint/lint.css');
+require('codemirror/addon/lint/lint');
+require('codemirror/addon/lint/yaml-lint');
+
+require('./diff_match_patch_20121119/diff_match_patch.js');
+require('codemirror/addon/merge/merge.css');
+require('codemirror/addon/merge/merge');
+
+require('codemirror/keymap/vim');
+
+module.exports = mirror;

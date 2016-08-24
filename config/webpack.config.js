@@ -2,7 +2,8 @@
 
 var path = require("path");
 var webpack = require("webpack");
-var glob = require('glob');
+var glob = require('glob'),
+  root = path.join(__dirname, "../public/components");
 
 function entries (globPath) {
   var files = glob.sync(globPath);
@@ -28,6 +29,10 @@ function entries (globPath) {
 
   console.log(entries);
   return entries;
+}
+
+function bowerdir(target) {
+  return root + target;
 }
 
 module.exports = {
@@ -63,8 +68,10 @@ module.exports = {
   },
   externals: {},
   resolve: {
-    root: [path.join(__dirname, "../public/components")],
-    alias: {}
+    root: [ root ],
+    alias: {
+      htmlhint: bowerdir('/codemirror/addon/hint/html-hint.js')
+    }
   },
   plugins: [
     new webpack.ResolverPlugin(

@@ -1,6 +1,8 @@
 /**
  *
  */
-var mirror = require('../js/codemirror');
+var mirror = require('../js/notemirror');
+
+global.mirror=mirror;
 
 

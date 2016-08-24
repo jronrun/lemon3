@@ -181,6 +181,12 @@ var helper = function(cm, events) {
         CodeMirror.autoLoadMode(cm, mode);
       }
     },
+    tip: function (msg, tipOptions) {
+      return cm.openNotification('<span style="color: orange">' + msg + '</span>', lemon.extend({
+        bottom: true,
+        duration: 5000
+      }, tipOptions || {}));
+    },
     doc: function() {
       return cm.doc;
     },

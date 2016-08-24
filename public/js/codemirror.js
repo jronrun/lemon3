@@ -267,7 +267,7 @@ mirror.showJson = function(target, output) {
 mirror.script = function (target) {
   global.CodeMirror = CodeMirror;
   lemon.script(lemon.fullUrl('/components/codemirror' + target), function () {
-    global.CodeMirror = null;
+    global.CodeMirror = undefined;
   });
 };
 

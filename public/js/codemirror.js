@@ -78,6 +78,16 @@ var helper = function(cm, events) {
     selectAll: function () {
       tools.handleCmd('selectAll');
     },
+    autoLoadMode: function (mode) {
+      if (!lemon.isFunc(CodeMirror.autoLoadMode)) {
+        mirror.script('/addon/mode/loadmode.js', function () {
+          CodeMirror.modeURL = lemon.fullUrl('/components/codemirror/mode/%N/%N.js');
+          CodeMirror.autoLoadMode(cm, mode);
+        });
+      } else {
+        CodeMirror.autoLoadMode(cm, mode);
+      }
+    },
     doc: function() {
       return cm.doc;
     },
@@ -264,10 +274,13 @@ mirror.showJson = function(target, output) {
   mirror.highlight(target, 'application/ld+json', output);
 };
 
-mirror.script = function (target) {
+mirror.script = function (target, callback) {
   global.CodeMirror = CodeMirror;
-  lemon.script(lemon.fullUrl('/components/codemirror' + target), function () {
-    global.CodeMirror = undefined;
+  lemon.script(lemon.fullUrl('/components/codemirror' + target), function (data) {
+    lemon.isFunc(callback) && callback(data);
+    lemon.delay(function () {
+      global.CodeMirror = undefined;
+    }, 10000);
   });
 };
 

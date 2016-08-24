@@ -72,6 +72,12 @@ var helper = function(cm, events) {
   events = events || {};
   var tools = {
     target: cm,
+    handleCmd: function (input) {
+      cm.execCommand(input);
+    },
+    selectAll: function () {
+      tools.handleCmd('selectAll');
+    },
     doc: function() {
       return cm.doc;
     },
@@ -156,7 +162,10 @@ var helper = function(cm, events) {
 /**
  *
  * @param elId
- * @param options
+ * @param options {
+ *  cust: {
+ *    escKey: true    // toggle fullscreen
+ * }
  * @param events {
  *  fullscreen: function(isFullscreen) {}
  * }
@@ -171,6 +180,16 @@ var mirror = function (elId, options, events) {
     escKey: true
   }, options.cust || {});
   delete options.cust;
+
+  var extraKeys = lemon.extend({
+    //http://codemirror.net/doc/manual.html#commands
+    "Ctrl-K": "toMatchingTag",
+    "Ctrl-J": "autocomplete",
+    "Ctrl-Q": function (cm) {
+      cm.foldCode(cm.getCursor());
+    }
+  }, options.extraKeys || {});
+  delete options.extraKeys;
 
   var rich = CodeMirror.fromTextArea(lemon.query(lemon.startIf(elId, '#')), lemon.extend({
       lineNumbers: false,
@@ -188,14 +207,7 @@ var mirror = function (elId, options, events) {
       matchTags: {
         bothTags: true
       },
-      extraKeys: {
-        //http://codemirror.net/doc/manual.html#commands
-        "Ctrl-K": "toMatchingTag",
-        "Ctrl-J": "autocomplete",
-        "Ctrl-Q": function (cm) {
-          cm.foldCode(cm.getCursor());
-        }
-      }
+      extraKeys: extraKeys
     }, options)
   );
 
@@ -252,5 +264,12 @@ mirror.showJson = function(target, output) {
   mirror.highlight(target, 'application/ld+json', output);
 };
 
-mirror.target = CodeMirror;
+mirror.script = function (target) {
+  global.CodeMirror = CodeMirror;
+  lemon.script(lemon.fullUrl('/components/codemirror' + target), function () {
+    global.CodeMirror = null;
+  });
+};
+
+mirror.CodeMirror = CodeMirror;
 module.exports = mirror;

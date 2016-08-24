@@ -96,4 +96,30 @@ require('codemirror/addon/merge/merge');
 
 require('codemirror/keymap/vim');
 
-module.exports = mirror;
+var noteMirror = function (elId, options, events) {
+  var aMirror = mirror(elId, lemon.extend({
+    mode: 'htmlmixed',
+    keyMap: 'vim',
+    fullScreen: true,
+    lineNumbers: true,
+    showCursorWhenSelecting: true,
+    styleActiveLine: true,
+    extraKeys: {
+      "Ctrl-/": "toggleComment",
+      "Ctrl-A": function(cm) {
+        aMirror.selectAll();
+      }
+    },
+    cust: {
+      escKey: false
+    }
+  }, options || {}), lemon.extend({
+
+  }, events || {}));
+
+  aMirror.autoLoadMode('htmlmixed');
+  return aMirror;
+};
+
+noteMirror.mirrors = mirror;
+module.exports = noteMirror;

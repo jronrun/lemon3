@@ -4,7 +4,8 @@
 require('codemirror/lib/codemirror.css');
 
 var CodeMirror = require('codemirror/lib/codemirror'),
-  json5s = require('./json5s');
+  json5s = require('./json5s'),
+  loadingScript = false;
 global._ = {};  //for json5s
 _.each = lemon.each;
 
@@ -275,11 +276,15 @@ mirror.showJson = function(target, output) {
 };
 
 mirror.script = function (target, callback) {
+  loadingScript = true;
   global.CodeMirror = CodeMirror;
   lemon.script(lemon.fullUrl('/components/codemirror' + target), function (data) {
     lemon.isFunc(callback) && callback(data);
+    loadingScript = false;
     lemon.delay(function () {
-      global.CodeMirror = undefined;
+      if (!loadingScript) {
+        global.CodeMirror = undefined;
+      }
     }, 10000);
   });
 };

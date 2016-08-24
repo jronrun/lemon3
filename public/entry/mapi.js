@@ -478,9 +478,6 @@ var mapis = {
         mapis.snapshoot();
       }
     });
-
-
-    global.mapis=mapis;
   }
 };
 

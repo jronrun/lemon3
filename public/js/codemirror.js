@@ -4,8 +4,8 @@
 require('codemirror/lib/codemirror.css');
 
 var CodeMirror = require('codemirror/lib/codemirror'),
-  json5s = require('./json5s'),
-  loadingScript = false;
+  json5s = require('./json5s')
+  ;
 global._ = {};  //for json5s
 _.each = lemon.each;
 
@@ -60,6 +60,7 @@ require('codemirror/addon/selection/selection-pointer');
 
 require('codemirror/addon/wrap/hardwrap');
 
+require('codemirror/mode/meta');
 require('codemirror/mode/javascript/javascript');
 
 lemon.fmtjson = function(target) {
@@ -68,6 +69,21 @@ lemon.fmtjson = function(target) {
   }
   return json5s.format(target);
 };
+
+var languages = {}, modes = {}, loadingScript = false;
+function initializeLangs() {
+  //["name", "mime", "mode"], Optional property: ["ext", "mimes", "file", "alias"]
+  var langs = [];
+  lemon.each(CodeMirror.modeInfo || [], function(lang, idx) {
+    lang.id = lemon.uniqueId();
+    languages[lang.name] = lang;
+    modes[lang.mode] = lang;
+    langs.push(lang);
+  });
+  return CodeMirror.modeInfo = langs;
+}
+
+initializeLangs();
 
 var helper = function(cm, events) {
   events = events || {};
@@ -78,6 +94,82 @@ var helper = function(cm, events) {
     },
     selectAll: function () {
       tools.handleCmd('selectAll');
+    },
+    langInfo: function(lang) {
+      if (lemon.isBlank(lang)) {
+        return null;
+      }
+
+      var m, info = null;
+      info = languages[lang];
+      if (!lemon.isBlank(info)) {
+        return info;
+      }
+
+      info = modes[lang];
+      if (!lemon.isBlank(info)) {
+        return info;
+      }
+
+      if (m = /.+\.([^.]+)$/.exec(lang)) {
+        info = CodeMirror.findModeByExtension(m[1]);
+      } else if (/\//.test(lang)) {
+        info = CodeMirror.findModeByMIME(lang);
+        info.mime = lang;
+      }
+
+      if (!lemon.isBlank(info)) {
+        return info;
+      }
+
+      info = CodeMirror.findModeByFileName(lang);
+      if (!lemon.isBlank(info)) {
+        return info;
+      }
+
+      info = CodeMirror.findModeByName(lang);
+      if (!lemon.isBlank(info)) {
+        return info;
+      }
+
+      return null;
+    },
+    attrs: function (optionKey, optionVal) {
+      if (lemon.isUndefined(optionKey)) {
+        return cm.options;
+      }
+
+      var aVal = cm.getOption(optionKey);
+      if (lemon.isUndefined(optionVal)) {
+        return aVal;
+      }
+
+      cm.setOption(optionKey, optionVal);
+      return aVal;
+    },
+    mode: function(lan) {
+      if (lemon.isUndefined(lan)) {
+        return tools.langInfo(tools.attrs('mode'));
+      }
+
+      var info = tools.langInfo(lan);
+      if (lemon.isBlank(info)) {
+        throw Error('Could not find a mode corresponding to ' + lan);
+      }
+
+      var spec = info.mime, mode = info.mode;
+      info.isJson = 'json' == lan.toLocaleLowerCase();
+      if (info.isJson) {
+        spec = 'application/ld+json';
+        tools.attrs('theme', 'lemon');
+      }
+
+      tools.attrs('mode', spec);
+      if (!info.isJson) {
+        tools.autoLoadMode(mode);
+      }
+
+      return info;
     },
     autoLoadMode: function (mode) {
       if (!lemon.isFunc(CodeMirror.autoLoadMode)) {

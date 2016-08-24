@@ -3,7 +3,7 @@
  */
 require('codemirror/lib/codemirror.css');
 
-var CodeMirror = require('codemirror/lib/codemirror'),
+global.CodeMirror = require('codemirror/lib/codemirror'),
   json5s = require('./json5s')
   ;
 global._ = {};  //for json5s
@@ -70,7 +70,7 @@ lemon.fmtjson = function(target) {
   return json5s.format(target);
 };
 
-var languages = {}, modes = {}, loadingScript = false;
+var languages = {}, modes = {};
 function initializeLangs() {
   //["name", "mime", "mode"], Optional property: ["ext", "mimes", "file", "alias"]
   var langs = [];
@@ -368,16 +368,8 @@ mirror.showJson = function(target, output) {
 };
 
 mirror.script = function (target, callback) {
-  loadingScript = true;
-  global.CodeMirror = CodeMirror;
   lemon.script(lemon.fullUrl('/components/codemirror' + target), function (data) {
     lemon.isFunc(callback) && callback(data);
-    loadingScript = false;
-    lemon.delay(function () {
-      if (!loadingScript) {
-        global.CodeMirror = undefined;
-      }
-    }, 10000);
   });
 };
 
@@ -385,5 +377,4 @@ mirror.css = function (target) {
   lemon.css(lemon.fullUrl('/components/codemirror' + target));
 };
 
-mirror.CodeMirror = CodeMirror;
 module.exports = mirror;

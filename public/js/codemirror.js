@@ -70,7 +70,7 @@ lemon.fmtjson = function(target) {
   return json5s.format(target);
 };
 
-var languages = {}, modes = {};
+var languages = {}, modes = {}, loadedTheme = ['default', 'lemon'];
 function initializeLangs() {
   //["name", "mime", "mode"], Optional property: ["ext", "mimes", "file", "alias"]
   var langs = [];
@@ -90,7 +90,7 @@ var helper = function(cm, events) {
   var tools = {
     target: cm,
     handleCmd: function (input) {
-      cm.execCommand(input);
+      return cm.execCommand(input);
     },
     selectAll: function () {
       tools.handleCmd('selectAll');
@@ -147,6 +147,20 @@ var helper = function(cm, events) {
       cm.setOption(optionKey, optionVal);
       return aVal;
     },
+    theme: function(th) {
+      if (lemon.isUndefined(th)) {
+        return tools.attrs('theme');
+      }
+
+      th = lemon.startWith(th, 'solarized') ? 'solarized' : th;
+      if (loadedTheme.indexOf(th) == -1) {
+        lemon.css(lemon.fullUrl(lemon.format('/components/codemirror/theme/{0}.css', th)));
+        loadedTheme.push(th);
+      }
+
+      tools.attrs('theme', th);
+      return th;
+    },
     mode: function(lan) {
       if (lemon.isUndefined(lan)) {
         return tools.langInfo(tools.attrs('mode'));
@@ -186,6 +200,12 @@ var helper = function(cm, events) {
         bottom: true,
         duration: 5000
       }, tipOptions || {}));
+    },
+    wordwrap: function() {
+      return tools.attrs('lineWrapping', !tools.attrs('lineWrapping'));
+    },
+    tglFoldCode: function () {
+      return cm.foldCode(cm.getCursor());
     },
     doc: function() {
       return cm.doc;

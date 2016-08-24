@@ -115,11 +115,30 @@ var noteMirror = function (elId, options, events) {
     }
   }, options || {}), lemon.extend({
 
-  }, events || {}));
+  }, events || {})), aTarget = aMirror.target;
+
+  lemon.extend(aMirror, {
+    vim: {
+      visualMode: function() {
+        return CodeMirror.Vim.exitInsertMode(aTarget);
+      },
+      handleEx: function(input) {
+        return CodeMirror.Vim.handleEx(aTarget, input);
+      },
+      handleKey: function(input, origin) {
+        return CodeMirror.Vim.handleKey(aTarget, input, origin);
+      },
+      editMode: function() {
+        return aMirror.vim.handleKey('i');
+      }
+    }
+  });
 
   aMirror.autoLoadMode('htmlmixed');
+
   return aMirror;
 };
 
 noteMirror.mirrors = mirror;
+
 module.exports = noteMirror;

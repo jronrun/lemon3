@@ -357,6 +357,28 @@ lemon.register({
     }));
   },
 
+  script: function (action, callback) {
+    $.ajax({
+      url: action,
+      dataType: 'script',
+      async: true,
+      success: function (data, textStatus, jqXHR) {
+        lemon.isFunc(callback) && callback(data, textStatus, jqXHR);
+      }
+    });
+  },
+
+  css: function(target) {
+    lemon.each(lemon.isArray(target) ? target : [target],
+      function(style, idx) {
+        var link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('type', 'text/css');
+        link.setAttribute('href', style);
+        lemon.query('head').appendChild(link);
+      });
+  },
+
   pjax: function(url, container) {
     $.pjax({url: url, container: container || '#page'});
   },

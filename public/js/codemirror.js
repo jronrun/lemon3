@@ -271,5 +271,9 @@ mirror.script = function (target) {
   });
 };
 
+mirror.css = function (target) {
+  lemon.css(lemon.fullUrl('/components/codemirror' + target));
+};
+
 mirror.CodeMirror = CodeMirror;
 module.exports = mirror;

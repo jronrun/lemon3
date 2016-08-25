@@ -3,16 +3,6 @@
 require('animate.css');
 
 lemon.register({
-  css: function(style, styleId) {
-    var link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', style);
-    if (styleId) {
-      link.setAttribute('id', styleId);
-    }
-    lemon.query('head').appendChild(link);
-  },
   animate: function (options) {
     var animationName = "animated " + options.name;
     var animationEnd = "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend";

@@ -368,15 +368,15 @@ lemon.register({
     });
   },
 
-  css: function(target) {
-    lemon.each(lemon.isArray(target) ? target : [target],
-      function(style, idx) {
-        var link = document.createElement('link');
-        link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('type', 'text/css');
-        link.setAttribute('href', style);
-        lemon.query('head').appendChild(link);
-      });
+  css: function(style, styleId) {
+    var link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', style);
+    if (styleId) {
+      link.setAttribute('id', styleId);
+    }
+    lemon.query('head').appendChild(link);
   },
 
   pjax: function(url, container) {

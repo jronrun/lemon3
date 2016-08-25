@@ -344,6 +344,7 @@ module.exports = function(commOptions) {
                 id: target.serv.id,
                 name: target.serv.name,
                 url: target.serv.url,
+                grant: isURL(target.serv.home_url) ? crypto.compress(target.serv.home_url) : '',
                 type: servRequ.type,
                 method: servRequ.method,
                 add_params: servRequ.add_params

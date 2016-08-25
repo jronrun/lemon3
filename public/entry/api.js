@@ -1887,7 +1887,7 @@ var mapi = {
 
     $(mapi.grantId).click(function () {
       var grant = lemon.dec(lemon.data(mapi.grantId, 'grant'));
-      if (grant || grant.length > 0) {
+      if (grant && grant.length > 0) {
         lemon.preview(grant);
       }
     });

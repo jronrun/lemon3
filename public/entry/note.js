@@ -5,6 +5,7 @@ var mirror = require('../js/notemirror');
 
 var note = {
   id: '#note_textarea',
+  toolTriId: '#note-tool-tri',
   instance: null,
 
   initialize: function () {

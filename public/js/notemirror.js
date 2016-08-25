@@ -128,7 +128,11 @@ var noteMirror = function (elId, options, events) {
     mode: 'htmlmixed',
     keyMap: 'vim',
     fullScreen: true,
+    autofocus: true,
     lineNumbers: true,
+    lineNumberFormatter: function (line) {
+      return 1 == line ? '' : line;
+    },
     showCursorWhenSelecting: true,
     styleActiveLine: true,
     extraKeys: {

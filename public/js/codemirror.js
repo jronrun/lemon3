@@ -321,6 +321,7 @@ var mirror = function (elId, options, events) {
   delete options.extraKeys;
 
   var rich = CodeMirror.fromTextArea(lemon.query(lemon.startIf(elId, '#')), lemon.extend({
+      autofocus: false,
       lineNumbers: false,
       matchBrackets: true,
       theme: 'lemon',

@@ -500,15 +500,25 @@ var requs = {
       }, advance);
     };
 
+    var formChkAndRequ = function () {
+      if (lemon.isButtonActive('#btn-tgl-form')) {
+        mapi.form2json(function () {
+          startRequ();
+        });
+      } else {
+        startRequ();
+      }
+    };
+
     if (envs.isDanger()) {
       var env = choosed.env,
         tip = '<h5>Are you sure ?</h5> <span class="text-warning">{0} !!!</span>';
-      lemon.confirm(lemon.format(tip, env.desc || env.name) , startRequ, function() {
+      lemon.confirm(lemon.format(tip, env.desc || env.name) , formChkAndRequ, function() {
         lemon.enable(requs.id);
         lemon.isFunc(cancelCallback) && cancelCallback();
       });
     } else {
-      startRequ();
+      formChkAndRequ();
     }
   },
 
@@ -1682,19 +1692,8 @@ var mapi = {
       }
       //-> json
       else {
-        lemon.progress(mapi.requToolId);
-        var aData = lemon.getParam('#tab-form');
-        $.post('/general/convert', {
-          data: lemon.enc(aData),
-          original: lemon.enc(mapi.requ.val())
-        }).done(function (resp) {
-          if (0 == resp.code) {
-            mapi.requ.json(lemon.dec(resp.result.data));
-            lemon.tabShow('#tab-tri-mirror');
-          } else {
-            lemon.msg(resp.msg);
-          }
-          lemon.progressEnd(mapi.requToolId);
+        mapi.form2json(function () {
+          lemon.tabShow('#tab-tri-mirror');
         });
       }
     });
@@ -1881,6 +1880,23 @@ var mapi = {
         }));
       });
     }
+  },
+  form2json: function (successCall) {
+    lemon.progress(mapi.requToolId);
+    var aData = lemon.getParam('#tab-form');
+    $.post('/general/convert', {
+      data: lemon.enc(aData),
+      original: lemon.enc(mapi.requ.val())
+    }).done(function (resp) {
+      if (0 == resp.code) {
+        var rjsonData = lemon.dec(resp.result.data);
+        mapi.requ.json(rjsonData);
+        lemon.isFunc(successCall) && successCall(rjsonData);
+      } else {
+        lemon.msg(resp.msg);
+      }
+      lemon.progressEnd(mapi.requToolId);
+    });
   },
   intlResp: function () {
     mapi.resp = mapi.mirror('#response', mapi.respCardId);

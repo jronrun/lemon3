@@ -96,6 +96,33 @@ require('codemirror/addon/merge/merge');
 
 require('codemirror/keymap/vim');
 
+var definedEx = [];
+
+function defineEx(cmd, exHandle, desc, shortCmd) {
+  if (!cmd || !lemon.isFunc(exHandle)) {
+    return definedEx;
+  }
+
+  var exbody = {
+    cmd: cmd,
+    shortCmd: shortCmd || cmd,
+    exHandle: exHandle,
+    desc: desc || ''
+  };
+
+  CodeMirror.Vim.defineEx(exbody.cmd, exbody.shortCmd, function(cm, params) {
+    exbody.exHandle(cm, lemon.extend({
+      args: [],
+      argString: '',
+      input: '',
+      line: false,
+      commandName: ''
+    }, params));
+  });
+
+  definedEx.push(exbody);
+}
+
 var noteMirror = function (elId, options, events) {
   var aMirror = mirror(elId, lemon.extend({
     mode: 'htmlmixed',
@@ -114,7 +141,9 @@ var noteMirror = function (elId, options, events) {
       escKey: false
     }
   }, options || {}), lemon.extend({
+    inputRead: function(cm, changeObj) {
 
+    }
   }, events || {})), aTarget = aMirror.target;
 
   lemon.extend(aMirror, {
@@ -139,6 +168,10 @@ var noteMirror = function (elId, options, events) {
   return aMirror;
 };
 
-noteMirror.mirrors = mirror;
+
+lemon.extend(noteMirror, {
+  mirrors: mirror,
+  defineEx: defineEx
+});
 
 module.exports = noteMirror;

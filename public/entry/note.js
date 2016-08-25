@@ -8,6 +8,10 @@ var note = {
   instance: null,
 
   initialize: function () {
+    if (lemon.isMediumUpView()) {
+      lemon.console();
+    }
+
     note.instance = mirror(note.id);
 
     //TODO remove

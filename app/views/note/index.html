@@ -13,11 +13,13 @@
 <div class="tab-content" id="note-layout">
     <div class="tab-pane active" id="note-tab1" role="tabpanel">
         <button type="button" class="btn btn-secondary-outline btn-sm icondh" id="note-tool-tri" title="Toggle Note Menu"
-                style="position: absolute;left: 2px;top: 10px;border: 0px;z-index: 50000;zoom: 70%">
-            <!--<em class="fa fa-rocket"></em>-->
-            {{> logo}}
+                style="position: absolute;left: 0;top: 0;border: 0px;z-index: 50000;">
+            <em class="fa fa-rocket"></em>
         </button>
         <textarea class="form-control" rows="17" style="border:0px;" id="note_textarea"></textarea>
+        <div id="note_tool" style="display:none;"></div>
     </div>
     <div class="tab-pane" id="note-tab2" role="tabpanel"></div>
 </div>
+
+{{> tmpl/note_tmpl}}

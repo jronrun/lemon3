@@ -1,0 +1,160 @@
+
+<script type="text/html" id="note_tool_tmpl">
+    <nav class="navbar">
+        <ul class="nav nav-pills" id="note_tool_bar">
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0);" style="zoom: 80%;margin-top: 5px;">
+                    {{> logo}}
+                </a>
+            </li>
+            <% lemon.each(menus, function(menu) { %>
+                <% if ('dropdown' == menu.type) { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false"><%= menu.ddName %></a>
+                        <div class="dropdown-menu boxshadow" style="border: none;">
+                            <% lemon.each(menu.items, function(item) { %>
+                                <% if ('separator' == item.name) { %>
+                                    <div class="dropdown-divider"></div>
+                                <% } else { %>
+                                    <a class="dropdown-item" href="javascript:void(0);" data-action="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
+                                <% } %>
+                            <% }); %>
+                            <div><%= lemon.repeat('&nbsp;', 80) %></div>
+                        </div>
+                    </li>
+                <% } else if ('link' == menu.type) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0);" data-action="<%= menu.item.action %>" data-params="<%= menu.item.params %>" title="<%= menu.item.title %>"><%= menu.item.text
+                            %></a>
+                    </li>
+                <% } %>
+            <% }); %>
+        </ul>
+    </nav>
+</script>
+
+<script type="text/html" id="note_tool_tmpl1">
+    <nav class="navbar" id="note_tool_bar" style="margin-bottom:0px;border:0px;background-color:#ffffff">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File</a>
+                    <ul class="dropdown-menu" style="border:0px;">
+                        <li><a href="javascript:void(0);" onclick="note.newNote();" title=":new"><%= menu('New', ':n', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" onclick="note.openFile();" title=":open"><%= menu('Open File...', ':o', 'visual') %></a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="javascript:void(0);" onclick="note.menuTgl();" title="Mouse move left toggle menu"><%= menu('Close Menu', ':menu', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" onclick="note.close();" title="Close Note"><%= menu('Close Note', ':q', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" onclick="note.share();" title="Share Note to Browser Address"><%= menu('Share Note', ':share', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" onclick="note.preview();" title=":view"><%= menu('Preview', ':v', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" onclick="note.fulltgl();" title=":fullscreen"><%= menu('Fullscreen', ':full', 'visual') %></a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="javascript:void(0);" onclick="note.save();" title="Save Note"><%= menu('Save Note', ':w', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" onclick="note.saveclose();" title="Save & Close Note"><%= menu('Save & Close Note', ':wq', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" onclick="note.save(null, 1);" title="Save As..."><%= menu('Save As...', ':sa', 'visual') %></a></li>
+                        <li><%= lemon.repeat('&nbsp;', 80) %></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Edit</a>
+                    <ul class="dropdown-menu" style="border:0px;" id="note_edit">
+                        <li><a href="javascript:void(0);" ex="undo" title=":undo"><%= menu('Undo', 'u', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" ex="redo" title=":redo"><%= menu('Redo', 'Ctrl-R', 'visual') %></a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="javascript:void(0);" func="editMode" title=""><%= menu('Edit Mode', 'i', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" func="visualMode" title=""><%= menu('Visual Mode', 'Esc', 'edit') %></a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="javascript:void(0);" func="wordwrap" title=":wrapword"><%= menu('Word Wrap', ':wrap', 'visual') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="toggleComment" title=""><%= menu('Toggle Comment', 'Ctrl-/', 'visual & edit') %></a></li>
+                        <li><a href="javascript:void(0);" func="tglFoldCode" title=""><%= menu('Toggle Fold Code', 'Ctrl-Q', 'visual & edit') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="autocomplete" title=""><%= menu('Content Assist', 'Ctrl-J', 'visual & edit') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="toMatchingTag" title=""><%= menu('Matching Tag', 'Ctrl-K', 'visual & edit') %></a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="javascript:void(0);" cmd="selectAll" title="Select All"><%= menu('Select All', 'Ctrl-A', 'visual & edit') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="find" title="/"><%= menu('Find...', 'Cmd-F', 'edit') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="findNext" title="n"><%= menu('Find Next', 'Cmd-G', 'edit') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="replace" title=":%s/"><%= menu('Replace...', 'Cmd-Alt-F', 'edit') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="replaceAll" title=":%s/"><%= menu('Replace All', 'Shift-Cmd-Alt-F', 'edit') %></a></li>
+                        <li><a href="javascript:void(0);" cmd="jumpToLine" title=":jump"><%= menu('Jump To Line', 'Alt-G', 'edit') %></a></li>
+                        <li><%= lemon.repeat('&nbsp;', 80) %></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0);" id="note_list_dd" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Note</a>
+                    <ul class="dropdown-menu fixed-dropdown" style="max-width: 400px;border:0px;" id="note_list">
+                        <div class="form-group form-group-lg" style="margin-left:15px;margin-bottom:15px;margin-top:15px;"> <div class="col-sm-12">
+                            <input class="form-control" type="text" id="note_list_qry" style="width:300px;" placeholder="Search Note..."> </div> </div>
+                        <% lemon.each([], function(n, idx) { var cnid = note.instance.noteId || -1; %>
+                        <li nid="<%= n.id %>" id="note_<%= n.id %>" note="1"><blockquote style="width:380px;" title="" class="">
+                            <h4 class="text-info"><%= n.title %><% if (cnid == n.id) { %><span class="pull-right text-danger glyphicon glyphicon-check"></span><% } %></h4>
+                            <h6 class="text-muted">Created <%= '  ' + n.create %></h6> <h6 class="text-muted">Modified <%= ' ' + n.lastmodify %></h6>
+                            <h6 class="text-muted"> <span class="badge"><%= n.id %></span> <div class="btn-group pull-right" role="group" aria-label="..."> <button type="button" title="Delete Note <%= n.title %>" id="note_rem_<%= n.id %>" nt="<%= n.title %>" nid="<%= n.id %>" style="border:0px;" class="btn btn-default"> <span class="text-danger glyphicon glyphicon-remove-circle"></span> </button> </div> </h6>
+                        </blockquote></li>
+                        <% }); %>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0);" id="note_mode_dd" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Language</a>
+                    <ul class="dropdown-menu fixed-dropdown" style="max-width: 400px;border:0px;" id="note_mode">
+                        <div class="form-group form-group-lg" style="margin-left:15px;margin-bottom:15px;margin-top:15px;"> <div class="col-sm-12">
+                            <input class="form-control" type="text" id="note_mode_qry" style="width:300px;" placeholder="Search Language..."> </div> </div>
+                        <% lemon.each(notesource.langs, function(lang, langname) { %>
+                        <li name="<%= langname %>" id="lang_<%= lang.id %>" lang="1">
+                            <blockquote style="width:380px;" title="" class="">
+                                <h4 class="text-success"><%= langname %><% if (langname == thislang) { %><span class="pull-right text-danger glyphicon glyphicon-check"></span><% } %></h4>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <% if ('null' != lang.mime || (lang.mimes && lang.mimes.length > 0)) { %> <h5><p class="text-muted"> Defined MIME types </p></h5> <% } %>
+                                        <% if (lang.mimes && lang.mimes.length > 0) { lemon.each(lang.mimes, function(mime, i2) { %> <h5 class="text-muted"><a href="javascript:void(0);" clk="1" val="<%= mime %>"><%= mime %></a></h5> <% }); } else if ('null' != lang.mime) { %> <h5 class="text-muted"><a href="javascript:void(0);" clk="1" val="<%= lang.mime %>"><%= lang.mime %></a></h5> <% } %>
+                                    </div> <div class="col-md-4">
+                                    <% if (lang.ext && lang.ext.length > 0) {  %> <h5><p class="text-muted"> Extensions </p></h5> <% lemon.each(lang.ext, function(ext, idx) { %> <h5 class="text-muted"><a href="javascript:void(0);" clk="1" val="<%= ext %>"><%= ext %></a></h5> <% }); }%>
+                                </div>
+                                </div>
+                            </blockquote>
+                        </li>
+                        <%
+                        });
+                        %>
+                        <li><%= lemon.repeat('&nbsp;', 60) %></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0);" id="note_theme_dd" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Theme</a>
+                    <ul class="dropdown-menu fixed-dropdown" style="border:0px;" id="note_theme"> <% lemon.each(notesource.themes, function(th, idx) { %>
+                        <li th="<%= th %>"> <blockquote style="" title="" class=""> <h5 class="text-success"><%= th %><% if (th == thistheme) { %> <span class="pull-right text-danger glyphicon
+                            glyphicon-check"></span><% } %></h5> </blockquote> </li> <% }); %>
+                        <li><%= lemon.repeat('&nbsp;', 60) %></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" id="note_compare" role="button" aria-haspopup="true" aria-expanded="false">Compare</a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" id="note_preview" role="button" aria-haspopup="true" aria-expanded="false">Preview</a>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0);" id="note_help_dd" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Help</a>
+                    <ul class="dropdown-menu" style="border:0px;">
+                        <li><a href="javascript:void(0);" onclick="note.showhelp(3);" title="Vim Doc">Vim Doc</a></li>
+                        <li><a href="javascript:void(0);" onclick="note.showhelp(8);" title="Vim Doc cn">Vim Doc cn</a></li>
+                        <li><a href="javascript:void(0);" onclick="note.showhelp(7);" title="Vim Cheat Sheet">Vim Cheat Sheet</a></li>
+                        <li><a href="javascript:void(0);" onclick="note.showhelp(6);" title="Vim Cheat Sheets">Vim Cheats</a></li>
+                        <li><a href="javascript:void(0);" onclick="note.showhelp(5);" title="Note Vim">Note Vim</a></li>
+                        <li><a href="javascript:void(0);" onclick="note.showhelp(4);" title="Codemirror Vim">Codemirror Vim</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:void(0);" class="close" title="Close" aria-label="Close" onclick="note.close();"><span aria-hidden="true">x</span></a></li>
+            </ul>
+        </div>
+    </nav>
+</script>

@@ -249,13 +249,17 @@ var note = {
           $(el).hide();
         },
         shown: function (el) {
-          var w = Math.floor($(window).width() / 2);
+          var viewport = {
+            w: $(window).width(),
+            h: $(window).height()
+          }, w = lemon.isMediumUpView() ? Math.floor(viewport.w / 1.8) : (viewport.w - 5);
+
           $(el).css({
             width: w,
             'max-width': w,
             border: 0,
             top: 11,
-            left: (w - 2),
+            left: (viewport.w - w - 2),
             'z-index': 50001
           });
           $(el).find('.popover-content').css({

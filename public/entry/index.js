@@ -840,13 +840,19 @@ lemon.register({
   //http://stackoverflow.com/questions/21857779/process-for-using-show-bs-dropdown-in-bootstrap
   dropdownEvent: function (selector, events) {
     events = events || {};
-    $(selector).on('show.bs.dropdown', function (e) {
+    lemon.live('show.bs.dropdown', selector, function (e) {
       lemon.isFunc(events.show) && events.show(e.relatedTarget, e, selector);
-    }).on('shown.bs.dropdown', function (e) {
+    });
+
+    lemon.live('shown.bs.dropdown', selector, function (e) {
       lemon.isFunc(events.shown) && events.shown(e.relatedTarget, e, selector);
-    }).on('hide.bs.dropdown', function (e) {
+    });
+
+    lemon.live('hide.bs.dropdown', selector, function (e) {
       lemon.isFunc(events.hide) && events.hide(e.relatedTarget, e, selector);
-    }).on('hidden.bs.dropdown', function (e) {
+    });
+
+    lemon.live('hidden.bs.dropdown', selector, function (e) {
       lemon.isFunc(events.hidden) && events.hidden(e.relatedTarget, e, selector);
     });
   }

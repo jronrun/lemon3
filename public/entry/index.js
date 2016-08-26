@@ -841,8 +841,7 @@ lemon.register({
   dropdownEvent: function (selector, events) {
     events = events || {};
     var onEvent = function (evtName, evt) {
-      var trigger = evt.relatedTarget, body = $(evt.target).find('.dropdown-menu');
-      lemon.isFunc(events[evtName]) && events[evtName](trigger, body, selector, evt);
+      lemon.isFunc(events[evtName]) && events[evtName](evt.target, selector, evt);
     };
 
     lemon.live('show.bs.dropdown', selector, function (e) {

@@ -78,6 +78,10 @@ var note = {
         return { name: name };
       }
 
+      if ('empty' == name) {
+        return { name: name, repeat: cmd };
+      }
+
       var text = [ name ];
       if (desc) {
         text.push(lemon.format('<span class="text-info" style="float:right;position:relative;font-size:55%;">{0}</span>', desc));
@@ -113,7 +117,8 @@ var note = {
             note.menu.item('separator'),
             note.menu.item('Save Note', ':w', 'visual', 'Save Note (:w)', 'saveNote'),
             note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote'),
-            note.menu.item('Save As...', ':sa', 'visual', 'Save Note As...', 'saveNoteAs')
+            note.menu.item('Save As...', ':sa', 'visual', 'Save Note As...', 'saveNoteAs'),
+            note.menu.item('empty', 80)
           ]
         }
       ];

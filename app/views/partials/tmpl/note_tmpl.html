@@ -15,11 +15,12 @@
                             <% lemon.each(menu.items, function(item) { %>
                                 <% if ('separator' == item.name) { %>
                                     <div class="dropdown-divider"></div>
+                                <% } else if ('empty' == item.name) { %>
+                                    <div><%= lemon.repeat('&nbsp;', item.repeat) %></div>
                                 <% } else { %>
                                     <a class="dropdown-item" href="javascript:void(0);" data-action="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
                                 <% } %>
                             <% }); %>
-                            <div><%= lemon.repeat('&nbsp;', 80) %></div>
                         </div>
                     </li>
                 <% } else if ('link' == menu.type) { %>

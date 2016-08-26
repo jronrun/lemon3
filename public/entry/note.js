@@ -13,6 +13,12 @@ var note = {
     instance: null,
 
     action: {
+      menuHide: function () {
+        return note.menu.action.menuTgl(3);
+      },
+      menuShow: function () {
+        return note.menu.action.menuTgl(2);
+      },
       menuTgl: function (opt) {
         //1 toggle, 2 active, 3 unactive
         var isOpened = note.menu.instance.opened();
@@ -36,7 +42,30 @@ var note = {
         lemon.buttonTgl(note.menu.triId, isOpened ? 2 : 3);
         return isOpened;
       },
+
+      fullscreenTgl: function () {
+
+      },
+
+      preview: function () {
+
+      },
       newNote: function () {
+
+      },
+      shareNote: function () {
+
+      },
+      saveNote: function () {
+
+      },
+      saveNoteAs: function () {
+
+      },
+      closeNote: function () {
+
+      },
+      saveAndCloseNote: function () {
 
       },
       openFile: function () {
@@ -66,35 +95,28 @@ var note = {
       };
     },
 
-    /**
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.menuTgl();" title="Mouse move left toggle menu"><%= menu('Close Menu', ':menu', 'visual') %></a>
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.close();" title="Close Note"><%= menu('Close Note', ':q', 'visual') %></a>
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.share();" title="Share Note to Browser Address"><%= menu('Share Note', ':share', 'visual') %></a>
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.preview();" title=":view"><%= menu('Preview', ':v', 'visual') %></a>
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.fulltgl();" title=":fullscreen"><%= menu('Fullscreen', ':full', 'visual') %></a>
-     <div class="dropdown-divider"></div>
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.save();" title="Save Note"><%= menu('Save Note', ':w', 'visual') %></a>
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.saveclose();" title="Save & Close Note"><%= menu('Save & Close Note', ':wq', 'visual') %></a>
-     <a class="dropdown-item" href="javascript:void(0);" onclick="note.save(null, 1);" title="Save As..."><%= menu('Save As...', ':sa', 'visual') %></a>
-     <div><%= lemon.repeat('&nbsp;', 80) %></div>
-     */
-
     source: function () {
       return [
+        /* { type: 'link', item: note.menu.item('New', false, false, 'New Note (:new)', 'newNote') } */
         {
           type: 'dropdown',
           ddName: 'File',
           items: [
             note.menu.item('New', ':n', 'visual', 'New Note (:new)', 'newNote'),
             note.menu.item('Open File...', ':o', 'visual', 'Open File (:open)', 'openFile'),
-            note.menu.item('separator')
+            note.menu.item('separator'),
+            note.menu.item('Close Menu', ':menu', 'visual', 'Close Menu', 'menuHide'),
+            note.menu.item('Close Note', ':q', 'visual', 'Close Note', 'closeNote'),
+            note.menu.item('Share Note', ':share', 'visual', 'Share Note', 'shareNote'),
+            note.menu.item('Preview', ':v', 'visual', 'Preview (:view)', 'preview'),
+            note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
+            note.menu.item('separator'),
+            note.menu.item('Save Note', ':w', 'visual', 'Save Note (:w)', 'saveNote'),
+            note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote'),
+            note.menu.item('Save As...', ':sa', 'visual', 'Save Note As...', 'saveNoteAs')
           ]
-        },
-        {
-          type: 'link',
-          item: note.menu.item('New', false, false, 'New Note (:new)', 'newNote')
         }
-      ]
+      ];
     },
 
     intl: function () {

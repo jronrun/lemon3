@@ -20,14 +20,18 @@ var note = {
         return note.menu.tgl(2);
       },
       menuClose: function () {
-        note.menu.tgl(3);
+        note.menu.action.menuHide();
         if (!lemon.isRootWin()) {
           lemon.pubEvent('MENU_CLOSE');
         }
       },
 
       fullscreenTgl: function () {
-
+        lemon.screenfull(function (full) {
+          if (full) {
+            note.menu.action.menuHide();
+          }
+        });
       },
 
       preview: function () {
@@ -63,10 +67,10 @@ var note = {
 
       },
       editMode: function () {
-
+        note.instance.vim.editMode();
       },
       visualMode: function () {
-
+        note.instance.vim.visualMode();
       },
       wrapword: function () {
 
@@ -219,8 +223,9 @@ var note = {
         evt.preventDefault();
         var anEl = 'A' == el.tagName ? el : $(el).parent(),
           act = lemon.data(anEl, 'menuact'), menuHandle = null;
+
         if (lemon.isFunc(menuHandle = note.menu.action[act])) {
-          menuHandle(lemon.data(anEl, 'params'));
+          menuHandle(lemon.data(anEl, 'params'), evt, el);
         }
       });
 

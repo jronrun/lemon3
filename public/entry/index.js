@@ -1073,6 +1073,8 @@ lemon.register({
             show: 1,
             modalId: modalId
           });
+
+          lemon.data(modalId, {shown: 1});
           lemon.isFunc(events.shown) && events.shown(e, this);
         })
         .on('hide.bs.modal', function(e) {
@@ -1088,6 +1090,7 @@ lemon.register({
             $(modalId).remove();
           }
 
+          lemon.data(modalId, {shown: 0});
           lemon.isFunc(events.hidden) && events.hidden(e, this);
         })
         .on('loaded.bs.modal', function(e) {
@@ -1097,6 +1100,9 @@ lemon.register({
 
     return {
       target: theModal,
+      opened: function () {
+        return 1 == lemon.data(modalId, 'shown');
+      },
       toggle: function() {
         $(modalId).modal('toggle');
       },
@@ -1158,17 +1164,22 @@ lemon.register({
         $(el).find('.popover-arrow').remove();
       }
 
+      lemon.data(selector, {shown: 1});
       lemon.isFunc(events.shown) && events.shown(el, this);
     }).on('hide.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;
       lemon.isFunc(events.hide) && events.hide(el, this);
     }).on('hidden.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;
+      lemon.data(selector, {shown: 0});
       lemon.isFunc(events.hidden) && events.hidden(el, this);
     });
 
     return {
       target: thePopover,
+      opened: function () {
+        return 1 == lemon.data(selector, 'shown');
+      },
       show: function() {
         $(selector).popover('show');
       },

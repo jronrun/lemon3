@@ -1066,6 +1066,7 @@ lemon.register({
       events = events || {};
       var theModal = $(modalId).modal(options.modal)
         .on('show.bs.modal', function(e) {
+          lemon.data(modalId, {shown: 1});
           lemon.isFunc(events.show) && events.show(e, this);
         })
         .on('shown.bs.modal', function(e) {
@@ -1074,10 +1075,10 @@ lemon.register({
             modalId: modalId
           });
 
-          lemon.data(modalId, {shown: 1});
           lemon.isFunc(events.shown) && events.shown(e, this);
         })
         .on('hide.bs.modal', function(e) {
+          lemon.data(modalId, {shown: 0});
           lemon.isFunc(events.hide) && events.hide(e, this);
         })
         .on('hidden.bs.modal', function(e) {
@@ -1090,7 +1091,6 @@ lemon.register({
             $(modalId).remove();
           }
 
-          lemon.data(modalId, {shown: 0});
           lemon.isFunc(events.hidden) && events.hidden(e, this);
         })
         .on('loaded.bs.modal', function(e) {
@@ -1153,6 +1153,7 @@ lemon.register({
       events.inserted && events.inserted(el, this);
     }).on('show.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;
+      lemon.data(selector, {shown: 1});
       lemon.isFunc(events.show) && events.show(el, this);
     }).on('shown.bs.popover', function() {
       if ($('#' + headId).length) {
@@ -1164,14 +1165,13 @@ lemon.register({
         $(el).find('.popover-arrow').remove();
       }
 
-      lemon.data(selector, {shown: 1});
       lemon.isFunc(events.shown) && events.shown(el, this);
     }).on('hide.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;
+      lemon.data(selector, {shown: 0});
       lemon.isFunc(events.hide) && events.hide(el, this);
     }).on('hidden.bs.popover', function() {
       var el = $(this).data("bs.popover").tip;
-      lemon.data(selector, {shown: 0});
       lemon.isFunc(events.hidden) && events.hidden(el, this);
     });
 

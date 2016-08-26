@@ -9,9 +9,33 @@ var note = {
 
   menu: {
     id: '#note_tool',
+    triId: '#note-tool-tri',
     instance: null,
 
     action: {
+      menuTgl: function (opt) {
+        //1 toggle, 2 active, 3 unactive
+        var isOpened = note.menu.instance.opened();
+        opt = opt || 1; switch (opt) {
+          case 1:
+            note.menu.instance.toggle();
+            break;
+          case 2:
+            if (!isOpened) {
+              note.menu.instance.show();
+            }
+            break;
+          case 3:
+            if (isOpened) {
+              note.menu.instance.hide();
+            }
+            break;
+        }
+
+        isOpened = note.menu.instance.opened();
+        lemon.buttonTgl(note.menu.triId, isOpened ? 2 : 3);
+        return isOpened;
+      },
       newNote: function () {
 
       },
@@ -110,12 +134,8 @@ var note = {
         }
       });
 
-      $('#note-tool-tri').click(function () {
-        if (lemon.buttonTgl(this)) {
-          note.menu.instance.show();
-        } else {
-          note.menu.instance.hide();
-        }
+      $(note.menu.triId).click(function () {
+        note.menu.action.menuTgl();
       });
     }
   },

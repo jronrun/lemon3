@@ -9,9 +9,9 @@
             </li>
             <% lemon.each(menus, function(menu) { %>
                 <% if ('dropdown' == menu.type) { %>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" id="<%= menu.id %>">
                         <a class="nav-link" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false"><%= menu.ddName %></a>
-                        <div class="dropdown-menu boxshadow" style="border: none;">
+                        <div class="dropdown-menu boxshadow" style="border: none;" id="<%= menu.id %>_dd">
                             <% lemon.each(menu.items, function(item) { %>
                                 <% if ('separator' == item.name) { %>
                                     <div class="dropdown-divider"></div>

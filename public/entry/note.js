@@ -172,6 +172,7 @@ var note = {
         {
           type: 'dropdown',
           ddName: 'File',
+          id: 'menu_file',
           items: [
             note.menu.item('New', ':n', 'visual', 'New Note (:new)', 'newNote'),
             note.menu.item('Open File...', ':o', 'visual', 'Open File (:open)', 'openFile'),
@@ -192,6 +193,7 @@ var note = {
         {
           type: 'dropdown',
           ddName: 'Edit',
+          id: 'menu_edit',
           items: [
             note.menu.item('Undo', 'u', 'visual', 'Undo (:undo)', 'undo'),
             note.menu.item('Redo', 'Ctrl-R', 'visual', 'Redo (:redo)', 'redo'),

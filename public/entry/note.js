@@ -19,6 +19,12 @@ var note = {
       menuShow: function () {
         return note.menu.tgl(2);
       },
+      menuClose: function () {
+        note.menu.tgl(3);
+        if (!lemon.isRootWin()) {
+          lemon.pubEvent('MENU_CLOSE');
+        }
+      },
 
       fullscreenTgl: function () {
 
@@ -209,6 +215,15 @@ var note = {
     },
 
     intl: function () {
+      lemon.live('click', 'a[data-menuact]', function (evt, el) {
+        evt.preventDefault();
+        var anEl = 'A' == el.tagName ? el : $(el).parent(),
+          act = lemon.data(anEl, 'menuact'), menuHandle = null;
+        if (lemon.isFunc(menuHandle = note.menu.action[act])) {
+          menuHandle(lemon.data(anEl, 'params'));
+        }
+      });
+
       note.menu.instance = lemon.popover(note.menu.id, {
         trigger: 'manual',
         placement: 'top',

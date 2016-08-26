@@ -1,7 +1,7 @@
 
 <script type="text/html" id="note_tool_tmpl">
-    <nav class="navbar">
-        <ul class="nav nav-pills" id="note_tool_bar">
+    <nav class="navbar nav-pills">
+        <ul class="nav" id="note_tool_bar">
             <li class="nav-item">
                 <a class="nav-link" href="javascript:void(0);" style="zoom: 80%;margin-top: 5px;">
                     {{> logo}}
@@ -19,19 +19,21 @@
                                     <div><%= lemon.repeat('&nbsp;', item.repeat) %></div>
                                 <% } else if ('none' == item.name) { %>
                                 <% } else { %>
-                                    <a class="dropdown-item" href="javascript:void(0);" data-action="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
+                                    <a class="dropdown-item" href="javascript:void(0);" data-menuact="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
                                 <% } %>
                             <% }); %>
                         </div>
                     </li>
                 <% } else if ('link' == menu.type) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0);" data-action="<%= menu.item.action %>" data-params="<%= menu.item.params %>" title="<%= menu.item.title %>"><%= menu.item.text
-                            %></a>
+                        <a class="nav-link" href="javascript:void(0);" data-menuact="<%= menu.item.action %>" data-params="<%= menu.item.params %>" title="<%= menu.item.title %>"><%= menu.item.text %></a>
                     </li>
                 <% } %>
             <% }); %>
         </ul>
+        <a href="javascript:void(0);" class="close" title="Close" data-menuact="LYUwdgrgwgNg9gZxEA" data-params="N4XyA" aria-label="Close">
+            <span aria-hidden="true" style="zoom: 70%;">x</span>
+        </a>
     </nav>
 </script>
 

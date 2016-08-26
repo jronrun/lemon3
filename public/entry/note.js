@@ -231,6 +231,42 @@ var note = {
         }
       });
 
+      lemon.dropdownEvent('li[id^="menu_dd_"]', {
+        show: function (ddEl, ddBody) {
+          $(ddBody).hide();
+        },
+        shown: function (ddEl, ddBody) {
+          // if (lemon.isSmallDownView()) {
+          if (true) {
+            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left;
+            $(ddBody).css({
+              left: offsetW
+            });
+            // var viewport = {
+            //   w: $(window).width(),
+            //   h: $(window).height()
+            // };
+            //
+            // var bodyW = Math.min($(body).width(), viewport.w), elOffset = $('#' + $(body).attr('id')).offset();
+            // var offsetW = -elOffset.left;
+            // alert(offsetW);
+            // $(body).css({
+            //   width: bodyW,
+            //   'max-width': bodyW,
+            //   // height: bodyH,
+            //   // 'max-height': bodyH,
+            //   left: offsetW
+            // });
+
+          }
+          $(ddBody).slideDown();
+        },
+        hidden: function (tri, body) {
+
+        }
+      });
+
+
       note.menu.instance = lemon.popover(note.menu.id, {
         trigger: 'manual',
         placement: 'top',

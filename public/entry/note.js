@@ -14,33 +14,10 @@ var note = {
 
     action: {
       menuHide: function () {
-        return note.menu.action.menuTgl(3);
+        return note.menu.tgl(3);
       },
       menuShow: function () {
-        return note.menu.action.menuTgl(2);
-      },
-      menuTgl: function (opt) {
-        //1 toggle, 2 active, 3 unactive
-        var isOpened = note.menu.instance.opened();
-        opt = opt || 1; switch (opt) {
-          case 1:
-            note.menu.instance.toggle();
-            break;
-          case 2:
-            if (!isOpened) {
-              note.menu.instance.show();
-            }
-            break;
-          case 3:
-            if (isOpened) {
-              note.menu.instance.hide();
-            }
-            break;
-        }
-
-        isOpened = note.menu.instance.opened();
-        lemon.buttonTgl(note.menu.triId, isOpened ? 2 : 3);
-        return isOpened;
+        return note.menu.tgl(2);
       },
 
       fullscreenTgl: function () {
@@ -70,10 +47,90 @@ var note = {
       },
       openFile: function () {
 
+      },
+
+
+      undo: function () {
+
+      },
+      redo: function () {
+
+      },
+      editMode: function () {
+
+      },
+      visualMode: function () {
+
+      },
+      wrapword: function () {
+
+      },
+      commentTgl: function () {
+
+      },
+      foldCodeTgl: function () {
+
+      },
+      contentAssist: function () {
+
+      },
+      matchTag: function () {
+
+      },
+      selectAll: function () {
+
+      },
+      find: function () {
+
+      },
+      findNext: function () {
+
+      },
+      findPrev: function () {
+
+      },
+      replace: function () {
+
+      },
+      replaceAll: function () {
+
+      },
+      jumpToLine: function () {
+
       }
     },
 
-    item: function(name, cmd, desc, title, action, params) {
+    tgl: function (opt) {
+      //1 toggle, 2 active, 3 unactive
+      var isOpened = note.menu.instance.opened();
+      opt = opt || 1; switch (opt) {
+        case 1:
+          note.menu.instance.toggle();
+          break;
+        case 2:
+          if (!isOpened) {
+            note.menu.instance.show();
+          }
+          break;
+        case 3:
+          if (isOpened) {
+            note.menu.instance.hide();
+          }
+          break;
+      }
+
+      isOpened = note.menu.instance.opened();
+      lemon.buttonTgl(note.menu.triId, isOpened ? 2 : 3);
+      return isOpened;
+    },
+
+    item: function(name, cmd, desc, title, action, params, onlyShowInChildWin) {
+      if (onlyShowInChildWin) {
+        if (lemon.isRootWin()) {
+          return { name: 'none' };
+        }
+      }
+
       if ('separator' == name) {
         return { name: name };
       }
@@ -110,14 +167,41 @@ var note = {
             note.menu.item('Open File...', ':o', 'visual', 'Open File (:open)', 'openFile'),
             note.menu.item('separator'),
             note.menu.item('Close Menu', ':menu', 'visual', 'Close Menu', 'menuHide'),
-            note.menu.item('Close Note', ':q', 'visual', 'Close Note', 'closeNote'),
+            note.menu.item('Close Note', ':q', 'visual', 'Close Note', 'closeNote', false, true),
             note.menu.item('Share Note', ':share', 'visual', 'Share Note', 'shareNote'),
             note.menu.item('Preview', ':v', 'visual', 'Preview (:view)', 'preview'),
             note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
             note.menu.item('separator'),
             note.menu.item('Save Note', ':w', 'visual', 'Save Note (:w)', 'saveNote'),
-            note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote'),
+            note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote', false, true),
             note.menu.item('Save As...', ':sa', 'visual', 'Save Note As...', 'saveNoteAs'),
+            note.menu.item('empty', 80)
+          ]
+        },
+
+        {
+          type: 'dropdown',
+          ddName: 'Edit',
+          items: [
+            note.menu.item('Undo', 'u', 'visual', 'Undo (:undo)', 'undo'),
+            note.menu.item('Redo', 'Ctrl-R', 'visual', 'Redo (:redo)', 'redo'),
+            note.menu.item('separator'),
+            note.menu.item('Edit Mode', 'i', 'visual', 'Edit Mode', 'editMode'),
+            note.menu.item('Visual Mode', 'Esc', 'edit', 'Visual Mode', 'visualMode'),
+            note.menu.item('separator'),
+            note.menu.item('Word Wrap', ':wrap', 'visual', 'Word Wrap (:wrapword)', 'wrapword'),
+            note.menu.item('Toggle Comment', 'Ctrl-/', 'visual & edit', 'Toggle Comment', 'commentTgl'),
+            note.menu.item('Toggle Fold Code', 'Ctrl-Q', 'visual & edit', 'Toggle Fold Code', 'foldCodeTgl'),
+            note.menu.item('Content Assist', 'Ctrl-J', 'visual & edit', 'Content Assist', 'contentAssist'),
+            note.menu.item('Matching Tag', 'Ctrl-K', 'visual & edit', 'To Matching Tag', 'matchTag'),
+            note.menu.item('separator'),
+            note.menu.item('Select All', 'Ctrl-A', 'visual & edit', 'Select All', 'selectAll'),
+            note.menu.item('Find...', 'Cmd-F', 'edit', 'Find... (/)', 'find'),
+            note.menu.item('Find Next', 'Cmd-G', 'edit', 'Find Next (n)', 'findNext'),
+            note.menu.item('Find Previous', 'Shift-Cmd-G', 'edit', 'Find Previous (shift + n)', 'findPrev'),
+            note.menu.item('Replace...', 'Cmd-Alt-F', 'edit', 'Replace... (:%s/)', 'replace'),
+            note.menu.item('Replace All', 'Shift-Cmd-Alt-F', 'edit', 'Replace All (:%s/)', 'replaceAll'),
+            note.menu.item('Jump To Line', 'Alt-G', 'edit', 'Jump To Line (:jump)', 'jumpToLine'),
             note.menu.item('empty', 80)
           ]
         }
@@ -162,7 +246,7 @@ var note = {
       });
 
       $(note.menu.triId).click(function () {
-        note.menu.action.menuTgl();
+        note.menu.tgl();
       });
     }
   },

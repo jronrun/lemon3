@@ -17,6 +17,7 @@
                                     <div class="dropdown-divider"></div>
                                 <% } else if ('empty' == item.name) { %>
                                     <div><%= lemon.repeat('&nbsp;', item.repeat) %></div>
+                                <% } else if ('none' == item.name) { %>
                                 <% } else { %>
                                     <a class="dropdown-item" href="javascript:void(0);" data-action="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
                                 <% } %>
@@ -38,24 +39,6 @@
     <nav class="navbar" id="note_tool_bar" style="margin-bottom:0px;border:0px;background-color:#ffffff">
         <div class="container-fluid">
             <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File</a>
-                    <ul class="dropdown-menu" style="border:0px;">
-                        <li><a href="javascript:void(0);" onclick="note.newNote();" title=":new"><%= menu('New', ':n', 'visual') %></a></li>
-                        <li><a href="javascript:void(0);" onclick="note.openFile();" title=":open"><%= menu('Open File...', ':o', 'visual') %></a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="javascript:void(0);" onclick="note.menuTgl();" title="Mouse move left toggle menu"><%= menu('Close Menu', ':menu', 'visual') %></a></li>
-                        <li><a href="javascript:void(0);" onclick="note.close();" title="Close Note"><%= menu('Close Note', ':q', 'visual') %></a></li>
-                        <li><a href="javascript:void(0);" onclick="note.share();" title="Share Note to Browser Address"><%= menu('Share Note', ':share', 'visual') %></a></li>
-                        <li><a href="javascript:void(0);" onclick="note.preview();" title=":view"><%= menu('Preview', ':v', 'visual') %></a></li>
-                        <li><a href="javascript:void(0);" onclick="note.fulltgl();" title=":fullscreen"><%= menu('Fullscreen', ':full', 'visual') %></a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="javascript:void(0);" onclick="note.save();" title="Save Note"><%= menu('Save Note', ':w', 'visual') %></a></li>
-                        <li><a href="javascript:void(0);" onclick="note.saveclose();" title="Save & Close Note"><%= menu('Save & Close Note', ':wq', 'visual') %></a></li>
-                        <li><a href="javascript:void(0);" onclick="note.save(null, 1);" title="Save As..."><%= menu('Save As...', ':sa', 'visual') %></a></li>
-                        <li><%= lemon.repeat('&nbsp;', 80) %></li>
-                    </ul>
-                </li>
 
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Edit</a>

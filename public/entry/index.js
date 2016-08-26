@@ -831,6 +831,20 @@ lemon.register({
     }).on('hidden.bs.tab', function (e) {
       doTabHandle(e, 'hidden');
     });
+  },
+
+  //http://stackoverflow.com/questions/21857779/process-for-using-show-bs-dropdown-in-bootstrap
+  dropdownEvent: function (selector, events) {
+    events = events || {};
+    $(selector).on('show.bs.dropdown', function (e) {
+      lemon.isFunc(events.show) && events.show(e.relatedTarget, e, selector);
+    }).on('shown.bs.dropdown', function (e) {
+      lemon.isFunc(events.shown) && events.shown(e.relatedTarget, e, selector);
+    }).on('hide.bs.dropdown', function (e) {
+      lemon.isFunc(events.hide) && events.hide(e.relatedTarget, e, selector);
+    }).on('hidden.bs.dropdown', function (e) {
+      lemon.isFunc(events.hidden) && events.hidden(e.relatedTarget, e, selector);
+    });
   }
 });
 

@@ -833,6 +833,10 @@ lemon.register({
     });
   },
 
+  /**
+   * @param selector    which is .dropdown class element
+   * @param events
+   */
   //http://stackoverflow.com/questions/21857779/process-for-using-show-bs-dropdown-in-bootstrap
   dropdownEvent: function (selector, events) {
     events = events || {};

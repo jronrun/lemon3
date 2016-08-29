@@ -463,6 +463,16 @@ lemon.register({
   isSmallDownView: function() {
     return lemon.isView('xs', 'sm');
   },
+  viewport: function () {
+    var viewport = {
+      w: $(window).width(),
+      h: $(window).height(),
+      smallDown: lemon.isSmallDownView(),
+      mediumUp: lemon.isMediumUpView()
+    };
+
+    return viewport;
+  },
 
   hasEvent: function(selector, type) {
     var data = undefined;

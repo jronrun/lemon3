@@ -236,12 +236,9 @@ var note = {
           $(ddBody).hide();
         },
         shown: function (ddEl, ddBody) {
-          var viewport = {
-            w: $(window).width(),
-            h: $(window).height()
-          };
+          var viewport = lemon.viewport();
 
-          if (lemon.isSmallDownView()) {
+          if (viewport.smallDown) {
             var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left,
               ddBodyW = $(ddBody).width(), ddBodyH = $(ddBody).height();
 
@@ -261,6 +258,7 @@ var note = {
               'max-height': viewport.h * 0.7,
               'overflow-y': 'scroll'
             });
+
           } else {
             $(ddBody).css({
               //width: viewport.w * 0.25,
@@ -271,6 +269,13 @@ var note = {
           }
 
           $(ddBody).slideDown();
+
+          if (viewport.smallDown) {
+            var ddBodyOffset = $(ddBody).offset();
+            $(ddBody).scroll(function () {
+              $(ddBody).offset(ddBodyOffset);
+            });
+          }
         },
         hidden: function (tri, body) {
 

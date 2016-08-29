@@ -186,7 +186,7 @@ var note = {
             note.menu.item('Save Note', ':w', 'visual', 'Save Note (:w)', 'saveNote'),
             note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote', false, true),
             note.menu.item('Save As...', ':sa', 'visual', 'Save Note As...', 'saveNoteAs'),
-            note.menu.item('empty', 80)
+            note.menu.item('empty', 180)
           ]
         },
 
@@ -236,28 +236,23 @@ var note = {
           $(ddBody).hide();
         },
         shown: function (ddEl, ddBody) {
-          // if (lemon.isSmallDownView()) {
-          if (true) {
-            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left;
-            $(ddBody).css({
-              left: offsetW
-            });
-            // var viewport = {
-            //   w: $(window).width(),
-            //   h: $(window).height()
-            // };
-            //
-            // var bodyW = Math.min($(body).width(), viewport.w), elOffset = $('#' + $(body).attr('id')).offset();
-            // var offsetW = -elOffset.left;
-            // alert(offsetW);
-            // $(body).css({
-            //   width: bodyW,
-            //   'max-width': bodyW,
-            //   // height: bodyH,
-            //   // 'max-height': bodyH,
-            //   left: offsetW
-            // });
+          if (lemon.isSmallDownView()) {
+            var viewport = {
+              w: $(window).width(),
+              h: $(window).height()
+            }, ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left, ddBodyW = $(ddBody).width();
 
+            if (viewport.w < ddBodyW) {
+              ddBodyW = viewport.w;
+            } else {
+              offsetW = offsetW + ((viewport.w - ddBodyW) / 2);
+            }
+
+            $(ddBody).css({
+              left: offsetW,
+              width: ddBodyW,
+              'max-width': ddBodyW
+            });
           }
           $(ddBody).slideDown();
         },

@@ -239,8 +239,7 @@ var note = {
           var viewport = lemon.viewport();
 
           if (viewport.smallDown) {
-            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left,
-              ddBodyW = $(ddBody).width(), ddBodyH = $(ddBody).height();
+            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left, ddBodyW = $(ddBody).width();
 
             if (viewport.w < ddBodyW) {
               ddBodyW = viewport.w - 10;

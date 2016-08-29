@@ -181,7 +181,7 @@ var note = {
             note.menu.item('Close Note', ':q', 'visual', 'Close Note', 'closeNote', false, true),
             note.menu.item('Share Note', ':share', 'visual', 'Share Note', 'shareNote'),
             note.menu.item('Preview', ':v', 'visual', 'Preview (:view)', 'preview'),
-            note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
+            //note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
             note.menu.item('separator'),
             note.menu.item('Save Note', ':w', 'visual', 'Save Note (:w)', 'saveNote'),
             note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote', false, true),
@@ -271,11 +271,14 @@ var note = {
 
           if (viewport.smallDown) {
             var ddBodyOffset = $(ddBody).offset(), toolbarOffset = $(note.menu.popoverId).offset();
-            $(ddBody).scroll(function (e) {
+            var holdPos = function (e) {
               e.preventDefault();
               $(ddBody).offset(ddBodyOffset);
               $(note.menu.popoverId).offset(toolbarOffset);
-            });
+            };
+
+            $(ddBody).scroll(holdPos);
+            $(ddBody).resize(holdPos);
           }
         },
         hidden: function (tri, body) {

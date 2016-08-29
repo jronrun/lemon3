@@ -270,9 +270,11 @@ var note = {
           $(ddBody).slideDown();
 
           if (viewport.smallDown) {
-            var ddBodyOffset = $(ddBody).offset();
-            $(ddBody).scroll(function () {
+            var ddBodyOffset = $(ddBody).offset(), toolbarOffset = $(note.menu.popoverId).offset();
+            $(ddBody).scroll(function (e) {
+              e.preventDefault();
               $(ddBody).offset(ddBodyOffset);
+              $(note.menu.popoverId).offset(toolbarOffset);
             });
           }
         },
@@ -284,8 +286,14 @@ var note = {
 
       note.menu.instance = lemon.popover(note.menu.id, {
         trigger: 'manual',
-        placement: 'top',
+        placement: 'right',
         arrow: false,
+        constraints: [
+          {
+            to: 'window',
+            attachment: 'together'
+          }
+        ],
         content: function () {
           return lemon.tmpl($('#note_tool_tmpl').html(), {
             menus: note.menu.source(),
@@ -302,19 +310,26 @@ var note = {
           $(el).hide();
         },
         shown: function (el) {
-          var viewport = lemon.viewport(), w = viewport.mediumUp ? Math.floor(viewport.w / 1.8) : (viewport.w - 5);
+          var viewport = lemon.viewport(), w = 0;
+          if (viewport.mediumUp) {
+            w = Math.floor(viewport.w / 1.8);
+          } else {
+            w = viewport.w;
+          }
 
           $(el).css({
             width: w,
             'max-width': w,
             border: 0,
-            top: 11,
-            left: (viewport.w - w - 2),
+            'margin-left': 0,
+            top: 1,
+            left: (viewport.w - w),
             'z-index': 50001
           });
           $(el).find('.popover-content').css({
             'padding': 0
           });
+          note.menu.popoverId = '#' + $(el).attr('id');
           $(el).slideDown();
         }
       });

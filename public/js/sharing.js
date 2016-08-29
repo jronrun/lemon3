@@ -97,10 +97,7 @@ sharing.shows = function(options) {
     options.qrclink = links(options.qrclink);
   }
 
-  var viewport = {
-      w: $(window).width(),
-      h: $(window).height()
-  }, hasQrclink = !lemon.isBlank(options.qrclink);
+  var viewport = lemon.viewport(), hasQrclink = !lemon.isBlank(options.qrclink);
 
   options.headBtns = btnsIntl(options.headBtns);
   options.footBtns = btnsIntl(options.footBtns);

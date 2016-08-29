@@ -95,10 +95,7 @@ var apis = {
   },
 
   render: function(page, callback) {
-    var viewport = {
-      w: $(window).width(),
-      h: $(window).height()
-    };
+    var viewport = lemon.viewport();
 
     page = page || 1;
     $(apis.id).data('page', page);
@@ -332,10 +329,7 @@ var envs = {
   },
 
   render: function(page, callback) {
-    var viewport = {
-      w: $(window).width(),
-      h: $(window).height()
-    };
+    var viewport = lemon.viewport();
 
     page = page || 1;
     $(envs.id).data('page', page);
@@ -788,10 +782,7 @@ var qry = {
 
     lemon.tabEvent(qry.contentId, {
       show: function(current, previous) {
-        var viewport = {
-          w: $(window).width(),
-          h: $(window).height()
-        };
+        var viewport = lemon.viewport();
 
         $(qry.contentId).css({
           height: viewport.h * 0.86,

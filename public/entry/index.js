@@ -1031,10 +1031,7 @@ lemon.register({
           return;
         }
 
-        var viewport = {
-          w: $(window).width(),
-          h: $(window).height()
-        };
+        var viewport = lemon.viewport();
         $(el).find('.modal-dialog').css({
           'max-height': viewport.h,
           margin: 0

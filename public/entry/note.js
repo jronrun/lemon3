@@ -278,7 +278,7 @@ var note = {
             };
 
             $(ddBody).scroll(holdPos);
-            $(window).resize(holdPos);
+            $(ddBody).resize(holdPos);
             lemon.data(ddEl, {evented: 1})
           }
         },

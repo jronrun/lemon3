@@ -303,7 +303,7 @@ var note = {
           $(el).hide();
         },
         shown: function (el) {
-          var viewport = lemon.viewport(), w = viewport.smallDown ? Math.floor(viewport.w / 1.8) : (viewport.w - 5);
+          var viewport = lemon.viewport(), w = viewport.mediumUp ? Math.floor(viewport.w / 1.8) : (viewport.w - 5);
 
           $(el).css({
             width: w,

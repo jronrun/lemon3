@@ -236,11 +236,14 @@ var note = {
           $(ddBody).hide();
         },
         shown: function (ddEl, ddBody) {
+          var viewport = {
+            w: $(window).width(),
+            h: $(window).height()
+          };
+
           if (lemon.isSmallDownView()) {
-            var viewport = {
-              w: $(window).width(),
-              h: $(window).height()
-            }, ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left, ddBodyW = $(ddBody).width();
+            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left,
+              ddBodyW = $(ddBody).width(), ddBodyH = $(ddBody).height();
 
             if (viewport.w < ddBodyW) {
               ddBodyW = viewport.w;
@@ -251,9 +254,21 @@ var note = {
             $(ddBody).css({
               left: offsetW,
               width: ddBodyW,
-              'max-width': ddBodyW
+              'max-width': ddBodyW,
+
+              height: viewport.h * 0.7,
+              'max-height': viewport.h * 0.7,
+              'overflow-y': 'scroll'
+            });
+          } else {
+            $(ddBody).css({
+              //width: viewport.w * 0.25,
+              height: viewport.h * 0.8,
+              'max-height': viewport.h * 0.8,
+              'overflow-y': 'scroll'
             });
           }
+
           $(ddBody).slideDown();
         },
         hidden: function (tri, body) {

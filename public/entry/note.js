@@ -174,18 +174,18 @@ var note = {
           ddName: 'File',
           id: 'menu_dd_file',
           items: [
-            note.menu.item('New', ':n', 'visual', 'New Note (:new)', 'newNote'),
-            note.menu.item('Open File...', ':o', 'visual', 'Open File (:open)', 'openFile'),
+            note.menu.item('New', ':n', 'visual & edit', 'New Note (:new)', 'newNote'),
+            note.menu.item('Open File...', ':o', 'visual & edit', 'Open File (:open)', 'openFile'),
             note.menu.item('separator'),
-            note.menu.item('Close Menu', ':menu', 'visual', 'Close Menu', 'menuHide'),
-            note.menu.item('Close Note', ':q', 'visual', 'Close Note', 'closeNote', false, true),
-            note.menu.item('Share Note', ':share', 'visual', 'Share Note', 'shareNote'),
-            note.menu.item('Preview', ':v', 'visual', 'Preview (:view)', 'preview'),
+            note.menu.item('Close Menu', ':menu', 'visual & edit', 'Close Menu', 'menuHide'),
+            note.menu.item('Close Note', ':q', 'visual & edit', 'Close Note', 'closeNote', false, true),
+            note.menu.item('Share Note', ':share', 'visual & edit', 'Share Note', 'shareNote'),
+            note.menu.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
             //note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
             note.menu.item('separator'),
-            note.menu.item('Save Note', ':w', 'visual', 'Save Note (:w)', 'saveNote'),
-            note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote', false, true),
-            note.menu.item('Save As...', ':sa', 'visual', 'Save Note As...', 'saveNoteAs'),
+            note.menu.item('Save Note', ':w', 'visual & edit', 'Save Note (:w)', 'saveNote'),
+            note.menu.item('Save & Close Note', ':wq', 'visual & edit', 'Save & Close Note', 'saveAndCloseNote', false, true),
+            note.menu.item('Save As...', ':sa', 'visual & edit', 'Save Note As...', 'saveNoteAs'),
             note.menu.item('empty', 80)
           ]
         },
@@ -269,7 +269,7 @@ var note = {
 
           $(ddBody).slideDown();
 
-          if (viewport.smallDown) {
+          if (1 != lemon.data(ddEl, 'evented') && viewport.smallDown) {
             var ddBodyOffset = $(ddBody).offset(), toolbarOffset = $(note.menu.popoverId).offset();
             var holdPos = function (e) {
               e.preventDefault();
@@ -278,7 +278,8 @@ var note = {
             };
 
             $(ddBody).scroll(holdPos);
-            $(ddBody).resize(holdPos);
+            $(window).resize(holdPos);
+            lemon.data(ddEl, {evented: 1})
           }
         },
         hidden: function (tri, body) {
@@ -334,6 +335,17 @@ var note = {
           });
           note.menu.popoverId = '#' + $(el).attr('id');
           $(el).slideDown();
+
+          if (1 != lemon.data(note.menu.id, 'evented') && viewport.smallDown) {
+            var toolbarOffset = $(note.menu.popoverId).offset();
+            var holdPos = function (e) {
+              e.preventDefault();
+              $(note.menu.popoverId).offset(toolbarOffset);
+            };
+
+            $(window).resize(holdPos);
+            lemon.data(note.menu.id, {evented: 1})
+          }
         }
       });
 

@@ -186,7 +186,7 @@ var note = {
             note.menu.item('Save Note', ':w', 'visual', 'Save Note (:w)', 'saveNote'),
             note.menu.item('Save & Close Note', ':wq', 'visual', 'Save & Close Note', 'saveAndCloseNote', false, true),
             note.menu.item('Save As...', ':sa', 'visual', 'Save Note As...', 'saveNoteAs'),
-            note.menu.item('empty', 180)
+            note.menu.item('empty', 80)
           ]
         },
 
@@ -246,7 +246,8 @@ var note = {
               ddBodyW = $(ddBody).width(), ddBodyH = $(ddBody).height();
 
             if (viewport.w < ddBodyW) {
-              ddBodyW = viewport.w;
+              ddBodyW = viewport.w - 10;
+              offsetW = offsetW + 5;
             } else {
               offsetW = offsetW + ((viewport.w - ddBodyW) / 2);
             }

@@ -253,8 +253,8 @@ var note = {
               width: ddBodyW,
               'max-width': ddBodyW,
 
-              height: viewport.h * 0.8,
-              'max-height': viewport.h * 0.8,
+              height: viewport.h * 0.85,
+              'max-height': viewport.h * 0.85,
               'overflow-y': 'scroll'
             });
 

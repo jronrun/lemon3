@@ -216,6 +216,29 @@ var note = {
             note.menu.item('Jump To Line', 'Alt-G', 'edit', 'Jump To Line (:jump)', 'jumpToLine'),
             note.menu.item('empty', 80)
           ]
+        },
+        {
+          type: 'dropdown',
+          ddName: 'Note',
+          id: 'menu_dd_note'
+        },
+        {
+          type: 'dropdown',
+          ddName: 'Language',
+          id: 'menu_dd_mode'
+        },
+        {
+          type: 'dropdown',
+          ddName: 'Theme',
+          id: 'menu_dd_theme'
+        },
+        {
+          type: 'dropdown',
+          ddName: 'Help',
+          id: 'menu_dd_help',
+          items: [
+
+          ]
         }
       ];
     },

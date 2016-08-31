@@ -12,16 +12,70 @@
                     <li class="nav-item dropdown" id="<%= menu.id %>">
                         <a class="nav-link" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false"><%= menu.ddName %></a>
                         <div class="dropdown-menu boxshadow" style="border: none;" id="<%= menu.id %>_dd">
-                            <% lemon.each(menu.items, function(item) { %>
-                                <% if ('separator' == item.name) { %>
-                                    <div class="dropdown-divider"></div>
-                                <% } else if ('empty' == item.name) { %>
-                                    <div><%= lemon.repeat('&nbsp;', item.repeat) %></div>
-                                <% } else if ('none' == item.name) { %>
-                                <% } else { %>
-                                    <a class="dropdown-item" href="javascript:void(0);" data-menuact="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
-                                <% } %>
-                            <% }); %>
+                            <% if ('menu_dd_note' == menu.id ) { %>
+
+                                <div><%= lemon.repeat('&nbsp;', 60) %></div>
+                            <% } else if ('menu_dd_theme' == menu.id ) { %>
+
+                                <div><%= lemon.repeat('&nbsp;', 60) %></div>
+                            <% } else if ('menu_dd_mode' == menu.id ) { %>
+                                <div class="form-group form-group-lg" style="margin-top:15px;">
+                                    <div class="col-sm-12">
+                                        <input class="form-control borderinfo" type="text" id="note_mode_qry" placeholder="Search Language...">
+                                    </div>
+                                </div>
+                                <% lemon.each(notesource.langs, function(lang, langname) { %>
+                                    <div class="dropdown-item" id="lang_<%= lang.id %>" data-lang="<%= lemon.enc(lang) %>">
+                                        <div class="card borderinfo">
+                                            <div class="card-block">
+                                                <h5 class="card-title">
+                                                    <% if (langname == thislang) { %>
+                                                        <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                                                        <span class="text-danger"><%= langname %></span>
+                                                    <% } else { %>
+                                                        <span class="text-success"><%= langname %></span>
+                                                    <% } %>
+                                                </h5>
+
+                                                <% if ('null' != lang.mime || (lang.mimes && lang.mimes.length > 0)) { %>
+                                                    <p class="card-text text-silver">Defined MIME Type
+                                                <% } %>
+                                                <% if (lang.mimes && lang.mimes.length > 0) { lemon.each(lang.mimes, function(mime, i2) { %>
+                                                        <br/>
+                                                        <small class="text-muted"><a href="javascript:void(0);"><%= mime %></a></small>
+                                                <% }); } else if ('null' != lang.mime) { %>
+                                                        <br/>
+                                                        <small class="text-muted"><a href="javascript:void(0);"><%= lang.mime %></a></small>
+                                                <% } %>
+                                                <% if ('null' != lang.mime || (lang.mimes && lang.mimes.length > 0)) { %>
+                                                    </p>
+                                                <% } %>
+
+                                                <% if (lang.ext && lang.ext.length > 0) {  %>
+                                                    <p class="card-text text-silver">Extension
+                                                        <% lemon.each(lang.ext, function(ext, idx) { %>
+                                                            <br/>
+                                                            <small class="text-muted"><a href="javascript:void(0);"><%= ext %></a></small>
+                                                        <% }); %>
+                                                    </p>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                                <div><%= lemon.repeat('&nbsp;', 80) %></div>
+                            <% } else { %>
+                                <% lemon.each(menu.items, function(item) { %>
+                                  <% if ('separator' == item.name) { %>
+                                      <div class="dropdown-divider"></div>
+                                  <% } else if ('empty' == item.name) { %>
+                                      <div><%= lemon.repeat('&nbsp;', item.repeat) %></div>
+                                  <% } else if ('none' == item.name) { %>
+                                  <% } else { %>
+                                      <a class="dropdown-item" href="javascript:void(0);" data-menuact="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
+                                  <% } %>
+                                <% }); %>
+                            <% } %>
                         </div>
                     </li>
                 <% } else if ('link' == menu.type) { %>
@@ -30,6 +84,35 @@
                     </li>
                 <% } %>
             <% }); %>
+
+          <!--
+            <li class="dropdown">
+                <a href="javascript:void(0);" id="note_mode_dd" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Language</a>
+                <ul class="dropdown-menu fixed-dropdown" style="max-width: 400px;border:0px;" id="note_mode">
+                    <div class="form-group form-group-lg" style="margin-left:15px;margin-bottom:15px;margin-top:15px;"> <div class="col-sm-12">
+                        <input class="form-control" type="text" id="note_mode_qry" style="width:300px;" placeholder="Search Language..."> </div> </div>
+                    <% lemon.each(notesource.langs, function(lang, langname) { %>
+                    <li name="<%= langname %>" id="lang_<%= lang.id %>" lang="1">
+                        <blockquote style="width:380px;" title="" class="">
+                            <h4 class="text-success"><%= langname %><% if (langname == thislang) { %><span class="pull-right text-danger glyphicon glyphicon-check"></span><% } %></h4>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <% if ('null' != lang.mime || (lang.mimes && lang.mimes.length > 0)) { %> <h5><p class="text-muted"> Defined MIME types </p></h5> <% } %>
+                                    <% if (lang.mimes && lang.mimes.length > 0) { lemon.each(lang.mimes, function(mime, i2) { %> <h5 class="text-muted"><a href="javascript:void(0);" clk="1" val="<%= mime %>"><%= mime %></a></h5> <% }); } else if ('null' != lang.mime) { %> <h5 class="text-muted"><a href="javascript:void(0);" clk="1" val="<%= lang.mime %>"><%= lang.mime %></a></h5> <% } %>
+                                </div> <div class="col-md-4">
+                                <% if (lang.ext && lang.ext.length > 0) {  %> <h5><p class="text-muted"> Extensions </p></h5> <% lemon.each(lang.ext, function(ext, idx) { %> <h5 class="text-muted"><a href="javascript:void(0);" clk="1" val="<%= ext %>"><%= ext %></a></h5> <% }); }%>
+                            </div>
+                            </div>
+                        </blockquote>
+                    </li>
+                    <%
+                    });
+                    %>
+                    <li><%= lemon.repeat('&nbsp;', 60) %></li>
+                </ul>
+            </li>
+            -->
+
         </ul>
         <a href="javascript:void(0);" class="close" title="Close" data-menuact="LYUwdgrgwgNg9gZxEA" data-params="N4XyA" aria-label="Close">
             <span aria-hidden="true" style="zoom: 70%;">x</span>

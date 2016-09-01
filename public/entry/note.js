@@ -243,6 +243,24 @@ var note = {
       ];
     },
 
+    render: {
+      note: function () {
+
+      },
+      theme: function () {
+        $('#menu_dd_theme_dd').empty().append(lemon.tmpl($('#menu_theme_tmpl').html(), {
+          themes: mirror.mirrors.themes,
+          thistheme: note.instance.theme()
+        }));
+      },
+      lang: function () {
+        $('#menu_dd_mode_dd').empty().append(lemon.tmpl($('#menu_lang_tmpl').html(), {
+          langs: mirror.mirrors.languages,
+          thislang: note.instance.mode().name
+        }));
+      }
+    },
+
     intl: function () {
       lemon.live('click', 'a[data-menuact]', function (evt, el) {
         evt.preventDefault();
@@ -323,13 +341,7 @@ var note = {
         ],
         content: function () {
           return lemon.tmpl($('#note_tool_tmpl').html(), {
-            menus: note.menu.source(),
-            notesource: {
-              langs: mirror.mirrors.languages,
-              themes: mirror.mirrors.themes
-            },
-            thislang: note.instance.mode().name,
-            thistheme: note.instance.theme()
+            menus: note.menu.source()
           });
         }
       }, {
@@ -357,6 +369,10 @@ var note = {
             'padding': 0
           });
           note.menu.popoverId = '#' + $(el).attr('id');
+
+          note.menu.render.lang();
+          note.menu.render.theme();
+          note.menu.render.note();
           $(el).slideDown();
 
           if (1 != lemon.data(note.menu.id, 'evented') && viewport.smallDown) {

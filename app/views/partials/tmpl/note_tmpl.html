@@ -29,18 +29,6 @@
                                         </blockquote>
                                     </div>
                                 <% }); %>
-            <!--
-            <li class="dropdown">
-                <a href="javascript:void(0);" id="note_theme_dd" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Theme</a>
-                <ul class="dropdown-menu fixed-dropdown" style="border:0px;" id="note_theme"> <% lemon.each(notesource.themes, function(th, idx) { %>
-                    <li th="<%= th %>"> <blockquote style="" title="" class=""> <h5 class="text-success"><%= th %><% if (th == thistheme) { %> <span class="pull-right text-danger glyphicon
-                            glyphicon-check"></span><% } %></h5> </blockquote> </li> <% }); %>
-                    <li><%= lemon.repeat('&nbsp;', 60) %></li>
-                </ul>
-            </li>
-            -->
-
-
                                 <div><%= lemon.repeat('&nbsp;', 60) %></div>
                             <% } else if ('menu_dd_mode' == menu.id ) { %>
                                 <div class="form-group form-group-lg" style="margin-top:15px;">

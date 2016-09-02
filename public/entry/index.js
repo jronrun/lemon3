@@ -250,11 +250,20 @@ lemon.register({
     });
   },
   rightclick: function(selector, callback) {
-    $(selector).contextmenu(function (e) {
+    lemon.live('contextmenu', selector, function (event) {
       lemon.isFunc(callback) && callback(event, selector);
-      e.preventDefault();
+      event.preventDefault();
       return false;
     });
+
+    /*
+     $(selector).contextmenu(function (e) {
+     lemon.isFunc(callback) && callback(event, selector);
+     e.preventDefault();
+     return false;
+     });
+     */
+
     /*
      lemon.disableRightclick(selector);
      $(selector).mousedown(function (event) {

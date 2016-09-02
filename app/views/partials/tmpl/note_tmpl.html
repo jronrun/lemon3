@@ -50,7 +50,7 @@
 <script type="text/html" id="menu_theme_tmpl">
     <% lemon.each(themes, function(th, idx) { %>
         <div class="dropdown-item">
-            <blockquote class="blockquote">
+            <blockquote class="blockquote" data-lang="<%= lemon.enc(th) %>">
                 <% if (th == thistheme) { %>
                     <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
                     <span class="text-danger"><small><%= th %></small></span>

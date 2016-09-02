@@ -6,7 +6,7 @@ var format = require('util').format;
 // var host = '192.168.20.19';
 //var host = 'localhost';
 // var host = '192.168.1.105';
-var host = '192.168.0.106';
+var host = '192.168.0.100';
 
 module.exports = {
   //'mongodb://localhost/noobjs_dev'

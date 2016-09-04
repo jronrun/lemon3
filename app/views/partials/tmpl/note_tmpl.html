@@ -24,9 +24,15 @@
                     <% } %>
                     <% if (lang.mimes && lang.mimes.length > 0) { lemon.each(lang.mimes, function(mime, i2) { %>
                         <br/>
+                        <% if (thislang.chosenMimeOrExt == mime) { %>
+                            <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                        <% } %>
                         <small class="text-muted"><a href="javascript:void(0);" data-lang-info="<%= lemon.enc(mime) %>"><%= mime %></a> </small>
                     <% }); } else if ('null' != lang.mime) { %>
                         <br/>
+                        <% if (thislang.chosenMimeOrExt == lang.mime) { %>
+                            <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                        <% } %>
                         <small class="text-muted"><a href="javascript:void(0);" data-lang-info="<%= lemon.enc(lang.mime) %>"><%= lang.mime %></a></small>
                     <% } %>
                     <% if ('null' != lang.mime || (lang.mimes && lang.mimes.length > 0)) { %>
@@ -37,6 +43,9 @@
                 <p class="card-text text-silver">Extension
                     <% lemon.each(lang.ext, function(ext, idx) { %>
                         <br/>
+                        <% if (thislang.chosenMimeOrExt == ext) { %>
+                            <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                        <% } %>
                         <small class="text-muted"><a href="javascript:void(0);" data-lang-info="<%= lemon.enc(ext) %>"><%= ext %></a></small>
                     <% }); %>
                 </p>

@@ -107,7 +107,7 @@ var helper = function(cm, events) {
         return null;
       }
 
-      var m, info = null;
+      var m, info = null, lang = String(lang);
       info = languages[lang];
       if (!lemon.isBlank(info)) {
         return info;
@@ -173,9 +173,14 @@ var helper = function(cm, events) {
       tools.attrs('theme', th);
       return th;
     },
-    mode: function(lan) {
+    mode: function(lan, optionalChosenMimeOrExt) {
       if (lemon.isUndefined(lan)) {
-        return tools.langInfo(tools.attrs('mode'));
+        var rInfo = {};
+        lemon.extend(rInfo, tools.langInfo(tools.attrs('mode')));
+        lemon.extend(rInfo, {
+          chosenMimeOrExt: tools.attrs('chosenMimeOrExt') || ''
+        });
+        return rInfo;
       }
 
       var info = tools.langInfo(lan);
@@ -194,6 +199,10 @@ var helper = function(cm, events) {
       tools.attrs('mode', spec);
       if (!info.isJson) {
         tools.autoLoadMode(mode);
+      }
+
+      if (optionalChosenMimeOrExt) {
+        tools.attrs('chosenMimeOrExt', optionalChosenMimeOrExt);
       }
 
       return info;

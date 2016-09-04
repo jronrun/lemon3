@@ -301,13 +301,13 @@ var note = {
         evt.stopPropagation();
         var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
           lang = note.instance.langInfo(langInfo);
-        note.instance.mode(lang.name);
+        note.instance.mode(lang.name, langInfo);
       });
 
       lemon.live('click', langInfoSel, function (evt) {
         var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
           lang = note.instance.langInfo(langInfo);
-        note.instance.mode(lang.name);
+        note.instance.mode(lang.name, langInfo);
         note.menu.render.lang();
       });
 

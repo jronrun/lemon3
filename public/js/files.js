@@ -1,16 +1,25 @@
 /**
  *
  */
-var isFileSaverSupported = false; try {
-  isFileSaverSupported = !!new Blob;
-} catch (e) {/**/}
+var isFileSaverSupported = false, saveAs = function () {
+  lemon.warn('this browser unsupported save file, using google chrome instead');
+};
 
-if (isFileSaverSupported) {
-  require('file-saver');
-}
+try {
+  if (isFileSaverSupported = !!new Blob) {
+    saveAs = require('file-saver').saveAs;
+  }
+} catch (e) {/**/}
 require('imports?this=>window!filereader/filereader');
 
 var files = {
+  saveAs: function(content, filename, options) {
+    if (isFileSaverSupported) {
+      saveAs(new Blob([content || ''], lemon.extend({
+        type: "text/plain;charset=" + document.characterSet
+      }, options || {})), filename);
+    }
+  },
   read: function (selector, callback) {
     files.reads(selector, {
       loadstart: function (e, file) {

@@ -27,8 +27,8 @@ var note = {
       },
 
       fullscreenTgl: function (params, evt, el) {
-        var full = null, lineNumbers = null, gutters = null, foldGutter = null;
-        if (1 == lemon.data(el, 'full')) {
+        var full = note.instance.attrs('gutters') || [], lineNumbers = null, gutters = null, foldGutter = null;
+        if (full.length == 0) {
           full = 0;
           foldGutter = true;
           lineNumbers = true;
@@ -45,7 +45,6 @@ var note = {
           lineNumbers: lineNumbers,
           gutters: gutters
         });
-        lemon.data(el, { full: full });
       },
 
       preview: function () {

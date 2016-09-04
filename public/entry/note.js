@@ -68,7 +68,7 @@ var note = {
 
       },
       saveNoteAs: function () {
-
+        files.saveAs(note.instance.val(), note.instance.target.getLine(0) + '.note');
       },
       closeNote: function () {
 
@@ -77,7 +77,7 @@ var note = {
 
       },
       openFile: function () {
-
+        $('#note_open_file').click();
       },
 
 
@@ -441,6 +441,10 @@ var note = {
         }
       });
 
+      files.read('#note_open_file', function(context){
+        note.instance.val('');
+        note.instance.val(context);
+      });
 
       note.menu.instance = lemon.popover(note.menu.id, {
         trigger: 'manual',

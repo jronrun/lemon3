@@ -312,6 +312,58 @@ var note = {
       });
 
 
+      lemon.live('keyup', '#note_mode_qry', function(evt) {
+        var val = $(evt.currentTarget).val(), blastSel = '#menu_dd_mode_dd';
+        if (lemon.isBlank(val)) {
+          lemon.blastReset(blastSel);
+          $(langSel).show();
+          return;
+        }
+
+        var ids = [], regEx = new RegExp(val), ismatch = false;
+        lemon.each(mirror.mirrors.languages, function(lang, idx) {
+          ismatch = false;
+          if (ismatch = regEx.test(lang.name)) {
+          } else if (ismatch = regEx.test(lang.mode)) {
+          } else if (ismatch = regEx.test(lang.mime)) {
+          }
+
+          if (!ismatch) {
+            lemon.each(lang.mimes || [], function(mime, idx) {
+              if (ismatch) { return false; }
+              if (ismatch = regEx.test(mime)) { }
+            });
+          }
+
+          if (!ismatch) {
+            lemon.each(lang.ext || [], function(ext, idx) {
+              if (ismatch) { return false; }
+              if (ismatch = regEx.test(ext)) { }
+            });
+          }
+
+          if (!ismatch) {
+            lemon.each(lang.alias || [], function(alias, idx) {
+              if (ismatch) { return false; }
+              if (ismatch = regEx.test(alias)) { }
+            });
+          }
+
+          if (!ismatch && lang.file) {
+            ismatch = lang.file.test(val);
+          }
+
+          if (ismatch) {
+            ids.push('#lang_' + lang.id);
+          }
+        });
+
+        $(langSel).hide();
+        $(ids.join(',')).show();
+
+        lemon.blast(val, blastSel);
+      });
+
       lemon.dropdownEvent('li[id^="menu_dd_"]', {
         show: function (ddEl, ddBody) {
           $(ddBody).hide();

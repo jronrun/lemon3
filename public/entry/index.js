@@ -192,7 +192,13 @@ lemon.register({
     options.target = aConsole;
     return aConsole;
   },
-  blast: function(target, selector) {
+  blastReset: function (selector) {
+    $(selector).blast(false);
+  },
+  blast: function(target, selector, noneReset) {
+    if (!noneReset) {
+      lemon.blastReset(selector);
+    }
     var blast = $(selector).blast({ search: target });
     blast.css({
       backgroundColor: "yellow",

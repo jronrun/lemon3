@@ -1,7 +1,8 @@
 /**
  *
  */
-var mirror = require('../js/notemirror');
+var mirror = require('../js/notemirror'),
+  files = require('../js/files');
 
 var note = {
   id: '#note_textarea',

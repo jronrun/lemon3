@@ -31,6 +31,7 @@
     "summernote": "^0.8.1",
     "jquery-qrcode": "*",
     "jquery-console": "*",
-    "file-saver": "^1.3.2"
+    "file-saver": "^1.3.2",
+    "filereader": "*"
   }
 }

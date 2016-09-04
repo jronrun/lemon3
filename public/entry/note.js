@@ -201,7 +201,7 @@ var note = {
             note.menu.item('Close Note', ':q', 'visual & edit', 'Close Note', 'closeNote', false, true),
             note.menu.item('Share Note', ':share', 'visual & edit', 'Share Note', 'shareNote'),
             note.menu.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
-            note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
+            note.menu.item('Fullscreen', ':full', 'visual & edit', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
             note.menu.item('separator'),
             note.menu.item('Save Note', ':w', 'visual & edit', 'Save Note (:w)', 'saveNote'),
             note.menu.item('Save & Close Note', ':wq', 'visual & edit', 'Save & Close Note', 'saveAndCloseNote', false, true),

@@ -139,6 +139,11 @@ var helper = function(cm, events) {
         return info;
       }
 
+      info = CodeMirror.findModeByExtension(lang);
+      if (!lemon.isBlank(info)) {
+        return info;
+      }
+
       return null;
     },
     attrs: function (optionKey, optionVal) {
@@ -179,6 +184,7 @@ var helper = function(cm, events) {
       }
 
       var spec = info.mime, mode = info.mode;
+      spec = 'null' == spec ? mode : spec;
       info.isJson = 'json' == lan.toLocaleLowerCase();
       if (info.isJson) {
         spec = 'application/ld+json';

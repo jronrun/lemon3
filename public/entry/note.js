@@ -256,7 +256,7 @@ var note = {
       lang: function () {
         $('#menu_dd_mode_dd').empty().append(lemon.tmpl($('#menu_lang_tmpl').html(), {
           langs: mirror.mirrors.languages,
-          thislang: note.instance.mode().name
+          thislang: note.instance.mode()
         }));
       }
     },
@@ -271,6 +271,46 @@ var note = {
           menuHandle(lemon.data(anEl, 'params'), evt, el);
         }
       });
+
+      var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';
+      lemon.rightclick(themeSel, function (evt) {
+        evt.stopPropagation();
+        var el = evt.currentTarget;
+        note.instance.theme(lemon.data(el, 'theme'));
+      });
+
+      lemon.live('click', themeSel, function (evt) {
+        var el = evt.currentTarget, th = lemon.data(el, 'theme');
+        note.instance.theme(th);
+        note.menu.render.theme();
+      });
+
+      lemon.rightclick(langSel, function (evt) {
+        evt.stopPropagation();
+        var el = evt.currentTarget, lang = lemon.data(el, 'lang');
+        note.instance.mode(lang.name);
+      });
+
+      lemon.live('click', langSel, function (evt) {
+        var el = evt.currentTarget, lang = lemon.data(el, 'lang');
+        note.instance.mode(lang.name);
+        note.menu.render.lang();
+      });
+
+      lemon.rightclick(langInfoSel, function (evt) {
+        evt.stopPropagation();
+        var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
+          lang = note.instance.langInfo(langInfo);
+        note.instance.mode(lang.name);
+      });
+
+      lemon.live('click', langInfoSel, function (evt) {
+        var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
+          lang = note.instance.langInfo(langInfo);
+        note.instance.mode(lang.name);
+        note.menu.render.lang();
+      });
+
 
       lemon.dropdownEvent('li[id^="menu_dd_"]', {
         show: function (ddEl, ddBody) {

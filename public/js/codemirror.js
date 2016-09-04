@@ -102,6 +102,17 @@ var helper = function(cm, events) {
     selectAll: function () {
       tools.handleCmd('selectAll');
     },
+    selected: function (noMirrorTextIfNoneSelected) {
+      var text = ''; if (tools.doc().somethingSelected()) {
+        text = tools.doc().getSelection();
+      } else {
+        if (!noMirrorTextIfNoneSelected) {
+          text = tools.val();
+        }
+      }
+
+      return text;
+    },
     langInfo: function(lang) {
       if (lemon.isBlank(lang)) {
         return null;

@@ -1009,7 +1009,7 @@ lemon.register({
 
     return lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions);
   },
-  preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
+  preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents) {
     if (jsonOptions) {
       jsonOptions = lemon.extend({
         mirror: null,
@@ -1042,7 +1042,7 @@ lemon.register({
     });
 
     var contextId = '#preview_full_' + lemon.uniqueId();
-    var previewM = lemon.modal(modalOptions, {
+    var previewM = lemon.modal(modalOptions, lemon.extend(modalEvents || {}, {
       shown: function(event, el) {
         var tglable = 'toggleable'; if (tglable == lemon.data(contextId, tglable)) {
           return;
@@ -1085,7 +1085,7 @@ lemon.register({
         lemon.data(contextId, {toggleable: tglable});
         lemon.isFunc(callback) && callback(view, previewM);
       }
-    });
+    }));
 
     return previewM;
   },

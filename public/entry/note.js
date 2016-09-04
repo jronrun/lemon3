@@ -48,7 +48,14 @@ var note = {
       },
 
       preview: function () {
-
+        lemon.preview(note.instance.selected(), function (view, previewM) {
+          note.menu.action.menuHide();
+          $(note.menu.triId).hide();
+        }, false, false, false, {
+          hidden: function () {
+            $(note.menu.triId).show();
+          }
+        });
       },
       newNote: function () {
 
@@ -499,6 +506,13 @@ var note = {
     }
   },
 
+  snapshoot: function () {
+
+  },
+  snapload: function (snapData) {
+
+  },
+
   initialize: function () {
     if (lemon.isMediumUpView()) {
       lemon.console();
@@ -506,6 +520,17 @@ var note = {
 
     note.instance = mirror(note.id);
     note.menu.intl();
+
+    lemon.subMsg(function (data) {
+      // lemon.info(data, 'Note received msg');
+      if (data && data.event) {
+        var evtData = data.data;
+        switch (data.event) {
+          case 'MODAL':
+            break;
+        }
+      }
+    });
 
     //TODO remove
     global.note = note;

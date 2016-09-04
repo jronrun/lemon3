@@ -48,7 +48,7 @@ var note = {
       },
 
       preview: function () {
-        lemon.preview(note.instance.selected(), function (view, previewM) {
+        lemon.preview(note.instance.selected(), function () {
           note.menu.action.menuHide();
           $(note.menu.triId).hide();
         }, false, false, false, {

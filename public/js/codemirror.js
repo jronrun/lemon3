@@ -147,6 +147,13 @@ var helper = function(cm, events) {
       return null;
     },
     attrs: function (optionKey, optionVal) {
+      if (lemon.isJson(optionKey)) {
+        lemon.each(optionKey, function (v, k) {
+          cm.setOption(k, v);
+        });
+        return optionKey;
+      }
+
       if (lemon.isUndefined(optionKey)) {
         return cm.options;
       }

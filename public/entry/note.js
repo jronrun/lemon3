@@ -26,12 +26,26 @@ var note = {
         }
       },
 
-      fullscreenTgl: function () {
-        lemon.screenfull(function (full) {
-          if (full) {
-            note.menu.action.menuHide();
-          }
+      fullscreenTgl: function (params, evt, el) {
+        var full = null, lineNumbers = null, gutters = null, foldGutter = null;
+        if (1 == lemon.data(el, 'full')) {
+          full = 0;
+          foldGutter = true;
+          lineNumbers = true;
+          gutters = ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'];
+        } else {
+          full = 1;
+          foldGutter = false;
+          lineNumbers = false;
+          gutters = [];
+        }
+
+        note.instance.attrs({
+          foldGutter: foldGutter,
+          lineNumbers: lineNumbers,
+          gutters: gutters
         });
+        lemon.data(el, { full: full });
       },
 
       preview: function () {
@@ -181,7 +195,7 @@ var note = {
             note.menu.item('Close Note', ':q', 'visual & edit', 'Close Note', 'closeNote', false, true),
             note.menu.item('Share Note', ':share', 'visual & edit', 'Share Note', 'shareNote'),
             note.menu.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
-            //note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
+            note.menu.item('Fullscreen', ':full', 'visual', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
             note.menu.item('separator'),
             note.menu.item('Save Note', ':w', 'visual & edit', 'Save Note (:w)', 'saveNote'),
             note.menu.item('Save & Close Note', ':wq', 'visual & edit', 'Save & Close Note', 'saveAndCloseNote', false, true),

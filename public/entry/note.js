@@ -191,21 +191,24 @@ var note = {
     },
 
     visualCmds: function () {
-      var na = function (action, params, cm) {
-        note.action[action](params, cm);
-      };
+      var na = function (action, args, cm) {
+        note.action[action](args, cm);
+      }, ex = mirror.defineEx;
 
-      mirror.defineEx('new', function (params) {
-        na('newNote', params);
-      }, 'New Note', 'n');
-
-      mirror.defineEx('open', function (params) {
-        na('openFile', params);
-      }, 'Open File', 'o');
-
-      mirror.defineEx('menu', function (params) {
-        na('menuTgl', params);
-      }, 'Toggle Menu');
+      ex('new', function (args) { na('newNote', args); }, 'New Note', 'n');
+      ex('open', function (args) { na('openFile', args); }, 'Open File', 'o');
+      ex('menu', function (args) { na('menuTgl', args); }, 'Toggle Menu');
+      ex('q', function (args) { na('closeNote', args); }, 'Close Note');
+      ex('share', function (args) { na('shareNote', args); }, 'Share Note');
+      ex('view', function (args) { na('preview', args); }, 'Preview', 'v');
+      ex('fullscreen', function (args) { na('fullscreenTgl', args); }, 'Toggle Fullscreen', 'full');
+      ex('w', function (args) { na('saveNote', args); }, 'Save Note');
+      ex('wq', function (args) { na('saveAndCloseNote', args); }, 'Save & Close Note');
+      ex('sa', function (args) { na('saveNoteAs', args); }, 'Save Note As...');
+      ex('undo', function (args) { na('undo', args); }, 'Undo');
+      ex('redo', function (args) { na('redo', args); }, 'Redo');
+      ex('wrapword', function (args) { na('wrapword', args); }, 'Word Wrap', 'wrap');
+      ex('jump', function (args) { na('jumpToLine', args); }, 'Jump To Line');
     },
 
     source: function () {

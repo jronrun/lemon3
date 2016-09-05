@@ -8,128 +8,131 @@ var note = {
   id: '#note_textarea',
   instance: null,
 
+  action: {
+    menuTgl: function () {
+      return note.menu.tgl(1);
+    },
+    menuHide: function () {
+      return note.menu.tgl(3);
+    },
+    menuShow: function () {
+      return note.menu.tgl(2);
+    },
+    menuClose: function () {
+      note.action.menuHide();
+      if (!lemon.isRootWin()) {
+        lemon.pubEvent('MENU_CLOSE');
+      }
+    },
+
+    fullscreenTgl: function (params, evt, el) {
+      var full = note.instance.attrs('gutters') || [], lineNumbers = null, gutters = null, foldGutter = null;
+      if (full.length == 0) {
+        full = 0;
+        foldGutter = true;
+        lineNumbers = true;
+        gutters = ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'];
+      } else {
+        full = 1;
+        foldGutter = false;
+        lineNumbers = false;
+        gutters = [];
+      }
+
+      note.instance.attrs({
+        foldGutter: foldGutter,
+        lineNumbers: lineNumbers,
+        gutters: gutters
+      });
+    },
+
+    preview: function () {
+      lemon.preview(note.instance.selected(), function () {
+        note.action.menuHide();
+        $(note.menu.triId).hide();
+      }, false, false, false, {
+        hidden: function () {
+          $(note.menu.triId).show();
+        }
+      });
+    },
+    newNote: function () {
+
+    },
+    shareNote: function () {
+
+    },
+    saveNote: function () {
+
+    },
+    saveNoteAs: function () {
+      files.saveAs(note.instance.val(), note.instance.target.getLine(0) + '.note');
+    },
+    closeNote: function () {
+
+    },
+    saveAndCloseNote: function () {
+
+    },
+    openFile: function () {
+      $('#note_open_file').click();
+    },
+
+
+    undo: function () {
+
+    },
+    redo: function () {
+
+    },
+    editMode: function () {
+      note.instance.vim.editMode();
+    },
+    visualMode: function () {
+      note.instance.vim.visualMode();
+    },
+    wrapword: function () {
+
+    },
+    commentTgl: function () {
+
+    },
+    foldCodeTgl: function () {
+
+    },
+    contentAssist: function () {
+
+    },
+    matchTag: function () {
+
+    },
+    selectAll: function () {
+
+    },
+    find: function () {
+
+    },
+    findNext: function () {
+
+    },
+    findPrev: function () {
+
+    },
+    replace: function () {
+
+    },
+    replaceAll: function () {
+
+    },
+    jumpToLine: function () {
+
+    }
+  },
+
   menu: {
     id: '#note_tool',
     triId: '#note-tool-tri',
     instance: null,
-
-    action: {
-      menuHide: function () {
-        return note.menu.tgl(3);
-      },
-      menuShow: function () {
-        return note.menu.tgl(2);
-      },
-      menuClose: function () {
-        note.menu.action.menuHide();
-        if (!lemon.isRootWin()) {
-          lemon.pubEvent('MENU_CLOSE');
-        }
-      },
-
-      fullscreenTgl: function (params, evt, el) {
-        var full = note.instance.attrs('gutters') || [], lineNumbers = null, gutters = null, foldGutter = null;
-        if (full.length == 0) {
-          full = 0;
-          foldGutter = true;
-          lineNumbers = true;
-          gutters = ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'];
-        } else {
-          full = 1;
-          foldGutter = false;
-          lineNumbers = false;
-          gutters = [];
-        }
-
-        note.instance.attrs({
-          foldGutter: foldGutter,
-          lineNumbers: lineNumbers,
-          gutters: gutters
-        });
-      },
-
-      preview: function () {
-        lemon.preview(note.instance.selected(), function () {
-          note.menu.action.menuHide();
-          $(note.menu.triId).hide();
-        }, false, false, false, {
-          hidden: function () {
-            $(note.menu.triId).show();
-          }
-        });
-      },
-      newNote: function () {
-
-      },
-      shareNote: function () {
-
-      },
-      saveNote: function () {
-
-      },
-      saveNoteAs: function () {
-        files.saveAs(note.instance.val(), note.instance.target.getLine(0) + '.note');
-      },
-      closeNote: function () {
-
-      },
-      saveAndCloseNote: function () {
-
-      },
-      openFile: function () {
-        $('#note_open_file').click();
-      },
-
-
-      undo: function () {
-
-      },
-      redo: function () {
-
-      },
-      editMode: function () {
-        note.instance.vim.editMode();
-      },
-      visualMode: function () {
-        note.instance.vim.visualMode();
-      },
-      wrapword: function () {
-
-      },
-      commentTgl: function () {
-
-      },
-      foldCodeTgl: function () {
-
-      },
-      contentAssist: function () {
-
-      },
-      matchTag: function () {
-
-      },
-      selectAll: function () {
-
-      },
-      find: function () {
-
-      },
-      findNext: function () {
-
-      },
-      findPrev: function () {
-
-      },
-      replace: function () {
-
-      },
-      replaceAll: function () {
-
-      },
-      jumpToLine: function () {
-
-      }
-    },
 
     tgl: function (opt) {
       //1 toggle, 2 active, 3 unactive
@@ -187,6 +190,24 @@ var note = {
       };
     },
 
+    visualCmds: function () {
+      var na = function (action, params, cm) {
+        note.action[action](params, cm);
+      };
+
+      mirror.defineEx('new', function (params) {
+        na('newNote', params);
+      }, 'New Note', 'n');
+
+      mirror.defineEx('open', function (params) {
+        na('openFile', params);
+      }, 'Open File', 'o');
+
+      mirror.defineEx('menu', function (params) {
+        na('menuTgl', params);
+      }, 'Toggle Menu');
+    },
+
     source: function () {
       return [
         /* { type: 'link', item: note.menu.item('New', false, false, 'New Note (:new)', 'newNote') } */
@@ -198,7 +219,7 @@ var note = {
             note.menu.item('New', ':n', 'visual & edit', 'New Note (:new)', 'newNote'),
             note.menu.item('Open File...', ':o', 'visual & edit', 'Open File (:open)', 'openFile'),
             note.menu.item('separator'),
-            note.menu.item('Close Menu', ':menu', 'visual & edit', 'Close Menu', 'menuHide'),
+            note.menu.item('Close Menu', ':menu', 'visual & edit', 'Close Menu', 'menuTgl'),
             note.menu.item('Close Note', ':q', 'visual & edit', 'Close Note', 'closeNote', false, true),
             note.menu.item('Share Note', ':share', 'visual & edit', 'Share Note', 'shareNote'),
             note.menu.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
@@ -283,12 +304,13 @@ var note = {
     },
 
     intl: function () {
+      note.menu.visualCmds();
       lemon.live('click', 'a[data-menuact]', function (evt, el) {
         evt.preventDefault();
         var anEl = 'A' == el.tagName ? el : $(el).parent(),
           act = lemon.data(anEl, 'menuact'), menuHandle = null;
 
-        if (lemon.isFunc(menuHandle = note.menu.action[act])) {
+        if (lemon.isFunc(menuHandle = note.action[act])) {
           menuHandle(lemon.data(anEl, 'params'), evt, el);
         }
       });

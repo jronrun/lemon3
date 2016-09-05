@@ -56,6 +56,27 @@ var note = {
         }
       });
     },
+    joinline: function () {
+
+    },
+    mode: function () {
+
+    },
+    theme: function () {
+
+    },
+    help: function () {
+
+    },
+    delNote: function () {
+
+    },
+    listNote: function () {
+
+    },
+    editNote: function () {
+
+    },
     newNote: function () {
 
     },
@@ -195,6 +216,13 @@ var note = {
         note.action[action](args, cm);
       }, ex = mirror.defineEx;
 
+      ex('joinline', function (args) { na('joinline', args); }, 'Join Line', 'jo');
+      ex('mode', function (args) { na('mode', args); }, 'Language', 'm');
+      ex('theme', function (args) { na('theme', args); }, 'Theme', 'th');
+      ex('help', function (args) { na('help', args); }, 'Help', 'h');
+      ex('del', function (args) { na('delNote', args); }, 'Delete Note', 'd');
+      ex('list', function (args) { na('listNote', args); }, 'List Note', 'l');
+      ex('edit', function (args) { na('editNote', args); }, 'Edit Note', 'e');
       ex('new', function (args) { na('newNote', args); }, 'New Note', 'n');
       ex('open', function (args) { na('openFile', args); }, 'Open File', 'o');
       ex('menu', function (args) { na('menuTgl', args); }, 'Toggle Menu');
@@ -204,7 +232,7 @@ var note = {
       ex('fullscreen', function (args) { na('fullscreenTgl', args); }, 'Toggle Fullscreen', 'full');
       ex('w', function (args) { na('saveNote', args); }, 'Save Note');
       ex('wq', function (args) { na('saveAndCloseNote', args); }, 'Save & Close Note');
-      ex('sa', function (args) { na('saveNoteAs', args); }, 'Save Note As...');
+      ex('save', function (args) { na('saveNoteAs', args); }, 'Save Note As...', 'sa');
       ex('undo', function (args) { na('undo', args); }, 'Undo');
       ex('redo', function (args) { na('redo', args); }, 'Redo');
       ex('wrapword', function (args) { na('wrapword', args); }, 'Word Wrap', 'wrap');

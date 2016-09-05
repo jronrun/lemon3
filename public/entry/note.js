@@ -216,27 +216,27 @@ var note = {
         note.action[action](args, cm);
       }, ex = mirror.defineEx;
 
-      ex('joinline', function (args) { na('joinline', args); }, 'Join Line', 'jo');
-      ex('mode', function (args) { na('mode', args); }, 'Language', 'm');
-      ex('theme', function (args) { na('theme', args); }, 'Theme', 'th');
-      ex('help', function (args) { na('help', args); }, 'Help', 'h');
-      ex('del', function (args) { na('delNote', args); }, 'Delete Note', 'd');
-      ex('list', function (args) { na('listNote', args); }, 'List Note', 'l');
-      ex('edit', function (args) { na('editNote', args); }, 'Edit Note', 'e');
-      ex('new', function (args) { na('newNote', args); }, 'New Note', 'n');
-      ex('open', function (args) { na('openFile', args); }, 'Open File', 'o');
-      ex('menu', function (args) { na('menuTgl', args); }, 'Toggle Menu');
-      ex('q', function (args) { na('closeNote', args); }, 'Close Note');
-      ex('share', function (args) { na('shareNote', args); }, 'Share Note');
-      ex('view', function (args) { na('preview', args); }, 'Preview', 'v');
-      ex('fullscreen', function (args) { na('fullscreenTgl', args); }, 'Toggle Fullscreen', 'full');
-      ex('w', function (args) { na('saveNote', args); }, 'Save Note');
-      ex('wq', function (args) { na('saveAndCloseNote', args); }, 'Save & Close Note');
-      ex('save', function (args) { na('saveNoteAs', args); }, 'Save Note As...', 'sa');
-      ex('undo', function (args) { na('undo', args); }, 'Undo');
-      ex('redo', function (args) { na('redo', args); }, 'Redo');
-      ex('wrapword', function (args) { na('wrapword', args); }, 'Word Wrap', 'wrap');
-      ex('jump', function (args) { na('jumpToLine', args); }, 'Jump To Line');
+      ex('joinline', function (args, cm) { na('joinline', args, cm); }, 'Join Line', 'jo');
+      ex('mode', function (args, cm) { na('mode', args, cm); }, 'Language', 'm');
+      ex('theme', function (args, cm) { na('theme', args, cm); }, 'Theme', 'th');
+      ex('help', function (args, cm) { na('help', args, cm); }, 'Help', 'h');
+      ex('del', function (args, cm) { na('delNote', args, cm); }, 'Delete Note', 'd');
+      ex('list', function (args, cm) { na('listNote', args, cm); }, 'List Note', 'l');
+      ex('edit', function (args, cm) { na('editNote', args, cm); }, 'Edit Note', 'e');
+      ex('new', function (args, cm) { na('newNote', args, cm); }, 'New Note', 'n');
+      ex('open', function (args, cm) { na('openFile', args, cm); }, 'Open File', 'o');
+      ex('menu', function (args, cm) { na('menuTgl', args, cm); }, 'Toggle Menu');
+      ex('q', function (args, cm) { na('closeNote', args, cm); }, 'Close Note');
+      ex('share', function (args, cm) { na('shareNote', args, cm); }, 'Share Note');
+      ex('view', function (args, cm) { na('preview', args, cm); }, 'Preview', 'v');
+      ex('fullscreen', function (args, cm) { na('fullscreenTgl', args, cm); }, 'Toggle Fullscreen', 'full');
+      ex('w', function (args, cm) { na('saveNote', args, cm); }, 'Save Note');
+      ex('wq', function (args, cm) { na('saveAndCloseNote', args, cm); }, 'Save & Close Note');
+      ex('save', function (args, cm) { na('saveNoteAs', args, cm); }, 'Save Note As...', 'sa');
+      ex('undo', function (args, cm) { na('undo', args, cm); }, 'Undo');
+      ex('redo', function (args, cm) { na('redo', args, cm); }, 'Redo');
+      ex('wrapword', function (args, cm) { na('wrapword', args, cm); }, 'Word Wrap', 'wrap');
+      ex('jump', function (args, cm) { na('jumpToLine', args, cm); }, 'Jump To Line');
     },
 
     source: function () {

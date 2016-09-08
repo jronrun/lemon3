@@ -183,6 +183,9 @@ var helper = function(cm, events) {
       }
 
       th = lemon.startWith(th, 'solarized') ? 'solarized' : th;
+      if (themes.indexOf(th) == -1) {
+        throw Error('Cound not find theme ' + th);
+      }
       if (loadedTheme.indexOf(th) == -1) {
         mirror.css(lemon.format('/theme/{0}.css', th));
         loadedTheme.push(th);

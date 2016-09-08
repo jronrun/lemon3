@@ -69,11 +69,13 @@ var note = {
       }
       note.instance.vim.joinLine(start, end);
     },
-    mode: function () {
-
+    mode: function (params) {
+      var pMode = (params.args && params.args.length > 0) ? params.args[0] : undefined;
+      note.langTip(note.instance.mode(pMode));
     },
-    theme: function () {
-
+    theme: function (params) {
+      var pTheme = (params.args && params.args.length > 0) ? params.args[0] : undefined;
+      note.thTip(note.instance.theme(pTheme));
     },
     help: function () {
 
@@ -158,6 +160,25 @@ var note = {
     jumpToLine: function () {
 
     }
+  },
+
+  langTip: function (rMode) {
+    var modeInfo = ['Current Language'];
+    if (!lemon.isBlank(rMode.name)) {
+      modeInfo.push(rMode.name);
+    }
+    if (!lemon.isBlank(rMode.mime)) {
+      modeInfo.push(rMode.mime);
+    }
+    // if (!lemon.isBlank(rMode.mode)) {
+    //   modeInfo.push(rMode.mode);
+    // }
+
+    note.instance.tip(modeInfo.join(' '))
+  },
+
+  thTip: function (th) {
+    note.instance.tip('Current Theme ' + th);
   },
 
   menu: {
@@ -360,24 +381,24 @@ var note = {
       lemon.rightclick(themeSel, function (evt) {
         evt.stopPropagation();
         var el = evt.currentTarget;
-        note.instance.theme(lemon.data(el, 'theme'));
+        note.thTip(note.instance.theme(lemon.data(el, 'theme')));
       });
 
       lemon.live('click', themeSel, function (evt) {
         var el = evt.currentTarget, th = lemon.data(el, 'theme');
-        note.instance.theme(th);
+        note.thTip(note.instance.theme(th));
         note.menu.render.theme();
       });
 
       lemon.rightclick(langSel, function (evt) {
         evt.stopPropagation();
         var el = evt.currentTarget, lang = lemon.data(el, 'lang');
-        note.instance.mode(lang.name);
+        note.langTip(note.instance.mode(lang.name));
       });
 
       lemon.live('click', langSel, function (evt) {
         var el = evt.currentTarget, lang = lemon.data(el, 'lang');
-        note.instance.mode(lang.name);
+        note.langTip(note.instance.mode(lang.name));
         note.menu.render.lang();
       });
 
@@ -385,13 +406,13 @@ var note = {
         evt.stopPropagation();
         var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
           lang = note.instance.langInfo(langInfo);
-        note.instance.mode(lang.name, langInfo);
+        note.langTip(note.instance.mode(lang.name, langInfo));
       });
 
       lemon.live('click', langInfoSel, function (evt) {
         var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
           lang = note.instance.langInfo(langInfo);
-        note.instance.mode(lang.name, langInfo);
+        note.langTip(note.instance.mode(lang.name, langInfo));
         note.menu.render.lang();
       });
 

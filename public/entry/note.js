@@ -113,10 +113,10 @@ var note = {
 
 
     undo: function () {
-
+      note.instance.vim.handleKey('u');
     },
     redo: function () {
-
+      note.instance.vim.handleKey('<C-r>');
     },
     editMode: function () {
       note.instance.vim.editMode();

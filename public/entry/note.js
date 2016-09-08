@@ -56,8 +56,18 @@ var note = {
         }
       });
     },
-    joinline: function () {
-
+    joinline: function (params) {
+      var start = 0, end = undefined;
+      if (params.args) {
+        var len = params.args.length;
+        if (1 == len) {
+          start = parseInt(params.args[0]) - 1;
+        } else if (len > 1) {
+          start = parseInt(params.args[0]) - 1;
+          end = parseInt(params.args[1]) - 1;
+        }
+      }
+      note.instance.vim.joinLine(start, end);
     },
     mode: function () {
 

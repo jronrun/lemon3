@@ -212,7 +212,8 @@ module.exports = function(commOptions) {
               //defined interface property
               var hasOtherParams = false;
               if (servRequ.interf_prop && servRequ.interf_prop.length > 0) {
-                if (target.requ[servRequ.interf_prop] && target.requ[servRequ.param_name]) {
+                if (_.has(target.requ, servRequ.interf_prop) && _.has(target.requ, servRequ.param_name)) {
+                //if (target.requ[servRequ.interf_prop] && target.requ[servRequ.param_name]) {
 
                 } else {
                   hasOtherParams = true;

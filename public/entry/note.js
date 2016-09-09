@@ -608,6 +608,9 @@ var note = {
           note.menu.render.lang();
           note.menu.render.theme();
           note.menu.render.note();
+          lemon.pubEvent('NOTE_MENU', {
+            show: 1
+          });
           $(el).slideDown();
 
           if (1 != lemon.data(note.menu.id, 'evented') && viewport.smallDown) {
@@ -620,6 +623,11 @@ var note = {
             $(window).resize(holdPos);
             lemon.data(note.menu.id, {evented: 1})
           }
+        },
+        hidden: function () {
+          lemon.pubEvent('NOTE_MENU', {
+            show: 0
+          });
         }
       });
 

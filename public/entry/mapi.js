@@ -322,10 +322,15 @@ var mapis = {
       return;
     }
 
-    var insts = [];
+    var insts = [], defaultInst = null;
     lemon.each(mapiSnapdata, function (inst) {
-      insts.push(inst);
+      if (inst.iframe.isDefault) {
+        defaultInst = inst;
+      } else {
+        insts.push(inst);
+      }
     });
+    insts.unshift(defaultInst);
 
     var loadInst = function(inst) {
       if (!inst) {
@@ -431,6 +436,7 @@ var mapis = {
           case 'HEADER':
           case 'MIRROR_FULL':
           case 'BTN_TOGGLE':
+          case 'NOTE_MENU':
             var viewId = data.iframe.id, view = mapis.tglBalance[viewId];
             if (!view) {
               view = mapis.tglBalance[viewId] = {

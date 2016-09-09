@@ -375,11 +375,9 @@ var mirror = function (elId, options, events) {
 
   var extraKeys = lemon.extend({
     //http://codemirror.net/doc/manual.html#commands
-    "Ctrl-K": "toMatchingTag",
-    "Ctrl-J": "autocomplete",
-    "Ctrl-Q": function (cm) {
-      cm.foldCode(cm.getCursor());
-    }
+    "Ctrl-K": 'toMatchingTag',
+    "Ctrl-J": 'autocomplete',
+    "Ctrl-Q": 'toggleFold'
   }, options.extraKeys || {});
   delete options.extraKeys;
 

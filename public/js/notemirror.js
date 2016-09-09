@@ -136,10 +136,8 @@ var noteMirror = function (elId, options, events) {
     showCursorWhenSelecting: true,
     styleActiveLine: true,
     extraKeys: {
-      "Ctrl-/": "toggleComment",
-      "Ctrl-A": function(cm) {
-        aMirror.selectAll();
-      }
+      "Ctrl-/": 'toggleComment',
+      "Ctrl-A": 'selectAll'
     },
     cust: {
       escKey: false

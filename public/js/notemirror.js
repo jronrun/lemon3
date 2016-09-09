@@ -111,13 +111,23 @@ function defineEx(cmd, exHandle, desc, shortCmd) {
   };
 
   CodeMirror.Vim.defineEx(exbody.cmd, exbody.shortCmd, function(cm, params) {
-    exbody.exHandle(lemon.extend({
+    params = lemon.extend({
       args: [],
       argString: '',
       input: '',
       line: false,
       commandName: ''
-    }, params), cm);
+    }, params);
+
+    params.get = function(index, defaultValue) {
+      index = index || 0; defaultValue = defaultValue || undefined;
+      if (params.args && params.args.length > index) {
+        return params.args[index];
+      }
+
+      return defaultValue;
+    };
+    exbody.exHandle(params, cm);
   });
 
   definedEx.push(exbody);

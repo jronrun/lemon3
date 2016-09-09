@@ -885,6 +885,12 @@ lemon.register({
     lemon.live('hidden.bs.dropdown', selector, function (e) {
       onEvent('hidden', e);
     });
+  },
+  /**
+   * @param selector  which is .dropdown-menu class element
+   */
+  dropdownTgl: function (selector) {
+    $(selector).dropdown('toggle');
   }
 });
 

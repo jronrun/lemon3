@@ -46,15 +46,8 @@ var note = {
       });
     },
 
-    preview: function () {
-      lemon.preview(note.instance.selected(), function () {
-        note.action.menuHide();
-        $(note.menu.triId).hide();
-      }, false, false, false, {
-        hidden: function () {
-          $(note.menu.triId).show();
-        }
-      });
+    preview: function (text) {
+      note.views(note.instance.selected());
     },
     joinline: function (params) {
       var start = 0, end = undefined;
@@ -70,15 +63,36 @@ var note = {
       note.instance.vim.joinLine(start, end);
     },
     mode: function (params) {
-      var pMode = (params.args && params.args.length > 0) ? params.args[0] : undefined;
-      note.langTip(note.instance.mode(pMode));
+      note.langTip(note.instance.mode(params.get(0)));
     },
     theme: function (params) {
-      var pTheme = (params.args && params.args.length > 0) ? params.args[0] : undefined;
-      note.thTip(note.instance.theme(pTheme));
+      note.thTip(note.instance.theme(params.get(0)));
     },
-    help: function () {
+    help: function (params) {
+      var fromMenu = params && params.topic, topic = 'none', topicDef = null;
+      if (fromMenu) {
+        topic = params.topic;
+      } else {
+        topic = params.get(0, topic);
+      }
 
+      if ('none' == topic || !(topicDef = note.action.helps[topic])) {
+        note.action.menuShow();
+        lemon.dropdownTgl('#menu_dd_help_dd');
+        return;
+      }
+
+      switch (topic) {
+        case 'note':
+          note.views(lemon.fmtjson(mirror.defineEx()), {
+            mirror: mirror.mirrors,
+            isDecode: true
+          });
+          break;
+        default:
+          note.views(topicDef.link);
+          break;
+      }
     },
     delNote: function () {
 
@@ -120,9 +134,41 @@ var note = {
     },
     wrapword: function () {
       note.instance.wordwrap();
+    },
+
+    helps: {
+      vim: {
+        link: 'http://vimdoc.sourceforge.net/htmldoc/'
+      },
+      vimcn: {
+        link: 'http://vimcdoc.sourceforge.net/doc/help.html'
+      },
+      vimcmd: {
+        link: 'https://jronrun.github.io/refs/img/vim_cheat_sheet_for_programmers_screen.png'
+      },
+      vimcmds: {
+        link: 'http://michael.peopleofhonoronly.com/vim/'
+      },
+      vimcm: {
+        link: lemon.fullUrl('/components/codemirror/keymap/vim.js')
+      },
+      note: {
+
+      }
     }
   },
 
+  views: function (text, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
+    //lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents)
+    lemon.preview(text, function () {
+      note.action.menuHide();
+      $(note.menu.triId).hide();
+    }, jsonOptions, domReadyCallbackIfUrl, modalOptions, {
+      hidden: function () {
+        $(note.menu.triId).show();
+      }
+    });
+  },
   langTip: function (rMode) {
     var modeInfo = ['Current Language'];
     if (!lemon.isBlank(rMode.name)) {
@@ -240,6 +286,10 @@ var note = {
     },
 
     source: function () {
+      var help_item = function (name, topic) {
+        return note.menu.item(name, '', '', name, 'help', { topic: topic });
+      };
+
       return [
         /* { type: 'link', item: note.menu.item('New', false, false, 'New Note (:new)', 'newNote') } */
         {
@@ -312,7 +362,12 @@ var note = {
           ddName: 'Help',
           id: 'menu_dd_help',
           items: [
-
+            help_item('Vim Doc', 'vim'),
+            help_item('Vim Doc cn', 'vimcn'),
+            help_item('Vim Cheat Sheet', 'vimcmd'),
+            help_item('Vim Cheats', 'vimcmds'),
+            help_item('Codemirror Vim', 'vimcm'),
+            help_item('Note Vim', 'note')
           ]
         }
       ];

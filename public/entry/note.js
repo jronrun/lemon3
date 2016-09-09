@@ -160,7 +160,7 @@ var note = {
 
   views: function (text) {
     var jsonOptions = false;
-    if (mirror.mirrors.isJson(text)) {
+    if (mirror.mirrors.isJson(text, true)) {
       text = lemon.fmtjson(text);
       jsonOptions = {
         mirror: mirror.mirrors,

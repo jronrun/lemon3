@@ -433,14 +433,16 @@ var mirror = function (elId, options, events) {
   return aHelp;
 };
 
-mirror.isJson = function(target) {
+mirror.isJson = function(target, noneLogWarnMsg) {
   try {
     if (!lemon.isString(target)) {
       target = json5s.stringify(target);
     }
     json5s.parse(target);
   } catch (e) {
-    lemon.warn('mirror.isJson: ' + e.message);
+    if (!noneLogWarnMsg) {
+      lemon.warn('mirror.isJson: ' + e.message);
+    }
     return false;
   }
   return true;

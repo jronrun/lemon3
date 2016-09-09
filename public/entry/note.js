@@ -112,8 +112,16 @@ var note = {
     saveNote: function (params) {
 
     },
-    saveNoteAs: function () {
-      files.saveAs(note.instance.val(), note.instance.target.getLine(0) + '.note');
+    saveNoteAs: function (params) {
+      var noteTitle = '';
+      if (noteTitle = params.get(0)) {
+        if (noteTitle.indexOf('.') == -1) {
+          noteTitle = noteTitle + '.note';
+        }
+      } else {
+        noteTitle = (note.instance.target.getLine(0) || '').substr(0, 50) + '.note';
+      }
+      files.saveAs(note.instance.val(), noteTitle);
     },
     closeNote: function () {
 

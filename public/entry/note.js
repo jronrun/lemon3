@@ -46,7 +46,7 @@ var note = {
       });
     },
 
-    preview: function (text) {
+    preview: function () {
       note.views(note.instance.selected());
     },
     joinline: function (params) {
@@ -82,17 +82,7 @@ var note = {
         return;
       }
 
-      switch (topic) {
-        case 'note':
-          note.views(lemon.fmtjson(mirror.defineEx()), {
-            mirror: mirror.mirrors,
-            isDecode: true
-          });
-          break;
-        default:
-          note.views(topicDef.link);
-          break;
-      }
+      note.views(lemon.isFunc(topicDef.link) ? topicDef.link() : topicDef.link);
     },
     delNote: function () {
 
@@ -161,12 +151,23 @@ var note = {
         link: lemon.fullUrl('/components/codemirror/keymap/vim.js')
       },
       note: {
-
+        link: function () {
+          return mirror.defineEx();
+        }
       }
     }
   },
 
-  views: function (text, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
+  views: function (text) {
+    var jsonOptions = false;
+    if (mirror.mirrors.isJson(text)) {
+      text = lemon.fmtjson(text);
+      jsonOptions = {
+        mirror: mirror.mirrors,
+        isDecode: true
+      };
+    }
+
     //lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents)
     var isMenuOpened = note.menu.instance.opened();
     lemon.preview(text, function () {
@@ -174,7 +175,7 @@ var note = {
         note.action.menuHide();
       }
       $(note.menu.triId).hide();
-    }, jsonOptions, domReadyCallbackIfUrl, modalOptions, {
+    }, jsonOptions, false, false, {
       hidden: function () {
         $(note.menu.triId).show();
         if (isMenuOpened) {

@@ -251,7 +251,11 @@ var helper = function(cm, events) {
       cm.setOption("extraKeys", lemon.extend(cm.getOption('extraKeys'), keymap || {}));
     },
     toLastLine: function () {
-      cm.scrollIntoView({line: cm.lastLine()})
+      //cm.scrollIntoView({line: cm.lastLine()})
+      tools.toLine(cm.lastLine() + 1);
+    },
+    toLine: function (line, ch) {
+      cm.setCursor((line || 1) - 1, ch || 0)
     },
     fullscreenTgl: function (full) {
       if (!cm.getOption('fullScreen')) {

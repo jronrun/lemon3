@@ -95,7 +95,7 @@ var note = {
     shareNote: function () {
 
     },
-    saveNote: function () {
+    saveNote: function (params) {
 
     },
     saveNoteAs: function () {
@@ -230,11 +230,11 @@ var note = {
       ex('share', function (args, cm) { na('shareNote', args, cm); }, 'Share Note');
       ex('view', function (args, cm) { na('preview', args, cm); }, 'Preview', 'v');
       ex('fullscreen', function (args, cm) { na('fullscreenTgl', args, cm); }, 'Toggle Fullscreen', 'full');
+
+      //CodeMirror.commands.save = note.action.saveNote;
       ex('w', function (args, cm) { na('saveNote', args, cm); }, 'Save Note');
       ex('wq', function (args, cm) { na('saveAndCloseNote', args, cm); }, 'Save & Close Note');
       ex('save', function (args, cm) { na('saveNoteAs', args, cm); }, 'Save Note As...', 'sa');
-      ex('undo', function (args, cm) { na('undo', args, cm); }, 'Undo');
-      ex('redo', function (args, cm) { na('redo', args, cm); }, 'Redo');
       ex('wrapword', function (args, cm) { na('wrapword', args, cm); }, 'Word Wrap', 'wrap');
       ex('jump', function (args, cm) { na('jumpToLine', args, cm); }, 'Jump To Line');
     },

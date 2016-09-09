@@ -241,8 +241,11 @@ var helper = function(cm, events) {
         duration: 5000
       }, tipOptions || {}));
     },
+    tglOption: function (optionKey) {
+      return tools.attrs(optionKey, !tools.attrs(optionKey));
+    },
     wordwrap: function() {
-      return tools.attrs('lineWrapping', !tools.attrs('lineWrapping'));
+      return tools.tglOption('lineWrapping');
     },
     doc: function() {
       return cm.doc;

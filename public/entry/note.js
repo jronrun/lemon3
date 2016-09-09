@@ -63,10 +63,10 @@ var note = {
       note.instance.vim.joinLine(start, end);
     },
     mode: function (params) {
-      note.langTip(note.instance.mode(params.get(0)));
+      note.lang.change(params.get(0));
     },
     theme: function (params) {
-      note.thTip(note.instance.theme(params.get(0)));
+      note.theme.change(params.get(0));
     },
     help: function (params) {
       var fromMenu = params && params.topic, topic = 'none', topicDef = null;
@@ -175,23 +175,44 @@ var note = {
       }
     });
   },
-  langTip: function (rMode) {
-    var modeInfo = ['Current Language'];
-    if (!lemon.isBlank(rMode.name)) {
-      modeInfo.push(rMode.name);
-    }
-    if (!lemon.isBlank(rMode.mime)) {
-      modeInfo.push(rMode.mime);
-    }
-    // if (!lemon.isBlank(rMode.mode)) {
-    //   modeInfo.push(rMode.mode);
-    // }
+  lang: {
+    tip: function (rMode) {
+      var modeInfo = ['Current Language'];
+      if (!lemon.isBlank(rMode.name)) {
+        modeInfo.push(rMode.name);
+      }
+      if (!lemon.isBlank(rMode.mime)) {
+        modeInfo.push(rMode.mime);
+      }
+      // if (!lemon.isBlank(rMode.mode)) {
+      //   modeInfo.push(rMode.mode);
+      // }
 
-    note.instance.tip(modeInfo.join(' '))
+      note.instance.tip(modeInfo.join(' '))
+    },
+
+    change: function (aLang, langInfo) {
+      try {
+        note.lang.tip(note.instance.mode(aLang, langInfo));
+      } catch (e) {
+        note.action.menuShow();
+        lemon.dropdownTgl('#menu_dd_mode_dd');
+      }
+    }
   },
+  theme: {
+    tip: function (th) {
+      note.instance.tip('Current Theme ' + th);
+    },
 
-  thTip: function (th) {
-    note.instance.tip('Current Theme ' + th);
+    change: function (aTheme) {
+      try {
+        note.theme.tip(note.instance.theme(aTheme));
+      } catch (e) {
+        note.action.menuShow();
+        lemon.dropdownTgl('#menu_dd_theme_dd');
+      }
+    }
   },
 
   menu: {
@@ -415,24 +436,24 @@ var note = {
       lemon.rightclick(themeSel, function (evt) {
         evt.stopPropagation();
         var el = evt.currentTarget;
-        note.thTip(note.instance.theme(lemon.data(el, 'theme')));
+        note.theme.change(lemon.data(el, 'theme'));
       });
 
       lemon.live('click', themeSel, function (evt) {
         var el = evt.currentTarget, th = lemon.data(el, 'theme');
-        note.thTip(note.instance.theme(th));
+        note.theme.change(th);
         note.menu.render.theme();
       });
 
       lemon.rightclick(langSel, function (evt) {
         evt.stopPropagation();
         var el = evt.currentTarget, lang = lemon.data(el, 'lang');
-        note.langTip(note.instance.mode(lang.name));
+        note.lang.change(lang.name);
       });
 
       lemon.live('click', langSel, function (evt) {
         var el = evt.currentTarget, lang = lemon.data(el, 'lang');
-        note.langTip(note.instance.mode(lang.name));
+        note.lang.change(lang.name);
         note.menu.render.lang();
       });
 
@@ -440,13 +461,13 @@ var note = {
         evt.stopPropagation();
         var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
           lang = note.instance.langInfo(langInfo);
-        note.langTip(note.instance.mode(lang.name, langInfo));
+        note.lang.change(lang.name, langInfo);
       });
 
       lemon.live('click', langInfoSel, function (evt) {
         var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
           lang = note.instance.langInfo(langInfo);
-        note.langTip(note.instance.mode(lang.name, langInfo));
+        note.lang.change(lang.name, langInfo);
         note.menu.render.lang();
       });
 

@@ -213,6 +213,9 @@ var note = {
         }
       }, ex = mirror.defineEx;
 
+      ex('foldall', function (args, cm) { na('foldAll', args, cm); }, 'Fold All', 'folda');
+      ex('unfoldall', function (args, cm) { na('unfoldAll', args, cm); }, 'Unfold All', 'unfolda');
+
       ex('joinline', function (args, cm) { na('joinline', args, cm); }, 'Join Line', 'jo');
       ex('mode', function (args, cm) { na('mode', args, cm); }, 'Language', 'm');
       ex('theme', function (args, cm) { na('theme', args, cm); }, 'Theme', 'th');

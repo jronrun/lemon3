@@ -112,12 +112,6 @@ var note = {
     },
 
 
-    undo: function () {
-      note.instance.vim.handleKey('u');
-    },
-    redo: function () {
-      note.instance.vim.handleKey('<C-r>');
-    },
     editMode: function () {
       note.instance.vim.editMode();
     },
@@ -125,40 +119,7 @@ var note = {
       note.instance.vim.visualMode();
     },
     wrapword: function () {
-
-    },
-    commentTgl: function () {
-
-    },
-    foldCodeTgl: function () {
-
-    },
-    contentAssist: function () {
-
-    },
-    matchTag: function () {
-
-    },
-    selectAll: function () {
-
-    },
-    find: function () {
-
-    },
-    findNext: function () {
-
-    },
-    findPrev: function () {
-
-    },
-    replace: function () {
-
-    },
-    replaceAll: function () {
-
-    },
-    jumpToLine: function () {
-
+      note.instance.wordwrap();
     }
   },
 
@@ -244,7 +205,12 @@ var note = {
 
     visualCmds: function () {
       var na = function (action, args, cm) {
-        note.action[action](args, cm);
+        var menuHandle = null;
+        if (lemon.isFunc(menuHandle = note.action[action])) {
+          menuHandle(args, cm);
+        } else if (lemon.isFunc(menuHandle = note.instance[action])) {
+          menuHandle();
+        }
       }, ex = mirror.defineEx;
 
       ex('joinline', function (args, cm) { na('joinline', args, cm); }, 'Join Line', 'jo');
@@ -299,17 +265,19 @@ var note = {
           ddName: 'Edit',
           id: 'menu_dd_edit',
           items: [
-            note.menu.item('Undo', 'u', 'visual', 'Undo (:undo)', 'undo'),
-            note.menu.item('Redo', 'Ctrl-R', 'visual', 'Redo (:redo)', 'redo'),
+            note.menu.item('Undo', 'u', 'visual & edit', 'Undo (:undo)', 'undo'),
+            note.menu.item('Redo', 'Ctrl-R', 'visual & edit', 'Redo (:redo)', 'redo'),
             note.menu.item('separator'),
             note.menu.item('Edit Mode', 'i', 'visual', 'Edit Mode', 'editMode'),
             note.menu.item('Visual Mode', 'Esc', 'edit', 'Visual Mode', 'visualMode'),
             note.menu.item('separator'),
-            note.menu.item('Word Wrap', ':wrap', 'visual', 'Word Wrap (:wrapword)', 'wrapword'),
-            note.menu.item('Toggle Comment', 'Ctrl-/', 'visual & edit', 'Toggle Comment', 'commentTgl'),
-            note.menu.item('Toggle Fold Code', 'Ctrl-Q', 'visual & edit', 'Toggle Fold Code', 'foldCodeTgl'),
-            note.menu.item('Content Assist', 'Ctrl-J', 'visual & edit', 'Content Assist', 'contentAssist'),
-            note.menu.item('Matching Tag', 'Ctrl-K', 'visual & edit', 'To Matching Tag', 'matchTag'),
+            note.menu.item('Content Assist', 'Ctrl-J', 'visual & edit', 'Content Assist', 'autocomplete'),
+            note.menu.item('Word Wrap', ':wrap', 'visual & edit', 'Word Wrap (:wrapword)', 'wrapword'),
+            note.menu.item('Toggle Comment', 'Ctrl-/', 'visual & edit', 'Toggle Comment', 'toggleComment'),
+            note.menu.item('Fold All', 'Ctrl-Q', 'visual & edit', 'Fold All', 'foldAll'),
+            note.menu.item('Unfold All', 'Ctrl-Q', 'visual & edit', 'Unfold All', 'unfoldAll'),
+            note.menu.item('Toggle Fold', 'Ctrl-Q', 'visual & edit', 'Toggle Fold', 'toggleFold'),
+            note.menu.item('Matching Tag', 'Ctrl-K', 'visual & edit', 'To Matching Tag', 'toMatchingTag'),
             note.menu.item('separator'),
             note.menu.item('Select All', 'Ctrl-A', 'visual & edit', 'Select All', 'selectAll'),
             note.menu.item('Find...', 'Cmd-F', 'edit', 'Find... (/)', 'find'),
@@ -374,6 +342,8 @@ var note = {
 
         if (lemon.isFunc(menuHandle = note.action[act])) {
           menuHandle(lemon.data(anEl, 'params'), evt, el);
+        } else if (lemon.isFunc(menuHandle = note.instance[act])) {
+          menuHandle();
         }
       });
 

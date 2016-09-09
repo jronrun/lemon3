@@ -99,9 +99,6 @@ var helper = function(cm, events) {
     handleCmd: function (input) {
       return cm.execCommand(input);
     },
-    selectAll: function () {
-      tools.handleCmd('selectAll');
-    },
     selected: function (noMirrorTextIfNoneSelected) {
       var text = ''; if (tools.doc().somethingSelected()) {
         text = tools.doc().getSelection();
@@ -247,9 +244,6 @@ var helper = function(cm, events) {
     wordwrap: function() {
       return tools.attrs('lineWrapping', !tools.attrs('lineWrapping'));
     },
-    tglFoldCode: function () {
-      return cm.foldCode(cm.getCursor());
-    },
     doc: function() {
       return cm.doc;
     },
@@ -327,6 +321,28 @@ var helper = function(cm, events) {
       tools.refreshDelay();
     }
   };
+
+  /* [
+      "selectAll", "singleSelection", "killLine", "deleteLine", "delLineLeft", "delWrappedLineLeft", "delWrappedLineRight",
+      "undo", "redo", "undoSelection", "redoSelection", "goDocStart", "goDocEnd", "goLineStart", "goLineStartSmart",
+      "goLineEnd", "goLineRight", "goLineLeft", "goLineLeftSmart", "goLineUp", "goLineDown", "goPageUp", "goPageDown",
+      "goCharLeft", "goCharRight", "goColumnLeft", "goColumnRight", "goWordLeft", "goGroupRight", "goGroupLeft", "goWordRight",
+      "delCharBefore", "delCharAfter", "delWordBefore", "delWordAfter", "delGroupBefore", "delGroupAfter", "indentAuto",
+      "indentMore", "indentLess", "insertTab", "insertSoftTab", "defaultTab", "transposeChars", "newlineAndIndent",
+      "openLine", "toggleOverwrite", "toggleComment", "closeTag", "newlineAndIndentContinueMarkdownList", "toMatchingTag",
+      "toggleFold", "fold", "unfold", "foldAll", "unfoldAll", "autocomplete", "jumpToLine", "find", "findPersistent",
+      "findPersistentNext", "findPersistentPrev", "findNext", "findPrev", "clearSearch", "replace", "replaceAll",
+      "wrapLines", "goNextDiff", "goPrevDiff"
+    ] */
+  tools.cmds = [];
+  lemon.each(CodeMirror.commands, function (v, k) {
+    var commandM = {};
+    commandM[k] = function () {
+      return tools.handleCmd(k);
+    };
+    lemon.register(commandM, tools);
+    tools.cmds.push(k);
+  });
 
   return tools;
 };

@@ -160,12 +160,18 @@ var note = {
 
   views: function (text, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
     //lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents)
+    var isMenuOpened = note.menu.instance.opened();
     lemon.preview(text, function () {
-      note.action.menuHide();
+      if (isMenuOpened) {
+        note.action.menuHide();
+      }
       $(note.menu.triId).hide();
     }, jsonOptions, domReadyCallbackIfUrl, modalOptions, {
       hidden: function () {
         $(note.menu.triId).show();
+        if (isMenuOpened) {
+          note.action.menuShow();
+        }
       }
     });
   },

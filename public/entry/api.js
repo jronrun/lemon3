@@ -1899,25 +1899,25 @@ var mapi = {
       }
     });
 
-    var btnPreviewId = '#btn_preview';
-    $(btnPreviewId).click(function () {
-      if (mapi.resp.doc().somethingSelected()) {
-        text = mapi.resp.doc().getSelection();
-      } else {
-        text = mapi.resp.val();
-      }
-
-      lemon.preview(text, false, {
+    var btnPreviewId = '#btn_preview', doPreview = function () {
+      lemon.preview(mapi.resp.selected(), false, {
         mirror: mirror,
         isDecode: true
       });
+    };
+    $(btnPreviewId).click(function () {
+      if (lemon.isRootWin()) {
+        doPreview();
+      } else {
+        lemon.pubEvent('BTN_TOGGLE', {
+          show: lemon.buttonTgl(btnPreviewId) ? 1 : 0
+        });
+      }
     });
 
     lemon.rightclick(btnPreviewId, function() {
       if (!lemon.isRootWin()) {
-        lemon.pubEvent('BTN_TOGGLE', {
-          show: lemon.buttonTgl(btnPreviewId) ? 1 : 0
-        });
+        doPreview();
       }
     });
 

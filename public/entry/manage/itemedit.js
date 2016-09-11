@@ -81,7 +81,7 @@ var editor = {
       hasResource = $(tree).length, dataset = $('#item-submit').data();
 
     if (1 == dataset.form) {
-      var reqData = lemon.getParam('#item-card', 'textarea');
+      var reqData = lemon.getParam('#item-card', 'textarea', 'input[type=color]');
       delete reqData.resource;
       params.item = lemon.enc(JSON.stringify(reqData));
     } else if (2 == dataset.form) {

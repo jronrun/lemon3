@@ -6,7 +6,7 @@
 
   {{#each form.items}}
     {{#is el "==" "input"}}
-      {{#is attrs.type "in" "radio,checkbox"}}
+      {{#is attrs.type "in" "radio,checkbox,color"}}
         {{#is attrs.type "==" "checkbox"}}
           {{#is inline "==" 1}}
               <div class="form-group">
@@ -80,6 +80,15 @@
                   {{/each}}
               </div>
           {{/is}}
+        {{/is}}
+        {{#is attrs.type "==" "color"}}
+          <div class="form-group">
+            {{#if label}} <label class="control-label" for="{{attrs.id}}">{{{label}}}</label> {{/if}}
+              <input class="{{attrs.class}}"
+                {{#each attrs}} {{#is @key "==" "class"}}{{else}}{{@key}}="{{this}}"{{/is}} {{/each}}
+                {{#if value}}value="{{value}}"{{/if}}>
+            {{#if desc}}<small class="text-muted">{{{desc}}}</small>{{/if}}
+          </div>
         {{/is}}
       {{else}}
         <div class="form-group">

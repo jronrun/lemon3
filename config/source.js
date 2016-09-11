@@ -28,11 +28,11 @@ var resource = [
   {id: 10, name: 'home', action: '/', desc: 'Home', page: 'index', protect: false},
 
   {id: 20, name: 'note', desc: 'Note', protect: false, children: [
-      {id: 20001, name: 'entities', desc: 'List Note', method: M.POST, protect: false},
-      {id: 20002, name: 'entity', desc: 'Create Note', method: M.POST, protect: false},
-      {id: 20003, name: 'entity', desc: 'Retrieve Note', action: '/note/entity/:id', protect: false},
-      {id: 20004, extend: 20003, desc: 'Update Note', method: M.PUT, protect: false},
-      {id: 20005, extend: 20003, desc: 'Delete Note', method: M.DELETE, protect: false}
+      {id: 20001, name: 'entities', desc: 'List', method: M.POST, protect: false},
+      {id: 20002, name: 'entity', desc: 'Create', method: M.POST, protect: false},
+      {id: 20003, name: 'entity', desc: 'Retrieve', action: '/note/entity/:id', protect: false},
+      {id: 20004, extend: 20003, desc: 'Update', method: M.PUT, protect: false},
+      {id: 20005, extend: 20003, desc: 'Delete', method: M.DELETE, protect: false}
     ]
   },
 

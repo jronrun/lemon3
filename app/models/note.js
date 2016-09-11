@@ -64,7 +64,7 @@ note.queryByKey = function (options, resultCall, requestInfo) {
     }
   };
 
-  Note.page(query, options.pn, false, options.ps, qryOpts).then(function (result) {
+  note.page(query, options.pn, false, options.ps, qryOpts).then(function (result) {
     resultCall(answer.succ({
       items: result.items,
       hasNext: result.page.hasNext

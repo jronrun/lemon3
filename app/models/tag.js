@@ -1,13 +1,18 @@
 'use strict';
 
-var log = log_from('article');
+var log = log_from('tag');
 
 var model = schema({
   id: { type: 'integer', required: true },
-  title: { type: 'string', required: true, allowEmpty: false },
-  summary: { type: 'string', allowEmpty: false },
-  content: { type: 'string', allowEmpty: false },
-  note: { type: 'string' },
+  name: { type: 'string', required: true, allowEmpty: false },
+  desc: { type: 'string' },
+  type: { type: 'integer', enum: [1, 2, 3], required: true, const: {
+      1: 'API',
+      2: 'History',
+      3: 'Note'
+    }
+  },
+  color: { type: 'string', required: true },
   owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   create_by: {
     type: 'object',
@@ -21,7 +26,7 @@ var model = schema({
   create_time: { type: 'date', required: true }
 });
 
-var note = model_bind('note', model);
+var tag = model_bind('tag', model);
 
-module.exports = note;
+module.exports = tag;
 

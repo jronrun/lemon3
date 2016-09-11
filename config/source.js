@@ -201,9 +201,19 @@ var resource = [
         ]
       },
 
-      { id: 200012, name: 'share-access', desc: 'Share Access', action: '/manage/share-access/:page', page: P.list }
+      { id: 200012, name: 'share-access', desc: 'Share Access', action: '/manage/share-access/:page', page: P.list },
 
-  ]
+      {
+        id: 200013, name: 'tag', desc: 'Tag', action: '/manage/tags/:page', page: P.list, children: [
+          {id: 2000131, name: 'editor', action: '/manage/tag', page: P.edit, desc: 'Editor'},
+          {id: 2000132, extend: 2000131, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000133, name: 'retrieve', action: '/manage/tag/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000134, extend: 2000133, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000135, extend: 2000133, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
+      }
+    ]
   }
 ];
 
@@ -226,7 +236,8 @@ var menu = [
     name: 'Settings', children: [
       {sourceId: 200001, args: '1'},
       {sourceId: 200010, args: '1'},
-      {sourceId: 200002, args: '1'}
+      {sourceId: 200002, args: '1'},
+      {sourceId: 200013, args: '1'}
     ]
   },
   {

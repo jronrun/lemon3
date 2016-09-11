@@ -47,7 +47,8 @@ module.exports = function (router, index, root) {
       {
         title: 'Color',
         prop: function(item) {
-          return format('<span class="tag tag-default" style="background-color:%s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>', item.color);
+          var fill = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+          return format('<span class="tag tag-default" style="background-color:%s">%s</span>', item.color, fill);
         },
         clazz: 'item-col-author'
       },

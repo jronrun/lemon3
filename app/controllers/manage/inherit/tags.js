@@ -38,14 +38,16 @@ module.exports = function (router, index, root) {
         clazz: 'item-col-author'
       },
       {
-        title: 'Owner',
+        title: 'Type',
         prop: function(item) {
-          switch (parseInt(item.owner)) {
-            case 1:
-              return generic.ownerPublic();
-            case 2:
-              return generic.ownerPrivate();
-          }
+          return generic.getSchema('type').const[item.type];
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Color',
+        prop: function(item) {
+          return format('<span class="tag tag-default" style="background-color:%s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>', item.color);
         },
         clazz: 'item-col-author'
       },
@@ -84,13 +86,6 @@ module.exports = function (router, index, root) {
   router.get(index.editor.do, function (req, res, next) {
     generic.editor({
       schemaExclude: ['create_by'],
-      defineElement: {
-        owner: {
-          selected: 1,
-          el: 'radio',
-          inline: 1
-        }
-      },
       formElHandle: function (forms) {
 
       }
@@ -105,7 +100,7 @@ module.exports = function (router, index, root) {
       sequenceId: 1,
       checkExistsField: 'name',
       paramHandle: function(item) {
-        item.owner = parseInt(item.owner);
+        item.type = parseInt(item.type);
         item.create_by = {
           id: req.user.id,
           name: req.user.name
@@ -121,7 +116,7 @@ module.exports = function (router, index, root) {
     generic.update({
       checkExistsField: 'name',
       paramHandle: function(item) {
-        item.owner = parseInt(item.owner);
+        item.type = parseInt(item.type);
       }
     }, req, res, next);
   });
@@ -131,13 +126,7 @@ module.exports = function (router, index, root) {
    */
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
-      schemaExclude: ['create_by'],
-      defineElement: {
-        owner: {
-          el: 'radio',
-          inline: 1
-        }
-      }
+      schemaExclude: ['create_by']
     }, req, res, next);
   });
 

@@ -13,7 +13,6 @@ var model = schema({
     }
   },
   color: { type: 'string', required: true },
-  owner: { type: 'integer', enum: [1, 2], required: true, const: { 1: 'Public', 2: 'Private'} },
   create_by: {
     type: 'object',
     required: true,

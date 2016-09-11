@@ -24,7 +24,7 @@ var note = model_bind('note', model);
 note.queryByKey = function (options, resultCall, requestInfo) {
   options = _.extend({
     key: '',
-    keyTag: '',
+    keyTag: '',   //eg: 1,2,3
     pn: 1,
     ps: false
   }, options || {});

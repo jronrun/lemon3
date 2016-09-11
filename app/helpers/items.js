@@ -10,6 +10,38 @@ var types = {
 
 var helper = {
 
+  /**
+   * @param originalArr
+   * @param operateEl
+   * @param opt   1 set, 2 add, 3 remove
+   */
+  arrays: function (originalArr, operateEl, opt) {
+    var resultA = _.cloneDeep(originalArr),
+      operatorA = _.cloneDeep(_.isArray(operateEl) ? operateEl : [operateEl]);
+
+    switch (opt) {
+      case 1: resultA = operatorA; break;
+      case 2:
+        _.each(operatorA, function (v) {
+          if (resultA.indexOf(v) == -1) {
+            resultA.push(v);
+          }
+        });
+        break;
+      case 3:
+        var filterA = [];
+        _.each(resultA, function (v) {
+          if (operatorA.indexOf(v) == -1) {
+            filterA.push(v);
+          }
+        });
+        resultA = filterA;
+        break;
+    }
+
+    return resultA;
+  },
+
   grantExecutableShare: function(anonymous, usr, shared) {
     var aUser = anonymous ? {
       env: [],

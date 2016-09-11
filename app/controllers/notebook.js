@@ -58,20 +58,56 @@ router.post(index.create.do, function (req, res, next) {
  * Note Retrieve
  */
 router.get(index.entity.do, function (req, res, next) {
-  res.json(answer.fail('Retrieve'))
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  Note.findById(req.params.id, function (err, result) {
+    if (err) {
+      return res.json(answer.fail(err.message));
+    }
+
+    if (!result) {
+      return res.json(answer.fail('item not exists.'));
+    }
+
+    return ansEncode(answer.succ(result));
+  });
 });
 
 /**
  * Note Update
  */
 router.put(index.entity.do, function (req, res, next) {
-  res.json(answer.fail('Update'))
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  var tagOpt = req.body.tago, itemParse = deepParse(req.body.item);
+  if (itemParse.isFail()) {
+    return res.json(itemParse.target);
+  }
+
+  Note.updateBy(req.params.id, itemParse.get(), function (updateAns) {
+    return res.json(updateAns);
+  }, tagOpt);
 });
 
 /**
  * Note Delete
  */
 router.delete(index.entity.do, function (req, res, next) {
-  res.json(answer.fail('Delete'))
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  Note.removeById(req.params.id, function(err) {
+    if (err) {
+      return res.json(answer.fail(err.message));
+    }
+
+    var desc = options.descField ? result[options.descField] : '';
+    return res.json(answer.succ(false, 'Remove ' + desc + ' success.'));
+  });
 });
 

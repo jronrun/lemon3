@@ -1,5 +1,7 @@
 'use strict';
 
+var items = require('../helpers/items');
+
 var model = schema({
   id: { type: 'integer', required: true },
   title: { type: 'string', required: true, allowEmpty: false },
@@ -20,6 +22,52 @@ var model = schema({
 });
 
 var note = model_bind('note', model);
+
+/**
+ *
+ * @param noteId
+ * @param aNote
+ * @param resultCall
+ * @param tagOpt    1 set, 2 add, 3 remove
+ */
+note.updateBy = function (noteId, aNote, resultCall, tagOpt) {
+  tagOpt = tagOpt || 1; async.waterfall([
+    function(callback) {
+      note.findById(noteId, function (err, result) {
+        if (err) {
+          return resultCall(answer.fail(err.message));
+        }
+
+        if (!result) {
+          return resultCall(answer.fail('item not exists.'));
+        }
+
+        var theTags = item.arrays(result.tags, aNote.tags || [], tagOpt);
+        var check = note.validate(_.extend(result, aNote));
+        if (!check.valid) {
+          return resultCall(answer.fail(check.msg));
+        }
+
+        aNote.tags = theTags;
+        aNote.last_modify_time = new Date();
+        aNote.content = crypto.compress(aNote.content);
+        callback(null, aNote, result);
+      });
+    },
+    function (target, itemObj, callback) {
+      note.updateById(noteId, {$set: target}, function (err) {
+        if (err) {
+          return resultCall(answer.fail(err.message));
+        }
+
+        callback(null, itemObj);
+      });
+    }
+  ], function (err, result) {
+    return resultCall(answer.succ());
+  });
+
+};
 
 note.fastNote = function (params, resultCall, requestInfo) {
   var aNote = _.extend({

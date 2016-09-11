@@ -31,8 +31,7 @@ router.post(index.entities.do, function (req, res, next) {
     key: req.body.key,
     keyTag: req.body.tag
   }, function (qryAns) {
-    qryAns.result = crypto.compress(qryAns.result);
-    return res.json(qryAns);
+    return res.json(ansEncode(qryAns));
   }, requestInfo(req));
 
 });
@@ -41,7 +40,18 @@ router.post(index.entities.do, function (req, res, next) {
  * Note Create
  */
 router.post(index.create.do, function (req, res, next) {
-  res.json(answer.fail('Create'))
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  var dataParse = deepParse(req.body.data);
+  if (dataParse.isFail()) {
+    return res.json(dataParse.target);
+  }
+
+  Note.fastNote(dataParse.get(), function (createAns) {
+    return res.json(ansEncode(createAns));
+  }, requestInfo(req));
 });
 
 /**

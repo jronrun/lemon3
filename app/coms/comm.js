@@ -319,6 +319,10 @@ module.exports = function(scope, config) {
     return ansWrap(theAns);
   };
 
+  scope.ansEncode = function (theAnswer) {
+    theAnswer.result = crypto.compress(theAnswer.result);
+    return theAnswer;
+  };
   scope.ansWrap = function(theAnswer) {
     var res = {
       target: theAnswer,

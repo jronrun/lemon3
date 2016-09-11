@@ -21,6 +21,61 @@ var model = schema({
 
 var note = model_bind('note', model);
 
+note.fastNote = function (params, resultCall, requestInfo) {
+  var aNote = _.extend({
+    title: null,
+    summary: null,
+    content: null,
+
+    tags: [],
+    create_by: {
+      id: requestInfo.usr.id,
+      name: requestInfo.usr.name
+    },
+    last_modify_time: new Date(),
+    create_time: new Date()
+  }, params || {});
+
+  if (!aNote.title || !aNote.summary || !aNote.content) {
+    return resultCall(answer.fail('invalid note'));
+  }
+
+  aNote.content = crypto.compress(aNote.content);
+
+  async.waterfall([
+    function(callback) {
+      callback(null, aNote);
+    },
+
+    function(target, callback) {
+      note.nextId(function (id) {
+        target.id = id;
+
+        delete target.check;
+        var check = note.validate(target);
+        if (!check.valid) {
+          return resultCall(answer.fail(check.msg));
+        }
+
+        note.insertOne(target, function(err, result) {
+          if (err) {
+            return resultCall(answer.fail(err.message));
+          }
+
+          if (1 != result.insertedCount) {
+            return resultCall(answer.fail('create fail'));
+          }
+
+          target._id = result.insertedId.toString();
+          callback(null, answer.succ(target));
+        });
+      });
+    }
+  ], function(err, result) {
+    resultCall(result);
+  });
+};
+
 note.queryByKey = function (options, resultCall, requestInfo) {
   options = _.extend({
     key: '',

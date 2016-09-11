@@ -83,8 +83,7 @@ router.post(index.request.do, function (req, res, next) {
       });
 
       requs.request(requestData, function(requAns) {
-        requAns.result = crypto.compress(requAns.result);
-        return res.json(requAns);
+        return res.json(ansEncode(requAns));
       }, requestInfo(req), requestOptions);
     } else {
 
@@ -93,8 +92,7 @@ router.post(index.request.do, function (req, res, next) {
       }
 
       requs.request(requestData, function(requAns) {
-        requAns.result = crypto.compress(requAns.result);
-        return res.json(requAns);
+        return res.json(ansEncode(requAns));
       }, requestInfo(req), requestOptions);
     }
   }, requestInfo(req));
@@ -108,10 +106,8 @@ router.post(index.define.do, function (req, res, next) {
     getHostIfMutation: 1
   });
 
-  requs.apiDefine(params, function(answer) {
-
-    answer.result = crypto.compress(answer.result);
-    return res.json(answer);
+  requs.apiDefine(params, function(defineAns) {
+    return res.json(ansEncode(defineAns));
   }, false, req.user);
 });
 
@@ -148,8 +144,7 @@ router.post(index.comment.do, function (req, res, next) {
       defineAns.result = '';
     }
 
-    defineAns.result = crypto.compress(defineAns.result);
-    return res.json(defineAns);
+    return res.json(ansEncode(defineAns));
   }, true, req.user);
 });
 
@@ -176,9 +171,8 @@ router.post(index.viewurl.do, function (req, res, next) {
       groupId: req.body.group,
       servId: req.body.serv,
       requ: req.body.requ
-    }, function(answer) {
-      answer.result = crypto.compress(answer.result);
-      return res.json(answer);
+    }, function(requAns) {
+      return res.json(ansEncode(requAns));
     }, requestInfo(req), {
       opt: 1
     }
@@ -233,9 +227,8 @@ router.post(index.history.next.do, function (req, res, next) {
   }
 
   var curHis = parseInt(req.body.curHis);
-  requs.nextHistory(curHis, false, function(answer) {
-    answer.result = crypto.compress(answer.result);
-    return res.json(answer);
+  requs.nextHistory(curHis, false, function(nextHisAns) {
+    return res.json(ansEncode(nextHisAns));
   });
 });
 
@@ -248,9 +241,8 @@ router.post(index.history.prev.do, function (req, res, next) {
   }
 
   var curHis = parseInt(req.body.curHis);
-  requs.nextHistory(curHis, true, function(answer) {
-    answer.result = crypto.compress(answer.result);
-    return res.json(answer);
+  requs.nextHistory(curHis, true, function(nextHisAns) {
+    return res.json(ansEncode(nextHisAns));
   });
 });
 
@@ -353,10 +345,9 @@ router.post(index.history.query.do, function (req, res, next) {
     });
   }
 
-  requs.qryHistory(query, pn, function (answer) {
+  requs.qryHistory(query, pn, function (qryHisAns) {
     answer.result.userl = req.user.isAdmin ? 1 : 0;
-    answer.result = crypto.compress(answer.result);
-    return res.json(answer);
+    return res.json(ansEncode(qryHisAns));
   }, ps, qryOpts);
 });
 

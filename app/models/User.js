@@ -1,7 +1,6 @@
  'use strict';
 
-var log = log_from('user'),
-  Power = app_require('models/power'),
+var Power = app_require('models/power'),
   Role = app_require('models/role');
 
 var model = schema({

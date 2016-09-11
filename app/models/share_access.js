@@ -1,7 +1,5 @@
 'use strict';
 
-var log = log_from('share_access');
-
 var model = schema({
   id: { type: 'integer', required: true },
   share: { type: 'string', allowEmpty: false, required: true },

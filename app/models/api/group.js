@@ -1,7 +1,5 @@
 'use strict';
 
-var log = log_from('group');
-
 var model = schema({
   id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },

@@ -1,7 +1,5 @@
 'use strict';
 
-var log = log_from('server');
-
 var model = schema({
   id: { type: 'integer', required: true },
   env_id: { type: 'integer', required: true },

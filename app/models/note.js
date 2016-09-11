@@ -1,7 +1,5 @@
 'use strict';
 
-var log = log_from('article');
-
 var model = schema({
   id: { type: 'integer', required: true },
   title: { type: 'string', required: true, allowEmpty: false },

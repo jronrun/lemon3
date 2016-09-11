@@ -1,7 +1,5 @@
 'use strict';
 
-var log = log_from('interf');
-
 var model = schema({
   id: { type: 'integer', required: true },
   group_id: { type: 'integer', required: true },

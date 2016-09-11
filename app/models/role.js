@@ -1,7 +1,5 @@
 'use strict';
 
-var log = log_from('role');
-
 var model = schema({
   id: { type: 'integer', required: true },
   name: { type: 'string', required: true, allowEmpty: false },

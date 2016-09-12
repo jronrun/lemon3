@@ -119,6 +119,7 @@ note.fastNote = function (params, resultCall, requestInfo) {
           }
 
           target._id = result.insertedId.toString();
+          delete target.content;
           callback(null, answer.succ(target));
         });
       });

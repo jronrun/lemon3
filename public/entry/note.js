@@ -4,8 +4,8 @@
 var mirror = require('../js/notemirror'),
   files = require('../js/files');
 
-var _current = {}; function current(data) {
-  //data { id: '', title: '', content: '', summary: '' }
+var _current = {}, title_len = 30; function current(data) {
+  //data { _id: '', title: '', content: '', summary: '' }
   lemon.extend(_current, data || {});
   return _current;
 }
@@ -100,7 +100,7 @@ var note = {
 
     },
     newNote: function () {
-      note.load();
+      note.load(note.make());
     },
     saveAndNewNote: function () {
 
@@ -121,7 +121,7 @@ var note = {
           noteTitle = noteTitle + '.note';
         }
       } else {
-        noteTitle = (note.instance.target.getLine(0) || '').substr(0, 50) + '.note';
+        noteTitle = (note.instance.target.getLine(0) || '').substr(0, title_len) + '.note';
       }
       files.saveAs(note.instance.val(), noteTitle);
     },
@@ -170,14 +170,90 @@ var note = {
     }
   },
 
-  load: function (noteId, title, content, summary) {
-    var aNote = lemon.isJson(noteId) ? noteId : {
-      id: noteId || '',
-      title: title || '',
-      content: content || '',
-      summary: summary || ''
-    };
+  entity: {
+    fail: function (resp) {
+      if (401 == resp.code) {
+        alert('signin');
+      } else {
+        lemon.msg(resp.msg);
+      }
+    },
+    save: function (aNote, callback) {
+      if (aNote._id) {
+        lemon.put('/note/entity/' + aNote._id, {
+          data: lemon.enc(aNote)
+        }).done(function(resp) {
+          if (0 == resp.code) {
+            lemon.isFunc(callback) && callback();
+          } else {
+            note.entity.fail(resp);
+          }
+        });
+      } else {
+        $.post('/note/create', {
+          data: leon.enc(aNote)
+        }).done(function (resp) {
+          if (0 == resp.code) {
+            current(lemon.deepDec(resp.result));
+            lemon.isFunc(callback) && callback();
+          } else {
+            note.entity.fail(resp);
+          }
+        });
+      }
+    },
+    list: function () {
 
+    },
+    get: function (noteId, callback) {
+      $.get('/note/entity/' + noteId).done(function (resp) {
+        if (0 == resp.code) {
+          var rNote = lemon.deepDec(resp.result);
+          lemon.isFunc(callback) && callback(rNote);
+        } else {
+          note.entity.fail(resp);
+        }
+      });
+    },
+    del: function (noteId, callback) {
+      lemon.delete('/note/entity/' + noteId).done(function(resp) {
+        if (0 == resp.code) {
+          lemon.isFunc(callback) && callback();
+        } else {
+          note.entity.fail(resp);
+        }
+      });
+    }
+  },
+
+  make: function (aNote) {
+    var isNew = lemon.isBlank(aNote), rNote = lemon.extend({
+      _id: '',
+      title: '',
+      content: '',
+      summary: ''
+    }, aNote || {});
+
+    if (!isNew) {
+      if (!rNote.title) {
+        var line1 = note.instance.target.getLine(0);
+        if (line1.length > 1) {
+          rNote.title = line1.substr(0, title_len);
+        } else {
+          rNote.title = 'Note.' + lemon.when.tiny();
+        }
+      }
+      if (!rNote.content) {
+        rNote.content = note.instance.val();
+      }
+      if (!rNote.summary) {
+        rNote.summary = rNote.content.substr(0, 100);
+      }
+    }
+
+    return rNote;
+  },
+  load: function (aNote) {
     note.instance.val(aNote.content);
     current(aNote);
   },

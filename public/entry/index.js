@@ -33,6 +33,10 @@ lemon.deepDec = function(val) {
   return val;
 };
 
+lemon.addDateMask({
+  tiny: 'yyyymmddHHMMss'
+});
+
 lemon.data = function(selector, target) {
   var prefix = 'data-';
 

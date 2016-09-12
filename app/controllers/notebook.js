@@ -83,7 +83,7 @@ router.put(index.entity.do, function (req, res, next) {
     return res.json(answer.resp(401));
   }
 
-  var tagOpt = req.body.tags, itemParse = deepParse(req.body.item);
+  var tagOpt = req.body.tags, itemParse = deepParse(req.body.data);
   if (itemParse.isFail()) {
     return res.json(itemParse.target);
   }

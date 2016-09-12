@@ -26,7 +26,6 @@ var note = model_bind('note', model);
 
 note.make = function (item, needContent) {
   var aNote = {
-    id: item.id,
     _id: item._id,
     title: item.title,
     summary: item.summary,

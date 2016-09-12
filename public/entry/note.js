@@ -5,7 +5,7 @@ var mirror = require('../js/notemirror'),
   files = require('../js/files');
 
 var _current = {}, title_len = 30; function current(data) {
-  //data { _id: '', title: '', content: '', summary: '' }
+  //data { _id: '', title: '', content: '', summary: '', note: '', tags: [] }
   lemon.extend(_current, data || {});
   return _current;
 }
@@ -117,6 +117,11 @@ var note = {
     saveNote: function (params) {
       note.entity.save({
         title: params.get ? params.get(0) : ''
+      });
+    },
+    curAsNewNote: function () {
+      current({
+        _id: ''
       });
     },
     saveNoteCust: function (params) {
@@ -244,10 +249,9 @@ var note = {
 
   make: function (aNote) {
     var isNew = lemon.isBlank(aNote), rNote = lemon.extend({
-      id: 0,
+      _id: '',
       tags: [],
       note: '',
-      _id: '',
       title: '',
       content: '',
       summary: ''
@@ -438,6 +442,7 @@ var note = {
       //CodeMirror.commands.save = note.action.saveNote;
       ex('w', function (args, cm) { na('saveNote', args, cm); }, 'Save Note');
       ex('ww', function (args, cm) { na('saveNoteCust', args, cm); }, 'Save Note With Custom...');
+      ex('asnew', function (args, cm) { na('curAsNewNote', args, cm); }, 'Current As New Note', 'asn');
       ex('wnew', function (args, cm) { na('saveAndNewNote', args, cm); }, 'Save & New Note', 'wn');
       ex('wq', function (args, cm) { na('saveAndCloseNote', args, cm); }, 'Save & Close Note');
       ex('save', function (args, cm) { na('saveNoteAs', args, cm); }, 'Save Note As...', 'sa');
@@ -459,6 +464,7 @@ var note = {
           items: [
             note.menu.item('New', ':n', 'visual & edit', 'New Note (:new)', 'newNote'),
             note.menu.item('Save & New', ':wn', 'visual & edit', 'Save & New Note (:wnew)', 'saveAndNewNote'),
+            note.menu.item('As New', ':asn', 'visual & edit', 'Current As New Note (:asnew)', 'curAsNewNote'),
             note.menu.item('Open File...', ':o', 'visual & edit', 'Open File (:open)', 'openFile'),
             note.menu.item('separator'),
             note.menu.item('Close Menu', ':menu', 'visual & edit', 'Close Menu', 'menuTgl'),

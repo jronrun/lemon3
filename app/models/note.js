@@ -9,6 +9,7 @@ var model = schema({
   content: { type: 'string', allowEmpty: false },
   note: { type: 'string' },
   tags: { type: 'array', uniqueItems: true },
+  state: { type: 'integer', enum: [1, 9], required: true, const: { 1: 'Normal', 9: 'Deleted'} },
   create_by: {
     type: 'object',
     required: true,
@@ -77,6 +78,7 @@ note.fastNote = function (params, resultCall, requestInfo) {
     summary: null,
     content: null,
 
+    state: 1,
     tags: [],
     create_by: {
       id: requestInfo.usr.id,

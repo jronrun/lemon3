@@ -24,6 +24,44 @@ var model = schema({
 
 var note = model_bind('note', model);
 
+note.make = function (item, needContent) {
+  var aNote = {
+    id: item.id,
+    _id: item._id,
+    title: item.title,
+    summary: item.summary,
+    note: item.note,
+    tags: item.tags
+  };
+
+  if (needContent) {
+    aNote.content = crypto.decompress(item.content);
+  }
+  return aNote;
+};
+
+note.getNoteById = function (noteId, resultCall, requestInfo) {
+  var qry = note.idQueryParam(noteId);
+  if (!requestInfo.usr.isAdmin) {
+    _.extend(qry, {
+      state: 1,
+      'create_by.id': requestInfo.usr.id
+    });
+  }
+
+  note.find(qry).limit(1).next(function(err, result) {
+    if (err) {
+      return resultCall(answer.fail(err.message));
+    }
+
+    if (!result) {
+      return resultCall(answer.fail('Note not exists.'));
+    }
+
+    return resultCall(answer.succ(note.make(result, true)));
+  });
+};
+
 /**
  *
  * @param noteId
@@ -32,7 +70,10 @@ var note = model_bind('note', model);
  * @param tagOpt    1 set, 2 add, 3 remove
  */
 note.updateBy = function (noteId, aNote, resultCall, tagOpt) {
-  tagOpt = tagOpt || 1; async.waterfall([
+  delete aNote._id;
+  tagOpt = tagOpt || 1;
+
+  async.waterfall([
     function(callback) {
       note.findById(noteId, function (err, result) {
         if (err) {
@@ -40,10 +81,10 @@ note.updateBy = function (noteId, aNote, resultCall, tagOpt) {
         }
 
         if (!result) {
-          return resultCall(answer.fail('item not exists.'));
+          return resultCall(answer.fail('note not exists.'));
         }
 
-        var theTags = item.arrays(result.tags, aNote.tags || [], tagOpt);
+        var theTags = items.arrays(result.tags, aNote.tags || [], tagOpt);
         var check = note.validate(_.extend(result, aNote));
         if (!check.valid) {
           return resultCall(answer.fail(check.msg));
@@ -63,11 +104,17 @@ note.updateBy = function (noteId, aNote, resultCall, tagOpt) {
           return resultCall(answer.fail(err.message));
         }
 
-        callback(null, itemObj);
+        note.findById(noteId, function (errU, updated) {
+          if (errU || !updated) {
+            callback(null, note.make(_.extend(itemObj, target)));
+          } else {
+            callback(null, note.make(updated));
+          }
+        });
       });
     }
   ], function (err, result) {
-    return resultCall(answer.succ());
+    return resultCall(answer.succ(result));
   });
 
 };
@@ -89,9 +136,10 @@ note.fastNote = function (params, resultCall, requestInfo) {
   }, params || {});
 
   if (!aNote.title || !aNote.summary || !aNote.content) {
-    return resultCall(answer.fail('invalid note'));
+    return resultCall(answer.fail('Invalid note, write something first'));
   }
 
+  delete aNote._id;
   aNote.content = crypto.compress(aNote.content);
 
   async.waterfall([
@@ -119,8 +167,7 @@ note.fastNote = function (params, resultCall, requestInfo) {
           }
 
           target._id = result.insertedId.toString();
-          delete target.content;
-          callback(null, answer.succ(target));
+          callback(null, answer.succ(note.make(target)));
         });
       });
     }

@@ -62,17 +62,10 @@ router.get(index.entity.do, function (req, res, next) {
     return res.json(answer.resp(401));
   }
 
-  Note.findById(req.params.id, function (err, result) {
-    if (err) {
-      return res.json(answer.fail(err.message));
-    }
+  Note.getNoteById(req.params.id, function (getAns) {
+    return res.json(ansEncode(getAns));
+  }, requestInfo(req));
 
-    if (!result) {
-      return res.json(answer.fail('item not exists.'));
-    }
-
-    return ansEncode(answer.succ(result));
-  });
 });
 
 /**

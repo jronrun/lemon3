@@ -508,6 +508,17 @@ module.exports.Base = function(model, modelName, define) {
       }
 
       return promise;
+    },
+
+    idQueryParam: function (itemId) {
+      var qry = null;
+      if (core.isObjectID(String(itemId))) {
+        qry = { _id: core.toObjectID(itemId)};
+      } else {
+        qry = { id: parseInt(itemId)};
+      }
+
+      return qry;
     }
 
   };

@@ -96,8 +96,14 @@ var note = {
     listNote: function () {
 
     },
-    editNote: function () {
-
+    editNote: function (params) {
+      var nid = null;
+      if (params.get) {
+        nid = params.get(0);
+      } else {
+        nid = params.noteId;
+      }
+      note.entity.loadById(nid);
     },
     newNote: function () {
       note.load(note.make());
@@ -177,7 +183,7 @@ var note = {
       if (401 == resp.code) {
         alert('signin');
       } else {
-        lemon.msg(resp.msg);
+        note.instance.tip(resp.msg);
       }
     },
     save: function (aNote, callback) {
@@ -198,7 +204,7 @@ var note = {
           data: lemon.enc(aNote)
         }).done(function (resp) {
           if (0 == resp.code) {
-            current(lemon.deepDec(resp.result));
+            current(note.make(lemon.deepDec(resp.result)));
             note.instance.tip('Save ' + aNote.title + ' success');
             lemon.isFunc(callback) && callback();
           } else {
@@ -210,10 +216,15 @@ var note = {
     list: function () {
 
     },
-    get: function (noteId, callback) {
+    loadById: function (noteId, callback) {
+      if (lemon.isBlank(noteId)) {
+        return note.instance.tip('Unknown note id');
+      }
+
       $.get('/note/entity/' + noteId).done(function (resp) {
         if (0 == resp.code) {
-          var rNote = lemon.deepDec(resp.result);
+          var rNote = note.make(lemon.deepDec(resp.result));
+          note.load(rNote);
           lemon.isFunc(callback) && callback(rNote);
         } else {
           note.entity.fail(resp);
@@ -240,6 +251,9 @@ var note = {
     }, aNote || {});
 
     if (!isNew) {
+      if (!rNote._id) {
+        rNote._id = current()._id || '';
+      }
       if (!rNote.title) {
         var line1 = note.instance.target.getLine(0);
         if (line1.length > 1) {
@@ -805,7 +819,7 @@ var note = {
     //TODO remove
     global.note = note;
     global.mirror = mirror;
-    global.files = files;
+    global.current = current;
     //TODO remove
 
 

@@ -105,7 +105,11 @@ var note = {
       note.load(note.make());
     },
     saveAndNewNote: function () {
-
+      note.entity.save({
+        title: params.get ? params.get(0) : ''
+      }, function () {
+        note.load(note.make());
+      });
     },
     shareNote: function () {
 
@@ -116,9 +120,7 @@ var note = {
       });
     },
     curAsNewNote: function () {
-      current({
-        _id: ''
-      });
+      current({ _id: ''});
     },
     saveNoteCust: function (params) {
 

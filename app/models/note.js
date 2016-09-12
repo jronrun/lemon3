@@ -100,8 +100,10 @@ note.updateBy = function (noteId, aNote, resultCall, requestInfo, tagOpt) {
         if (_.has(aNote, 'tags')) {
           aNote.tags = theTags;
         }
+        if (_.has(aNote, 'content')) {
+          aNote.content = crypto.compress(aNote.content);
+        }
         aNote.last_modify_time = new Date();
-        aNote.content = crypto.compress(aNote.content);
         callback(null, aNote, result);
       });
     },

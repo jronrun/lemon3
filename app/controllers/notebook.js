@@ -83,7 +83,7 @@ router.put(index.entity.do, function (req, res, next) {
     return res.json(answer.resp(401));
   }
 
-  var tagOpt = req.body.tago, itemParse = deepParse(req.body.item);
+  var tagOpt = req.body.tags, itemParse = deepParse(req.body.item);
   if (itemParse.isFail()) {
     return res.json(itemParse.target);
   }
@@ -101,13 +101,8 @@ router.delete(index.entity.do, function (req, res, next) {
     return res.json(answer.resp(401));
   }
 
-  Note.removeById(req.params.id, function(err) {
-    if (err) {
-      return res.json(answer.fail(err.message));
-    }
-
-    var desc = options.descField ? result[options.descField] : '';
-    return res.json(answer.succ(false, 'Remove ' + desc + ' success.'));
+  Note.updateBy(req.params.id, {state: 9}, function (updateAns) {
+    return res.json(updateAns);
   });
 });
 

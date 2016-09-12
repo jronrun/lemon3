@@ -4,6 +4,12 @@
 var mirror = require('../js/notemirror'),
   files = require('../js/files');
 
+var _current = {}; function current(data) {
+  //data { id: '', title: '', content: '', summary: '' }
+  lemon.extend(_current, data || {});
+  return _current;
+}
+
 var note = {
   id: '#note_textarea',
   instance: null,
@@ -94,12 +100,18 @@ var note = {
 
     },
     newNote: function () {
+      note.load();
+    },
+    saveAndNewNote: function () {
 
     },
     shareNote: function () {
 
     },
     saveNote: function (params) {
+
+    },
+    saveNoteCust: function (params) {
 
     },
     saveNoteAs: function (params) {
@@ -156,6 +168,18 @@ var note = {
         }
       }
     }
+  },
+
+  load: function (noteId, title, content, summary) {
+    var aNote = lemon.isJson(noteId) ? noteId : {
+      id: noteId || '',
+      title: title || '',
+      content: content || '',
+      summary: summary || ''
+    };
+
+    note.instance.val(aNote.content);
+    current(aNote);
   },
 
   views: function (text) {
@@ -315,6 +339,8 @@ var note = {
 
       //CodeMirror.commands.save = note.action.saveNote;
       ex('w', function (args, cm) { na('saveNote', args, cm); }, 'Save Note');
+      ex('ww', function (args, cm) { na('saveNoteCust', args, cm); }, 'Save Note With Custom...');
+      ex('wnew', function (args, cm) { na('saveAndNewNote', args, cm); }, 'Save & New Note', 'wn');
       ex('wq', function (args, cm) { na('saveAndCloseNote', args, cm); }, 'Save & Close Note');
       ex('save', function (args, cm) { na('saveNoteAs', args, cm); }, 'Save Note As...', 'sa');
       ex('wrapword', function (args, cm) { na('wrapword', args, cm); }, 'Word Wrap', 'wrap');
@@ -334,6 +360,7 @@ var note = {
           id: 'menu_dd_file',
           items: [
             note.menu.item('New', ':n', 'visual & edit', 'New Note (:new)', 'newNote'),
+            note.menu.item('Save & New', ':wn', 'visual & edit', 'Save & New Note (:wnew)', 'saveAndNewNote'),
             note.menu.item('Open File...', ':o', 'visual & edit', 'Open File (:open)', 'openFile'),
             note.menu.item('separator'),
             note.menu.item('Close Menu', ':menu', 'visual & edit', 'Close Menu', 'menuTgl'),
@@ -343,6 +370,7 @@ var note = {
             note.menu.item('Fullscreen', ':full', 'visual & edit', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
             note.menu.item('separator'),
             note.menu.item('Save Note', ':w', 'visual & edit', 'Save Note (:w)', 'saveNote'),
+            note.menu.item('Save Note With...', ':ww', 'visual & edit', 'Save Note With Custom (:ww)', 'saveNoteCust'),
             note.menu.item('Save & Close Note', ':wq', 'visual & edit', 'Save & Close Note', 'saveAndCloseNote', false, true),
             note.menu.item('Save As...', ':sa', 'visual & edit', 'Save Note As...', 'saveNoteAs'),
             note.menu.item('empty', 80)

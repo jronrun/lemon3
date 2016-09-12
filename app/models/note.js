@@ -164,7 +164,8 @@ note.queryByKey = function (options, resultCall, requestInfo) {
 
   var qryOpts = {
     fields: {
-      content: 0
+      content: 0,
+      create_by: 0
     },
     sorts: {
       id: -1

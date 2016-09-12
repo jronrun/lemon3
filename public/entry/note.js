@@ -109,14 +109,16 @@ var note = {
 
     },
     saveNote: function (params) {
-
+      note.entity.save({
+        title: params.get ? params.get(0) : ''
+      });
     },
     saveNoteCust: function (params) {
 
     },
     saveNoteAs: function (params) {
       var noteTitle = '';
-      if (noteTitle = params.get(0)) {
+      if (params.get && (noteTitle = params.get(0))) {
         if (noteTitle.indexOf('.') == -1) {
           noteTitle = noteTitle + '.note';
         }
@@ -179,11 +181,13 @@ var note = {
       }
     },
     save: function (aNote, callback) {
+      aNote = note.make(aNote);
       if (aNote._id) {
         lemon.put('/note/entity/' + aNote._id, {
           data: lemon.enc(aNote)
         }).done(function(resp) {
           if (0 == resp.code) {
+            note.instance.tip('Save ' + aNote.title + ' success');
             lemon.isFunc(callback) && callback();
           } else {
             note.entity.fail(resp);
@@ -191,10 +195,11 @@ var note = {
         });
       } else {
         $.post('/note/create', {
-          data: leon.enc(aNote)
+          data: lemon.enc(aNote)
         }).done(function (resp) {
           if (0 == resp.code) {
             current(lemon.deepDec(resp.result));
+            note.instance.tip('Save ' + aNote.title + ' success');
             lemon.isFunc(callback) && callback();
           } else {
             note.entity.fail(resp);

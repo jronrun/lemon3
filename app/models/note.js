@@ -160,6 +160,7 @@ note.queryByKey = function (options, resultCall, requestInfo) {
   }
 
   _.extend(query, {
+    state: 1,
     'create_by.id': requestInfo.usr.id
   });
 

@@ -244,6 +244,9 @@ var note = {
 
   make: function (aNote) {
     var isNew = lemon.isBlank(aNote), rNote = lemon.extend({
+      id: 0,
+      tags: [],
+      note: '',
       _id: '',
       title: '',
       content: '',

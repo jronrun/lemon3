@@ -9,7 +9,7 @@ var model = schema({
   content: { type: 'string', allowEmpty: false },
   note: { type: 'string' },
   tags: { type: 'array', uniqueItems: true },
-  state: { type: 'integer', enum: [1, 9], required: true, const: { 1: 'Normal', 9: 'Deleted'} },
+  state: { type: 'integer', enum: [1, 9], required: true, const: { 1: 'Using', 9: 'Deleted'} },
   create_by: {
     type: 'object',
     required: true,

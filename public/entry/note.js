@@ -268,23 +268,39 @@ var note = {
       summary: ''
     }, aNote || {});
 
-    if (!isNew) {
+    var curN = current(); if (!isNew) {
       if (!rNote._id) {
-        rNote._id = current()._id || '';
+        rNote._id = curN._id || '';
       }
+      if (!rNote.note) {
+        rNote.note = curN.note || '';
+      }
+      if (!rNote.tags) {
+        rNote.tags = curN.tags || [];
+      }
+
       if (!rNote.title) {
-        var line1 = note.instance.target.getLine(0);
-        if (line1.length > 1) {
-          rNote.title = line1.substr(0, title_len);
+        if (curN.title) {
+          rNote.title = curN.title;
         } else {
-          rNote.title = 'Note.' + lemon.when.tiny();
+          var line1 = note.instance.target.getLine(0);
+          if (line1.length > 1) {
+            rNote.title = line1.substr(0, title_len);
+          } else {
+            rNote.title = 'Note.' + lemon.when.tiny();
+          }
         }
       }
+      if (!rNote.summary) {
+        if (curN.summary) {
+          rNote.summary = curN.summary;
+        } else {
+          rNote.summary = rNote.content.substr(0, 100);
+        }
+      }
+
       if (!rNote.content) {
         rNote.content = note.instance.val();
-      }
-      if (!rNote.summary) {
-        rNote.summary = rNote.content.substr(0, 100);
       }
     }
 

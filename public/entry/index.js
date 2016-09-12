@@ -815,6 +815,12 @@ lemon.register({
     }
     return lemon.isButtonActive(selector);
   },
+  isEvented: function (selector) {
+    return 1 == lemon.data(selector, 'evented');
+  },
+  setEvented: function (selector) {
+    lemon.data(selector, {evented: 1});
+  },
   /**
    * lemon.tabEventListen first
    * @param selector  tab content id

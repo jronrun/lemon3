@@ -95,7 +95,7 @@ var note = {
       note.entity.del(nid);
     },
     listNote: function () {
-
+//TODO
     },
     editNote: function (params) {
       var nid = params.get ? params.get(0) : params.noteId;
@@ -112,7 +112,7 @@ var note = {
       });
     },
     shareNote: function () {
-
+//TODO
     },
     saveNote: function (params) {
       note.entity.save({
@@ -123,7 +123,7 @@ var note = {
       current({ _id: ''});
     },
     saveNoteCust: function (params) {
-
+      note.saveWith.show();
     },
     saveNoteAs: function (params) {
       var noteTitle = '';
@@ -199,7 +199,7 @@ var note = {
         note.instance.tip(resp.msg);
       }
     },
-    save: function (aNote, callback) {
+    save: function (aNote, succCall, failCall) {
       aNote = note.make(aNote);
       if (aNote._id) {
         lemon.put('/note/entity/' + aNote._id, {
@@ -207,9 +207,10 @@ var note = {
         }).done(function(resp) {
           if (0 == resp.code) {
             note.instance.tip('Save ' + aNote.title + ' success');
-            lemon.isFunc(callback) && callback();
+            lemon.isFunc(succCall) && succCall(resp);
           } else {
             note.entity.fail(resp);
+            lemon.isFunc(failCall) && failCall(resp);
           }
         });
       } else {
@@ -219,9 +220,10 @@ var note = {
           if (0 == resp.code) {
             current(note.make(lemon.deepDec(resp.result)));
             note.instance.tip('Save ' + aNote.title + ' success');
-            lemon.isFunc(callback) && callback();
+            lemon.isFunc(succCall) && succCall(resp);
           } else {
             note.entity.fail(resp);
+            lemon.isFunc(failCall) && failCall(resp);
           }
         });
       }
@@ -570,6 +572,46 @@ var note = {
 
     intl: function () {
       note.menu.visualCmds();
+
+      note.saveWith = lemon.modal({
+        id: 'note_cust_save',
+        cache: true,
+        body: lemon.tmpl($('#save_body_tmpl').html(), {}),
+        footer: lemon.tmpl($('#save_foot_tmpl').html(), {}),
+        modal: {
+          backdrop: 'static',
+          keyboard: false
+        }
+      }, {
+        show: function () {
+          note.menuOpened = note.menu.instance.opened();
+          if (note.menuOpened) {
+            note.action.menuHide();
+          }
+        },
+        shown: function(evt, el) {
+          var fid = '#save_with_form', swid = '#save_with', aNote = note.make(true);
+          lemon.fillParam(fid, aNote);
+          if (!lemon.isEvented(swid)) {
+            $(swid).click(function () {
+              var pg = lemon.progress(fid + ',' + swid);
+              note.entity.save(lemon.getParam(fid, 'textarea'), function () {
+                pg.end();
+                note.saveWith.hide();
+              }, function () {
+                pg.end();
+              });
+            });
+            lemon.setEvented(swid);
+          }
+        },
+        hidden: function (evt, el) {
+          if (note.menuOpened) {
+            note.action.menuShow();
+          }
+        }
+      });
+
       lemon.live('click', 'a[data-menuact]', function (evt, el) {
         evt.preventDefault();
         var anEl = 'A' == el.tagName ? el : $(el).parent(),

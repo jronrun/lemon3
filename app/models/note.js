@@ -48,7 +48,9 @@ note.updateBy = function (noteId, aNote, resultCall, tagOpt) {
           return resultCall(answer.fail(check.msg));
         }
 
-        aNote.tags = theTags;
+        if (_.has(aNote, 'tags')) {
+          aNote.tags = theTags;
+        }
         aNote.last_modify_time = new Date();
         aNote.content = crypto.compress(aNote.content);
         callback(null, aNote, result);

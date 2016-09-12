@@ -90,19 +90,15 @@ var note = {
 
       note.views(lemon.isFunc(topicDef.link) ? topicDef.link() : topicDef.link);
     },
-    delNote: function () {
-
+    delNote: function (params) {
+      var nid = params.get ? params.get(0) : params.noteId;
+      note.entity.del(nid);
     },
     listNote: function () {
 
     },
     editNote: function (params) {
-      var nid = null;
-      if (params.get) {
-        nid = params.get(0);
-      } else {
-        nid = params.noteId;
-      }
+      var nid = params.get ? params.get(0) : params.noteId;
       note.entity.loadById(nid);
     },
     newNote: function () {
@@ -239,6 +235,7 @@ var note = {
     del: function (noteId, callback) {
       lemon.delete('/note/entity/' + noteId).done(function(resp) {
         if (0 == resp.code) {
+          note.load(note.make());
           lemon.isFunc(callback) && callback();
         } else {
           note.entity.fail(resp);

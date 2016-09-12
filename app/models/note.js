@@ -68,13 +68,21 @@ note.getNoteById = function (noteId, resultCall, requestInfo) {
  * @param resultCall
  * @param tagOpt    1 set, 2 add, 3 remove
  */
-note.updateBy = function (noteId, aNote, resultCall, tagOpt) {
+note.updateBy = function (noteId, aNote, resultCall, requestInfo, tagOpt) {
   delete aNote._id;
   tagOpt = tagOpt || 1;
 
+  var qry = note.idQueryParam(noteId);
+  if (!requestInfo.usr.isAdmin) {
+    _.extend(qry, {
+      state: 1,
+      'create_by.id': requestInfo.usr.id
+    });
+  }
+
   async.waterfall([
     function(callback) {
-      note.findById(noteId, function (err, result) {
+      note.find(qry).limit(1).next(function(err, result) {
         if (err) {
           return resultCall(answer.fail(err.message));
         }
@@ -98,6 +106,7 @@ note.updateBy = function (noteId, aNote, resultCall, tagOpt) {
       });
     },
     function (target, itemObj, callback) {
+      noteId = itemObj._id.toString();
       note.updateById(noteId, {$set: target}, function (err) {
         if (err) {
           return resultCall(answer.fail(err.message));

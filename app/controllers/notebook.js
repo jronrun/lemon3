@@ -83,7 +83,7 @@ router.put(index.entity.do, function (req, res, next) {
 
   Note.updateBy(req.params.id, itemParse.get(), function (updateAns) {
     return res.json(updateAns);
-  }, tagOpt);
+  }, requestInfo(req), tagOpt);
 });
 
 /**
@@ -96,6 +96,6 @@ router.delete(index.entity.do, function (req, res, next) {
 
   Note.updateBy(req.params.id, {state: 9}, function (updateAns) {
     return res.json(updateAns);
-  });
+  }, requestInfo(req));
 });
 

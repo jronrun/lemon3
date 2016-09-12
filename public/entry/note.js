@@ -108,7 +108,7 @@ var note = {
       note.entity.save({
         title: params.get ? params.get(0) : ''
       }, function () {
-        note.load(note.make());
+        note.action.newNote();
       });
     },
     shareNote: function () {
@@ -137,10 +137,20 @@ var note = {
       files.saveAs(note.instance.val(), noteTitle);
     },
     closeNote: function () {
-
+      if (lemon.isRootWin()) {
+        note.load(note.make());
+      } else {
+        lemon.pubEvent('NOTE_CLOSE', {
+          nid: current()._id || ''
+        });
+      }
     },
-    saveAndCloseNote: function () {
-
+    saveAndCloseNote: function (params) {
+      note.entity.save({
+        title: params.get ? params.get(0) : ''
+      }, function () {
+        note.action.closeNote();
+      });
     },
     openFile: function () {
       $('#note_open_file').click();

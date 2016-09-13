@@ -280,7 +280,11 @@ var note = {
           }
 
           if (fp) {
-            note.entity.listScroll();
+            if (lemon.isMediumUpView()) {
+              note.entity.listScroll();
+            } else {
+
+            }
           }
 
         } else {
@@ -291,19 +295,21 @@ var note = {
       });
     },
     listScroll: function () {
-      var ddBody = '#menu_dd_note_dd';
-      if (!lemon.isEvented(ddBody)) {
-        lemon.scroll(ddBody, function () {
-          if (!note.entity.list.noteEnd) {
-            var pg = lemon.homeProgress();
-            var pn = parseInt($(ddBody).data('page')) + 1;
-            note.entity.list(note.entity.list.prevKey, pn, '', function() {
-              pg.end();
-            });
-          }
-        });
+      if (lemon.isMediumUpView()) {
+        var ddBody = '#menu_dd_note_dd';
+        if (!lemon.isEvented(ddBody)) {
+          lemon.scroll(ddBody, function () {
+            if (!note.entity.list.noteEnd) {
+              var pg = lemon.homeProgress();
+              var pn = parseInt($(ddBody).data('page')) + 1;
+              note.entity.list(note.entity.list.prevKey, pn, '', function() {
+                pg.end();
+              });
+            }
+          });
 
-        lemon.setEvented(ddBody);
+          lemon.setEvented(ddBody);
+        }
       }
     },
     loadById: function (noteId, callback) {
@@ -665,6 +671,9 @@ var note = {
     },
 
     intl: function () {
+      lemon.live('click', '#menu_logo', function () {
+        note.views(lemon.fullUrl('/manage/notes/1'));
+      });
       note.menu.visualCmds();
 
       note.saveWith = lemon.modal({
@@ -975,6 +984,7 @@ var note = {
         var evtData = data.data;
         switch (data.event) {
           case 'MODAL':
+
             break;
         }
       }

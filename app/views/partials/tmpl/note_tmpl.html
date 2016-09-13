@@ -100,6 +100,9 @@
             <div class="card-block">
                 <h5 class="card-title"><%= n.title %></h5>
                 <small class="card-subtitle linebreak text-silver">
+                    <% if (n.id) { %>
+                        Note.<%= n.id %>
+                    <% } %>
                     <% if (userl) { %>
                         Created by&nbsp;
                         <% if (n.create_by.id) { %>
@@ -114,7 +117,9 @@
                 <h5 class="invisible"></h5>
                 <p class="card-text linebreak"><%= n.summary %></p>
                 <% if (n.note && n.note.length > 0) { %>
-                <p class="card-text linebreak"><%= n.note %></p>
+                <div class="alert alert-warning linebreak" style="max-width: 300px;" role="alert">
+                    <%= n.note %>
+                </div>
                 <% } %>
             </div>
             <div class="card-block">
@@ -138,7 +143,7 @@
 <script type="text/html" id="note_tool_tmpl">
     <nav class="navbar nav-pills">
         <ul class="nav" id="note_tool_bar">
-            <li class="nav-item">
+            <li class="nav-item" id="menu_logo">
                 <a class="nav-link" href="javascript:void(0);" style="zoom: 80%;margin-top: 5px;">
                     {{> logo}}
                 </a>

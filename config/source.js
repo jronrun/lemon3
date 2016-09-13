@@ -216,6 +216,17 @@ var resource = [
           {id: 2000134, extend: 2000133, method: M.PUT, page: P.list, desc: 'Update'},
           {id: 2000135, extend: 2000133, method: M.DELETE, page: P.list, desc: 'Delete'}
         ]
+      },
+
+      {
+        id: 200014, name: 'mnote', desc: 'Note', action: '/manage/notes/:page', page: P.list, children: [
+          {id: 2000141, name: 'editor', action: '/manage/note', page: P.edit, desc: 'Editor'},
+          {id: 2000142, extend: 2000141, method: M.POST, page: P.list, desc: 'Create'},
+
+          {id: 2000143, name: 'retrieve', action: '/manage/note/:id', page: P.edit, desc: 'Retrieve'},
+          {id: 2000144, extend: 2000143, method: M.PUT, page: P.list, desc: 'Update'},
+          {id: 2000145, extend: 2000143, method: M.DELETE, page: P.list, desc: 'Delete'}
+        ]
       }
     ]
   }
@@ -252,7 +263,9 @@ var menu = [
       {sourceId: 200006, args: '1'}
       //{sourceId: 200008, args: '1'}
     ]
-  }
+  },
+
+  {name: 'Notes', sourceId: 200014},
 
 ];
 

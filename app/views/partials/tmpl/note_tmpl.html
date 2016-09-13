@@ -2,15 +2,15 @@
     <form id="save_with_form">
         <div class="form-group">
             <label for="title">Title</label>
-            <textarea class="form-control" id="title" name="title" rows="1" placeholder="Note Title"></textarea>
+            <textarea class="form-control borderinfo" id="title" name="title" rows="1" placeholder="Note Title"></textarea>
         </div>
         <div class="form-group">
             <label for="summary">Summary</label>
-            <textarea class="form-control" id="summary" name="summary" rows="3" placeholder="Summary for Note"></textarea>
+            <textarea class="form-control borderinfo" id="summary" name="summary" rows="3" placeholder="Summary for Note"></textarea>
         </div>
         <div class="form-group">
             <label for="note">Note</label>
-            <textarea class="form-control" id="note" name="note" rows="2" placeholder="Remarks for Note"></textarea>
+            <textarea class="form-control borderinfo" id="note" name="note" rows="2" placeholder="Remarks for Note"></textarea>
         </div>
     </form>
 </script>
@@ -98,7 +98,7 @@
     <div class="dropdown-item" id="n_<%= n._id %>" data-entity="<%= lemon.enc(n) %>">
         <div class="card borderinfo">
             <div class="card-block">
-                <h5 class="card-title"><%= n.title %></h5>
+                <h5 class="card-title"><%= lemon.escape(n.title) %></h5>
                 <small class="card-subtitle linebreak text-silver">
                     <% if (n.id) { %>
                         Note.<%= n.id %>
@@ -115,9 +115,9 @@
                     <%= lemon.when.default(n.create_time) %>
                 </small>
                 <h5 class="invisible"></h5>
-                <p class="card-text linebreak"><%= n.summary %></p>
+                <p class="card-text linebreak" title="Note Summary"><%= lemon.escape(n.summary) %></p>
                 <% if (n.note && n.note.length > 0) { %>
-                <div class="alert alert-warning linebreak" style="max-width: 300px;" role="alert">
+                <div class="alert alert-warning linebreak" title="Note Remarks" style="border: none;">
                     <%= n.note %>
                 </div>
                 <% } %>

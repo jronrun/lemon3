@@ -152,6 +152,39 @@ var note = {
         note.action.closeNote();
       });
     },
+    noteInfo: function (params) {
+      var nid = params.get ? params.get(0) : '', tid = '#note_card_tmpl', ashow = function (n) {
+        n = note.make(n); if (lemon.isBlank(n.content)) {
+          note.instance.tip('invalid note');
+          return;
+        }
+
+        lemon.modal({
+          modal: {
+            show: true
+          },
+          body: function () {
+            return lemon.tmpls(tid, {n: n, userl: false});
+          }
+        }, {
+          shown: function (evt, el) {
+            $(el).find('.borderinfo').removeClass('borderinfo').css({
+              border: 'none'
+            });
+          }
+        });
+      };
+
+      if (nid) {
+        var pg = lemon.homeProgress();
+        note.entity.get(nid, function (n) {
+          ashow(n);
+          pg.end();
+        });
+      } else {
+        ashow(current());
+      }
+    },
     openFile: function () {
       $('#note_open_file').click();
     },
@@ -313,6 +346,12 @@ var note = {
       }
     },
     loadById: function (noteId, callback) {
+      note.entity.get(noteId, function (rNote) {
+        note.load(rNote);
+        lemon.isFunc(callback) && callback();
+      });
+    },
+    get: function (noteId, callback) {
       if (lemon.isBlank(noteId)) {
         return note.instance.tip('Unknown note id');
       }
@@ -320,7 +359,6 @@ var note = {
       $.get('/note/entity/' + noteId).done(function (resp) {
         if (0 == resp.code) {
           var rNote = note.make(lemon.deepDec(resp.result));
-          note.load(rNote);
           lemon.isFunc(callback) && callback(rNote);
         } else {
           note.entity.fail(resp);
@@ -533,6 +571,7 @@ var note = {
       ex('foldall', function (args, cm) { na('foldAll', args, cm); }, 'Fold All', 'folda');
       ex('unfoldall', function (args, cm) { na('unfoldAll', args, cm); }, 'Unfold All', 'unfolda');
 
+      ex('info', function (args, cm) { na('noteInfo', args, cm); }, 'Note Info');
       ex('joinline', function (args, cm) { na('joinline', args, cm); }, 'Join Line', 'jo');
       ex('mode', function (args, cm) { na('mode', args, cm); }, 'Language', 'm');
       ex('theme', function (args, cm) { na('theme', args, cm); }, 'Theme', 'th');
@@ -582,6 +621,7 @@ var note = {
             note.menu.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
             note.menu.item('Fullscreen', ':full', 'visual & edit', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
             note.menu.item('separator'),
+            note.menu.item('Note Info', ':info', 'visual & edit', 'Note Info', 'noteInfo'),
             note.menu.item('Save Note', ':w', 'visual & edit', 'Save Note (:w)', 'saveNote'),
             note.menu.item('Save Note With...', ':ww', 'visual & edit', 'Save Note With Custom (:ww)', 'saveNoteCust'),
             note.menu.item('Save & Close Note', ':wq', 'visual & edit', 'Save & Close Note', 'saveAndCloseNote', false, true),
@@ -834,10 +874,10 @@ var note = {
           $(ddBody).hide();
         },
         shown: function (ddEl, ddBody) {
-          var viewport = lemon.viewport();
+          var viewport = lemon.viewport(), ddBodyW = $(ddBody).width();
 
           if (viewport.smallDown) {
-            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left, ddBodyW = $(ddBody).width();
+            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left;
 
             if (viewport.w < ddBodyW) {
               ddBodyW = viewport.w - 10;
@@ -860,6 +900,7 @@ var note = {
             $(ddBody).css({
               //width: viewport.w * 0.25,
               // height: viewport.h * 0.8,
+              'max-width': ddBodyW,
               'max-height': viewport.h * 0.8,
               'overflow-y': 'scroll'
             });

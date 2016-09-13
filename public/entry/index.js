@@ -123,6 +123,12 @@ global.register = function(call) {
 
 var homeProgress = null;
 lemon.register({
+  escape: function (target) {
+    return $('<div>').text(target).html();
+  },
+  unescape: function (target) {
+    return $('<textarea/>').html(target).text();
+  },
   /**
    * Opposite of jQuery.camelCase
    * @param target
@@ -823,6 +829,13 @@ lemon.register({
   },
   setEvented: function (selector) {
     lemon.data(selector, {evented: 1});
+  },
+  tmpls: function (selector, data, appendToSelector) {
+    var aHtml = lemon.tmpl($(selector).html(), data);
+    if (appendToSelector) {
+      $(appendToSelector).append(aHtml);
+    }
+    return aHtml
   },
   /**
    * lemon.tabEventListen first

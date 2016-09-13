@@ -168,9 +168,18 @@ var note = {
           }
         }, {
           shown: function (evt, el) {
+            note.menuOpened = note.menu.instance.opened();
+            if (note.menuOpened) {
+              note.action.menuHide();
+            }
             $(el).find('.borderinfo').removeClass('borderinfo').css({
               border: 'none'
             });
+          },
+          hidden: function () {
+            if (note.menuOpened) {
+              note.action.menuShow();
+            }
           }
         });
       };

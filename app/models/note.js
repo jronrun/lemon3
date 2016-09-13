@@ -206,6 +206,11 @@ note.queryByKey = function (options, resultCall, requestInfo) {
     });
 
     if (requestInfo.usr.isAdmin) {
+      try {
+        query.$or.push({
+          'id': parseInt(options.key)
+        });
+      } catch (e) {/**/}
       query.$or.push({
         'create_by.id': options.key
       });

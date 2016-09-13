@@ -346,7 +346,7 @@ router.post(index.history.query.do, function (req, res, next) {
   }
 
   requs.qryHistory(query, pn, function (qryHisAns) {
-    answer.result.userl = req.user.isAdmin ? 1 : 0;
+    qryHisAns.result.userl = req.user.isAdmin ? 1 : 0;
     return res.json(ansEncode(qryHisAns));
   }, ps, qryOpts);
 });

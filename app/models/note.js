@@ -204,6 +204,15 @@ note.queryByKey = function (options, resultCall, requestInfo) {
         {note: likeKey}
       ]
     });
+
+    if (requestInfo.usr.isAdmin) {
+      query.$or.push({
+        'create_by.id': options.key
+      });
+      query.$or.push({
+        'create_by.name': likeKey
+      });
+    }
   }
 
   if (options.keyTag && options.keyTag.length > 0) {
@@ -216,20 +225,23 @@ note.queryByKey = function (options, resultCall, requestInfo) {
     _.extend(query, { tags: {$all: keyTags}});
   }
 
-  _.extend(query, {
-    state: 1,
-    'create_by.id': requestInfo.usr.id
-  });
-
   var qryOpts = {
     fields: {
-      content: 0,
-      create_by: 0
+      content: 0
     },
     sorts: {
       id: -1
     }
   };
+
+  if (!requestInfo.usr.isAdmin) {
+    _.extend(query, {
+      state: 1,
+      'create_by.id': requestInfo.usr.id
+    });
+
+    qryOpts.fields.create_by = 0;
+  }
 
   note.page(query, options.pn, false, options.ps, qryOpts).then(function (result) {
     resultCall(answer.succ({

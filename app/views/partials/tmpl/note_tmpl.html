@@ -96,7 +96,7 @@
 
 <script type="text/html" id="note_card_tmpl">
     <% lemon.each(items, function(n, idx) { %>
-        <div class="dropdown-item">
+        <div class="dropdown-item" id="n_<%= n._id %>" data-entity="<%= lemon.enc(n) %>">
             <div class="card borderinfo">
                 <div class="card-block">
                     <h5 class="card-title"><%= n.title %></h5>

@@ -716,6 +716,16 @@ var note = {
         }
       });
 
+      lemon.live('click', '#menu_dd_note_dd', function (evt) {
+        evt.stopPropagation();
+      });
+
+      lemon.live('dblclick', 'div[data-entity]', function (evt) {
+        var el = evt.currentTarget, n = lemon.data(el, 'entity');
+        note.entity.loadById(n._id);
+        lemon.dropdownTgl('#menu_dd_note_dd');
+      });
+
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';
       lemon.rightclick(themeSel, function (evt) {
         evt.stopPropagation();

@@ -31,6 +31,7 @@ router.post(index.entities.do, function (req, res, next) {
     key: req.body.key,
     keyTag: req.body.tag
   }, function (qryAns) {
+    qryAns.result.userl = req.user.isAdmin ? 1 : 0;
     return res.json(ansEncode(qryAns));
   }, requestInfo(req));
 

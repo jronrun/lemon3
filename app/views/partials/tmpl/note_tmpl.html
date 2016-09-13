@@ -95,22 +95,34 @@
 </script>
 
 <script type="text/html" id="note_card_tmpl">
-    <% lemon.each(items, function(n, idx) { %>
-        <div class="dropdown-item" id="n_<%= n._id %>" data-entity="<%= lemon.enc(n) %>">
-            <div class="card borderinfo">
-                <div class="card-block">
-                    <h5 class="card-title"><%= n.title %></h5>
-                    <small class="card-subtitle linebreak text-silver"><%= lemon.when.default(n.create_time) %></small>
-                    <h5 class="invisible"></h5>
-                    <p class="card-text linebreak"><%= n.summary %></p>
-                </div>
-                <div class="card-block">
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                </div>
+    <div class="dropdown-item" id="n_<%= n._id %>" data-entity="<%= lemon.enc(n) %>">
+        <div class="card borderinfo">
+            <div class="card-block">
+                <h5 class="card-title"><%= n.title %></h5>
+                <small class="card-subtitle linebreak text-silver">
+                    <% if (userl) { %>
+                        Created by&nbsp;
+                        <% if (n.create_by.id) { %>
+                        <a href="/manage/user/<%= n.create_by.id %>" data-preview><%= (n.create_by.name || '') %></a>
+                        <% } else { %>
+                        <%= (n.create_by.name || '') %>
+                        <% } %>
+                        &nbsp;
+                    <% } %>
+                    <%= lemon.when.default(n.create_time) %>
+                </small>
+                <h5 class="invisible"></h5>
+                <p class="card-text linebreak"><%= n.summary %></p>
+                <% if (n.note && n.note.length > 0) { %>
+                <p class="card-text linebreak"><%= n.note %></p>
+                <% } %>
+            </div>
+            <div class="card-block">
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
             </div>
         </div>
-    <% }); %>
+    </div>
 </script>
 <script type="text/html" id="menu_note_tmpl">
     <p style="text-align: center;"><small class="text-silver">Double Click to Choose</small></p>

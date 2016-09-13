@@ -267,10 +267,12 @@ var note = {
               lemon.blast(qry.prevKey, cards);
             }
 
-            $(cards).append(lemon.tmpl($('#note_card_tmpl').html(), {
-              items: rdata.items,
-              userl: (1 == rdata.userl ? true : false)
-            }));
+            lemon.each(rdata.items, function (n, idx) {
+              $(cards).append(lemon.tmpl($('#note_card_tmpl').html(), {
+                n: n,
+                userl: (1 == rdata.userl ? true : false)
+              }));
+            });
           }
 
           if (!rdata.hasNext ) {

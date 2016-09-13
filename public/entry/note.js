@@ -303,16 +303,16 @@ var note = {
           var rdata = lemon.deepDec(resp.result);
           if (rdata.items.length > 0) {
 
-            if (qry.prevKey && qry.prevKey.length > 0) {
-              lemon.blast(qry.prevKey, cards);
-            }
-
             lemon.each(rdata.items, function (n, idx) {
               $(cards).append(lemon.tmpl($('#note_card_tmpl').html(), {
                 n: n,
                 userl: (1 == rdata.userl ? true : false)
               }));
             });
+
+            if (qry.prevKey && qry.prevKey.length > 0) {
+              lemon.blast(qry.prevKey, cards);
+            }
           }
 
           if (!rdata.hasNext) {

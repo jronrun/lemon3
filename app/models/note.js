@@ -193,9 +193,9 @@ note.queryByKey = function (options, resultCall, requestInfo) {
     pn: 1,
     ps: false
   }, options || {});
-  var query = {};
+  var query = {}, hasKey = null;
 
-  if (options.key && options.key.length > 0) {
+  if (hasKey = (options.key && options.key.length > 0)) {
     var likeKey = new RegExp(options.key, 'i');
     _.extend(query, {
       $or: [
@@ -234,7 +234,14 @@ note.queryByKey = function (options, resultCall, requestInfo) {
     }
   };
 
-  if (!requestInfo.usr.isAdmin) {
+  if (requestInfo.usr.isAdmin) {
+    if (!hasKey) {
+      _.extend(query, {
+        state: 1,
+        'create_by.id': requestInfo.usr.id
+      });
+    }
+  } else {
     _.extend(query, {
       state: 1,
       'create_by.id': requestInfo.usr.id

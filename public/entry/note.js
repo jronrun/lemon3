@@ -315,15 +315,20 @@ var note = {
             });
           }
 
-          if (!rdata.hasNext ) {
+          if (!rdata.hasNext) {
             qry.noteEnd = true;
           }
 
           if (fp) {
-            if (lemon.isMediumUpView()) {
-              note.entity.listScroll();
-            } else {
+            note.entity.listScroll();
+          }
 
+          if (lemon.isSmallDownView()) {
+            var nptrid = '#next-page-tri';
+            if (rdata.hasNext) {
+              $(nptrid).show();
+            } else {
+              $(nptrid).hide();
             }
           }
 
@@ -335,20 +340,41 @@ var note = {
       });
     },
     listScroll: function () {
+      var ddBody = '#menu_dd_note_dd', nextPage = function (callback) {
+        if (!note.entity.list.noteEnd) {
+          var pg = lemon.homeProgress();
+          var pn = parseInt($(ddBody).data('page')) + 1;
+          note.entity.list(note.entity.list.prevKey, pn, '', function() {
+            pg.end(); callback();
+          });
+        }
+      };
+
       if (lemon.isMediumUpView()) {
-        var ddBody = '#menu_dd_note_dd';
         if (!lemon.isEvented(ddBody)) {
           lemon.scroll(ddBody, function () {
-            if (!note.entity.list.noteEnd) {
-              var pg = lemon.homeProgress();
-              var pn = parseInt($(ddBody).data('page')) + 1;
-              note.entity.list(note.entity.list.prevKey, pn, '', function() {
-                pg.end();
-              });
-            }
+            nextPage();
           });
 
           lemon.setEvented(ddBody);
+        }
+      } else {
+        var npid = '#next-page', nptrid = '#next-page-tri';
+        if ($(npid).length) {
+          if (!$(nptrid).length) {
+            var aBtn = [
+              '<button type="button" class="btn btn-info btn-lg btn-block" id="next-page-tri">',
+              'More...',
+              '</button>'
+            ].join('');
+            $(npid).append(aBtn);
+            $(nptrid).click(function () {
+              var pg = lemon.progress(nptrid);
+              nextPage(function () {
+                pg.end();
+              });
+            });
+          }
         }
       }
     },

@@ -98,7 +98,7 @@
     <div class="dropdown-item" id="n_<%= n._id %>" data-entity="<%= lemon.enc(n) %>">
         <div class="card borderinfo">
             <div class="card-block">
-                <h5 class="card-title"><%= lemon.escape(n.title) %></h5>
+                <h5 class="card-title linebreak"><%= lemon.escape(n.title) %></h5>
                 <small class="card-subtitle linebreak text-silver">
                     <% if (n.id) { %>
                         Note.<%= n.id %>
@@ -137,6 +137,9 @@
     </div>
     <div><%= lemon.repeat('&nbsp;', 90) %></div>
     <div id="note_entities"></div>
+    <div  class="card" style="border: 0px;">
+        <div class="card-block" id="next-page"></div>
+    </div>
 </script>
 
 <script type="text/html" id="note_tool_tmpl">

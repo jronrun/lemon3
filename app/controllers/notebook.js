@@ -27,6 +27,7 @@ router.post(index.entities.do, function (req, res, next) {
   }
 
   Note.queryByKey({
+    ps: 5,
     pn: parseInt(req.body.page || '1'),
     key: req.body.key,
     keyTag: req.body.tag

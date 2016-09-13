@@ -818,6 +818,9 @@ lemon.register({
   isEvented: function (selector) {
     return 1 == lemon.data(selector, 'evented');
   },
+  unEvented: function (selector) {
+    lemon.data(selector, {evented: 0});
+  },
   setEvented: function (selector) {
     lemon.data(selector, {evented: 1});
   },

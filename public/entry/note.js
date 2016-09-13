@@ -243,30 +243,28 @@ var note = {
     },
     save: function (aNote, succCall, failCall) {
       aNote = note.make(aNote);
+      var respCall = function (resp) {
+        if (0 == resp.code) {
+          current(note.make(lemon.deepDec(resp.result)));
+          note.instance.tip('Save ' + aNote.title + ' success');
+          lemon.isFunc(succCall) && succCall(resp);
+        } else {
+          note.entity.fail(resp);
+          lemon.isFunc(failCall) && failCall(resp);
+        }
+      };
+
       if (aNote._id) {
         lemon.put('/note/entity/' + aNote._id, {
           data: lemon.enc(aNote)
         }).done(function(resp) {
-          if (0 == resp.code) {
-            note.instance.tip('Save ' + aNote.title + ' success');
-            lemon.isFunc(succCall) && succCall(resp);
-          } else {
-            note.entity.fail(resp);
-            lemon.isFunc(failCall) && failCall(resp);
-          }
+          respCall(resp);
         });
       } else {
         $.post('/note/create', {
           data: lemon.enc(aNote)
         }).done(function (resp) {
-          if (0 == resp.code) {
-            current(note.make(lemon.deepDec(resp.result)));
-            note.instance.tip('Save ' + aNote.title + ' success');
-            lemon.isFunc(succCall) && succCall(resp);
-          } else {
-            note.entity.fail(resp);
-            lemon.isFunc(failCall) && failCall(resp);
-          }
+          respCall(resp);
         });
       }
     },
@@ -400,8 +398,11 @@ var note = {
       if (!rNote._id) {
         rNote._id = curN._id || '';
       }
-      if (!rNote.note) {
-        rNote.note = curN.note || '';
+      //note allow empty
+      if (!lemon.has(aNote, 'note')) {
+        if (!rNote.note) {
+          rNote.note = curN.note || '';
+        }
       }
       if (!rNote.tags) {
         rNote.tags = curN.tags || [];

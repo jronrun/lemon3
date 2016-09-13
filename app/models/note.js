@@ -66,11 +66,11 @@ note.getNoteById = function (noteId, resultCall, requestInfo) {
  * @param noteId
  * @param aNote
  * @param resultCall
- * @param tagOpt    1 set, 2 add, 3 remove
+ * @param tagOpt    0 donoting, 1 set, 2 add, 3 remove
  */
 note.updateBy = function (noteId, aNote, resultCall, requestInfo, tagOpt) {
   delete aNote._id;
-  tagOpt = tagOpt || 1;
+  tagOpt = tagOpt || 0;
 
   var qry = note.idQueryParam(noteId);
   if (!requestInfo.usr.isAdmin) {
@@ -97,7 +97,7 @@ note.updateBy = function (noteId, aNote, resultCall, requestInfo, tagOpt) {
           return resultCall(answer.fail(check.msg));
         }
 
-        if (_.has(aNote, 'tags')) {
+        if (_.has(aNote, 'tags') && tagOpt > 0) {
           aNote.tags = theTags;
         }
         if (_.has(aNote, 'content')) {

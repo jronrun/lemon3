@@ -13,9 +13,13 @@ var helper = {
   /**
    * @param originalArr
    * @param operateEl
-   * @param opt   1 set, 2 add, 3 remove
+   * @param opt   0 donoting, 1 set, 2 add, 3 remove
    */
   arrays: function (originalArr, operateEl, opt) {
+    if (0 == opt) {
+      return originalArr;
+    }
+
     var resultA = _.cloneDeep(originalArr),
       operatorA = _.cloneDeep(_.isArray(operateEl) ? operateEl : [operateEl]);
 

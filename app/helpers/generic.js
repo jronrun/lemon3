@@ -786,7 +786,7 @@ module.exports = function(model, index, defineForm) {
             };
 
             _.each(fields, function (prop) {
-              qry[prop] = _.get(target, prop);
+              qry[prop] = _.get(target, prop) || _.get(itemObj, prop);
             });
 
             model.find(qry).limit(1).next(function(err, exists){
@@ -820,7 +820,7 @@ module.exports = function(model, index, defineForm) {
             };
 
             _.each(fields, function (prop) {
-              qry[prop] = _.get(target, prop);
+              qry[prop] = _.get(target, prop) || _.get(itemObj, prop);
             });
 
             model.find(qry).limit(1).next(function(err, exists){

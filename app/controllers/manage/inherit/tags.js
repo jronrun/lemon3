@@ -99,7 +99,7 @@ module.exports = function (router, index, root) {
   router.post(index.editor.do, function (req, res, next) {
     generic.create({
       sequenceId: 1,
-      checkExistsField: 'name',
+      checkExistsField: ['name', 'create_by.id'],
       paramHandle: function(item) {
         item.type = parseInt(item.type);
         item.create_by = {
@@ -115,7 +115,7 @@ module.exports = function (router, index, root) {
    */
   router.put(index.retrieve.do, function (req, res, next) {
     generic.update({
-      checkExistsField: 'name',
+      checkExistsField: ['name', 'create_by.id'],
       paramHandle: function(item) {
         item.type = parseInt(item.type);
       }

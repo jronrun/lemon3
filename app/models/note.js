@@ -264,12 +264,14 @@ note.queryByKey = function (options, resultCall, requestInfo) {
     var aTags = [];
     _.each(result.items || [], function (n) {
       _.each(n.tags || [], function (t) {
-        aTags.push(t);
+        if (aTags.indexOf(t) == -1) {
+          aTags.push(t);
+        }
       });
     });
 
     var npageAns = answer.succ({
-      tags: [],
+      tags: {},
       items: result.items,
       hasNext: result.page.hasNext
     });
@@ -289,7 +291,11 @@ note.queryByKey = function (options, resultCall, requestInfo) {
       }
 
       Tag.find(tagQry).next(function(tErr, tResult){
-        npageAns.result.tags = tResult;
+        var theTags = {};
+        _.each(tResult || [], function (t) {
+          theTags[t.id] = t;
+        });
+        npageAns.result.tags = theTags;
         resultCall(npageAns);
       });
     } else {

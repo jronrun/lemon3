@@ -168,18 +168,13 @@ var note = {
           }
         }, {
           shown: function (evt, el) {
-            note.menuOpened = note.menu.instance.opened();
-            if (note.menuOpened) {
-              note.action.menuHide();
-            }
+            note.menu.whenModalShow();
             $(el).find('.borderinfo').removeClass('borderinfo').css({
               border: 'none'
             });
           },
           hidden: function () {
-            if (note.menuOpened) {
-              note.action.menuShow();
-            }
+            note.menu.whenModalHide();
           }
         });
       };
@@ -191,7 +186,7 @@ var note = {
           pg.end();
         });
       } else {
-        ashow(current());
+        ashow(note.make(current()));
       }
     },
     openFile: function () {
@@ -478,18 +473,11 @@ var note = {
     }
 
     //lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents)
-    var isMenuOpened = note.menu.instance.opened();
     lemon.preview(text, function () {
-      if (isMenuOpened) {
-        note.action.menuHide();
-      }
-      $(note.menu.triId).hide();
+      note.menu.whenModalShow();
     }, jsonOptions, false, false, {
       hidden: function () {
-        $(note.menu.triId).show();
-        if (isMenuOpened) {
-          note.action.menuShow();
-        }
+        note.menu.whenModalHide();
       }
     });
   },
@@ -746,6 +734,20 @@ var note = {
       }
     },
 
+    whenModalShow: function () {
+      note.menuOpened = note.menu.instance.opened();
+      if (note.menuOpened) {
+        note.action.menuHide();
+      }
+      $(note.menu.triId).hide();
+    },
+    whenModalHide: function () {
+      if (note.menuOpened) {
+        note.action.menuShow();
+      }
+      $(note.menu.triId).show();
+    },
+
     intl: function () {
       lemon.live('click', '#menu_logo', function () {
         note.views(lemon.fullUrl('/manage/notes/1'));
@@ -763,10 +765,7 @@ var note = {
         }
       }, {
         show: function () {
-          note.menuOpened = note.menu.instance.opened();
-          if (note.menuOpened) {
-            note.action.menuHide();
-          }
+          note.menu.whenModalShow();
         },
         shown: function(evt, el) {
           var fid = '#save_with_form', swid = '#save_with', aNote = note.make(true);
@@ -785,9 +784,7 @@ var note = {
           }
         },
         hidden: function (evt, el) {
-          if (note.menuOpened) {
-            note.action.menuShow();
-          }
+          note.menu.whenModalHide();
         }
       });
 
@@ -811,6 +808,26 @@ var note = {
         var el = evt.currentTarget, n = lemon.data(el, 'entity');
         note.entity.loadById(n._id);
         lemon.dropdownTgl('#menu_dd_note_dd');
+      });
+
+      lemon.live('click', 'button[id^=n_tags_]', function (evt) {
+        var el = evt.currentTarget,
+          nid = '#' + lemon.data(el, 'nid'), n = lemon.data(nid, 'entity');
+
+        lemon.modal({
+          modal: { show: true},
+          body: function () {
+            return lemon.tmpls('#note_tags_tmpl', {n: n});
+          }
+        }, {
+          shown: function (evt, el) {
+            note.menu.whenModalShow();
+
+          },
+          hidden: function () {
+            note.menu.whenModalHide();
+          }
+        });
       });
 
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';

@@ -19,6 +19,10 @@
     <button type="button" id="save_with" class="btn btn-primary"> Save</button>
 </script>
 
+<script type="text/html" id="note_tags_tmpl">
+
+</script>
+
 <script type="text/html" id="menu_lang_tmpl">
     <p style="text-align: center;"><small class="text-silver">Right Click to Preview, Click to Choose</small></p>
     <div class="form-group form-group-lg" style="margin-top:15px;">
@@ -123,6 +127,9 @@
                 <% } %>
             </div>
             <div class="card-block">
+                <button type="button" id="n_tags_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
+                    <em class="fa fa-tags" title="Tags"></em>
+                </button>
                 <!--<a href="#" class="card-link">Card link</a>-->
             </div>
         </div>

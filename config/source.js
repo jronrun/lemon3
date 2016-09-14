@@ -32,7 +32,9 @@ var resource = [
       {id: 20002, name: 'create', desc: 'Create', method: M.POST, protect: false},
       {id: 20003, name: 'entity', desc: 'Retrieve', action: '/note/entity/:id', protect: false},
       {id: 20004, extend: 20003, desc: 'Update', method: M.PUT, protect: false},
-      {id: 20005, extend: 20003, desc: 'Delete', method: M.DELETE, protect: false}
+      {id: 20005, extend: 20003, desc: 'Delete', method: M.DELETE, protect: false},
+
+      {id: 20006, name: 'tag', desc: 'Note Tag', method: M.POST, protect: false}
     ]
   },
 

@@ -1,7 +1,6 @@
 'use strict';
 
-var Tag = app_require('models/tag'),
-  items = require('../helpers/items');
+var items = require('../helpers/items');
 
 var model = schema({
   id: { type: 'integer', required: true },
@@ -260,52 +259,10 @@ note.queryByKey = function (options, resultCall, requestInfo) {
   }
 
   note.page(query, options.pn, false, options.ps, qryOpts).then(function (result) {
-
-    var aTags = [];
-    _.each(result.items || [], function (n) {
-      _.each(n.tags || [], function (t) {
-        if (aTags.indexOf(t) == -1) {
-          aTags.push(t);
-        }
-      });
-    });
-
-    var npageAns = answer.succ({
-      tags: {},
+    resultCall(answer.succ({
       items: result.items,
       hasNext: result.page.hasNext
-    });
-
-    if (aTags.length > 0) {
-      var tagQry = {
-        type: 3,
-        id: {
-          $in: aTags
-        }
-      };
-
-      if (!requestInfo.usr.isAdmin) {
-        _.extend(tagQry, {
-          'create_by.id': requestInfo.usr.id
-        });
-      }
-
-      Tag.find(tagQry, {
-        type: 0,
-        create_by: 0,
-        last_modify_time: 0,
-        create_time: 0
-      }).next(function(tErr, tResult){
-        var theTags = {};
-        _.each(tResult || [], function (t) {
-          theTags[t.id] = t;
-        });
-        npageAns.result.tags = theTags;
-        resultCall(npageAns);
-      });
-    } else {
-      resultCall(npageAns);
-    }
+    }));
   });
 };
 

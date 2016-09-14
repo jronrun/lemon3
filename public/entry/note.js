@@ -748,6 +748,18 @@ var note = {
       $(note.menu.triId).show();
     },
 
+    tags: {
+      intl: function () {
+        $.post('/note/tag').done(function (resp) {
+          if (0 == resp.code) {
+            note.tags = lemon.deepDec(resp.result);
+          } else {
+            note.entity.fail(resp);
+          }
+        });
+      }
+    },
+
     intl: function () {
       lemon.live('click', '#menu_logo', function () {
         note.views(lemon.fullUrl('/manage/notes/1'));
@@ -1069,6 +1081,7 @@ var note = {
       lemon.console();
     }
 
+    note.menu.tags.intl();
     note.instance = mirror(note.id);
     note.menu.intl();
 

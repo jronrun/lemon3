@@ -3,6 +3,7 @@
 var express = require('express'),
   router = express.Router(),
   Note = require('../models/note'),
+  Tag = app_require('models/tag'),
   log = log_from('notebook'),
   index = routes.note;
 
@@ -101,3 +102,35 @@ router.delete(index.entity.do, function (req, res, next) {
   }, requestInfo(req));
 });
 
+/**
+ * Note Tags
+ */
+router.post(index.tag.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.resp(401));
+  }
+
+  var tagQry = {
+    type: 3,
+    'create_by.id': req.user.id
+  };
+
+  Tag.find(tagQry, {
+    type: 0,
+    create_by: 0,
+    last_modify_time: 0,
+    create_time: 0
+  }).sort({_id: -1}).toArray(function (err, items) {
+    if (err) {
+      return res.json(answer.fail(err.message));
+    }
+
+    var theTags = {};
+    _.each(items || [], function (t) {
+      theTags[t.id] = t;
+    });
+
+    return res.json(ansEncode(answer.succ(theTags)));
+  });
+
+});

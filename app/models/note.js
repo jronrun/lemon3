@@ -290,7 +290,12 @@ note.queryByKey = function (options, resultCall, requestInfo) {
         });
       }
 
-      Tag.find(tagQry).next(function(tErr, tResult){
+      Tag.find(tagQry, {
+        type: 0,
+        create_by: 0,
+        last_modify_time: 0,
+        create_time: 0
+      }).next(function(tErr, tResult){
         var theTags = {};
         _.each(tResult || [], function (t) {
           theTags[t.id] = t;

@@ -244,7 +244,8 @@ var menu = [
   {
     name: 'Users', children: [
       {sourceId: 200003, args: '1'},
-      {sourceId: 200011, args: '1'}
+      {sourceId: 200011, args: '1'},
+      {sourceId: 200014, args: '1'},
     ]
   },
   {
@@ -263,9 +264,7 @@ var menu = [
       {sourceId: 200006, args: '1'}
       //{sourceId: 200008, args: '1'}
     ]
-  },
-
-  {name: 'Notes', sourceId: 200014},
+  }
 
 ];
 

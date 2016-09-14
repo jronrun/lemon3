@@ -164,7 +164,7 @@ var note = {
             show: true
           },
           body: function () {
-            return lemon.tmpls(tid, {n: n, userl: false});
+            return lemon.tmpls(tid, {n: n, userl: false, tags: note.tags});
           }
         }, {
           shown: function (evt, el) {
@@ -301,6 +301,7 @@ var note = {
             lemon.each(rdata.items, function (n, idx) {
               $(cards).append(lemon.tmpl($('#note_card_tmpl').html(), {
                 n: n,
+                tags: note.tags,
                 userl: (1 == rdata.userl ? true : false)
               }));
             });
@@ -462,7 +463,7 @@ var note = {
     current(aNote);
   },
 
-  views: function (text) {
+  views: function (text, hiddenCall) {
     var jsonOptions = false;
     if (mirror.mirrors.isJson(text, true)) {
       text = lemon.fmtjson(text);
@@ -478,6 +479,7 @@ var note = {
     }, jsonOptions, false, false, {
       hidden: function () {
         note.menu.whenModalHide();
+        lemon.isFunc(hiddenCall) && hiddenCall();
       }
     });
   },
@@ -731,6 +733,17 @@ var note = {
           langs: mirror.mirrors.languages,
           thislang: note.instance.mode()
         }));
+      },
+      tags: function () {
+        $.post('/note/tag').done(function (resp) {
+          if (0 == resp.code) {
+            note.tags = lemon.deepDec(resp.result);
+          } if (401 == resp.code) {
+
+          } else {
+            note.instance.tip(resp.msg);
+          }
+        });
       }
     },
 
@@ -746,18 +759,6 @@ var note = {
         note.action.menuShow();
       }
       $(note.menu.triId).show();
-    },
-
-    tags: {
-      intl: function () {
-        $.post('/note/tag').done(function (resp) {
-          if (0 == resp.code) {
-            note.tags = lemon.deepDec(resp.result);
-          } else {
-            note.entity.fail(resp);
-          }
-        });
-      }
     },
 
     intl: function () {
@@ -823,23 +824,33 @@ var note = {
       });
 
       lemon.live('click', 'button[id^=n_tags_]', function (evt) {
-        var el = evt.currentTarget,
-          nid = '#' + lemon.data(el, 'nid'), n = lemon.data(nid, 'entity');
-
-        lemon.modal({
-          modal: { show: true},
-          body: function () {
-            return lemon.tmpls('#note_tags_tmpl', {n: n});
-          }
-        }, {
-          shown: function (evt, el) {
-            note.menu.whenModalShow();
-
-          },
-          hidden: function () {
-            note.menu.whenModalHide();
-          }
+        var el = evt.currentTarget, nid = lemon.data(el, 'nid');
+        lemon.tabShow('#tri-ncard-' + nid + '-tab2');
+      });
+      lemon.live('click', 'button[id^=n_info_]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'nid');
+        lemon.tabShow('#tri-ncard-' + nid + '-tab1');
+      });
+      lemon.live('click', 'button[id^=n_newtag_]', function (evt) {
+        note.views(lemon.fullUrl('/manage/tag'), function () {
+          note.menu.render.tags();
         });
+      });
+      lemon.live('click', 'button[data-add-tag]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'addTag');
+        lemon.tmpls('#note_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_tags_{0}', nid));
+        lemon.tmpls('#rem_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_rem_tags_{0}', nid));
+      });
+      lemon.rightclick('button[data-add-tag]', function (evt) {
+        var el = evt.currentTarget, tag = lemon.data(el, 'addTag');
+        note.views(lemon.fullUrl('/manage/tag/' + tag._id), function () {
+          note.menu.render.tags();
+        });
+      });
+      lemon.live('click', 'button[data-rem-tag]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'nid'),
+          tag = lemon.data(el, 'remTag'), remFmt = '#note_tag_{0}_{1},#rem_tag_{0}_{1}';
+        $(lemon.format(remFmt, nid, tag.id)).remove();
       });
 
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';
@@ -1081,7 +1092,7 @@ var note = {
       lemon.console();
     }
 
-    note.menu.tags.intl();
+    note.menu.render.tags();
     note.instance = mirror(note.id);
     note.menu.intl();
 

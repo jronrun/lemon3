@@ -137,10 +137,12 @@
                             </div>
                         <% } %>
 
+                        <small class="card-subtitle linebreak text-silver">Tags</small>
+                        <button type="button" id="n_tags_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
+                            <em class="fa fa-tags" title="Tags"></em>
+                        </button>
+                        <h5 class="invisible"></h5>
                         <div id="note_tags_<%= n._id %>" class="row">
-                            <button type="button" id="n_tags_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
-                                <em class="fa fa-tags" title="Tags"></em>
-                            </button>
                             <% lemon.each(n.tags, function(nt){
                                 var tag = tags[nt]; if (tag) { %>
                                     <%= lemon.tmpls('#note_tag_tmpl', {nid: n._id, tag: tag}) %>
@@ -167,6 +169,13 @@
                     </div>
                     <div class="card-block">
                         <small class="card-subtitle linebreak text-silver">Note Tags</small>
+                        <button type="button" id="n_info_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
+                            <em class="fa fa-info" title="Note Info"></em>
+                        </button>
+                        <button type="button" id="n_newtag_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
+                            <em class="fa fa-tag" title="New Tag"></em>
+                        </button>
+
                         <h5 class="invisible"></h5>
                         <div id="note_rem_tags_<%= n._id %>" class="row">
                             <% lemon.each(n.tags, function(nt){
@@ -175,13 +184,6 @@
                                 <% } %>
                             <% }); %>
                         </div>
-                        <h5 class="invisible"></h5>
-                        <button type="button" id="n_info_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
-                            <em class="fa fa-info" title="Note Info"></em>
-                        </button>
-                        <button type="button" id="n_newtag_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
-                            <em class="fa fa-tag" title="New Tag"></em>
-                        </button>
 
                     </div>
                 </div>

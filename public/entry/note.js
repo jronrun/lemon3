@@ -840,6 +840,8 @@ var note = {
         var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'addTag');
         lemon.tmpls('#note_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_tags_{0}', nid));
         lemon.tmpls('#rem_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_rem_tags_{0}', nid));
+
+
       });
       lemon.rightclick('button[data-add-tag]', function (evt) {
         var el = evt.currentTarget, tag = lemon.data(el, 'addTag');

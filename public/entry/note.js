@@ -738,6 +738,9 @@ var note = {
         $.post('/note/tag').done(function (resp) {
           if (0 == resp.code) {
             note.tags = lemon.deepDec(resp.result);
+            if (!note.tags) {
+              note.tags = [];
+            }
           } if (401 == resp.code) {
 
           } else {
@@ -763,7 +766,9 @@ var note = {
 
     intl: function () {
       lemon.live('click', '#menu_logo', function () {
-        note.views(lemon.fullUrl('/manage/notes/1'));
+        note.views(lemon.fullUrl('/manage/notes/1'), function () {
+          note.menu.render.tags();
+        });
       });
       note.menu.visualCmds();
 

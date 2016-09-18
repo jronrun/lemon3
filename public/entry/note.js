@@ -282,19 +282,26 @@ var note = {
     //opt 1 add, 2 rem
     tagQry: function (tagId, opt, callback) {
       opt = opt || 1;
-      var qry = note.entity.list;
+      var qry = note.entity.list, doTriList = false;
       qry.prevTags = qry.prevTags || [];
       switch (opt) {
         case 1:
-          qry.prevTags.push(tagId);
+          if (qry.prevTags.indexOf(tagId) == -1) {
+            qry.prevTags.push(tagId);
+            doTriList = true;
+          }
           break;
         case 2:
+          doTriList = true;
           lemon.rmByVal(qry.prevTags, tagId);
           break;
       }
-      note.entity.triList(function () {
-        lemon.isFunc(callback) && callback();
-      }, true);
+
+      if (doTriList) {
+        note.entity.triList(function () {
+          lemon.isFunc(callback) && callback();
+        }, true);
+      }
     },
     triList: function (callback, tagQry) {
       var btnQry = '#note_qry', qryK = $(btnQry).val(), cards = '#note_entities',

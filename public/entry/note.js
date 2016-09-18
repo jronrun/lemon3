@@ -306,7 +306,7 @@ var note = {
       var data = {
         page: page,
         key: key,
-        keyTag: keyTag
+        tag: keyTag
       };
 
       $.post('/note/entities', data, function (resp) {
@@ -888,6 +888,19 @@ var note = {
             $(lemon.format(remFmt, nid, tag.id)).remove();
           }, 300);
         }, function () { pg.end(); });
+      });
+
+      lemon.live('click', 'button[data-note-tag]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'noteTag'),
+          qtid = lemon.format('#qry_tag_{0}_{1}', nid, tag.id);
+        if (!$(qtid).length) {
+          lemon.tmpls('#qry_tag_tmpl', {nid: nid, tag: tag}, '#qry_tags');
+        }
+      });
+      lemon.live('click', 'button[data-qry-tag]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'qryTag'),
+          qtid = lemon.format('#qry_tag_{0}_{1}', nid, tag.id);
+        $(qtid).remove();
       });
 
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';

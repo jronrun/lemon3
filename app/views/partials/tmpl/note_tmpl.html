@@ -205,12 +205,21 @@
         <%= tag.name %>
     </button>
 </script>
+<script type="text/html" id="qry_tag_tmpl">
+    <button type="button" class="btn btn-sm btn-info" id="qry_tag_<%= nid %>_<%= tag.id %>"
+            data-nid="<%= lemon.enc(nid) %>" data-qry-tag="<%= lemon.enc(tag) %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
+        <%= tag.name %>
+    </button>
+</script>
 
 <script type="text/html" id="menu_note_tmpl">
     <p style="text-align: center;"><small class="text-silver">Double Click to Choose</small></p>
     <div class="form-group form-group-lg" style="margin-top:15px;">
         <div class="col-sm-12">
             <input class="form-control borderinfo" type="text" id="note_qry" placeholder="Search Note...">
+        </div>
+        <div id="qry_tags" class="col-sm-12">
+            <h5 class="invisible"></h5>
         </div>
     </div>
     <div><%= lemon.repeat('&nbsp;', 90) %></div>

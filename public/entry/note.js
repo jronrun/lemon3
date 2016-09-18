@@ -985,6 +985,10 @@ var note = {
       });
 
       lemon.live('click', langSel, function (evt) {
+        if (note.langInfoSel) {
+          note.langInfoSel = false;
+          return;
+        }
         var el = evt.currentTarget, lang = lemon.data(el, 'lang');
         note.lang.change(lang.name);
         note.menu.render.lang();
@@ -998,6 +1002,7 @@ var note = {
       });
 
       lemon.live('click', langInfoSel, function (evt) {
+        note.langInfoSel = true;
         var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
           lang = note.instance.langInfo(langInfo);
         note.lang.change(lang.name, langInfo);

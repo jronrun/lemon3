@@ -189,6 +189,12 @@ var note = {
         ashow(note.make(current()));
       }
     },
+    login: function () {
+      note.entity.loginView = note.views(lemon.fullUrl('/user/signin'), function () {
+        note.menu.render.tags();
+        note.menu.render.note();
+      });
+    },
     openFile: function () {
       $('#note_open_file').click();
     },
@@ -231,10 +237,7 @@ var note = {
   entity: {
     fail: function (resp) {
       if (401 == resp.code) {
-        note.entity.loginView = note.views(lemon.fullUrl('/user/signin'), function () {
-          note.menu.render.tags();
-          note.menu.render.note();
-        });
+        note.action.login();
       } else {
         note.instance.tip(resp.msg);
       }
@@ -646,6 +649,7 @@ var note = {
       ex('foldall', function (args, cm) { na('foldAll', args, cm); }, 'Fold All', 'folda');
       ex('unfoldall', function (args, cm) { na('unfoldAll', args, cm); }, 'Unfold All', 'unfolda');
 
+      ex('login', function (args, cm) { na('login', args, cm); }, 'Sign In');
       ex('info', function (args, cm) { na('noteInfo', args, cm); }, 'Note Info');
       ex('joinline', function (args, cm) { na('joinline', args, cm); }, 'Join Line', 'jo');
       ex('mode', function (args, cm) { na('mode', args, cm); }, 'Language', 'm');

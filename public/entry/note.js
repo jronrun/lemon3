@@ -260,7 +260,7 @@ var note = {
       var respCall = function (resp) {
         if (0 == resp.code) {
           current(note.make(lemon.deepDec(resp.result)));
-          note.menu.render.note();
+          note.menu.render.note(true);
           note.instance.tip('Save ' + aNote.title + ' success');
           lemon.isFunc(succCall) && succCall(resp);
         } else {
@@ -769,8 +769,8 @@ var note = {
       note: function (force) {
         if (force) {
           $('#note_entities').empty();
-          note.entity.list();
         }
+        note.entity.list();
         note.entity.list.noteEnd = false;
         note.entity.listScroll();
       },

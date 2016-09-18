@@ -166,6 +166,14 @@ var helper = function(cm, events) {
         return cm.options;
       }
 
+      if (lemon.isArray(optionKey)) {
+        var rAttr = {};
+        lemon.each(optionKey, function (okey) {
+          rAttr[okey] = cm.getOption(okey);
+        });
+        return rAttr;
+      }
+
       var aVal = cm.getOption(optionKey);
       if (lemon.isUndefined(optionVal)) {
         return aVal;

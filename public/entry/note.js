@@ -10,6 +10,10 @@ var _current = {}, title_len = 30; function current(data) {
   return _current;
 }
 
+function leave() {
+  lemon.persist('note_snapshoot', note.snapshoot());
+}
+
 var note = {
   id: '#note_textarea',
   instance: null,
@@ -560,7 +564,7 @@ var note = {
 
     change: function (aLang, langInfo) {
       try {
-        note.lang.tip(note.instance.mode(aLang, langInfo));
+        note.lang.tip(note.instance.mode(aLang, langInfo || ''));
       } catch (e) {
         note.action.menuShow();
         lemon.dropdownTgl('#menu_dd_mode_dd');
@@ -1189,10 +1193,50 @@ var note = {
   },
 
   snapshoot: function () {
+    var cMode = note.instance.mode(), aNote = lemon.clone(current());
+    lemon.extend(aNote, {
+      content: lemon.enc(note.instance.val())
+    });
+    delete aNote._id;
 
+    return {
+      note: aNote,
+      menu: {
+        open: note.menu.instance.opened()
+      },
+      mirror: {
+        opts: note.instance.attrs(['foldGutter','lineNumbers','gutters']),
+        mode: {
+          name: cMode.name,
+          chosen: cMode.chosenMimeOrExt || cMode.mime
+        },
+        th: note.instance.theme()
+      }
+    };
   },
-  snapload: function (snapData) {
+  snapload: function (snapdata) {
+    snapdata = snapdata ? lemon.deepDec(snapdata) : lemon.persist('note_snapshoot');
+    var n = null, m = null, mn = null;
+    if (n = snapdata.note) {
+      n.content = lemon.dec(n.content);
+      note.load(note.make(n));
+    }
 
+    if (nm = snapdata.menu) {
+      if (nm.open) {
+        note.action.menuShow();
+      }
+    }
+
+    if (m = snapdata.mirror) {
+      note.instance.attrs(m.opts || {});
+      if (m.mode) {
+        note.lang.change(m.mode.name, m.mode.chosen);
+      }
+      if (m.th) {
+        note.theme.change(m.th);
+      }
+    }
   },
 
   initialize: function () {
@@ -1203,6 +1247,10 @@ var note = {
     note.menu.render.tags();
     note.instance = mirror(note.id);
     note.menu.intl();
+
+    if (lemon.isRootWin()) {
+      note.snapload();
+    }
 
     lemon.subMsg(function (data) {
       // lemon.info(data, 'Note received msg');
@@ -1222,6 +1270,12 @@ var note = {
 
             break;
         }
+      }
+    });
+
+    lemon.unload(function () {
+      if (lemon.isRootWin()) {
+        leave();
       }
     });
 

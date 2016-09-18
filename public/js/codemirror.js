@@ -216,18 +216,10 @@ var helper = function(cm, events) {
 
       var spec = info.mime, mode = info.mode;
       spec = 'null' == spec ? mode : spec;
-      info.isJson = 'json' == lan.toLocaleLowerCase();
-      if (info.isJson) {
-        spec = 'application/ld+json';
-        tools.attrs('theme', 'lemon');
-      }
-
       tools.attrs('mode', spec);
-      if (!info.isJson) {
-        tools.autoLoadMode(mode);
-      }
+      tools.autoLoadMode(mode);
 
-      if (optionalChosenMimeOrExt) {
+      if (!lemon.isUndefined(optionalChosenMimeOrExt)) {
         tools.attrs('chosenMimeOrExt', optionalChosenMimeOrExt);
       }
 

@@ -236,6 +236,22 @@ var note = {
         note.instance.tip(resp.msg);
       }
     },
+    tag: function (nid, tagId, tags, succCall, failCall) {
+      lemon.put('/note/entity/' + nid, {
+        tags: tags,
+        data: lemon.enc({
+          tags: [tagId]
+        })
+      }).done(function(resp) {
+        if (0 == resp.code) {
+          current(note.make(lemon.deepDec(resp.result)));
+          lemon.isFunc(succCall) && succCall(resp);
+        } else {
+          note.entity.fail(resp);
+          lemon.isFunc(failCall) && failCall(resp);
+        }
+      });
+    },
     save: function (aNote, succCall, failCall) {
       aNote = note.make(aNote);
       var respCall = function (resp) {
@@ -843,10 +859,18 @@ var note = {
       });
       lemon.live('click', 'button[data-add-tag]', function (evt) {
         var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'addTag');
-        lemon.tmpls('#note_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_tags_{0}', nid));
-        lemon.tmpls('#rem_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_rem_tags_{0}', nid));
+        if ($(lemon.format('#note_tag_{0}_{1}', nid, tag.id)).length) {
+          return;
+        }
 
-
+        var pg = lemon.progress('#' + $(el).attr('id'));
+        note.entity.tag(nid, tag.id, 2, function () {
+          pg.end();
+          lemon.delay(function () {
+            lemon.tmpls('#note_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_tags_{0}', nid));
+            lemon.tmpls('#rem_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_rem_tags_{0}', nid));
+          }, 300);
+        }, function () { pg.end(); });
       });
       lemon.rightclick('button[data-add-tag]', function (evt) {
         var el = evt.currentTarget, tag = lemon.data(el, 'addTag');
@@ -856,8 +880,14 @@ var note = {
       });
       lemon.live('click', 'button[data-rem-tag]', function (evt) {
         var el = evt.currentTarget, nid = lemon.data(el, 'nid'),
-          tag = lemon.data(el, 'remTag'), remFmt = '#note_tag_{0}_{1},#rem_tag_{0}_{1}';
-        $(lemon.format(remFmt, nid, tag.id)).remove();
+          tag = lemon.data(el, 'remTag'), remFmt = '#note_tag_{0}_{1},#rem_tag_{0}_{1}',
+          pg = lemon.progress('#' + $(el).attr('id'));
+        note.entity.tag(nid, tag.id, 3, function () {
+          pg.end();
+          lemon.delay(function () {
+            $(lemon.format(remFmt, nid, tag.id)).remove();
+          }, 300);
+        }, function () { pg.end(); });
       });
 
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';

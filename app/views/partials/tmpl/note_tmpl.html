@@ -160,7 +160,7 @@
                         <h5 class="invisible"></h5>
                         <div class="row" style="margin-left: 0;">
                             <% lemon.each(tags, function(tag){ %>
-                            <button type="button" class="btn btn-sm btn-info" data-nid="<%= lemon.enc(n._id) %>"
+                            <button type="button" class="btn btn-sm btn-info" data-nid="<%= lemon.enc(n._id) %>" id="add_tag_<%= n._id %>_<%= tag.id %>"
                                     data-add-tag="<%= lemon.enc (tag) %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
                                 <%= tag.name %>
                             </button>

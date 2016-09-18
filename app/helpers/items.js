@@ -16,7 +16,7 @@ var helper = {
    * @param opt   0 donoting, 1 set, 2 add, 3 remove
    */
   arrays: function (originalArr, operateEl, opt) {
-    if (0 == opt) {
+    if (0 == (opt = parseInt(opt || '0'))) {
       return originalArr;
     }
 

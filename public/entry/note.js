@@ -766,8 +766,11 @@ var note = {
     },
 
     render: {
-      note: function () {
-        note.entity.list();
+      note: function (force) {
+        if (force) {
+          $('#note_entities').empty();
+          note.entity.list();
+        }
         note.entity.list.noteEnd = false;
         note.entity.listScroll();
       },

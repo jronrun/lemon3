@@ -987,7 +987,7 @@ lemon.register({
       }
     });
   },
-  confirm: function(text, okCallback, cancelCallback, title) {
+  confirm: function(text, okCallback, cancelCallback, title, modalEvents) {
     var okId = 'ok_id_' + lemon.uniqueId(), cid = 'cancel_id_' + lemon.uniqueId();
     var footer = [
       lemon.format('<button type="button" id="{0}" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>', cid),
@@ -999,6 +999,17 @@ lemon.register({
       text
     ].join('');
 
+    modalEvents = modalEvents || {};
+    var shownFunc = modalEvents.shown;
+    delete modalEvents.shown;
+
+    var mEvents = lemon.extend(modalEvents, {
+      shown: function() {
+        $('#' + okId).focus();
+        lemon.isFunc(shownFunc) && shownFunc();
+      }
+    });
+
     lemon.modal({
       title: title || '',
       body: body,
@@ -1006,11 +1017,7 @@ lemon.register({
       modal: {
         show: true
       }
-    }, {
-      shown: function() {
-        $('#' + okId).focus();
-      }
-    });
+    }, mEvents);
 
     $('#' + okId).click(function(e) {
       lemon.isFunc(okCallback) && okCallback(e);

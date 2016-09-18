@@ -91,8 +91,16 @@ var note = {
       note.views(lemon.isFunc(topicDef.link) ? topicDef.link() : topicDef.link);
     },
     delNote: function (params) {
-      var nid = params.get ? params.get(0) : params.noteId;
-      note.entity.del(nid);
+      var fromCmd = params.get, nid = fromCmd ? (params.get(0) || current()._id) : params.noteId;
+      if (nid) {
+        note.entity.del(nid, function () {
+          if (fromCmd) {
+            note.load(note.make());
+            note.instance.tip('Note delete success');
+          }
+          note.menu.render.note(true);
+        });
+      }
     },
     listNote: function (params) {
       note.entity.list(params.get ? params.get(0) : '');
@@ -449,7 +457,6 @@ var note = {
     del: function (noteId, callback) {
       lemon.delete('/note/entity/' + noteId).done(function(resp) {
         if (0 == resp.code) {
-          note.load(note.make());
           lemon.isFunc(callback) && callback();
         } else {
           note.entity.fail(resp);
@@ -944,6 +951,13 @@ var note = {
           qtid = lemon.format('#qry_tag_{0}_{1}', nid, tag.id);
         note.entity.tagQry(tag.id, 2, function () {
           $(qtid).remove();
+        });
+      });
+
+      lemon.live('click', 'button[data-del-note]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'delNote');
+        note.action.delNote({
+          noteId: nid
         });
       });
 

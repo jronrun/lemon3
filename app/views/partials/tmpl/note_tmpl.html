@@ -109,7 +109,12 @@
             <div class="tab-pane active" id="<%= ntab1Id %>" role="tabpanel">
                 <div class="card borderinfo">
                     <div class="card-block">
-                        <h5 class="card-title linebreak"><%= lemon.escape(n.title) %></h5>
+                        <h5 class="card-title linebreak">
+                            <%= lemon.escape(n.title) %>
+                            <button type="button" data-del-note="<%= lemon.enc(n._id) %>" class="btn btn-secondary-outline btn-sm icondh pull-right text-silver" style="border: none;">
+                                <em class="fa fa-close"></em>
+                            </button>
+                        </h5>
                         <small class="card-subtitle linebreak text-silver">
                             <% if (n.id) { %>
                             Note.<%= n.id %>

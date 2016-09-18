@@ -231,7 +231,10 @@ var note = {
   entity: {
     fail: function (resp) {
       if (401 == resp.code) {
-        alert('signin');
+        note.entity.loginView = note.views(lemon.fullUrl('/user/signin'), function () {
+          note.menu.render.tags();
+          note.menu.render.note();
+        });
       } else {
         note.instance.tip(resp.msg);
       }
@@ -519,7 +522,7 @@ var note = {
     }
 
     //lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents)
-    lemon.preview(text, function () {
+    return lemon.preview(text, function () {
       note.menu.whenModalShow();
     }, jsonOptions, false, false, {
       hidden: function () {
@@ -1184,6 +1187,15 @@ var note = {
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {
+          case 'SIGNIN':
+            if (note.entity.loginView) {
+              note.entity.loginView.hide();
+              note.entity.loginView = false;
+            }
+            break;
+          case 'SIGNOUT':
+            location.reload();
+            break;
           case 'MODAL':
 
             break;

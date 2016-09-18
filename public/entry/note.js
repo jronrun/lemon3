@@ -260,6 +260,7 @@ var note = {
       var respCall = function (resp) {
         if (0 == resp.code) {
           current(note.make(lemon.deepDec(resp.result)));
+          note.menu.render.note();
           note.instance.tip('Save ' + aNote.title + ' success');
           lemon.isFunc(succCall) && succCall(resp);
         } else {

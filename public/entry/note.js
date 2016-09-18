@@ -279,6 +279,37 @@ var note = {
         });
       }
     },
+    //opt 1 add, 2 rem
+    tagQry: function (tagId, opt, callback) {
+      opt = opt || 1;
+      var qry = note.entity.list;
+      qry.prevTags = qry.prevTags || [];
+      switch (opt) {
+        case 1:
+          qry.prevTags.push(tagId);
+          break;
+        case 2:
+          lemon.rmByVal(qry.prevTags, tagId);
+          break;
+      }
+      note.entity.triList(function () {
+        lemon.isFunc(callback) && callback();
+      }, true);
+    },
+    triList: function (callback, tagQry) {
+      var btnQry = '#note_qry', qryK = $(btnQry).val(), cards = '#note_entities',
+        qry = note.entity.list, keyTag = (qry.prevTags || []).join(',');
+      if (qryK != qry.prevKey || tagQry) {
+        $(cards).empty();
+        var pg = lemon.homeProgress();
+        note.entity.list(qryK, 1, keyTag, function() {
+          lemon.isFunc(callback) && callback();
+          pg.end();
+        });
+        qry.noteEnd = false;
+        qry.prevKey = qryK;
+      }
+    },
     list: function (key, page, keyTag, callback) {
       page = page || 1;
       var btnQry = '#note_qry', ddBody = '#menu_dd_note_dd', cards = '#note_entities', qry = note.entity.list;
@@ -290,16 +321,7 @@ var note = {
         }));
 
         lemon.enter(btnQry, function () {
-          var qryK = $(btnQry).val();
-          if (qryK != qry.prevKey) {
-            $(cards).empty();
-            var pg = lemon.homeProgress();
-            note.entity.list(qryK, 1, '', function() {
-              pg.end();
-            });
-            qry.noteEnd = false;
-            qry.prevKey = qryK;
-          }
+          note.entity.triList();
         });
       }
 
@@ -354,9 +376,9 @@ var note = {
     listScroll: function () {
       var ddBody = '#menu_dd_note_dd', nextPage = function (callback) {
         if (!note.entity.list.noteEnd) {
-          var pg = lemon.homeProgress();
-          var pn = parseInt($(ddBody).data('page')) + 1;
-          note.entity.list(note.entity.list.prevKey, pn, '', function() {
+          var pg = lemon.homeProgress(), pn = parseInt($(ddBody).data('page')) + 1,
+            keyTag = (note.entity.list.prevTags || []).join(',');
+          note.entity.list(note.entity.list.prevKey, pn, keyTag, function() {
             pg.end(); callback();
           });
         }
@@ -894,13 +916,17 @@ var note = {
         var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'noteTag'),
           qtid = lemon.format('#qry_tag_{0}_{1}', nid, tag.id);
         if (!$(qtid).length) {
-          lemon.tmpls('#qry_tag_tmpl', {nid: nid, tag: tag}, '#qry_tags');
+          note.entity.tagQry(tag.id, 1, function () {
+            lemon.tmpls('#qry_tag_tmpl', {nid: nid, tag: tag}, '#qry_tags');
+          });
         }
       });
       lemon.live('click', 'button[data-qry-tag]', function (evt) {
         var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'qryTag'),
           qtid = lemon.format('#qry_tag_{0}_{1}', nid, tag.id);
-        $(qtid).remove();
+        note.entity.tagQry(tag.id, 2, function () {
+          $(qtid).remove();
+        });
       });
 
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';

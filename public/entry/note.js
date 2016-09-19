@@ -124,12 +124,30 @@ var note = {
         note.action.newNote();
       });
     },
+    sharedNote: function (params) {
+      var nid = params.get(0), shareData = null;
+      if (nid) {
+        shareData = {
+          title: 'Note',
+          type: 4,
+          content: nid
+        };
+      } else {
+        var cData = current(); shareData = {
+          title: 'Note Snapshot' + (cData.title ? (' of ' + cData.title) : ''),
+          type: 5,
+          content: note.snapshoot()
+        };
+      }
+
+      sharing.createAndShow(shareData);
+    },
     shareNote: function (params) {
       var fromCmd = params.get, shareData = null, nid = fromCmd ? params.get(0) : params.noteId;
       if (nid) {
         shareData = {
           type: 4,
-            content: nid
+          content: nid
         };
       } else {
         shareData = {
@@ -689,7 +707,8 @@ var note = {
       ex('open', function (args, cm) { na('openFile', args, cm); }, 'Open File', 'o');
       ex('menu', function (args, cm) { na('menuTgl', args, cm); }, 'Toggle Menu');
       ex('q', function (args, cm) { na('closeNote', args, cm); }, 'Close Note');
-      ex('share', function (args, cm) { na('shareNote', args, cm); }, 'Share Note');
+      ex('shared', function (args, cm) { na('sharedNote', args, cm); }, 'Share Note Direct');
+      ex('share', function (args, cm) { na('shareNote', args, cm); }, 'Share Note with Preview');
       ex('view', function (args, cm) { na('preview', args, cm); }, 'Preview', 'v');
       ex('fullscreen', function (args, cm) { na('fullscreenTgl', args, cm); }, 'Toggle Fullscreen', 'full');
 

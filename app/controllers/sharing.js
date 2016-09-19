@@ -8,6 +8,7 @@ var express = require('express'),
   History = app_require('models/api/history'),
   Group = app_require('models/api/group'),
   Interface = app_require('models/api/interf'),
+  Note = app_require('models/note'),
   apiRequest = require('../helpers/api_request'),
   index = routes.share;
 
@@ -73,8 +74,8 @@ function views(share, callback, requestInfo) {
       });
     });
   }
-  //API Snapshot, APIs Snapshot
-  else if (2 == share.type || 7 == share.type) {
+  //API Snapshot, APIs Snapshot, Note Snapshot
+  else if (2 == share.type || 7 == share.type || 5 == share.type) {
     _.extend(share, {
       content: crypto.compress(share.content)
     });
@@ -83,13 +84,7 @@ function views(share, callback, requestInfo) {
   }
   //API History
   else if (3 == share.type) {
-    var hisId = share.content, qry = {};
-    if (History.isObjectID(String(hisId))) {
-      qry = { _id: History.toObjectID(hisId)};
-    } else {
-      qry = { id: parseInt(hisId)};
-    }
-
+    var hisId = share.content, qry = History.idQueryParam(hisId);
     History.find(qry).limit(1).next(function(err, aHis) {
       if (err) {
         return callback(answer.fail(err.message));
@@ -101,6 +96,25 @@ function views(share, callback, requestInfo) {
 
       _.extend(share, {
         content: crypto.compress(aHis)
+      });
+
+      callback(answer.succ(share));
+    });
+  }
+  //Note
+  else if (4 == share.type) {
+    var nid = share.content, qry = Note.idQueryParam(nid);
+    Note.find(qry).limit(1).next(function(err, aNote) {
+      if (err) {
+        return callback(answer.fail(err.message));
+      }
+
+      if (!aNote) {
+        return callback(answer.fail('share Note not exists'));
+      }
+
+      _.extend(share, {
+        content: crypto.compress(Note.make(aNote, true))
       });
 
       callback(answer.succ(share));

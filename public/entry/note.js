@@ -124,7 +124,7 @@ var note = {
       });
     },
     shareNote: function () {
-//TODO
+
     },
     saveNote: function (params) {
       note.entity.save({
@@ -1283,13 +1283,6 @@ var note = {
         leave();
       }
     });
-
-    //TODO remove
-    global.note = note;
-    global.mirror = mirror;
-    global.current = current;
-    //TODO remove
-
 
   }
 };

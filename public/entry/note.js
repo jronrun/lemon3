@@ -125,17 +125,22 @@ var note = {
       });
     },
     shareNote: function (params) {
-      var fromCmd = params.get, nid = fromCmd ? params.get(0) : params.noteId;
+      var fromCmd = params.get, shareData = null, nid = fromCmd ? params.get(0) : params.noteId;
       if (nid) {
-        note.views(lemon.getUrl(lemon.fullUrl('/share/preview'), {
-          data: lemon.enc({
-            type: 4,
+        shareData = {
+          type: 4,
             content: nid
-          })
-        }));
+        };
       } else {
-
+        shareData = {
+          type: 5,
+          content: note.snapshoot()
+        };
       }
+
+      note.views(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+        data: lemon.enc(shareData)
+      }));
     },
     saveNote: function (params) {
       note.entity.save({
@@ -1331,7 +1336,23 @@ var note = {
             }
             break;
           case 'SHARE_NOTE_SNAPSHOT':
-            lemon.info(evtData, 'SHARE_NOTE_SNAPSHOT');
+            var sData = lemon.deepCopy(evtData.content);
+            note.snapload(evtData.content);
+
+            if (1 == evtData.preview) {
+              note.action.menuHide();
+              var sTitle = evtData.content.note.title;
+              note.shareShow({
+                title: 'Note Snapshot' + (sTitle ? (' of ' + sTitle) : ''),
+                type: 5,
+                content: sData
+              });
+            }
+
+            if (1 == evtData.read_write) {
+              note.action.menuHide();
+              $(note.menu.triId).remove();
+            }
             break;
         }
       }

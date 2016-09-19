@@ -33,6 +33,10 @@ lemon.deepDec = function(val) {
   return val;
 };
 
+lemon.deepCopy = function (originalTarget) {
+  return $.extend(true, {}, originalTarget);
+};
+
 lemon.addDateMask({
   tiny: 'yyyymmddHHMMss'
 });

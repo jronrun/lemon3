@@ -981,6 +981,14 @@ var note = {
           noteId: nid
         });
       });
+      lemon.rightclick('button[data-share-note]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'shareNote'), n = lemon.data('#n_' + nid, 'entity');
+        sharing.createAndShow({
+          title: n.title,
+          type: 4,
+          content: n._id
+        });
+      });
 
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';
       lemon.rightclick(themeSel, function (evt) {

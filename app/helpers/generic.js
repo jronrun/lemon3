@@ -34,7 +34,7 @@ module.exports = function(model, index, defineForm) {
       }
       return format(
         '<a href="%s" data-pjax><h4 class="item-title">%s<em class="fa fa-edit text-muted"></em>&nbsp;%s</h4></a>',
-        href, theId, title
+        href, theId, _.escape(title)
       );
     },
 
@@ -56,13 +56,13 @@ module.exports = function(model, index, defineForm) {
     },
 
     em: function(icon, text) {
-      return '<em class="fa fa-' + icon + '"></em> ' + (text || '');
+      return '<em class="fa fa-' + icon + '"></em> ' + _.escape(text || '');
     },
 
     previewHref: function(href, text, title) {
       var html = [
         format('<a class="btn btn-secondary text-info icondh" data-preview title="%s" href="%s" ' +
-          'style="border: 0px;" type="button">', title || '', href || ''),
+          'style="border: 0px;" type="button">', _.escape(title || ''), href || ''),
         text || '',
         '</a>'
       ];

@@ -2,7 +2,8 @@
  *
  */
 var mirror = require('../js/notemirror'),
-  files = require('../js/files');
+  files = require('../js/files'),
+  sharing =  require('../js/sharing');
 
 var _current = {}, title_len = 30; function current(data) {
   //data { _id: '', title: '', content: '', summary: '', note: '', tags: [] }
@@ -123,8 +124,18 @@ var note = {
         note.action.newNote();
       });
     },
-    shareNote: function () {
+    shareNote: function (params) {
+      var fromCmd = params.get, nid = fromCmd ? params.get(0) : params.noteId;
+      if (nid) {
+        note.views(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+          data: lemon.enc({
+            type: 4,
+            content: nid
+          })
+        }));
+      } else {
 
+      }
     },
     saveNote: function (params) {
       note.entity.save({
@@ -964,6 +975,12 @@ var note = {
           noteId: nid
         });
       });
+      lemon.live('click', 'button[data-share-note]', function (evt) {
+        var el = evt.currentTarget, nid = lemon.data(el, 'shareNote');
+        note.action.shareNote({
+          noteId: nid
+        });
+      });
 
       var themeSel = 'div[data-theme]', langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';
       lemon.rightclick(themeSel, function (evt) {
@@ -1211,6 +1228,7 @@ var note = {
       },
       mirror: {
         opts: note.instance.attrs(['foldGutter','lineNumbers','gutters']),
+        vimInsert: 'vim-insert' === note.instance.attrs('keyMap'),
         mode: {
           name: cMode.name,
           chosen: cMode.chosenMimeOrExt || cMode.mime
@@ -1241,7 +1259,20 @@ var note = {
       if (m.th) {
         note.theme.change(m.th);
       }
+      if (m.vimInsert) {
+        note.action.editMode();
+      }
     }
+  },
+
+  shareShow: function (shareData) {
+    $('#share_this').show({
+      complete: function() {
+        $('#share_this').click(function() {
+          sharing.createAndShow(shareData);
+        });
+      }
+    });
   },
 
   initialize: function () {
@@ -1271,8 +1302,28 @@ var note = {
           case 'SIGNOUT':
             location.reload();
             break;
-          case 'MODAL':
+          case 'SHARE_NOTE':
+            var snapD = lemon.clone(evtData.content);
+            delete snapD._id;
 
+            note.snapload({
+              note: snapD
+            });
+
+            if (1 == evtData.preview) {
+              note.shareShow({
+                title: evtData.content.title,
+                type: 4,
+                content: evtData.content._id
+              });
+            }
+
+            if (1 == evtData.read_write) {
+              $(note.menu.triId).remove();
+            }
+            break;
+          case 'SHARE_NOTE_SNAPSHOT':
+            lemon.info(evtData, 'SHARE_NOTE_SNAPSHOT');
             break;
         }
       }
@@ -1284,6 +1335,11 @@ var note = {
       }
     });
 
+    //TODO remove
+    global.note = note;
+    global.mirror = mirror;
+    global.current = current;
+    //TODO remove
   }
 };
 

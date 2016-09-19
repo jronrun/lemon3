@@ -23,10 +23,26 @@ var shar = {
         case 1: shar.api.render(ans.result); break;
         case 2: shar.api.snapshotRender(ans.result); break;
         case 3: shar.his.render(ans.result); break;
+        case 4: shar.note.render(ans.result); break;
+        case 5: shar.note.snapshotRender(ans.result); break;
         case 7: shar.api.apisSnapshotRender(ans.result); break;
       }
     } else {
       lemon.warn(ans.msg);
+    }
+  },
+
+  note: {
+    render: function (share) {
+      lemon.previews(lemon.fullUrl('/note'), false, false, function(view) {
+        view.tellEvent('SHARE_NOTE', share);
+      });
+    },
+
+    snapshotRender: function (share) {
+      lemon.previews(lemon.fullUrl('/note'), false, false, function(view) {
+        view.tellEvent('SHARE_NOTE_SNAPSHOT', share);
+      });
     }
   },
 

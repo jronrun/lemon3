@@ -113,8 +113,10 @@ function views(share, callback, requestInfo) {
         return callback(answer.fail('share Note not exists'));
       }
 
+      var rNote = Note.make(aNote);
+      rNote.content = aNote.content;
       _.extend(share, {
-        content: crypto.compress(Note.make(aNote, true))
+        content: crypto.compress(rNote)
       });
 
       callback(answer.succ(share));

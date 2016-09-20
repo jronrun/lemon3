@@ -52,14 +52,6 @@ module.exports = function (router, index, root) {
         clazz: 'item-col-author linebreak'
       },
       {
-        title: 'Create By',
-        prop: function(item) {
-          var aUser = item.create_by;
-          return generic.info(getAction(root.users.retrieve, aUser.id), aUser.name);
-        },
-        clazz: 'item-col-author'
-      },
-      {
         title: 'Create',
         prop: 'create_time',
         clazz: 'item-col-date',

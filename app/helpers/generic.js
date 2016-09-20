@@ -202,6 +202,17 @@ module.exports = function(model, index, defineForm) {
         }
       }, options || {});
 
+      if (req.user.isAdmin && generic.getSchema('create_by')) {
+        options.defines.push({
+          title: 'Create By',
+          prop: function (item) {
+            var aUser = item.create_by;
+            return generic.info(getAction(routes.manage.users.retrieve, aUser.id), aUser.name);
+          },
+          clazz: 'item-col-author'
+        });
+      }
+
       var queryStr = req.header('query') || req.param('q') || '', query = {}, realQuery = {};
       if (queryStr.length > 0) {
         query = crypto.decompress(queryStr);

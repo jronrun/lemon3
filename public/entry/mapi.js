@@ -151,14 +151,28 @@ var mapis = {
               modal: {
                 show: true
               },
-              body: [
-                '<div class="input-group input-group-lg">',
-                '<input type="text" id="' + inputURLId + '" class="form-control" style="border: 0px;" placeholder="Enter an URL address">',
-                '</div>'
-              ].join('')
+              body: function () {
+                return lemon.tmpl($('#mapi_new_tmpl').html(), {
+                  inputURLId: inputURLId
+                });
+              }
             }, {
               shown: function() {
                 lemon.enter('#' + inputURLId, function () {
+                  mapinM.hide();
+                });
+                $('button[data-new]').click(function () {
+                  var ty = lemon.data(this, 'new'), vurl = '';
+                  switch (ty) {
+                    case TAPI:
+                      vurl = lemon.fullUrl('/api');
+                      break;
+                    case TNOTE:
+                      vurl = lemon.fullUrl('/note');
+                      break;
+                  }
+
+                  $('#' + inputURLId).val(vurl);
                   mapinM.hide();
                 });
                 $(mapis.toolsId).slideUp();

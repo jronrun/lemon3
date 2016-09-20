@@ -10,6 +10,25 @@
     </nav>
 </script>
 
+<script type="text/html" id="mapi_new_tmpl">
+    <form>
+        <div class="input-group input-group-lg">
+            <button type="button" class="btn btn-sm btn-secondary-outline" style="border: none;">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {{> logo}}
+                &nbsp;&nbsp;
+            </button>
+            <input type="text" id="<%= inputURLId %>" class="form-control" style="border: none;height: 80px;" placeholder="Enter an URL address">
+            <button type="button" class="btn btn-sm btn-info-outline pull-right icondh" data-new="<%= lemon.enc(2) %>" title="New Instance of API" style="border: none;">
+                <em class="fa fa-leaf"></em>
+            </button>
+            <button type="button" class="btn btn-sm btn-info-outline pull-right icondh" data-new="<%= lemon.enc(3) %>" title="New Instance of Note" style="border: none;">
+                <em class="fa fa-lemon-o"></em>
+            </button>
+        </div>
+    </form>
+</script>
+
 <script type="text/html" id="mapi_tab_tmpl">
     <% lemon.each(mapis, function(inst, instId) { %>
         <li class="nav-item" id="mapi_tool_<%= instId %>">

@@ -210,7 +210,7 @@ var note = {
             show: true
           },
           body: function () {
-            return lemon.tmpls(tid, {n: n, userl: false, tags: note.tags});
+            return lemon.tmpls(tid, {n: n, userl: false, tags: note.tags, btns: 0});
           }
         }, {
           shown: function (evt, el) {
@@ -400,7 +400,8 @@ var note = {
               $(cards).append(lemon.tmpl($('#note_card_tmpl').html(), {
                 n: n,
                 tags: note.tags,
-                userl: (1 == rdata.userl ? true : false)
+                userl: (1 == rdata.userl ? true : false),
+                btns: 1
               }));
             });
 

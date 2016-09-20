@@ -111,12 +111,14 @@
                     <div class="card-block">
                         <h5 class="card-title linebreak">
                             <%= lemon.escape(n.title) %>
-                            <button type="button" data-del-note="<%= lemon.enc(n._id) %>" class="btn btn-secondary-outline btn-sm icondh pull-right text-silver" style="border: none;">
-                                <em class="fa fa-close"></em>
-                            </button>
-                            <button type="button" data-share-note="<%= lemon.enc(n._id) %>" class="btn btn-secondary-outline btn-sm icondh pull-right text-silver" style="border: none;">
-                                <em class="fa fa-share-alt"></em>
-                            </button>
+                            <% if (1 == btns) { %>
+                                <button type="button" data-del-note="<%= lemon.enc(n._id) %>" title="Delete Note" class="btn btn-secondary-outline btn-sm icondh pull-right text-silver" style="border: none;">
+                                    <em class="fa fa-close"></em>
+                                </button>
+                                <button type="button" data-share-note="<%= lemon.enc(n._id) %>" title="Share Note" class="btn btn-secondary-outline btn-sm icondh pull-right text-silver" style="border: none;">
+                                    <em class="fa fa-share-alt"></em>
+                                </button>
+                            <% } %>
                         </h5>
                         <small class="card-subtitle linebreak text-silver">
                             <% if (n.id) { %>

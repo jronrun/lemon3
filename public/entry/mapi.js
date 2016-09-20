@@ -1,7 +1,7 @@
 /**
  *
  */
-var sharing =  require('../js/sharing');
+var sharing =  require('../js/sharing'), TAPI = 2, TNOTE = 3, TOTHER = 1;
 
 function $$(selector, instanceId) {
   var aInstance = mapis.instance.gets(instanceId || mapis.instance.defaultId);
@@ -302,7 +302,7 @@ var mapis = {
   },
 
   createView: function(domReadyCallback, theURL, name) {
-    theURL = theURL || lemon.fullUrl('/api');
+    theURL = theURL || mapis.theURL();
     return lemon.previews(theURL, false, false, function(view, preview) {
       if (lemon.endWith(theURL, '/api')) {
         $('body', view.getDocument()).css({
@@ -315,6 +315,16 @@ var mapis = {
       var instanceId = mapis.instance.add(view, preview, name);
       lemon.isFunc(domReadyCallback) && domReadyCallback(instanceId, view, preview);
     });
+  },
+
+  theURL: function () {
+    var anURI = null;
+    switch (mapis.type()) {
+      case TAPI: anURI = '/api'; break;
+      case TNOTE: anURI = '/note'; break;
+    }
+
+    return lemon.fullUrl(anURI);
   },
 
   loadsnap: function(mapiSnapdata, callback, shared) {
@@ -344,7 +354,7 @@ var mapis = {
         }
 
         var anInst = mapis.instance.gets(instId);
-        if (inst.iframe.api) {
+        if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE)) {
           anInst.view.tellEvent('SNAPLOAD', {
             id: anInst.view.getId(),
             snapdata: inst.snapdata
@@ -357,7 +367,7 @@ var mapis = {
         }
 
         if (shared) {
-          if (inst.iframe.api) {
+          if (mapis.is(inst, TAPI)) {
             var evtData = lemon.clone(shared);
             delete evtData.content;
             evtData.instanceId = inst.id;
@@ -368,7 +378,7 @@ var mapis = {
             });
           }
         } else {
-          if (inst.iframe.api) {
+          if (mapis.is(inst, TAPI)) {
             anInst.view.tellEvent('INST_RENDER');
           }
         }
@@ -381,9 +391,8 @@ var mapis = {
     lemon.store('mapi_snapshoot', null);
   },
   snapshoot: function() {
-    var anAPI = location.origin + '/api', asrc = null;
     lemon.each(mapis.instances, function (inst) {
-      if (anAPI == (asrc = inst.view.attr('src'))) {
+      if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE)) {
         inst.view.tellEvent('SNAPSHOOT', {
           id: inst.instanceId,
           tabName: inst.name,
@@ -394,10 +403,11 @@ var mapis = {
         shoot[inst.view.getName()] = {
           id: inst.instanceId,
           iframe: {
+            type: TOTHER,
             api: false,
             isDefault: false,
             name: inst.name,
-            src: asrc
+            src: inst.view.attr('src')
           }
         };
         lemon.persist('mapi_snapshoot', shoot);
@@ -405,10 +415,38 @@ var mapis = {
     });
   },
 
+  //1 others, 2 api, 3 note
+  type: function (inst) {
+    var lo = location.origin, href = null;
+    if (!lemon.isUndefined(inst)) {
+      if (inst.iframe && inst.iframe.type) {
+        return inst.iframe.type;
+      }
+
+      href = lemon.isString(inst) ? lemon.fullUrl(inst) : inst.view.attr('src');
+    } else {
+      href = location.href;
+    }
+    if ((lo + '/api') == href || (lo + '/apis') == href) {
+      return TAPI;
+    } else if ((lo + '/note') == href || (lo + '/notes') == href) {
+      return TNOTE;
+    } else {
+      return TOTHER;
+    }
+  },
+
+  is: function (inst, instType) {
+    return instType == mapis.type(inst);
+  },
+
   initialize: function() {
     if (lemon.isSmallDownView()) {
-      lemon.href('/api');
-      return;
+      switch (mapis.type()) {
+        case TAPI: return lemon.href('/api');
+        case TNOTE: return lemon.href('/note');
+        default: return;
+      }
     }
 
     lemon.console();

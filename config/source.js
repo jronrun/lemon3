@@ -38,6 +38,8 @@ var resource = [
     ]
   },
 
+  {id: 21, name: 'notes', desc: 'Multiple Note', protect: false, page: 'apis/index'},
+
   {
     id: 30, name: 'user', desc: 'User', children: [
       {id: 30001, name: 'signin', desc: 'Sign In', protect: false},

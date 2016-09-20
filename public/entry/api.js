@@ -2049,7 +2049,7 @@ var mapi = {
             shoot[data.iframe.name] = {
               id: data.data.id,
               iframe: {
-                api: true,
+                type: 2,
                 isDefault: data.data.isDefault,
                 name: data.data.tabName,
                 src: data.iframe.src

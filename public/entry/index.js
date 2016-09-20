@@ -224,7 +224,7 @@ lemon.register({
     return /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/.test(text);
   },
   fullUrl: function(anURI) {
-    return (location.origin || '') + anURI;
+    return lemon.isUrl(anURI) ? anURI : (location.origin || '') + anURI;
   },
   inlineTip: function(selector, msg, delay) {
     var tipSel = selector + ' .inlinetip';
@@ -825,14 +825,39 @@ lemon.register({
     }
     return lemon.isButtonActive(selector);
   },
+  //opt 1 toggle, 2 mark, 3 unmark, 4 get
+  attrTgl: function (selector, attrName, opt) {
+    var markD = {};
+    switch (opt = opt || 1) {
+      case 1:
+        markD[attrName] = 1 == lemon.data(selector, attrName) ? 0 : 1;
+        break;
+      case 2:
+        if (1 != lemon.data(selector, attrName)) {
+          markD[attrName] = 1;
+        }
+        break;
+      case 3:
+        if (1 == lemon.data(selector, attrName)) {
+          markD[attrName] = 0;
+        }
+        break;
+    }
+
+    if ([1, 2, 3].indexOf(opt) != -1) {
+      lemon.data(selector, markD);
+    }
+
+    return 1 == lemon.data(selector, attrName);
+  },
   isEvented: function (selector) {
-    return 1 == lemon.data(selector, 'evented');
+    return lemon.attrTgl(selector, 'evented', 4);
   },
   unEvented: function (selector) {
-    lemon.data(selector, {evented: 0});
+    return lemon.attrTgl(selector, 'evented', 3);
   },
   setEvented: function (selector) {
-    lemon.data(selector, {evented: 1});
+    return lemon.attrTgl(selector, 'evented', 2);
   },
   tmpls: function (selector, data, appendToSelector) {
     var aHtml = lemon.tmpl($(selector).html(), data);

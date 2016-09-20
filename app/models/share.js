@@ -11,7 +11,7 @@ var model = schema({
       4: 'Note',
       5: 'Note Capture',
       6: 'Blank Text',
-      7: 'APIs Capture'
+      7: 'APIs || Notes Capture'
     }
   },
   read_write: { type: 'integer', enum: [1, 2, 3], required: true, const: { 1: 'Readonly', 2: 'User Power', 3: 'Executable'} },

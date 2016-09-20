@@ -1243,6 +1243,13 @@ var note = {
       $(note.menu.triId).click(function () {
         note.menu.tgl();
       });
+
+      lemon.rightclick(note.menu.triId, function (evt) {
+        var el = evt.currentTarget;
+        lemon.pubEvent('BTN_TOGGLE', {
+          show: lemon.attrTgl(el, 'btgl') ? 1 : 0
+        });
+      });
     }
   },
 
@@ -1334,6 +1341,23 @@ var note = {
           case 'SIGNOUT':
             location.reload();
             break;
+          case 'SNAPSHOOT':
+            var shoot = {};
+            shoot[data.iframe.name] = {
+              id: evtData.id,
+              iframe: {
+                type: 3,
+                isDefault: evtData.isDefault,
+                name: evtData.tabName,
+                src: data.iframe.src
+              },
+              snapdata: note.snapshoot()
+            };
+            lemon.persist('mapi_snapshoot', shoot);
+            break;
+          case 'SNAPLOAD':
+            note.snapload(evtData.snapdata);
+            break;
           case 'SHARE_NOTE':
             var snapD = lemon.clone(evtData.content);
             delete snapD._id;
@@ -1383,11 +1407,6 @@ var note = {
       }
     });
 
-    //TODO remove
-    global.note = note;
-    global.mirror = mirror;
-    global.current = current;
-    //TODO remove
   }
 };
 

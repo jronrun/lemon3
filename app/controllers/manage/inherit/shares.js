@@ -170,12 +170,6 @@ module.exports = function (router, index, root) {
         clazz: 'item-col-author'
       },
       {
-        title: 'Create',
-        prop: 'create_time',
-        clazz: 'item-col-date',
-        type: 'date'
-      },
-      {
         title: 'Manual',
         prop: function(item) {
           var html = [
@@ -187,6 +181,12 @@ module.exports = function (router, index, root) {
           return html.join('');
         },
         clazz: 'item-col-author'
+      },
+      {
+        title: 'Create',
+        prop: 'create_time',
+        clazz: 'item-col-date',
+        type: 'date'
       }
     ];
 

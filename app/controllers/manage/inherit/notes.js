@@ -42,7 +42,7 @@ module.exports = function (router, index, root) {
         prop: function (item) {
           return _.escape(item.summary);
         },
-        clazz: 'item-col-author'
+        clazz: 'item-col-author linebreak'
       },
       {
         title: 'Note',
@@ -52,6 +52,13 @@ module.exports = function (router, index, root) {
         clazz: 'item-col-author linebreak'
       },
       {
+        title: 'State',
+        prop: function(item) {
+          return generic.getSchema('state').const[item.state];
+        },
+        clazz: 'item-col-author'
+      },
+      {
         title: 'Create',
         prop: 'create_time',
         clazz: 'item-col-date',
@@ -59,9 +66,18 @@ module.exports = function (router, index, root) {
       }
     ];
 
+    var stateOptions = [];
+    _.each(generic.getSchema('state').const, function (v, k) {
+      stateOptions.push({
+        val: k,
+        text: v
+      });
+    });
+
     var search = [
       generic.searchInput('id', 'search id...'),
-      generic.searchInput('title', 'search note...')
+      generic.searchInput('title', 'search note...'),
+      generic.searchSelect('state', 'All State', stateOptions)
     ];
 
     generic.list({
@@ -69,6 +85,9 @@ module.exports = function (router, index, root) {
       defines: defines,
       search: search,
       queryHandle: function(realQuery, query) {
+        if (realQuery.state) {
+          realQuery.state = parseInt(query.state);
+        }
         if (realQuery.title) {
           var likeKey = realQuery.title;
           _.extend(realQuery, {

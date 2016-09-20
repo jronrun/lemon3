@@ -14,6 +14,7 @@ module.exports = function (app) {
   require('./inherit/roles')(router, index.roles, index);
   require('./inherit/sourcetree')(router, index.resource, index);
 
+  require('./inherit/notes')(router, index.mnote, index);
   require('./inherit/tags')(router, index.tag, index);
   require('./inherit/envs')(router, index.env, index);
   require('./inherit/groups')(router, index.group, index);

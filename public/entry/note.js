@@ -12,7 +12,7 @@ var _current = {}, title_len = 30; function current(data) {
 }
 
 function leave() {
-  lemon.persist('note_snapshoot', note.snapshoot());
+  lemon.persist('note_snapshoot', note.snapshoot(true));
 }
 
 var note = {
@@ -210,7 +210,7 @@ var note = {
             show: true
           },
           body: function () {
-            return lemon.tmpls(tid, {n: n, userl: false, tags: note.tags, btns: 0});
+            return lemon.tmpls(tid, {n: n, cnid: 0, userl: false, tags: note.tags, btns: 0});
           }
         }, {
           shown: function (evt, el) {
@@ -399,6 +399,7 @@ var note = {
             lemon.each(rdata.items, function (n, idx) {
               $(cards).append(lemon.tmpl($('#note_card_tmpl').html(), {
                 n: n,
+                cnid: current()._id,
                 tags: note.tags,
                 userl: (1 == rdata.userl ? true : false),
                 btns: 1
@@ -928,6 +929,7 @@ var note = {
       lemon.live('dblclick', 'div[data-entity]', function (evt) {
         var el = evt.currentTarget, n = lemon.data(el, 'entity');
         note.entity.loadById(n._id);
+        note.menu.render.note(true);
         lemon.dropdownTgl('#menu_dd_note_dd');
       });
 
@@ -1254,12 +1256,14 @@ var note = {
     }
   },
 
-  snapshoot: function () {
+  snapshoot: function (keepNid) {
     var cMode = note.instance.mode(), aNote = lemon.clone(current());
     lemon.extend(aNote, {
       content: lemon.enc(note.instance.val())
     });
-    delete aNote._id;
+    if (!keepNid) {
+      delete aNote._id;
+    }
 
     return {
       note: aNote,

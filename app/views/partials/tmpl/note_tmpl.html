@@ -110,7 +110,13 @@
                 <div class="card borderinfo">
                     <div class="card-block">
                         <h5 class="card-title linebreak">
-                            <%= lemon.escape(n.title) %>
+                            <% if (cnid == n._id) { %>
+                                <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                                <span class="text-danger"><%= lemon.escape(n.title) %></span>
+                            <% } else { %>
+                                <span class="text-success"><%= lemon.escape(n.title) %></span>
+                            <% } %>
+
                             <% if (1 == btns) { %>
                                 <button type="button" data-del-note="<%= lemon.enc(n._id) %>" title="Delete Note" class="btn btn-danger-outline btn-sm icondh pull-right text-silver" style="border: none;">
                                 <em class="fa fa-close"></em>
@@ -165,7 +171,14 @@
             <div class="tab-pane" id="<%= ntab2Id %>" role="tabpanel">
                 <div class="card borderinfo">
                     <div class="card-block">
-                        <h5 class="card-title linebreak"><%= lemon.escape(n.title) %></h5>
+                        <h5 class="card-title linebreak">
+                            <% if (cnid == n._id) { %>
+                                <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                                <span class="text-danger"><%= lemon.escape(n.title) %></span>
+                            <% } else { %>
+                                <span class="text-success"><%= lemon.escape(n.title) %></span>
+                            <% } %>
+                        </h5>
                         <small class="card-subtitle linebreak text-muted">Defined Tags</small>
                         <h5 class="invisible"></h5>
                         <div class="row" style="margin-left: 0;">

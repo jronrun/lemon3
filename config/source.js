@@ -34,7 +34,8 @@ var resource = [
       {id: 20004, extend: 20003, desc: 'Update', method: M.PUT, protect: false},
       {id: 20005, extend: 20003, desc: 'Delete', method: M.DELETE, protect: false},
 
-      {id: 20006, name: 'tag', desc: 'Note Tag', method: M.POST, protect: false}
+      {id: 20006, name: 'tag', desc: 'Note Tag', method: M.POST, protect: false},
+      {id: 20007, name: 'load', desc: 'Share', action: '/note/:id', page: 'note/index', protect: false},
     ]
   },
 

@@ -25,6 +25,10 @@ module.exports = function (router, index, root) {
     }
   });
 
+  function previewHref(item) {
+    return generic.previewHref('/note/' + crypto.compress(item._id.toString()), generic.em('edit'), 'View ' + item.title)
+  }
+
   /**
    * Note list
    */
@@ -55,6 +59,17 @@ module.exports = function (router, index, root) {
         title: 'State',
         prop: function(item) {
           return generic.getSchema('state').const[item.state];
+        },
+        clazz: 'item-col-author'
+      },
+      {
+        title: 'Manual',
+        prop: function(item) {
+          var html = [
+            previewHref(item)
+          ];
+
+          return html.join('');
         },
         clazz: 'item-col-author'
       },
@@ -157,6 +172,13 @@ module.exports = function (router, index, root) {
       schemaExclude: ['create_by'],
       resultHandle: function(result, respdata) {
         respdata.content = crypto.decompress(respdata.content)
+      },
+      formElHandle: function(forms) {
+        var theTitle = forms.get('title');
+        theTitle.label = [
+          'Title ',
+          previewHref(forms.item)
+        ].join(' ');
       }
     }, req, res, next);
   });

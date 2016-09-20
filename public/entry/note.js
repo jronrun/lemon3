@@ -1323,8 +1323,15 @@ var note = {
     note.instance = mirror(note.id);
     note.menu.intl();
 
-    if (lemon.isRootWin()) {
-      note.snapload();
+    var lnid = lemon.data(note.id, 'lnid');
+    if (lemon.isBlank(lnid)) {
+      if (lemon.isRootWin()) {
+        note.snapload();
+      }
+    } else {
+      note.action.editNote({
+        noteId: lnid
+      });
     }
 
     lemon.subMsg(function (data) {

@@ -18,6 +18,16 @@ router.get(index.do, function (req, res, next) {
   res.render(index);
 });
 
+router.get(index.load.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.render(index);
+  }
+
+  return res.render(index, {
+    nid: req.params.id
+  });
+});
+
 /**
  * Note List
  */

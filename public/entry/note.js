@@ -982,7 +982,7 @@ var note = {
       lemon.live('click', 'button[data-note-tag]', function (evt) {
         var el = evt.currentTarget, nid = lemon.data(el, 'nid'), tag = lemon.data(el, 'noteTag'),
           qtid = lemon.format('#qry_tag_{0}_{1}', nid, tag.id);
-        if (!$(qtid).length) {
+        if (!$(qtid).length && note.menu.instance.opened()) {
           note.entity.tagQry(tag.id, 1, function () {
             lemon.tmpls('#qry_tag_tmpl', {nid: nid, tag: tag}, '#qry_tags');
           });

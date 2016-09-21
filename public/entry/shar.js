@@ -19,9 +19,6 @@ var shar = {
     var ans = lemon.data(shar.id, 'ans');
     if (0 == ans.code) {
       ans.result.content = lemon.deepDec(ans.result.content);
-      if (ans.result.title) {
-        ans.result.title = decodeURIComponent(ans.result.title);
-      }
       switch (ans.result.type) {
         case 1: shar.api.render(ans.result); break;
         case 2: shar.api.snapshotRender(ans.result); break;

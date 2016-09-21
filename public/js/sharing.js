@@ -163,7 +163,6 @@ sharing.create = function(share, callback, selector) {
     content: ''
   }, share || {});
 
-  share.title = encodeURIComponent(share.title);
   $.post('/share', {
     data: lemon.enc(share)
   }).done(function (resp) {

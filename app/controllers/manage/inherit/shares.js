@@ -116,7 +116,7 @@ module.exports = function (router, index, root) {
       {
         title: 'Title',
         prop: function(item) {
-          return generic.title(decodeURIComponent(item.title), getAction(root.share.retrieve, item._id), item.id);
+          return generic.title(item.title, getAction(root.share.retrieve, item._id), item.id);
         },
         clazz: 'fixed pull-left item-col-title'
       },

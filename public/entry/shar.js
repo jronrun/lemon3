@@ -118,7 +118,7 @@ var shar = {
       }
     },
     render: function(share) {
-      if (2 == share.read_write) {
+      if ([2, 3].indexOf(share.read_write) != -1) {
         lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
           view.tellEvent('SHARE_HIS', share);
         });

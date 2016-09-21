@@ -412,9 +412,9 @@ var mirror = function (elId, options, events) {
 
   var extraKeys = lemon.extend({
     //http://codemirror.net/doc/manual.html#commands
-    "Ctrl-K": 'toMatchingTag',
-    "Ctrl-J": 'autocomplete',
-    "Ctrl-Q": 'toggleFold'
+    'Ctrl-K': 'toMatchingTag',
+    'Ctrl-J': 'autocomplete',
+    'Ctrl-Q': 'toggleFold'
   }, options.extraKeys || {});
   delete options.extraKeys;
 
@@ -463,6 +463,12 @@ var mirror = function (elId, options, events) {
       }
     });
   }
+
+  aHelp.mapkey({
+    'Ctrl-L': function () {
+      aHelp.guttersTgl();
+    }
+  });
 
   return aHelp;
 };

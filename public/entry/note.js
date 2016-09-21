@@ -1310,6 +1310,9 @@ var note = {
     note.menu.render.tags();
     note.instance = mirror(note.id);
     note.menu.intl();
+    if (lemon.isSmallDownView()) {
+      note.action.editMode();
+    }
 
     var lnid = lemon.data(note.id, 'lnid');
     if (lemon.isBlank(lnid)) {

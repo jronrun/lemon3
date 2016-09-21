@@ -37,24 +37,7 @@ var note = {
     },
 
     fullscreenTgl: function (params, evt, el) {
-      var full = note.instance.attrs('gutters') || [], lineNumbers = null, gutters = null, foldGutter = null;
-      if (full.length == 0) {
-        full = 0;
-        foldGutter = true;
-        lineNumbers = true;
-        gutters = ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'];
-      } else {
-        full = 1;
-        foldGutter = false;
-        lineNumbers = false;
-        gutters = [];
-      }
-
-      note.instance.attrs({
-        foldGutter: foldGutter,
-        lineNumbers: lineNumbers,
-        gutters: gutters
-      });
+      note.instance.guttersTgl();
     },
 
     preview: function () {

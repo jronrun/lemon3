@@ -260,6 +260,40 @@ var helper = function(cm, events) {
     toLine: function (line, ch) {
       cm.setCursor((line || 1) - 1, ch || 0)
     },
+    //opt 1 toggle, 2 show, 3 unshow, 4 get
+    guttersTgl: function (opt, options) {
+      var hasGutters = ((tools.attrs('gutters') || []).length > 0);
+      switch (opt = opt || 1) {
+        case 1:
+          return tools.guttersTgl(options, hasGutters ? 3 : 2);
+        case 2:
+          if (!hasGutters) {
+            options = lemon.extend({
+              foldGutter: true,
+              lineNumbers: true,
+              gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+            }, options || {});
+
+            tools.attrs(options);
+          }
+          break;
+        case 3:
+          if (hasGutters) {
+            options = lemon.extend({
+              foldGutter: false,
+              lineNumbers: false,
+              gutters: []
+            }, options || {});
+
+            tools.attrs(options);
+          }
+          break;
+        case 4:
+          break;
+      }
+
+      return (tools.attrs('gutters') || []).length > 0;
+    },
     fullscreenTgl: function (full) {
       if (!cm.getOption('fullScreen')) {
         tools.fullBefore = {

@@ -19,6 +19,9 @@ var shar = {
     var ans = lemon.data(shar.id, 'ans');
     if (0 == ans.code) {
       ans.result.content = lemon.deepDec(ans.result.content);
+      if (ans.result.title) {
+        ans.result.title = decodeURIComponent(ans.result.title);
+      }
       switch (ans.result.type) {
         case 1: shar.api.render(ans.result); break;
         case 2: shar.api.snapshotRender(ans.result); break;
@@ -34,15 +37,41 @@ var shar = {
 
   note: {
     render: function (share) {
-      lemon.previews(lemon.fullUrl('/note'), false, false, function(view) {
-        view.tellEvent('SHARE_NOTE', share);
-      });
+      if (shar.note.detectRW(share, 4)) {
+        lemon.previews(lemon.fullUrl('/note'), false, false, function (view) {
+          view.tellEvent('SHARE_NOTE', share);
+        });
+      }
     },
 
     snapshotRender: function (share) {
-      lemon.previews(lemon.fullUrl('/note'), false, false, function(view) {
-        view.tellEvent('SHARE_NOTE_SNAPSHOT', share);
-      });
+      if (shar.note.detectRW(share, 5)) {
+        lemon.previews(lemon.fullUrl('/note'), false, false, function(view) {
+          view.tellEvent('SHARE_NOTE_SNAPSHOT', share);
+        });
+      }
+    },
+
+    detectRW: function (share, sType) {
+      if (1 == share.preview) {
+        return true;
+      }
+
+      if (1 == share.read_write) {
+        var content = '';
+        if (4 == sType) {
+          content = share.content.content;
+        } else if (5 == sType) {
+          content = share.content.note.content;
+        }
+        lemon.previews(lemon.dec(content), false, {
+          mirror: mirror,
+          isDecode: true
+        });
+        return false;
+      }
+
+      return true;
     }
   },
 
@@ -92,8 +121,8 @@ var shar = {
             api: aHis.api.id
           };
 
-          lemon.homeProgress();
-          $.post('/api/comment', { params: data }).done(function (resp) {
+          var pg = lemon.homeProgress();
+          $.post('/api/comment', { params: lemon.enc(data) }).done(function (resp) {
             if (0 == resp.code) {
               var rdata = lemon.dec(resp.result);
               if (rdata && rdata.length > 0) {
@@ -108,7 +137,7 @@ var shar = {
               }
             }
 
-            lemon.homeProgressEnd();
+            pg.end();
           });
         }
 

@@ -495,7 +495,8 @@ var note = {
       note: '',
       title: '',
       content: '',
-      summary: ''
+      summary: '',
+      language: ''
     }, aNote || {});
 
     var curN = current(); if (!isNew) {
@@ -514,6 +515,11 @@ var note = {
 
       if (!rNote.content) {
         rNote.content = note.instance.val();
+      }
+
+      if (!rNote.language) {
+        var lang = note.instance.mode();
+        rNote.language = lang.mime || lang.name;
       }
 
       if (!rNote.title) {
@@ -1405,6 +1411,8 @@ var note = {
       }
     });
 
+    //TODO remove
+    global.note = note;
   }
 };
 

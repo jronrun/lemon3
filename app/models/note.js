@@ -8,6 +8,7 @@ var model = schema({
   summary: { type: 'string', allowEmpty: false },
   content: { type: 'string', allowEmpty: false },
   note: { type: 'string' },
+  language: { type: 'string', allowEmpty: false },
   tags: { type: 'array', uniqueItems: true },
   state: { type: 'integer', enum: [1, 9], required: true, const: { 1: 'Using', 9: 'Deleted'} },
   create_by: {
@@ -30,7 +31,8 @@ note.make = function (item, needContent) {
     title: item.title,
     summary: item.summary,
     note: item.note,
-    tags: item.tags
+    tags: item.tags,
+    language: item.language
   };
 
   if (needContent) {

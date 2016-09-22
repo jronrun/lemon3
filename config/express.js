@@ -222,7 +222,7 @@ module.exports = function(app, config, passport) {
           removeCommentsFromCDATA: true,
           collapseWhitespace: true,
           collapseBooleanAttributes: true,
-          removeAttributeQuotes: true,
+          removeAttributeQuotes: false,
           removeEmptyAttributes: true,
           //script type="text/html"
           processScripts: ['text/html']

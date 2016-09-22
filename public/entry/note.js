@@ -90,9 +90,6 @@ var note = {
         });
       }
     },
-    listNote: function (params) {
-      note.entity.list(params.get ? params.get(0) : '');
-    },
     editNote: function (params) {
       var nid = params.get ? params.get(0) : params.noteId;
       note.entity.loadById(nid);
@@ -697,7 +694,6 @@ var note = {
       ex('theme', function (args, cm) { na('theme', args, cm); }, 'Theme', 'th');
       ex('help', function (args, cm) { na('help', args, cm); }, 'Help', 'h');
       ex('del', function (args, cm) { na('delNote', args, cm); }, 'Delete Note', 'd');
-      ex('list', function (args, cm) { na('listNote', args, cm); }, 'List Note', 'l');
       ex('edit', function (args, cm) { na('editNote', args, cm); }, 'Edit Note', 'e');
       ex('new', function (args, cm) { na('newNote', args, cm); }, 'New Note', 'n');
       ex('open', function (args, cm) { na('openFile', args, cm); }, 'Open File', 'o');
@@ -943,8 +939,12 @@ var note = {
         var el = evt.currentTarget, n = lemon.data(el, 'entity'), pnid = current()._id;
         if (note.menu.instance.opened()) {
           note.entity.loadById(n._id, function () {
-            note.menu.render.noteEl(pnid);
-            note.menu.render.noteEl(n._id);
+            if (lemon.isSmallDownView()) {
+              note.action.menuHide();
+            } else {
+              note.menu.render.noteEl(pnid);
+              note.menu.render.noteEl(n._id);
+            }
           });
         }
       });

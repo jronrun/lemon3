@@ -14,7 +14,8 @@ var favicon = require('serve-favicon'),
   methodOverride = require('method-override'),
   mongoStore = require('connect-mongo')(session),
   flash = require('connect-flash'),
-  multer = require('multer');
+  multer = require('multer'),
+  Minifier = require('html-minifier');
 
 var hbs = require('hbs'),
   registrar = app_require('coms/helpers/registrar'),
@@ -209,7 +210,28 @@ module.exports = function(app, config, passport) {
         req.session.customEvent = null;
       }
 
-      _render.call(this, view, options, fn);
+      _render.call(this, view, options, function (err, html) {
+        if (err) {
+          throw err;
+        }
+
+        html = Minifier.minify(html, {
+          minifyCSS: true,
+          minifyJS: true,
+          removeComments: true,
+          removeCommentsFromCDATA: true,
+          collapseWhitespace: true,
+          collapseBooleanAttributes: true,
+          removeAttributeQuotes: true,
+          removeEmptyAttributes: true
+        });
+
+        if (_.isFunction(fn)) {
+          return fn(err, html);
+        } else {
+          return res.send(html);
+        }
+      });
     };
 
     next();

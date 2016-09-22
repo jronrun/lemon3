@@ -114,7 +114,7 @@
                                 <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
                                 <span class="text-danger"><%= lemon.escape(n.title) %></span>
                             <% } else { %>
-                                <span class="text-success"><%= lemon.escape(n.title) %></span>
+                                <span class=""><%= lemon.escape(n.title) %></span>
                             <% } %>
 
                             <% if (1 == btns) { %>
@@ -126,7 +126,11 @@
                                 </button>
                             <% } %>
                         </h5>
-                        <small class="card-subtitle linebreak text-silver">
+                        <small class="card-subtitle linebreak text-muted">
+                            <%= n.language.name %>&nbsp;&nbsp;<%= n.language.mime %>
+                        </small>
+                        <br/>
+                        <small class="card-subtitle linebreak text-muted">
                             <% if (n.id) { %>
                             Note.<%= n.id %>
                             <% } %>
@@ -141,19 +145,20 @@
                             <% } %>
                             <%= lemon.when.default(n.create_time) %>
                         </small>
+
                         <h5 class="invisible"></h5>
-                        <small class="card-subtitle linebreak text-muted">Summary</small>
+                        <small class="card-subtitle linebreak text-silver">Summary</small>
                         <p class="card-text linebreak" title="Note Summary"><%= lemon.escape(n.summary) %></p>
                         <% if (n.note && n.note.length > 0) { %>
                             <h5 class="invisible"></h5>
-                            <small class="card-subtitle linebreak text-muted">Remarks</small>
+                            <small class="card-subtitle linebreak text-silver">Remarks</small>
                             <h5 class="invisible"></h5>
                             <div class="alert alert-warning linebreak" title="Note Remarks" style="border: none;">
                                 <%= n.note %>
                             </div>
                         <% } %>
 
-                        <small class="card-subtitle linebreak text-muted">Tags</small>
+                        <small class="card-subtitle linebreak text-silver">Tags</small>
                         <button type="button" id="n_tags_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
                             <em class="fa fa-tags" title="Tags"></em>
                         </button>
@@ -176,10 +181,10 @@
                                 <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
                                 <span class="text-danger"><%= lemon.escape(n.title) %></span>
                             <% } else { %>
-                                <span class="text-success"><%= lemon.escape(n.title) %></span>
+                                <span class=""><%= lemon.escape(n.title) %></span>
                             <% } %>
                         </h5>
-                        <small class="card-subtitle linebreak text-muted">Defined Tags</small>
+                        <small class="card-subtitle linebreak text-silver">Defined Tags</small>
                         <h5 class="invisible"></h5>
                         <div class="row" style="margin-left: 0;">
                             <% lemon.each(tags, function(tag){ %>
@@ -191,7 +196,7 @@
                         </div>
                     </div>
                     <div class="card-block">
-                        <small class="card-subtitle linebreak text-muted">Note Tags</small>
+                        <small class="card-subtitle linebreak text-silver">Note Tags</small>
                         <button type="button" id="n_info_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
                             <em class="fa fa-info" title="Note Info"></em>
                         </button>

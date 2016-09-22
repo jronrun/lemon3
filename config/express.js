@@ -223,7 +223,9 @@ module.exports = function(app, config, passport) {
           collapseWhitespace: true,
           collapseBooleanAttributes: true,
           removeAttributeQuotes: true,
-          removeEmptyAttributes: true
+          removeEmptyAttributes: true,
+          //script type="text/html"
+          processScripts: ['text/html']
         });
 
         if (_.isFunction(fn)) {

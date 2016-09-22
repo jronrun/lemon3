@@ -182,7 +182,7 @@ var note = {
       });
     },
     noteInfo: function (params) {
-      var nid = params.get ? params.get(0) : '', tid = '#note_card_tmpl', ashow = function (n) {
+      var nid = params.get ? params.get(0) : '', ashow = function (n) {
         n = note.make(n); if (lemon.isBlank(n.content)) {
           note.instance.tip('invalid note');
           return;
@@ -193,7 +193,10 @@ var note = {
             show: true
           },
           body: function () {
-            return lemon.tmpls(tid, {n: n, cnid: 0, userl: false, tags: note.tags, btns: 0});
+            return note.menu.render.card({
+              n: n,
+              cnid: 0
+            });
           }
         }, {
           shown: function (evt, el) {
@@ -380,10 +383,8 @@ var note = {
           if (rdata.items.length > 0) {
 
             lemon.each(rdata.items, function (n, idx) {
-              $(cards).append(lemon.tmpl($('#note_card_tmpl').html(), {
+              $(cards).append(note.menu.render.card({
                 n: n,
-                cnid: current()._id,
-                tags: note.tags,
                 userl: (1 == rdata.userl ? true : false),
                 btns: 1
               }));
@@ -811,6 +812,25 @@ var note = {
     },
 
     render: {
+      noteEl: function (nid, options) {
+        var nidEl = ''; if ($(nidEl = '#n_' + nid).length) {
+          var n = lemon.data(nidEl, 'entity'), userl = lemon.data(nidEl, 'userl');
+          $(nidEl).replaceWith(note.menu.render.card(lemon.extend({
+            n: n,
+            userl: userl,
+            btns: 1
+          }, options || {})));
+        }
+      },
+      card: function (options) {
+        return lemon.tmpl($('#note_card_tmpl').html(), lemon.extend({
+          n: {},
+          cnid: current()._id,
+          tags: note.tags,
+          userl: false,
+          btns: 0
+        }, options || {}))
+      },
       note: function (force) {
         if (force) {
           $('#note_entities').empty();
@@ -920,10 +940,13 @@ var note = {
       });
 
       lemon.live('dblclick', 'div[data-entity]', function (evt) {
-        var el = evt.currentTarget, n = lemon.data(el, 'entity');
-        note.entity.loadById(n._id);
-        note.menu.render.note(true);
-        lemon.dropdownTgl('#menu_dd_note_dd');
+        var el = evt.currentTarget, n = lemon.data(el, 'entity'), pnid = current()._id;
+        if (pnid != n._id) {
+          note.entity.loadById(n._id, function () {
+            note.menu.render.noteEl(pnid);
+            note.menu.render.noteEl(n._id);
+          });
+        }
       });
 
       lemon.live('click', 'button[id^=n_tags_]', function (evt) {
@@ -949,6 +972,10 @@ var note = {
         note.entity.tag(nid, tag.id, 2, function () {
           pg.end();
           lemon.delay(function () {
+            var nidEl = '#n_' + nid, n = lemon.data(nidEl, 'entity');
+            n.tags.push(tag.id);
+            lemon.data(nidEl, { entity: n});
+
             lemon.tmpls('#note_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_tags_{0}', nid));
             lemon.tmpls('#rem_tag_tmpl', {nid: nid, tag: tag}, lemon.format('#note_rem_tags_{0}', nid));
           }, 300);
@@ -967,6 +994,10 @@ var note = {
         note.entity.tag(nid, tag.id, 3, function () {
           pg.end();
           lemon.delay(function () {
+            var nidEl = '#n_' + nid, n = lemon.data(nidEl, 'entity');
+            n.tags = lemon.rmByVal(n.tags, tag.id);
+            lemon.data(nidEl, { entity: n});
+
             $(lemon.format(remFmt, nid, tag.id)).remove();
           }, 300);
         }, function () { pg.end(); });

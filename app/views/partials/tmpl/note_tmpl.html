@@ -96,7 +96,7 @@
 
 <script type="text/html" id="note_card_tmpl">
     <% var ntab1Id = 'ncard-' + n._id + '-tab1', ntab2Id = 'ncard-' + n._id + '-tab2'; %>
-    <div class="dropdown-item" id="n_<%= n._id %>" data-entity="<%= lemon.enc(n) %>">
+    <div class="dropdown-item" id="n_<%= n._id %>" data-entity="<%= lemon.enc(n) %>" data-userl="<%= userl %>">
         <ul class="nav nav-tabs" style="display: none;" role="tablist">
             <li class="nav-item">
                 <a class="nav-link" id="tri-<%= ntab1Id %>" data-toggle="tab" data-target="#<%= ntab1Id %>" href="#<%= ntab1Id %>" role="tab">Note Info</a>

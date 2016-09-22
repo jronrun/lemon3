@@ -938,6 +938,7 @@ var note = {
       lemon.live('dblclick', 'div[data-entity]', function (evt) {
         var el = evt.currentTarget, n = lemon.data(el, 'entity'), pnid = current()._id;
         if (note.menu.instance.opened()) {
+          var pg = lemon.homeProgress();
           note.entity.loadById(n._id, function () {
             if (lemon.isSmallDownView()) {
               note.action.menuHide();
@@ -945,6 +946,7 @@ var note = {
               note.menu.render.noteEl(pnid);
               note.menu.render.noteEl(n._id);
             }
+            pg.end();
           });
         }
       });

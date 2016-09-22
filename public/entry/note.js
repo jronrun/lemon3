@@ -941,12 +941,10 @@ var note = {
 
       lemon.live('dblclick', 'div[data-entity]', function (evt) {
         var el = evt.currentTarget, n = lemon.data(el, 'entity'), pnid = current()._id;
-        if (pnid != n._id) {
-          note.entity.loadById(n._id, function () {
-            note.menu.render.noteEl(pnid);
-            note.menu.render.noteEl(n._id);
-          });
-        }
+        note.entity.loadById(n._id, function () {
+          note.menu.render.noteEl(pnid);
+          note.menu.render.noteEl(n._id);
+        });
       });
 
       lemon.live('click', 'button[id^=n_tags_]', function (evt) {

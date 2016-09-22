@@ -8,7 +8,14 @@ var model = schema({
   summary: { type: 'string', allowEmpty: false },
   content: { type: 'string', allowEmpty: false },
   note: { type: 'string' },
-  language: { type: 'string', allowEmpty: false },
+  language: {
+    type: 'object',
+    required: true,
+    properties: {
+      name: { type: 'string', required: true },
+      mime: { type: 'string', required: true }
+    }
+  },
   tags: { type: 'array', uniqueItems: true },
   state: { type: 'integer', enum: [1, 9], required: true, const: { 1: 'Using', 9: 'Deleted'} },
   create_by: {

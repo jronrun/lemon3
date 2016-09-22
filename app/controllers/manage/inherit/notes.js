@@ -21,9 +21,6 @@ module.exports = function (router, index, root) {
       },
       note: {
         el: 'textarea'
-      },
-      language: {
-        label: 'Language (mime)'
       }
     }
   });
@@ -130,7 +127,8 @@ module.exports = function (router, index, root) {
     generic.editor({
       schemaExclude: ['create_by', 'state'],
       formElHandle: function (forms) {
-        forms.get('language').value = 'text/plain';
+        forms.get('language.name').value = 'Plain Text';
+        forms.get('language.mime').value = 'text/plain';
       }
     }, req, res, next);
   });

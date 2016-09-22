@@ -519,7 +519,10 @@ var note = {
 
       if (!rNote.language) {
         var lang = note.instance.mode();
-        rNote.language = lang.mime || lang.name;
+        rNote.language = {
+          name: lang.name,
+          mime: lang.mime
+        };
       }
 
       if (!rNote.title) {
@@ -547,7 +550,7 @@ var note = {
     return rNote;
   },
   load: function (aNote) {
-    note.instance.mode(aNote.language || 'text/plain');
+    note.instance.mode(aNote.language.mime || 'text/plain');
     note.instance.val(aNote.content);
     current(aNote);
   },

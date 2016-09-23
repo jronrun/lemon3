@@ -550,10 +550,11 @@ mirror.highlights = function(options) {
     var theOutput = $(hctx).html();
     $(hsrc + ',' + hctx).remove();
 
-    if (options.outputEl && $(options.outputEl).length) {
+    if (lemon.isFunc(options.callback)) {
+      options.callback(theOutput, modeInfo, options.theme);
+    } else if (options.outputEl && $(options.outputEl).length) {
       $(options.outputEl).html(theOutput);
     }
-    lemon.isFunc(options.callback) && options.callback(theOutput, modeInfo, options.theme);
   });
 };
 

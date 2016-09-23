@@ -65,8 +65,8 @@ var shar = {
           theme = share.content.mirror.th;
         }
 
-        var vid = 'note_share_view', rightTip = [
-          '<button type="button" id="note_preview" class="btn btn-secondary-outline icondh" style="border:0">',
+        var vid = 'note_share_view', bid = 'n_preview', rightTip = [
+          '<button type="button" id="' + bid + '" class="btn btn-secondary-outline icondh" style="border:0">',
           '<em class="fa fa-eye" title="Show Request URL"></em>',
           '</button>'
         ].join('');
@@ -83,8 +83,11 @@ var shar = {
           outputEl: '#' + vid,
           rightTip: rightTip,
           doneHandle: function () {
-            $('#note_preview').click(function () {
+            $('#' + bid).click(function () {
               lemon.preview(content);
+            });
+            lemon.rightclick('#' + bid, function () {
+              lemon.preview('<pre>' + content + '</pre>');
             });
           }
         });

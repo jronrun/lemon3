@@ -553,14 +553,16 @@ var note = {
     current(aNote);
   },
 
-  views: function (text, hiddenCall) {
+  views: function (text, hiddenCall, noneWrapJSON) {
     var jsonOptions = false;
-    if (mirror.mirrors.isJson(text, true)) {
-      text = lemon.fmtjson(text);
-      jsonOptions = {
-        mirror: mirror.mirrors,
-        isDecode: true
-      };
+    if (!noneWrapJSON) {
+      if (mirror.mirrors.isJson(text, true)) {
+        text = lemon.fmtjson(text);
+        jsonOptions = {
+          mirror: mirror.mirrors,
+          isDecode: true
+        };
+      }
     }
 
     //lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents)

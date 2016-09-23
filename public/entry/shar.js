@@ -55,16 +55,25 @@ var shar = {
       }
 
       if (1 == share.read_write) {
-        var content = '';
+        var content = '', lang = '';
         if (4 == sType) {
           content = share.content.content;
+          lang = share.content.language.mime;
         } else if (5 == sType) {
           content = share.content.note.content;
+          lang = share.content.note.language.mime;
         }
-        lemon.previews(lemon.dec(content), false, {
-          mirror: mirror,
-          isDecode: true
-        });
+        // lemon.previews(lemon.dec(content), false, {
+        //   mirror: mirror,
+        //   isDecode: true
+        // });
+
+        var html = (lemon.tmpl($('#share_note_tmpl').html(), {
+          content: content
+        }));
+
+        $(shar.id).html(html);
+        mirror.highlights('#note_src', lang, '#note_ctx');
         return false;
       }
 

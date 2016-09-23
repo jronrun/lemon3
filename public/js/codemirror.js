@@ -92,6 +92,65 @@ function initializeLangs() {
 
 initializeLangs();
 
+function langInfo(lang) {
+  if (lemon.isBlank(lang)) {
+    return null;
+  }
+
+  var m, info = null, lang = String(lang);
+  info = languages[lang];
+  if (!lemon.isBlank(info)) {
+    return info;
+  }
+
+  info = modes[lang];
+  if (!lemon.isBlank(info)) {
+    return info;
+  }
+
+  if (m = /.+\.([^.]+)$/.exec(lang)) {
+    info = CodeMirror.findModeByExtension(m[1]);
+  } else if (/\//.test(lang)) {
+    info = CodeMirror.findModeByMIME(lang);
+    info.mime = lang;
+  }
+
+  if (!lemon.isBlank(info)) {
+    return info;
+  }
+
+  info = CodeMirror.findModeByFileName(lang);
+  if (!lemon.isBlank(info)) {
+    return info;
+  }
+
+  info = CodeMirror.findModeByName(lang);
+  if (!lemon.isBlank(info)) {
+    return info;
+  }
+
+  info = CodeMirror.findModeByExtension(lang);
+  if (!lemon.isBlank(info)) {
+    return info;
+  }
+
+  return null;
+}
+
+function loadTheme(th) {
+  th = lemon.startWith(th, 'solarized') ? 'solarized' : th;
+  if (themes.indexOf(th) == -1) {
+    throw Error('Cound not find theme ' + th);
+  }
+
+  if (loadedTheme.indexOf(th) == -1) {
+    mirror.css(lemon.format('/theme/{0}.css', th));
+    loadedTheme.push(th);
+  }
+
+  return th;
+}
+
 var helper = function(cm, events) {
   events = events || {};
   var tools = {
@@ -110,50 +169,7 @@ var helper = function(cm, events) {
 
       return text;
     },
-    langInfo: function(lang) {
-      if (lemon.isBlank(lang)) {
-        return null;
-      }
-
-      var m, info = null, lang = String(lang);
-      info = languages[lang];
-      if (!lemon.isBlank(info)) {
-        return info;
-      }
-
-      info = modes[lang];
-      if (!lemon.isBlank(info)) {
-        return info;
-      }
-
-      if (m = /.+\.([^.]+)$/.exec(lang)) {
-        info = CodeMirror.findModeByExtension(m[1]);
-      } else if (/\//.test(lang)) {
-        info = CodeMirror.findModeByMIME(lang);
-        info.mime = lang;
-      }
-
-      if (!lemon.isBlank(info)) {
-        return info;
-      }
-
-      info = CodeMirror.findModeByFileName(lang);
-      if (!lemon.isBlank(info)) {
-        return info;
-      }
-
-      info = CodeMirror.findModeByName(lang);
-      if (!lemon.isBlank(info)) {
-        return info;
-      }
-
-      info = CodeMirror.findModeByExtension(lang);
-      if (!lemon.isBlank(info)) {
-        return info;
-      }
-
-      return null;
-    },
+    langInfo: langInfo,
     attrs: function (optionKey, optionVal) {
       if (lemon.isJson(optionKey)) {
         lemon.each(optionKey, function (v, k) {
@@ -187,15 +203,7 @@ var helper = function(cm, events) {
         return tools.attrs('theme');
       }
 
-      th = lemon.startWith(th, 'solarized') ? 'solarized' : th;
-      if (themes.indexOf(th) == -1) {
-        throw Error('Cound not find theme ' + th);
-      }
-      if (loadedTheme.indexOf(th) == -1) {
-        mirror.css(lemon.format('/theme/{0}.css', th));
-        loadedTheme.push(th);
-      }
-
+      th = loadTheme(th);
       tools.attrs('theme', th);
       return th;
     },
@@ -490,6 +498,33 @@ mirror.isJson = function(target, noneLogWarnMsg) {
 
 mirror.highlight = function(target, mode, output) {
   CodeMirror.runMode(lemon.query(target).value, mode, lemon.query(output));
+};
+
+mirror.highlights = function(target, mode, output) {
+  mirror.requireMode(mode, function (lang) {
+    mirror.highlight(target, lang.mime, output);
+  });
+};
+
+mirror.requireMode = function (mode, callback) {
+  var lang = langInfo(mode), reqM = function (aMode) {
+    if (!CodeMirror.modes.hasOwnProperty(aMode)) {
+      CodeMirror.requireMode(aMode, function() {
+        lemon.isFunc(callback) && callback(lang);
+      });
+    } else {
+      lemon.isFunc(callback) && callback(lang);
+    }
+  };
+
+  if (!lemon.isFunc(CodeMirror.autoLoadMode)) {
+    mirror.script('/addon/mode/loadmode.js', function () {
+      CodeMirror.modeURL = lemon.fullUrl('/components/codemirror/mode/%N/%N.js');
+      reqM(lang.mode);
+    });
+  } else {
+    reqM(lang.mode);
+  }
 };
 
 mirror.highlightJson5 = function(text, output) {

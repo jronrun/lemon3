@@ -55,25 +55,29 @@ var shar = {
       }
 
       if (1 == share.read_write) {
-        var content = '', lang = '';
+        var content = '', lang = '', theme = 'default';
         if (4 == sType) {
           content = share.content.content;
           lang = share.content.language.mime;
         } else if (5 == sType) {
           content = share.content.note.content;
-          lang = share.content.note.language.mime;
+          lang = share.content.mirror.mode.chosen;
+          theme = share.content.mirror.th;
         }
-        // lemon.previews(lemon.dec(content), false, {
-        //   mirror: mirror,
-        //   isDecode: true
-        // });
 
-        var html = (lemon.tmpl($('#share_note_tmpl').html(), {
-          content: content
-        }));
+        var vid = 'note_share_view';
+        $(shar.id).css({
+          padding: 0
+        }).html('<div id="' + vid + '"></div>');
 
-        $(shar.id).html(html);
-        mirror.highlights('#note_src', lang, '#note_ctx');
+        mirror.highlights({
+          input: content,
+          inputIsEncode: true,
+          mode: lang,
+          theme: theme,
+          outputEl: '#' + vid
+        });
+
         return false;
       }
 

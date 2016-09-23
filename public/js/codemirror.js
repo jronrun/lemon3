@@ -500,12 +500,64 @@ mirror.highlight = function(target, mode, output) {
   CodeMirror.runMode(lemon.query(target).value, mode, lemon.query(output));
 };
 
-mirror.highlights = function(target, mode, output) {
-  mirror.requireMode(mode, function (lang) {
-    mirror.highlight(target, lang.mime, output);
+var htmpl = [
+  '<textarea style="display: none;" id="hsrc_<%= id %>"><%= content %></textarea>',
+  '<div  id="hctx_<%= id %>" style="display: none;"><pre class="CodeMirror cm-s-<%= theme %>"></pre></div>'
+].join('');
+
+mirror.highlights = function(options) {
+  options = lemon.extend({
+    input: '',
+    outputEl: '',
+    callback: false, //function (highlighted, modeInfo, theme) {},
+    mode: 'text',
+    theme: 'default',
+
+    inputIsEl: false,
+    inputIsEncode: false,
+    style: {
+      height: '100%',
+      margin: 0
+    },
+    attrs: {},
+
+    id: lemon.now() + '_' + lemon.uniqueId()
+  }, options || {});
+
+  var content = options.input, hsrc = '#hsrc_' + options.id,
+    hctx = '#hctx_' + options.id, hpre = hctx + ' pre';
+  if (options.inputIsEl) {
+    content = lemon.query(content).value;
+  }
+
+  if (options.inputIsEncode) {
+    content = lemon.dec(content);
+  }
+
+  options.content = content;
+  options.theme = mirror.requireTheme(options.theme);
+
+  $('body').append(lemon.tmpl(htmpl, options));
+  if (!lemon.isBlank(options.style)) {
+    $(hpre).css(options.style);
+  }
+  if (!lemon.isBlank(options.attrs)) {
+    $(hpre).css(options.attrs);
+  }
+
+  mirror.requireMode(options.mode, function (modeInfo) {
+    mirror.highlight(hsrc, modeInfo.mime, hpre);
+    var theOutput = $(hctx).html();
+    $(hsrc + ',' + hctx).remove();
+
+    if (options.outputEl && $(options.outputEl).length) {
+      $(options.outputEl).html(theOutput);
+    }
+    lemon.isFunc(options.callback) && options.callback(theOutput, modeInfo, options.theme);
   });
 };
 
+mirror.requireTheme = loadTheme;
 mirror.requireMode = function (mode, callback) {
   var lang = langInfo(mode), reqM = function (aMode) {
     if (!CodeMirror.modes.hasOwnProperty(aMode)) {

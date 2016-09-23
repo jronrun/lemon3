@@ -501,7 +501,7 @@ mirror.highlight = function(target, mode, output) {
 };
 
 var htmpl = [
-  '<textarea style="display: none;" id="hsrc_<%= id %>"><%= content %></textarea>',
+  '<textarea style="display: none;" id="hsrc_<%= id %>"></textarea>',
   '<div  id="hctx_<%= id %>" style="display: none;"><pre class="CodeMirror cm-s-<%= theme %>"></pre></div>'
 ].join('');
 
@@ -521,7 +521,8 @@ mirror.highlights = function(options) {
     style: {
       height: '100%',
       margin: 0,
-      padding: '1rem'
+      padding: '1rem',
+      'overflow-x': 'auto'
     },
     attrs: {},
 
@@ -538,10 +539,9 @@ mirror.highlights = function(options) {
     content = lemon.dec(content);
   }
 
-  options.content = content;
   options.theme = mirror.requireTheme(options.theme);
-
   $('body').append(lemon.tmpl(htmpl, options));
+  $(hsrc).val(content);
   if (!lemon.isBlank(options.style)) {
     $(hpre).css(options.style);
   }

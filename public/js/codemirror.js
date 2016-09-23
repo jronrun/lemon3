@@ -508,16 +508,20 @@ var htmpl = [
 mirror.highlights = function(options) {
   options = lemon.extend({
     input: '',
-    outputEl: '',
-    callback: false, //function (highlighted, modeInfo, theme) {},
+    outputEl: '',           //alternative options.resultHandle
+    beforeHandle: false,    //after highlight and before final result generate event, function(preEl) {}
+    resultHandle: false,    //alternative options.outputEl, function (highlighted, modeInfo, theme) {}
+    doneHandle: false,      //call when is done, function (highlighted, modeInfo, theme) {}
     mode: 'text',
     theme: 'default',
 
+    rightTip: '',       //right corner tip
     inputIsEl: false,
     inputIsEncode: false,
     style: {
       height: '100%',
-      margin: 0
+      margin: 0,
+      padding: '1rem'
     },
     attrs: {},
 
@@ -547,14 +551,21 @@ mirror.highlights = function(options) {
 
   mirror.requireMode(options.mode, function (modeInfo) {
     mirror.highlight(hsrc, modeInfo.mime, hpre);
+    if (!lemon.isBlank(options.rightTip)) {
+      $(hpre).prepend(lemon.format('<p class="pull-right text-muted">{0}</p>', options.rightTip));
+    }
+
+    lemon.isFunc(options.beforeHandle) && options.beforeHandle(hpre);
     var theOutput = $(hctx).html();
     $(hsrc + ',' + hctx).remove();
 
-    if (lemon.isFunc(options.callback)) {
-      options.callback(theOutput, modeInfo, options.theme);
+    if (lemon.isFunc(options.resultHandle)) {
+      options.resultHandle(theOutput, modeInfo, options.theme);
     } else if (options.outputEl && $(options.outputEl).length) {
       $(options.outputEl).html(theOutput);
     }
+
+    lemon.isFunc(options.doneHandle) && options.doneHandle(theOutput, modeInfo, options.theme);
   });
 };
 

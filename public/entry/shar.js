@@ -65,17 +65,28 @@ var shar = {
           theme = share.content.mirror.th;
         }
 
-        var vid = 'note_share_view';
+        var vid = 'note_share_view', rightTip = [
+          '<button type="button" id="note_preview" class="btn btn-secondary-outline icondh" style="border:0">',
+          '<em class="fa fa-eye" title="Show Request URL"></em>',
+          '</button>'
+        ].join('');
+
         $(shar.id).css({
           padding: 0
         }).html('<div id="' + vid + '"></div>');
 
+        content = lemon.dec(content);
         mirror.highlights({
           input: content,
-          inputIsEncode: true,
           mode: lang,
           theme: theme,
-          outputEl: '#' + vid
+          outputEl: '#' + vid,
+          rightTip: rightTip,
+          doneHandle: function () {
+            $('#note_preview').click(function () {
+              lemon.preview(content);
+            });
+          }
         });
 
         return false;

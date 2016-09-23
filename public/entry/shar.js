@@ -85,7 +85,7 @@ var shar = {
           doneHandle: function () {
             $('#' + bid).click(function () {
               lemon.preview(content);
-            });
+            }).attr('title', 'Left Click To View Plain Text, Right Click To View With Format');
             lemon.rightclick('#' + bid, function () {
               lemon.preview('<pre>' + content + '</pre>');
             });

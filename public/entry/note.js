@@ -1448,9 +1448,6 @@ var note = {
       }
     });
 
-    //TODO remove
-    global.note = note;
-    global.mirror = mirror;
   }
 };
 

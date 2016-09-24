@@ -194,8 +194,77 @@ var noteMirror = function (elId, options, events) {
   return aMirror;
 };
 
+var helper = function (target) {
+  var tools = {
+    target: target
+  };
+
+  return tools;
+};
+
+var mergeMirror = function (options) {
+  options = lemon.extend({
+    elId: '',
+    mergedval: '',
+    panes: 2,
+    orig1: '',
+    orig2: '',
+    connect: null,
+    mode: '',
+    lineNumbers: true,
+    revertButtons: true,
+    showDifferences: true,
+    highlightDifferences: true,
+    collapseIdentical: false,
+    allowEditingOriginals: false,
+    height: $(window).height() - 65,
+    top: 54
+  }, options || {});
+
+  var mv = CodeMirror.MergeView(lemon.query(options.elId), {
+    value: options.mergedval,
+    origLeft: options.panes == 3 ? options.orig1 : null,
+    orig: options.orig2,
+    lineNumbers: options.lineNumbers,
+    mode: options.mode,
+    revertButtons: options.revertButtons,
+    showDifferences: options.showDifferences,
+    highlightDifferences: options.highlightDifferences,
+    connect: options.connect,
+    collapseIdentical: options.collapseIdentical,
+    allowEditingOriginals: options.allowEditingOriginals
+  });
+
+  var me, ml, mr;
+  if (me = mv.editor()) {
+    me.setSize(null, options.height);
+  }
+  if (ml = mv.leftOriginal()) {
+    ml.setSize(null, options.height);
+  }
+  if (mr = mv.rightOriginal()) {
+    mr.setSize(null, options.height);
+  }
+
+  $(mv.wrap).css({
+    top: options.top,
+    border: 'none'
+  }).find('.CodeMirror-merge-gap').css({
+    height: options.height,
+    'border-color': '#d9edf7',
+    'background-color': '#ffffff'
+  });
+  $(mv.wrap).find('.CodeMirror-gutters').css({
+    border: 'none',
+    'background-color': '#ffffff'
+  });
+
+  return helper(mv);
+};
+
 
 lemon.extend(noteMirror, {
+  merge: mergeMirror,
   mirrors: mirror,
   defineEx: defineEx
 });

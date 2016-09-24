@@ -26,6 +26,10 @@ var merge = {
       merge.snapload();
     }
 
+    merge.instance = mirror.merge({
+      elId: '#merge_view'
+    });
+
     lemon.subMsg(function (data) {
       // lemon.info(data, 'Merge received msg');
       if (data && data.event) {
@@ -46,5 +50,8 @@ var merge = {
     });
   }
 };
+
+//TODO remove
+global.merge = merge;
 
 $(function () { merge.initialize(); });

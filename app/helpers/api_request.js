@@ -894,7 +894,7 @@ module.exports = function(commOptions) {
             //defined interface property
             var hasOtherParams = false;
             if (servRequ.interf_prop && servRequ.interf_prop.length > 0) {
-              if (target.requ[servRequ.interf_prop] && target.requ[servRequ.param_name]) {
+              if (_.has(target.requ, servRequ.interf_prop) && _.has(target.requ, servRequ.param_name)) {
 
               } else {
                 hasOtherParams = true;
@@ -903,7 +903,7 @@ module.exports = function(commOptions) {
 
             var complex = hasOtherParams ? servRequ.param_name : '';
             if (hasOtherParams) {
-              target.requ = target.requ[servRequ.param_name];
+              target.requ = _.get(target.requ, servRequ.param_name);
             }
 
             //choose & editor match

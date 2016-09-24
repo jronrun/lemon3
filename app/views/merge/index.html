@@ -1,0 +1,21 @@
+{{#content "head" mode="append"}}
+    <script src="/dist/merge.js"></script>
+{{/content}}
+
+<ul class="nav nav-tabs" style="display: none;" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="tri-merge-tab1" data-toggle="tab" data-target="#merge-tab1" href="#merge-tab1" role="tab"></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="tri-merge-tab2" data-toggle="tab" data-target="#merge-tab2" href="#merge-tab2" role="tab"></a>
+    </li>
+</ul>
+<div class="tab-content" id="merge-layout">
+    <div class="tab-pane active" id="merge-tab1" role="tabpanel">
+
+    </div>
+    <div class="tab-pane" id="merge-tab2" role="tabpanel"></div>
+</div>
+
+{{> tmpl/sharing_tmpl}}
+{{> tmpl/merge_tmpl}}

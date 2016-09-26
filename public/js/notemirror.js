@@ -195,8 +195,16 @@ var noteMirror = function (elId, options, events) {
 };
 
 var helper = function (target) {
+  var is2Panels = 2 == target.extras.panels,
+    vLeft = is2Panels ? mirror.helpers(target.editor()) : mirror.helpers(target.leftOriginal()),
+    vMiddle = is2Panels ? null : mirror.helpers(target.editor()),
+    vRight = mirror.helpers(target.rightOriginal());
+
   var tools = {
     target: target,
+    left: vLeft,
+    middle: vMiddle,
+    right: vRight,
 
     tglOption: function (optionKey) {
       tools.attrs(optionKey, !tools.attrs(optionKey));
@@ -231,35 +239,67 @@ var helper = function (target) {
       return aVal;
     },
 
+    alignTgl: function () {
+
+    },
+    collapseTgl: function () {
+
+    },
     differencesTgl: function (manual) {
       var val = lemon.isUndefined(manual) ? !tools.attrs('highlightDifferences') : manual;
       target.setShowDifferences(val);
       return !tools.attrs('highlightDifferences', val);
     },
+    refresh: function (options) {
+      var prevAttrs = tools.attrs(), newOptions = target.extras,
+        pnum = newOptions.panels, is2Panels = 2 == pnum;
+      lemon.extend(newOptions, prevAttrs, options = options || {});
 
-    panelsTgl: function() {
-      var orig1 = '', orig2 = target.rightOriginal().getValue(), value = target.editor().getValue(),
-        prevAttrs = tools.attrs(), newOptions = prevAttrs.extras;
+      var viewVals = {};
+      if (!lemon.has(options, 'orig1')) {
+        viewVals.left = is2Panels ? target.editor().getValue() : target.leftOriginal().getValue();
+      }
 
-      switch (newOptions.panes) {
-        case 2:
-          orig1 = value;
-          newOptions.panes = 3;
-          break;
-        case 3:
-          orig1 = target.leftOriginal().getValue();
-          newOptions.panes = 2;
-          break;
+      if (!lemon.has(options, 'orig2')) {
+        viewVals.right = target.rightOriginal().getValue();
+      }
+
+      if (!lemon.has(options, 'value')) {
+        viewVals.middle = target.editor().getValue();
       }
 
       $(newOptions.elId).empty();
-      lemon.extend(newOptions, {
-        orig1: orig1,
-        orig2: orig2,
-        value: value
+      var inst = mergeMirror(newOptions), vcm = null;
+      lemon.each(viewVals, function (val, view) {
+        if (null != (vcm = inst[view])) {
+          vcm.val(val);
+        }
       });
 
-      return mergeMirror(newOptions);
+      return inst;
+    },
+
+    panelsTgl: function() {
+      var orig1 = '', orig2 = target.rightOriginal().getValue(),
+        value = target.editor().getValue(), pnum = null;
+
+      switch (target.extras.panels) {
+        case 2:
+          orig1 = value;
+          pnum = 3;
+          break;
+        case 3:
+          orig1 = target.leftOriginal().getValue();
+          pnum = 2;
+          break;
+      }
+
+      return tools.refresh({
+        orig1: orig1,
+        orig2: orig2,
+        value: value,
+        panels: pnum
+      });
     },
   };
 
@@ -276,16 +316,19 @@ var helper = function (target) {
  * @param options
  */
 var mergeMirror = function (options) {
+  lemon.info(options);
+
   options = lemon.extend({
     elId: '',
     top: 54,
     height: $(window).height() - 65,
-    panes: 2,
+    panels: 2,
 
     orig1: '',
     orig2: '',
 
     value: '',
+
     connect: null,
     mode: '',
     lineNumbers: true,
@@ -304,7 +347,7 @@ var mergeMirror = function (options) {
 
   var mv = CodeMirror.MergeView(lemon.query(options.elId), {
     value: options.value,
-    origLeft: options.panes == 3 ? options.orig1 : null,
+    origLeft: options.panels == 3 ? options.orig1 : null,
     orig: options.orig2,
     lineNumbers: options.lineNumbers,
     mode: aMode,
@@ -340,11 +383,11 @@ var mergeMirror = function (options) {
     'background-color': '#ffffff'
   });
 
-  mv.options.extras = {
+  mv.extras = {
     elId: options.elId,
     top: options.top,
     height: options.height,
-    panes: options.panes
+    panels: options.panels
   };
 
   return helper(mv);

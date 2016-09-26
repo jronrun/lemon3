@@ -231,6 +231,12 @@ var helper = function (target) {
       return aVal;
     },
 
+    differencesTgl: function (manual) {
+      var val = lemon.isUndefined(manual) ? !tools.attrs('highlightDifferences') : manual;
+      target.setShowDifferences(val);
+      return !tools.attrs('highlightDifferences', val);
+    },
+
     panelsTgl: function() {
       var orig1 = '', orig2 = target.rightOriginal().getValue(), value = target.editor().getValue(),
         prevAttrs = tools.attrs(), newOptions = prevAttrs.extras;

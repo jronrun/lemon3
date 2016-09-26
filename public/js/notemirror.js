@@ -196,19 +196,90 @@ var noteMirror = function (elId, options, events) {
 
 var helper = function (target) {
   var tools = {
-    target: target
+    target: target,
+
+    tglOption: function (optionKey) {
+      tools.attrs(optionKey, !tools.attrs(optionKey));
+      return tools.attrs(optionKey);
+    },
+    attrs: function (optionKey, optionVal) {
+      if (lemon.isJson(optionKey)) {
+        lemon.each(optionKey, function (v, k) {
+          target.options[k] = v;
+        });
+        return optionKey;
+      }
+
+      if (lemon.isUndefined(optionKey)) {
+        return target.options;
+      }
+
+      if (lemon.isArray(optionKey)) {
+        var rAttr = {};
+        lemon.each(optionKey, function (okey) {
+          rAttr[okey] = target.options[okey];
+        });
+        return rAttr;
+      }
+
+      var aVal = target.options[optionKey];
+      if (lemon.isUndefined(optionVal)) {
+        return aVal;
+      }
+
+      target.options[optionKey] = optionVal;
+      return aVal;
+    },
+
+    panelsTgl: function() {
+      var orig1 = '', orig2 = target.rightOriginal().getValue(), value = target.editor().getValue(),
+        prevAttrs = tools.attrs(), newOptions = prevAttrs.extras;
+
+      switch (newOptions.panes) {
+        case 2:
+          orig1 = value;
+          newOptions.panes = 3;
+          break;
+        case 3:
+          orig1 = target.leftOriginal().getValue();
+          newOptions.panes = 2;
+          break;
+      }
+
+      $(newOptions.elId).empty();
+      lemon.extend(newOptions, {
+        orig1: orig1,
+        orig2: orig2,
+        value: value
+      });
+
+      return mergeMirror(newOptions);
+    },
   };
 
   return tools;
 };
 
+/**
+ *
+ * panels 3:
+ * orig1  value  orig2
+ *
+ * panels 2:
+ * value  orig2
+ * @param options
+ */
 var mergeMirror = function (options) {
   options = lemon.extend({
     elId: '',
-    mergedval: '',
+    top: 54,
+    height: $(window).height() - 65,
     panes: 2,
+
     orig1: '',
     orig2: '',
+
+    value: '',
     connect: null,
     mode: '',
     lineNumbers: true,
@@ -216,17 +287,21 @@ var mergeMirror = function (options) {
     showDifferences: true,
     highlightDifferences: true,
     collapseIdentical: false,
-    allowEditingOriginals: false,
-    height: $(window).height() - 65,
-    top: 54
+    allowEditingOriginals: true
   }, options || {});
 
+  var aMode = null, minfo = null; if (aMode = options.mode) {
+    if (!lemon.isBlank(minfo = mirror.modeInfo(aMode))) {
+      aMode = minfo.mode;
+    }
+  }
+
   var mv = CodeMirror.MergeView(lemon.query(options.elId), {
-    value: options.mergedval,
+    value: options.value,
     origLeft: options.panes == 3 ? options.orig1 : null,
     orig: options.orig2,
     lineNumbers: options.lineNumbers,
-    mode: options.mode,
+    mode: aMode,
     revertButtons: options.revertButtons,
     showDifferences: options.showDifferences,
     highlightDifferences: options.highlightDifferences,
@@ -258,6 +333,13 @@ var mergeMirror = function (options) {
     border: 'none',
     'background-color': '#ffffff'
   });
+
+  mv.options.extras = {
+    elId: options.elId,
+    top: options.top,
+    height: options.height,
+    panes: options.panes
+  };
 
   return helper(mv);
 };

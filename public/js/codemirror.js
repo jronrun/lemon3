@@ -250,7 +250,8 @@ var helper = function(cm, events) {
       }, tipOptions || {}));
     },
     tglOption: function (optionKey) {
-      return tools.attrs(optionKey, !tools.attrs(optionKey));
+      tools.attrs(optionKey, !tools.attrs(optionKey));
+      return tools.attrs(optionKey);
     },
     wordwrap: function() {
       return tools.tglOption('lineWrapping');
@@ -569,6 +570,8 @@ mirror.highlights = function(options) {
   });
 };
 
+mirror.helpers = helper;
+mirror.modeInfo = langInfo;
 mirror.requireTheme = loadTheme;
 mirror.requireMode = function (mode, callback) {
   var lang = langInfo(mode), reqM = function (aMode) {

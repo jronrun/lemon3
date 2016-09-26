@@ -1,2 +1,31 @@
-<script type="text/html" id="_tmpl">
+<script type="text/html" id="merge_nav_tmpl">
+    <ul class="nav nav-pills" id="merge_nav_bar">
+        <% lemon.each(menus, function(menu) { %>
+            <% if ('dropdown' == menu.type) { %>
+            <li class="nav-item dropdown" id="<%= menu.id %>">
+                <a class="nav-link" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false"><%= menu.ddName %></a>
+                <div class="dropdown-menu boxshadow" style="border: none;" id="<%= menu.id %>_dd">
+                    <% if (['menu_dd_note','menu_dd_theme','menu_dd_mode'].indexOf(menu.id) == -1) { %>
+                        <% lemon.each(menu.items, function(item) { %>
+                            <% if ('separator' == item.name) { %>
+                                <div class="dropdown-divider"></div>
+                            <% } else if ('empty' == item.name) { %>
+                                <div><%= lemon.repeat('&nbsp;', item.repeat) %></div>
+                            <% } else if ('none' == item.name) { %>
+                            <% } else { %>
+                                <a class="dropdown-item" href="javascript:void(0);" data-menuact="<%= item.action %>" data-params="<%= item.params %>" title="<%= item.title %>"><%= item.text %></a>
+                            <% } %>
+                        <% }); %>
+                    <% } %>
+                </div>
+            </li>
+            <% } else if ('link' == menu.type) { %>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0);" data-menuact="<%= menu.item.action %>" data-params="<%= menu.item.params %>" title="<%= menu.item.title %>"><%= menu.item.text %></a>
+            </li>
+            <% } %>
+        <% }); %>
+    </ul>
+    <form class="form-inline pull-right">
+    </form>
 </script>

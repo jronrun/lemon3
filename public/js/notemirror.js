@@ -239,12 +239,6 @@ var helper = function (target) {
       return aVal;
     },
 
-    alignTgl: function () {
-
-    },
-    collapseTgl: function () {
-
-    },
     differencesTgl: function (manual) {
       var val = lemon.isUndefined(manual) ? !tools.attrs('highlightDifferences') : manual;
       target.setShowDifferences(val);
@@ -279,6 +273,17 @@ var helper = function (target) {
       return inst;
     },
 
+    alignTgl: function () {
+      return tools.refresh({
+        connect: tools.attrs('connect') ? null : 'align'
+      });
+    },
+    collapseTgl: function () {
+      tools.tglOption('collapseIdentical');
+      return tools.refresh({
+        collapseIdentical: !tools.attrs('collapseIdentical')
+      });
+    },
     panelsTgl: function() {
       var orig1 = '', orig2 = target.rightOriginal().getValue(),
         value = target.editor().getValue(), pnum = null;

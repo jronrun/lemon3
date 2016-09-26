@@ -114,8 +114,7 @@ var merge = {
 
     merge.nav.intl();
     merge.instance = mirror.merge({
-      elId: '#merge_view',
-      panels: 3
+      elId: '#merge_view'
     });
 
     lemon.subMsg(function (data) {

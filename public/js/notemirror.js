@@ -238,7 +238,12 @@ var helper = function (target) {
       target.options[optionKey] = optionVal;
       return aVal;
     },
-
+    next: function () {
+      CodeMirror.commands.goNextDiff(tools.left.target);
+    },
+    prev: function () {
+      CodeMirror.commands.goPrevDiff(tools.left.target);
+    },
     differencesTgl: function (manual) {
       var val = lemon.isUndefined(manual) ? !tools.attrs('highlightDifferences') : manual;
       target.setShowDifferences(val);

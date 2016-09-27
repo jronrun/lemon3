@@ -86,7 +86,10 @@ var merge = {
             merge.nav.item('separator'),
             merge.nav.item('empty', 80)
           ]
-        }
+        },
+
+        { type: 'action', item: merge.nav.item('<em class="fa fa-arrow-down"></em>', false, false, 'Go Next Diff', 'next') },
+        { type: 'action', item: merge.nav.item('<em class="fa fa-arrow-up"></em>', false, false, 'Go Previous Diff', 'prev') }
       ];
     },
 

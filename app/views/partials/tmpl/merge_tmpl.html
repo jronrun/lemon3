@@ -20,9 +20,16 @@
                 </div>
             </li>
             <% } else if ('link' == menu.type) { %>
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);" data-menuact="<%= menu.item.action %>" data-params="<%= menu.item.params %>" title="<%= menu.item.title %>"><%= menu.item.text %></a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" data-menuact="<%= menu.item.action %>" data-params="<%= menu.item.params %>" title="<%= menu.item.title %>"><%= menu.item.text %></a>
+                </li>
+            <% } else if ('action' == menu.type) { %>
+                <li class="nav-item">
+                    <a type="button" class="btn btn-info-outline icondh" style="border:none;padding-left: 0.5rem; padding-right: 0.5rem;"
+                       href="javascript:void (0);" data-menuact="<%= menu.item.action %>" data-params="<%= menu.item.params %>" title="<%= menu.item.title %>">
+                        <%= menu.item.text %>
+                    </a>
+                </li>
             <% } %>
         <% }); %>
     </ul>

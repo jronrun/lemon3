@@ -100,17 +100,17 @@ var merge = {
   // type 1 new instance, 2 panelsTgl, 3 collapseTgl, 4 alignTgl, 5 refresh,
   //      6 allowEditOrigTgl, 7 revertButtonsTgl, 8 lineNumbersTgl, 9 differencesTgl
   refresh: function (type) {
-    var inst = null;
+    var inst = null, minst = merge.instance;
     switch (type = type || 1) {
       case 1: inst = mirror.merge({ elId: '#merge_view'}); break;
-      case 2: inst = merge.instance.panelsTgl(); break;
-      case 3: inst = merge.instance.collapseTgl(); break;
-      case 4: inst = merge.instance.alignTgl(); break;
-      case 5: inst = merge.instance.refresh(); break;
-      case 6: inst = merge.instance.allowEditOrigTgl(); break;
-      case 7: inst = merge.instance.revertButtonsTgl(); break;
-      case 8: inst = merge.instance.lineNumbersTgl(); break;
-      case 9: inst = merge.instance.differencesTgl(); break;
+      case 2: inst = minst.panelsTgl(); break;
+      case 3: inst = minst.collapseTgl(); break;
+      case 4: inst = minst.alignTgl(); break;
+      case 5: inst = minst.refresh(); break;
+      case 6: inst = minst.allowEditOrigTgl(); break;
+      case 7: inst = minst.revertButtonsTgl(); break;
+      case 8: inst = minst.lineNumbersTgl(); break;
+      case 9: inst = minst.differencesTgl(); break;
     }
 
     return merge.instance = inst;

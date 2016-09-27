@@ -121,7 +121,14 @@ var merge = {
     refresh: function (type) {
       var inst = null, minst = merge.instance;
       switch (type = type || 1) {
-        case 1: inst = mirror.merge({ elId: '#merge_view'}); break;
+        case 1:
+          var navH = $(merge.nav.id).height(), height = $(window).height() - navH, top = navH + 14;
+          inst = mirror.merge({
+            top: top,
+            height: height,
+            elId: '#merge_view'
+          });
+          break;
         case 2: inst = minst.panelsTgl(); break;
         case 3: inst = minst.collapseTgl(); break;
         case 4: inst = minst.alignTgl(); break;

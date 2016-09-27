@@ -325,6 +325,13 @@ var helper = function(cm, events) {
       }
       lemon.isFunc(events.fullscreen) && events.fullscreen(isFullscreen);
     },
+    readonlyTgl: function (isNocursor) {
+      if (!isNocursor) {
+        return tools.tglOption('readOnly');
+      } else {
+        return tools.attrs('readOnly', 'nocursor');
+      }
+    },
     format: function () {
       var cursor = cm.getCursor();
       cm.setValue(lemon.fmtjson(cm.getValue()));

@@ -67,7 +67,7 @@ var merge = {
             mni_item('separator'),
             mni_item('Save As...', false, false, 'Save As...', 'saveAs'),
             mni_item('Save Note', false, false, 'Save Note or Create an New Note Directly', 'saveNote'),
-            mni_item('Save As Note...', false, false, 'Save As an New Note...', 'saveAsNote'),
+            mni_item('Save As New Note...', false, false, 'Save As an New Note...', 'saveAsNote'),
             mni_item('empty', 60)
           ]
         },

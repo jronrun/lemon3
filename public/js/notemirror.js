@@ -242,7 +242,8 @@ var helper = function (target) {
     differencesTgl: function (manual) {
       var val = lemon.isUndefined(manual) ? !tools.attrs('highlightDifferences') : manual;
       target.setShowDifferences(val);
-      return !tools.attrs('highlightDifferences', val);
+      tools.attrs('highlightDifferences', val);
+      return tools;
     },
     refresh: function (options) {
       options = options || {};

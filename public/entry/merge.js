@@ -76,6 +76,10 @@ var merge = {
             mni_item('separator'),
             tgl_item('Collapse', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
             tgl_item('Panels', 'Toggle Two or Three Panels', 'refresh', 2),
+            tgl_item('Align', 'Toggle Pad Changed Sections to Align Them', 'refresh', 4),
+            tgl_item('Edit Originals', 'Toggle Allow Editing Originals', 'refresh', 6),
+            tgl_item('Line Numbers', 'Toggle Line Numbers', 'refresh', 8),
+            tgl_item('Highlight Differences', 'Toggle Highlight Differences', 'refresh', 9),
             mni_item('separator'),
             mni_item('empty', 50)
           ]
@@ -84,7 +88,11 @@ var merge = {
         act_item('chevron-down', 'Go Next Diff', 'next'),
         act_item('chevron-up', 'Go Previous Diff', 'prev'),
         act_item('compress', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
-        act_item('sliders', 'Toggle Panels', 'refresh', 2)
+        act_item('sliders', 'Toggle Two or Three Panels', 'refresh', 2),
+        act_item('assistive-listening-systems', 'Toggle Pad Changed Sections to Align Them', 'refresh', 4),
+        act_item('list-ol', 'Toggle Line Numbers', 'refresh', 8),
+        act_item('lightbulb-o', 'Toggle Highlight Differences', 'refresh', 9),
+        act_item('unlock-alt', 'Toggle Allow Editing Originals', 'refresh', 6)
       ];
     },
 

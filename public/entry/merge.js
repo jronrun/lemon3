@@ -62,7 +62,7 @@ var merge = {
           ddName: 'File',
           id: 'menu_dd_file',
           items: [
-            mni_item('empty', 50)
+            mni_item('empty', 60)
           ]
         },
 
@@ -81,7 +81,7 @@ var merge = {
             tgl_item('Line Numbers', 'Toggle Line Numbers', 'refresh', 8),
             tgl_item('Highlight Differences', 'Toggle Highlight Differences', 'refresh', 9),
             mni_item('separator'),
-            mni_item('empty', 50)
+            mni_item('empty', 60)
           ]
         },
 

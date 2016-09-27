@@ -46,12 +46,12 @@ var merge = {
       };
     },
     source: function () {
-      var mni = merge.nav.item, tgl = function(name, title, action, params) {
-        return mni(name, '<em class="fa fa-toggle-on"></em>', false, title, action, params);
-      }, act = function (icon, title, action, params) {
+      var mni_item = merge.nav.item, tgl_item = function(name, title, action, params) {
+        return mni_item(name, '<em class="fa fa-toggle-on"></em>', false, title, action, params);
+      }, act_item = function (icon, title, action, params) {
         return {
           type: 'action',
-          item: mni('<em class="fa fa-' + icon + '"></em>', false, false, title, action, params)
+          item: mni_item('<em class="fa fa-' + icon + '"></em>', false, false, title, action, params)
         };
       };
 
@@ -62,7 +62,7 @@ var merge = {
           ddName: 'File',
           id: 'menu_dd_file',
           items: [
-            mni('empty', 50)
+            mni_item('empty', 50)
           ]
         },
 
@@ -71,20 +71,20 @@ var merge = {
           ddName: 'Edit',
           id: 'menu_dd_edit',
           items: [
-            mni('Next Diff', false, false, 'Go Next Diff', 'next'),
-            mni('Prev Diff', false, false, 'Go Previous Diff', 'prev'),
-            mni('separator'),
-            tgl('Collapse', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
-            tgl('Panels', 'Toggle Two or Three Panels', 'refresh', 2),
-            mni('separator'),
-            mni('empty', 50)
+            mni_item('Next Diff', false, false, 'Go Next Diff', 'next'),
+            mni_item('Prev Diff', false, false, 'Go Previous Diff', 'prev'),
+            mni_item('separator'),
+            tgl_item('Collapse', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
+            tgl_item('Panels', 'Toggle Two or Three Panels', 'refresh', 2),
+            mni_item('separator'),
+            mni_item('empty', 50)
           ]
         },
 
-        act('chevron-down', 'Go Next Diff', 'next'),
-        act('chevron-up', 'Go Previous Diff', 'prev'),
-        act('compress', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
-        act('sliders', 'Toggle Panels', 'refresh', 2)
+        act_item('chevron-down', 'Go Next Diff', 'next'),
+        act_item('chevron-up', 'Go Previous Diff', 'prev'),
+        act_item('compress', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
+        act_item('sliders', 'Toggle Panels', 'refresh', 2)
       ];
     },
 

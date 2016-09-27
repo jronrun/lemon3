@@ -720,6 +720,8 @@ var note = {
     source: function () {
       var help_item = function (name, topic) {
         return note.menu.item(name, '', '', name, 'help', { topic: topic });
+      }, tgl_item = function(name, desc, title, action, params) {
+        return note.menu.item(name, '<em class="fa fa-toggle-on"></em>', desc, title, action, params);
       };
 
       return [
@@ -738,7 +740,7 @@ var note = {
             note.menu.item('Close Note', ':q', 'visual & edit', 'Close Note', 'closeNote', false, true),
             note.menu.item('Share Note', ':share', 'visual & edit', 'Share Note', 'shareNote'),
             note.menu.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
-            note.menu.item('Fullscreen', 'Ctrl-L', 'visual & edit', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
+            tgl_item('Fullscreen', 'Ctrl-L', 'Toggle Fullscreen (Ctrl-L)', 'fullscreenTgl'),
             note.menu.item('separator'),
             note.menu.item('Note Info', ':info', 'visual & edit', 'Note Info', 'noteInfo'),
             note.menu.item('Save Note', ':w', 'visual & edit', 'Save Note (:w)', 'saveNote'),
@@ -762,10 +764,10 @@ var note = {
             note.menu.item('separator'),
             note.menu.item('Content Assist', 'Ctrl-J', 'visual & edit', 'Content Assist', 'autocomplete'),
             note.menu.item('Word Wrap', ':wrap', 'visual & edit', 'Word Wrap (:wrapword)', 'wrapword'),
-            note.menu.item('Toggle Comment', 'Ctrl-/', 'visual & edit', 'Toggle Comment', 'toggleComment'),
+            tgl_item('Toggle Comment', 'Ctrl-/', 'Toggle Comment (Ctrl-/)', 'toggleComment'),
             note.menu.item('Fold All', ':folda', 'visual & edit', 'Fold All (:foldall)', 'foldAll'),
             note.menu.item('Unfold All', ':unfoldall', 'visual & edit', 'Unfold All (:unfolda)', 'unfoldAll'),
-            note.menu.item('Toggle Fold', 'Ctrl-Q', 'visual & edit', 'Toggle Fold', 'toggleFold'),
+            tgl_item('Toggle Fold', 'Ctrl-Q', 'Toggle Fold (Ctrl-Q)', 'toggleFold'),
             note.menu.item('Matching Tag', 'Ctrl-K', 'visual & edit', 'To Matching Tag', 'toMatchingTag'),
             note.menu.item('separator'),
             note.menu.item('Select All', 'Ctrl-A', 'visual & edit', 'Select All', 'selectAll'),

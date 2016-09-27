@@ -46,6 +46,15 @@ var merge = {
       };
     },
     source: function () {
+      var mni = merge.nav.item, tgl = function(name, title, action, params) {
+        return mni(name, '<em class="fa fa-toggle-on"></em>', false, title, action, params);
+      }, act = function (icon, title, action, params) {
+        return {
+          type: 'action',
+          item: mni('<em class="fa fa-' + icon + '"></em>', false, false, title, action, params)
+        };
+      };
+
       return [
         /* { type: 'link', item: merge.nav.item('New', false, false, 'New Note (:new)', 'newNote') } */
         {
@@ -53,23 +62,7 @@ var merge = {
           ddName: 'File',
           id: 'menu_dd_file',
           items: [
-            merge.nav.item('New', ':n', 'visual & edit', 'New Note (:new)', 'newNote'),
-            merge.nav.item('Save & New', ':wn', 'visual & edit', 'Save & New Note (:wnew)', 'saveAndNewNote'),
-            merge.nav.item('As New', ':asn', 'visual & edit', 'Current As New Note (:asnew)', 'curAsNewNote'),
-            merge.nav.item('Open File...', ':o', 'visual & edit', 'Open File (:open)', 'openFile'),
-            merge.nav.item('separator'),
-            merge.nav.item('Close Menu', ':menu', 'visual & edit', 'Close Menu', 'menuTgl'),
-            merge.nav.item('Close Note', ':q', 'visual & edit', 'Close Note', 'closeNote', false, true),
-            merge.nav.item('Share Note', ':share', 'visual & edit', 'Share Note', 'shareNote'),
-            merge.nav.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
-            merge.nav.item('Fullscreen', 'Ctrl-L', 'visual & edit', 'Toggle Fullscreen (:fullscreen)', 'fullscreenTgl'),
-            merge.nav.item('separator'),
-            merge.nav.item('Note Info', ':info', 'visual & edit', 'Note Info', 'noteInfo'),
-            merge.nav.item('Save Note', ':w', 'visual & edit', 'Save Note (:w)', 'saveNote'),
-            merge.nav.item('Save Note With...', ':ww', 'visual & edit', 'Save Note With Custom (:ww)', 'saveNoteCust'),
-            merge.nav.item('Save & Close Note', ':wq', 'visual & edit', 'Save & Close Note', 'saveAndCloseNote', false, true),
-            merge.nav.item('Save As...', ':sa', 'visual & edit', 'Save Note As...', 'saveNoteAs'),
-            merge.nav.item('empty', 80)
+            mni('empty', 50)
           ]
         },
 
@@ -78,18 +71,20 @@ var merge = {
           ddName: 'Edit',
           id: 'menu_dd_edit',
           items: [
-            merge.nav.item('Undo', 'u', 'visual & edit', 'Undo (:undo)', 'undo'),
-            merge.nav.item('Redo', 'Ctrl-R', 'visual & edit', 'Redo (:redo)', 'redo'),
-            merge.nav.item('separator'),
-            merge.nav.item('Edit Mode', 'i', 'visual', 'Edit Mode', 'editMode'),
-            merge.nav.item('Visual Mode', 'Esc', 'edit', 'Visual Mode', 'visualMode'),
-            merge.nav.item('separator'),
-            merge.nav.item('empty', 80)
+            mni('Next Diff', false, false, 'Go Next Diff', 'next'),
+            mni('Prev Diff', false, false, 'Go Previous Diff', 'prev'),
+            mni('separator'),
+            tgl('Collapse', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
+            tgl('Panels', 'Toggle Two or Three Panels', 'refresh', 2),
+            mni('separator'),
+            mni('empty', 50)
           ]
         },
 
-        { type: 'action', item: merge.nav.item('<em class="fa fa-arrow-down"></em>', false, false, 'Go Next Diff', 'next') },
-        { type: 'action', item: merge.nav.item('<em class="fa fa-arrow-up"></em>', false, false, 'Go Previous Diff', 'prev') }
+        act('chevron-down', 'Go Next Diff', 'next'),
+        act('chevron-up', 'Go Previous Diff', 'prev'),
+        act('compress', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
+        act('sliders', 'Toggle Panels', 'refresh', 2)
       ];
     },
 

@@ -239,6 +239,14 @@ var helper = function (target) {
       return aVal;
     },
 
+    lockOriginalsTgl: function () {
+      return tools.tglOption('allowEditingOriginals');
+    },
+
+    lineNumbersTgl: function () {
+      return tools.tglOption('lineNumbers');
+    },
+
     differencesTgl: function (manual) {
       var val = lemon.isUndefined(manual) ? !tools.attrs('highlightDifferences') : manual;
       target.setShowDifferences(val);

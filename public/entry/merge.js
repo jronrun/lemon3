@@ -97,6 +97,20 @@ var merge = {
     }
   },
 
+  // type 1 new instance, 2 panelsTgl, 3 collapseTgl, 4 alignTgl, 5 refresh
+  operate: function (type) {
+    var inst = null;
+    switch (type = type || 1) {
+      case 1: inst = mirror.merge({ elId: '#merge_view'}); break;
+      case 2: inst = merge.instance.panelsTgl(); break;
+      case 3: inst = merge.instance.collapseTgl(); break;
+      case 4: inst = merge.instance.alignTgl(); break;
+      case 5: inst = merge.instance.refresh(); break;
+    }
+
+    return merge.instance = inst;
+  },
+
   snapshoot: function () {
 
   },
@@ -113,9 +127,7 @@ var merge = {
     }
 
     merge.nav.intl();
-    merge.instance = mirror.merge({
-      elId: '#merge_view'
-    });
+    merge.operate();
 
     lemon.subMsg(function (data) {
       // lemon.info(data, 'Merge received msg');

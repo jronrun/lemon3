@@ -194,11 +194,24 @@ var noteMirror = function (elId, options, events) {
   return aMirror;
 };
 
-var helper = function (target) {
+function mirrorWrap(target, events) {
+  var wrapped = mirror.helpers(target, events);
+
+  wrapped.mapkey({
+    "Esc": function (cm) {
+      wrapped.fullscreenTgl();
+    }
+  });
+
+  return wrapped;
+}
+
+var helper = function (target, events) {
   var is2Panels = 2 == target.extras.panels,
-    vLeft = is2Panels ? mirror.helpers(target.editor()) : mirror.helpers(target.leftOriginal()),
-    vMiddle = is2Panels ? null : mirror.helpers(target.editor()),
-    vRight = mirror.helpers(target.rightOriginal());
+    vLeft = is2Panels ? mirrorWrap(target.editor(), events) : mirrorWrap(target.leftOriginal(), events),
+    vMiddle = is2Panels ? null : mirrorWrap(target.editor(), events),
+    //vRight = mirrorWrap(target.rightOriginal(), events)
+    vRight = mirror.helpers(target.rightOriginal(), events);
 
   var tools = {
     target: target,
@@ -274,7 +287,7 @@ var helper = function (target) {
       lemon.extend(newOptions, prevAttrs, options);
 
       $(newOptions.elId).empty();
-      var inst = mergeMirror(newOptions), vcm = null;
+      var inst = mergeMirror(newOptions, events), vcm = null;
       lemon.each(viewVals, function (val, view) {
         if (null != (vcm = inst[view])) {
           vcm.val(val);
@@ -365,7 +378,7 @@ var helper = function (target) {
  * value  orig2
  * @param options
  */
-var mergeMirror = function (options) {
+var mergeMirror = function (options, events) {
   lemon.info(options);
 
   options = lemon.extend({
@@ -440,7 +453,7 @@ var mergeMirror = function (options) {
     panels: options.panels
   };
 
-  return helper(mv);
+  return helper(mv, events);
 };
 
 

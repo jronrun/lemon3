@@ -145,11 +145,15 @@ var merge = {
       var inst = null, minst = merge.instance;
       switch (type = type || 1) {
         case 1:
-          var navH = $(merge.nav.id).height(), height = $(window).height() - navH, top = navH + 14;
+          var navH = $(merge.nav.id).height(), height = $(window).height() - navH - 25, top = navH + 14;
           inst = mirror.merge({
             top: top,
             height: height,
             elId: '#merge_view'
+          }, {
+            fullscreen: function(isFullscreen) {
+              $(merge.nav.id).toggle(!isFullscreen);
+            }
           });
           break;
         case 2: inst = minst.panelsTgl(); break;

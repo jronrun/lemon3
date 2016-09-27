@@ -260,7 +260,7 @@ var helper = function(cm, events) {
       return cm.doc;
     },
     mapkey: function (keymap) {
-      cm.setOption("extraKeys", lemon.extend(cm.getOption('extraKeys'), keymap || {}));
+      cm.setOption("extraKeys", lemon.extend(cm.getOption('extraKeys') || {}, keymap || {}));
     },
     toLastLine: function () {
       //cm.scrollIntoView({line: cm.lastLine()})

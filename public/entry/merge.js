@@ -94,29 +94,43 @@ var merge = {
     },
 
     intl: function () {
+      lemon.live('click', 'a[data-menuact]', function (evt, el) {
+        evt.preventDefault();
+        var anEl = 'A' == el.tagName ? el : $(el).parent(),
+          act = lemon.data(anEl, 'menuact'), menuHandle = null;
+
+        if (lemon.isFunc(menuHandle = merge.action[act])) {
+          menuHandle(lemon.data(anEl, 'params'), evt, el);
+        } else if (lemon.isFunc(menuHandle = merge.instance[act])) {
+          menuHandle();
+        }
+      });
+
       lemon.tmpls('#merge_nav_tmpl', {
         menus: merge.nav.source()
       }, merge.nav.id);
     }
   },
 
-  // type 1 new instance, 2 panelsTgl, 3 collapseTgl, 4 alignTgl, 5 refresh,
-  //      6 allowEditOrigTgl, 7 revertButtonsTgl, 8 lineNumbersTgl, 9 differencesTgl
-  refresh: function (type) {
-    var inst = null, minst = merge.instance;
-    switch (type = type || 1) {
-      case 1: inst = mirror.merge({ elId: '#merge_view'}); break;
-      case 2: inst = minst.panelsTgl(); break;
-      case 3: inst = minst.collapseTgl(); break;
-      case 4: inst = minst.alignTgl(); break;
-      case 5: inst = minst.refresh(); break;
-      case 6: inst = minst.allowEditOrigTgl(); break;
-      case 7: inst = minst.revertButtonsTgl(); break;
-      case 8: inst = minst.lineNumbersTgl(); break;
-      case 9: inst = minst.differencesTgl(); break;
-    }
+  action: {
+    // type 1 new instance, 2 panelsTgl, 3 collapseTgl, 4 alignTgl, 5 refresh,
+    //      6 allowEditOrigTgl, 7 revertButtonsTgl, 8 lineNumbersTgl, 9 differencesTgl
+    refresh: function (type) {
+      var inst = null, minst = merge.instance;
+      switch (type = type || 1) {
+        case 1: inst = mirror.merge({ elId: '#merge_view'}); break;
+        case 2: inst = minst.panelsTgl(); break;
+        case 3: inst = minst.collapseTgl(); break;
+        case 4: inst = minst.alignTgl(); break;
+        case 5: inst = minst.refresh(); break;
+        case 6: inst = minst.allowEditOrigTgl(); break;
+        case 7: inst = minst.revertButtonsTgl(); break;
+        case 8: inst = minst.lineNumbersTgl(); break;
+        case 9: inst = minst.differencesTgl(); break;
+      }
 
-    return merge.instance = inst;
+      return merge.instance = inst;
+    },
   },
 
   snapshoot: function () {
@@ -135,7 +149,7 @@ var merge = {
     }
 
     merge.nav.intl();
-    merge.refresh();
+    merge.action.refresh();
 
     lemon.subMsg(function (data) {
       // lemon.info(data, 'Merge received msg');

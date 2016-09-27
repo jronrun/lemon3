@@ -245,22 +245,8 @@ var helper = function (target) {
       return !tools.attrs('highlightDifferences', val);
     },
     refresh: function (options) {
-      var prevAttrs = tools.attrs(), newOptions = target.extras,
-        pnum = newOptions.panels, is2Panels = 2 == pnum;
+      var prevAttrs = tools.attrs(), newOptions = target.extras, viewVals = tools.viewVals(options);
       lemon.extend(newOptions, prevAttrs, options = options || {});
-
-      var viewVals = {};
-      if (!lemon.has(options, 'orig1')) {
-        viewVals.left = is2Panels ? target.editor().getValue() : target.leftOriginal().getValue();
-      }
-
-      if (!lemon.has(options, 'orig2')) {
-        viewVals.right = target.rightOriginal().getValue();
-      }
-
-      if (!lemon.has(options, 'value')) {
-        viewVals.middle = target.editor().getValue();
-      }
 
       $(newOptions.elId).empty();
       var inst = mergeMirror(newOptions), vcm = null;
@@ -273,6 +259,25 @@ var helper = function (target) {
       return inst;
     },
 
+    viewVals: function (options) {
+      var viewVals = {}, is2Panels = 2 == target.extras.panels;
+      options = options || {};
+      if (!lemon.has(options, 'orig1')) {
+        viewVals.left = is2Panels ? target.editor().getValue() : target.leftOriginal().getValue();
+      }
+
+      if (!lemon.has(options, 'orig2')) {
+        viewVals.right = target.rightOriginal().getValue();
+      }
+
+      if (!lemon.has(options, 'value')) {
+        viewVals.middle = target.editor().getValue();
+      }
+
+      viewVals.is2Panels = is2Panels;
+      return viewVals;
+    },
+
     alignTgl: function () {
       return tools.refresh({
         connect: tools.attrs('connect') ? null : 'align'
@@ -280,8 +285,11 @@ var helper = function (target) {
     },
     collapseTgl: function () {
       tools.tglOption('collapseIdentical');
+      var vs = tools.viewVals();
       return tools.refresh({
-        collapseIdentical: !tools.attrs('collapseIdentical')
+        orig1: vs.left,
+        value: vs.middle,
+        orig2: vs.right
       });
     },
     panelsTgl: function() {

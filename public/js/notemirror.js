@@ -245,8 +245,27 @@ var helper = function (target) {
       return !tools.attrs('highlightDifferences', val);
     },
     refresh: function (options) {
-      var prevAttrs = tools.attrs(), newOptions = target.extras, viewVals = tools.viewVals(options);
-      lemon.extend(newOptions, prevAttrs, options = options || {});
+      options = options || {};
+      var prevAttrs = tools.attrs(), newOptions = target.extras,
+        isCollapseIdentical = lemon.has(prevAttrs, 'collapseIdentical') && true === prevAttrs.collapseIdentical;
+
+      if (isCollapseIdentical) {
+        var vs = tools.viewVals();
+        if (!lemon.has(options, 'orig1')) {
+          lemon.extend(options, { orig1: vs.left});
+        }
+
+        if (!lemon.has(options, 'orig2')) {
+          lemon.extend(options, { orig2: vs.right});
+        }
+
+        if (!lemon.has(options, 'value')) {
+          lemon.extend(options, { value: vs.middle});
+        }
+      }
+
+      var viewVals = tools.viewVals(options);
+      lemon.extend(newOptions, prevAttrs, options);
 
       $(newOptions.elId).empty();
       var inst = mergeMirror(newOptions), vcm = null;

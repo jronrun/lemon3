@@ -294,14 +294,24 @@ var helper = function (target, events) {
         }
       });
 
-      lemon.each(['left', 'middle', 'right'], function (n) {
-        var cminst = null; if (null != (cminst = inst[n])) {
-          cminst.theme(th);
-          cminst.mode(modeInfo.mime, modeInfo.chosenMimeOrExt || '');
-        }
+      inst.actions(function (anInst) {
+        anInst.theme(th);
+        anInst.mode(modeInfo.mime, modeInfo.chosenMimeOrExt || '');
       });
 
       return inst;
+    },
+
+    /**
+     * Same action to each mirror instance
+     * @param doFunc    function(inst) {}
+     */
+    actions: function (doFunc) {
+      lemon.each(['left', 'middle', 'right'], function (n) {
+        var anInst = null; if (null != (anInst = tools[n])) {
+          lemon.isFunc(doFunc) && doFunc(anInst);
+        }
+      });
     },
 
     viewVals: function (options) {

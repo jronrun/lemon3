@@ -130,19 +130,15 @@ var merge = {
 
   theme: {
     change: function (aTheme) {
-      lemon.each(['left', 'middle', 'right'], function (n) {
-        var inst = null; if (null != (inst = merge.instance[n])) {
-          inst.theme(aTheme);
-        }
+      merge.instance.actions(function (anInst) {
+        anInst.theme(aTheme);
       });
     }
   },
   lang: {
     change: function (aLang, langInfo) {
-      lemon.each(['left', 'middle', 'right'], function (n) {
-        var inst = null; if (null != (inst = merge.instance[n])) {
-          inst.mode(aLang, langInfo || '');
-        }
+      merge.instance.actions(function (anInst) {
+        anInst.mode(aLang, langInfo || '');
       });
     }
   },

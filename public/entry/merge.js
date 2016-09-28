@@ -306,16 +306,17 @@ var merge = {
 
     // type 1 new instance, 2 panelsTgl, 3 collapseTgl, 4 alignTgl, 5 refresh,
     //      6 allowEditOrigTgl, 7 revertButtonsTgl, 8 lineNumbersTgl, 9 differencesTgl
-    refresh: function (type) {
+    refresh: function (type, options) {
       var inst = null, minst = merge.instance;
       switch (type = type || 1) {
         case 1:
-          var navH = $(merge.nav.id).height(), height = $(window).height() - navH - 25, top = navH + 14;
-          inst = mirror.merge({
+          var elId = '#merge_view', navH = $(merge.nav.id).height(),
+            height = $(window).height() - navH - 25, top = navH + 14; $(elId).empty();
+
+          merge.instance = mirror.merge(lemon.extend({ elId: elId}, options || {}, {
             top: top,
-            height: height,
-            elId: '#merge_view'
-          }, {
+            height: height
+          }), {
             fullscreen: function(isFullscreen) {
               $(merge.nav.id).toggle(!isFullscreen);
             }
@@ -331,28 +332,70 @@ var merge = {
         case 9: inst = minst.differencesTgl(); break;
       }
 
-      return merge.instance = inst;
+      if (1 != type) {
+        merge.instance = inst;
+      }
+
+      return merge.instance;
     },
   },
 
   snapshoot: function () {
+    var inst = merge.instance, m = inst.left.mode(), th = inst.left.theme(), snapdata = {
+      info: {
+        mime: m.chosenMimeOrExt || m.mime,
+        theme: th
+      }
+    };
 
+    var vals = inst.viewVals();
+    if (vals.is2Panels) {
+      delete vals.middle;
+    }
+
+    lemon.extend(snapdata, {
+      vals: vals,
+      merge: lemon.extend({}, inst.attrs(), inst.target.extras)
+    });
+
+    lemon.each(['elId', 'top', 'height', 'orig', 'origLeft', 'value'], function (prop) {
+      delete snapdata.merge[prop];
+    });
+
+    return snapdata;
   },
-  snapload: function () {
+  snapload: function (snapdata) {
+    snapdata = snapdata ? lemon.deepDec(snapdata) : lemon.persist('merge_snapshoot');
+    var info = null, mi = null, vals = null;
+    if (mi = snapdata.merge) {
+      merge.action.refresh(1, mi);
+    }
 
+    if (vals = snapdata.vals) {
+      merge.instance.left.val(vals.left);
+      merge.instance.right.val(vals.right);
+      if (!vals.is2Panels) {
+        merge.instance.middle.val(vals.middle);
+      }
+    }
+
+    if (info = snapdata.info) {
+      merge.theme.change(info.theme);
+      merge.lang.change(info.mime, info.mime);
+    }
   },
   initialize: function () {
     if (lemon.isMediumUpView()) {
       lemon.console();
     }
 
-    if (lemon.isRootWin()) {
-      merge.snapload();
-    }
-
     merge.nav.intl();
     merge.action.refresh();
     merge.render.intl();
+
+    if (lemon.isRootWin()) {
+      merge.snapload();
+    }
 
     lemon.subMsg(function (data) {
       // lemon.info(data, 'Merge received msg');

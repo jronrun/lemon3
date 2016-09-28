@@ -151,6 +151,8 @@ function loadTheme(th) {
   return th;
 }
 
+var customEvts = [ 'fullscreen' ];
+
 var helper = function(cm, events) {
   events = events || {};
   var tools = {
@@ -379,6 +381,21 @@ var helper = function(cm, events) {
     }
   };
 
+  events = lemon.extend({
+    inputRead: function(cm, changeObj) {
+      if (tools.isJson()) {
+        tools.format();
+      }
+    }
+  }, events);
+
+  lemon.each(events, function (v, k) {
+    //CodeMirror event
+    if (customEvts.indexOf(k) == -1 && lemon.isFunc(v)) {
+      cm.on(k, v);
+    }
+  });
+
   /* [
       "selectAll", "singleSelection", "killLine", "deleteLine", "delLineLeft", "delWrappedLineLeft", "delWrappedLineRight",
       "undo", "redo", "undoSelection", "redoSelection", "goDocStart", "goDocEnd", "goLineStart", "goLineStartSmart",
@@ -417,9 +434,7 @@ var helper = function(cm, events) {
  * @see http://codemirror.net/doc/manual.html#events
  */
 var mirror = function (elId, options, events) {
-  options = options || {}, events = events || {}, customEvts = [
-    'fullscreen'
-  ];
+  options = options || {}, events = events || {};
 
   var custOptions = lemon.extend({
     escKey: true
@@ -456,21 +471,6 @@ var mirror = function (elId, options, events) {
   );
 
   var aHelp = helper(rich, events);
-
-  events = lemon.extend({
-    inputRead: function(cm, changeObj) {
-      if (aHelp.isJson()) {
-        aHelp.format();
-      }
-    }
-  }, events);
-
-  lemon.each(events, function (v, k) {
-    //CodeMirror event
-    if (customEvts.indexOf(k) == -1 && lemon.isFunc(v)) {
-      rich.on(k, v);
-    }
-  });
 
   if (custOptions.escKey) {
     aHelp.mapkey({

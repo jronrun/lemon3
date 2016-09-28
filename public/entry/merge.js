@@ -313,10 +313,11 @@ var merge = {
           var elId = '#merge_view', navH = $(merge.nav.id).height(),
             height = $(window).height() - navH - 25, top = navH + 14; $(elId).empty();
 
-          merge.instance = mirror.merge(lemon.extend({ elId: elId}, options || {}, {
+          merge.instance = mirror.merge(lemon.extend({
+            elId: elId,
             top: top,
             height: height
-          }), {
+          }, options || {}), {
             fullscreen: function(isFullscreen) {
               $(merge.nav.id).toggle(!isFullscreen);
             }

@@ -91,6 +91,12 @@ var merge = {
           ]
         },
 
+        {
+          type: 'dropdown',
+          ddName: 'Language',
+          id: 'menu_dd_mode'
+        },
+
         act_item('chevron-down', 'Go Next Diff', 'next'),
         act_item('chevron-up', 'Go Previous Diff', 'prev'),
         act_item('compress', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
@@ -118,9 +124,171 @@ var merge = {
       lemon.tmpls('#merge_nav_tmpl', {
         menus: merge.nav.source()
       }, merge.nav.id);
+
     }
   },
 
+  theme: {
+    change: function (aTheme) {
+      lemon.each(['left', 'middle', 'right'], function (n) {
+        var inst = null; if (null != (inst = merge.instance[n])) {
+          inst.theme(aTheme);
+        }
+      });
+    }
+  },
+  lang: {
+    change: function (aLang, langInfo) {
+      lemon.each(['left', 'middle', 'right'], function (n) {
+        var inst = null; if (null != (inst = merge.instance[n])) {
+          inst.mode(aLang, langInfo || '');
+        }
+      });
+    }
+  },
+
+  render: {
+    intl: function () {
+      merge.render.lang();
+      merge.theme.change('lemon');
+
+      var langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';
+
+      lemon.rightclick(langSel, function (evt) {
+        evt.stopPropagation();
+        var el = evt.currentTarget, lang = lemon.data(el, 'lang');
+        merge.lang.change(lang.name);
+      });
+
+      lemon.live('click', langSel, function (evt) {
+        if (merge.langInfoSel) {
+          merge.langInfoSel = false;
+          return;
+        }
+        var el = evt.currentTarget, lang = lemon.data(el, 'lang');
+        merge.lang.change(lang.name);
+        merge.render.lang();
+      });
+
+      lemon.rightclick(langInfoSel, function (evt) {
+        evt.stopPropagation();
+        var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
+          lang = mirror.mirrors.modeInfo(langInfo);
+        merge.lang.change(lang.name, langInfo);
+      });
+
+      lemon.live('click', langInfoSel, function (evt) {
+        merge.langInfoSel = true;
+        var el = evt.currentTarget, langInfo = lemon.data(el, 'langInfo'),
+          lang = mirror.mirrors.modeInfo(langInfo);
+        merge.lang.change(lang.name, langInfo);
+        merge.render.lang();
+      });
+
+
+      lemon.live('keyup', '#note_mode_qry', function(evt) {
+        var val = $(evt.currentTarget).val(), blastSel = '#menu_dd_mode_dd';
+        if (lemon.isBlank(val)) {
+          lemon.blastReset(blastSel);
+          $(langSel).show();
+          return;
+        }
+
+        var ids = [], regEx = new RegExp(val), ismatch = false;
+        lemon.each(mirror.mirrors.languages, function(lang, idx) {
+          ismatch = false;
+          if (ismatch = regEx.test(lang.name)) {
+          } else if (ismatch = regEx.test(lang.mode)) {
+          } else if (ismatch = regEx.test(lang.mime)) {
+          }
+
+          if (!ismatch) {
+            lemon.each(lang.mimes || [], function(mime, idx) {
+              if (ismatch) { return false; }
+              if (ismatch = regEx.test(mime)) { }
+            });
+          }
+
+          if (!ismatch) {
+            lemon.each(lang.ext || [], function(ext, idx) {
+              if (ismatch) { return false; }
+              if (ismatch = regEx.test(ext)) { }
+            });
+          }
+
+          if (!ismatch) {
+            lemon.each(lang.alias || [], function(alias, idx) {
+              if (ismatch) { return false; }
+              if (ismatch = regEx.test(alias)) { }
+            });
+          }
+
+          if (!ismatch && lang.file) {
+            ismatch = lang.file.test(val);
+          }
+
+          if (ismatch) {
+            ids.push('#lang_' + lang.id);
+          }
+        });
+
+        $(langSel).hide();
+        $(ids.join(',')).show();
+
+        lemon.blast(val, blastSel);
+      });
+
+      lemon.dropdownEvent('li[id^="menu_dd_"]', {
+        show: function (ddEl, ddBody) {
+          $(ddBody).hide();
+        },
+        shown: function (ddEl, ddBody) {
+          var viewport = lemon.viewport(), ddBodyW = $(ddBody).width();
+
+          if (viewport.smallDown) {
+            var ddElOffset = $(ddEl).offset(), offsetW = -ddElOffset.left;
+
+            if (viewport.w < ddBodyW) {
+              ddBodyW = viewport.w - 10;
+              offsetW = offsetW + 5;
+            } else {
+              offsetW = offsetW + ((viewport.w - ddBodyW) / 2);
+            }
+
+            $(ddBody).css({
+              left: offsetW,
+              width: ddBodyW,
+              'max-width': ddBodyW,
+
+              // height: viewport.h * 0.85,
+              'max-height': viewport.h * 0.85,
+              'overflow-y': 'scroll'
+            });
+
+          } else {
+            $(ddBody).css({
+              //width: viewport.w * 0.25,
+              // height: viewport.h * 0.8,
+              'max-width': ddBodyW,
+              'max-height': viewport.h * 0.8,
+              'overflow-y': 'scroll'
+            });
+          }
+
+          $(ddBody).slideDown();
+        },
+        hidden: function (tri, body) {
+
+        }
+      });
+    },
+    lang: function () {
+      $('#menu_dd_mode_dd').empty().append(lemon.tmpl($('#menu_lang_tmpl').html(), {
+        langs: mirror.mirrors.languages,
+        thislang: merge.instance.left.mode()
+      }));
+    }
+  },
   action: {
     loadLeft: function () {
 
@@ -187,6 +355,7 @@ var merge = {
 
     merge.nav.intl();
     merge.action.refresh();
+    merge.render.intl();
 
     lemon.subMsg(function (data) {
       // lemon.info(data, 'Merge received msg');

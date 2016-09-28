@@ -5,7 +5,7 @@
             <li class="nav-item dropdown" id="<%= menu.id %>">
                 <a class="nav-link" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false"><%= menu.ddName %></a>
                 <div class="dropdown-menu boxshadow" style="border: none;" id="<%= menu.id %>_dd">
-                    <% if (['menu_dd_note','menu_dd_theme','menu_dd_mode'].indexOf(menu.id) == -1) { %>
+                    <% if (['menu_dd_theme','menu_dd_mode'].indexOf(menu.id) == -1) { %>
                         <% lemon.each(menu.items, function(item) { %>
                             <% if ('separator' == item.name) { %>
                                 <div class="dropdown-divider"></div>
@@ -35,4 +35,62 @@
     </ul>
     <form class="form-inline pull-right">
     </form>
+</script>
+
+<script type="text/html" id="menu_lang_tmpl">
+    <p style="text-align: center;"><small class="text-silver">Right Click to Preview, Click to Choose</small></p>
+    <div class="form-group form-group-lg" style="margin-top:15px;">
+        <div class="col-sm-12">
+            <input class="form-control borderinfo" type="text" id="note_mode_qry" placeholder="Search Language...">
+        </div>
+    </div>
+    <% lemon.each(langs, function(lang, langname) { %>
+    <div class="dropdown-item" id="lang_<%= lang.id %>" data-lang="<%= lemon.enc(lang) %>">
+        <div class="card borderinfo">
+            <div class="card-block">
+                <h5 class="card-title">
+                    <% if (langname == thislang.name) { %>
+                    <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                    <span class="text-danger"><%= langname %></span>
+                    <% } else { %>
+                    <span class="text-success"><%= langname %></span>
+                    <% } %>
+                </h5>
+
+                <% if ('null' != lang.mime || (lang.mimes && lang.mimes.length > 0)) { %>
+                <p class="card-text text-silver">Defined MIME Type
+                    <% } %>
+                    <% if (lang.mimes && lang.mimes.length > 0) { lemon.each(lang.mimes, function(mime, i2) { %>
+                    <br/>
+                    <% if (thislang.chosenMimeOrExt == mime) { %>
+                    <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                    <% } %>
+                    <small class="text-muted"><a href="javascript:void(0);" data-lang-info="<%= lemon.enc(mime) %>"><%= mime %></a> </small>
+                    <% }); } else if ('null' != lang.mime) { %>
+                    <br/>
+                    <% if (thislang.chosenMimeOrExt == lang.mime) { %>
+                    <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                    <% } %>
+                    <small class="text-muted"><a href="javascript:void(0);" data-lang-info="<%= lemon.enc(lang.mime) %>"><%= lang.mime %></a></small>
+                    <% } %>
+                    <% if ('null' != lang.mime || (lang.mimes && lang.mimes.length > 0)) { %>
+                </p>
+                <% } %>
+
+                <% if (lang.ext && lang.ext.length > 0) {  %>
+                <p class="card-text text-silver">Extension
+                    <% lemon.each(lang.ext, function(ext, idx) { %>
+                    <br/>
+                    <% if (thislang.chosenMimeOrExt == ext) { %>
+                    <span class="text-danger icondh"> <em class="fa fa-check"></em> </span>
+                    <% } %>
+                    <small class="text-muted"><a href="javascript:void(0);" data-lang-info="<%= lemon.enc(ext) %>"><%= ext %></a></small>
+                    <% }); %>
+                </p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <% }); %>
+    <div><%= lemon.repeat('&nbsp;', 80) %></div>
 </script>

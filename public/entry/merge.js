@@ -145,9 +145,9 @@ var merge = {
 
   render: {
     intl: function () {
-      merge.render.lang();
       merge.lang.change('text');
       merge.theme.change('lemon');
+      merge.render.lang();
 
       var langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';
 
@@ -382,6 +382,7 @@ var merge = {
     if (info = snapdata.info) {
       merge.theme.change(info.theme);
       merge.lang.change(info.mime, info.mime);
+      merge.render.lang();
     }
   },
   initialize: function () {

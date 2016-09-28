@@ -386,8 +386,6 @@ var helper = function (target, events) {
  * @param options
  */
 var mergeMirror = function (options, events) {
-  lemon.info(options);
-
   options = lemon.extend({
     elId: '',
     top: 54,

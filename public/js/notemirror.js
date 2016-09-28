@@ -265,7 +265,7 @@ var helper = function (target, events) {
     },
     refresh: function (options) {
       options = options || {};
-      var prevAttrs = tools.attrs(), newOptions = target.extras,
+      var prevAttrs = tools.attrs(), newOptions = target.extras, th = tools.left.theme(), modeInfo = tools.left.mode(),
         isCollapseIdentical = lemon.has(prevAttrs, 'collapseIdentical') && true === prevAttrs.collapseIdentical;
 
       if (isCollapseIdentical) {
@@ -291,6 +291,13 @@ var helper = function (target, events) {
       lemon.each(viewVals, function (val, view) {
         if (null != (vcm = inst[view])) {
           vcm.val(val);
+        }
+      });
+
+      lemon.each(['left', 'middle', 'right'], function (n) {
+        var cminst = null; if (null != (cminst = inst[n])) {
+          cminst.theme(th);
+          cminst.mode(modeInfo.mime, modeInfo.chosenMimeOrExt || '');
         }
       });
 

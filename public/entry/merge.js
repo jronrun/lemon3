@@ -150,6 +150,7 @@ var merge = {
   render: {
     intl: function () {
       merge.render.lang();
+      merge.lang.change('text');
       merge.theme.change('lemon');
 
       var langSel = 'div[data-lang]', langInfoSel = 'a[data-lang-info]';

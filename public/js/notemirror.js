@@ -207,7 +207,7 @@ function mirrorWrap(target, events) {
 }
 
 var helper = function (target, events) {
-  var is2Panels = 2 == target.extras.panels,
+  var is2Panels = 2 == target.extras.panels, mergeEditors = ['left', 'middle', 'right'],
     vLeft = is2Panels ? mirrorWrap(target.editor(), events) : mirrorWrap(target.leftOriginal(), events),
     vMiddle = is2Panels ? null : mirrorWrap(target.editor(), events),
     //vRight = mirrorWrap(target.rightOriginal(), events)
@@ -289,7 +289,7 @@ var helper = function (target, events) {
       $(newOptions.elId).empty();
       var inst = mergeMirror(newOptions, events), vcm = null;
       lemon.each(viewVals, function (val, view) {
-        if (null != (vcm = inst[view])) {
+        if (mergeEditors.indexOf(view) != -1 && null != (vcm = inst[view])) {
           vcm.val(val);
         }
       });
@@ -302,12 +302,20 @@ var helper = function (target, events) {
       return inst;
     },
 
+    mergedView: function () {
+      return tools.is2Panels() ? tools.left : tools.middle;
+    },
+
+    is2Panels: function () {
+      return 2 == target.extras.panels;
+    },
+
     /**
      * Same action to each mirror instance
      * @param doFunc    function(inst) {}
      */
     actions: function (doFunc) {
-      lemon.each(['left', 'middle', 'right'], function (n) {
+      lemon.each(mergeEditors, function (n) {
         var anInst = null; if (null != (anInst = tools[n])) {
           lemon.isFunc(doFunc) && doFunc(anInst);
         }
@@ -315,7 +323,7 @@ var helper = function (target, events) {
     },
 
     viewVals: function (options) {
-      var viewVals = {}, is2Panels = 2 == target.extras.panels;
+      var viewVals = {}, is2Panels = tools.is2Panels();
       options = options || {};
       if (!lemon.has(options, 'orig1')) {
         viewVals.left = is2Panels ? target.editor().getValue() : target.leftOriginal().getValue();

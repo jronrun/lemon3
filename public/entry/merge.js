@@ -68,8 +68,7 @@ var merge = {
             mni_item('Share This', false, false, 'Share', 'share'),
             mni_item('separator'),
             mni_item('Save As...', false, false, 'Save As...', 'saveAs'),
-            mni_item('Save Note', false, false, 'Save Note or Create an New Note Directly', 'saveNote'),
-            mni_item('Save As New Note...', false, false, 'Save As an New Note...', 'saveAsNote'),
+            mni_item('Save As Note...', false, false, 'Save As an Note...', 'saveAsNote'),
             mni_item('empty', 60)
           ]
         },
@@ -127,6 +126,14 @@ var merge = {
         menus: merge.nav.source()
       }, merge.nav.id);
 
+      files.read('#load_left', function(context){
+        merge.instance.left.val('');
+        merge.instance.left.val(context);
+      });
+      files.read('#load_right', function(context){
+        merge.instance.right.val('');
+        merge.instance.right.val(context);
+      });
     }
   },
 
@@ -290,22 +297,21 @@ var merge = {
   },
   action: {
     loadLeft: function () {
-
+      $('#load_left').click();
     },
     loadRight: function () {
-
+      $('#load_right').click();
     },
     share: function () {
-
-    },
-    saveNote: function () {
 
     },
     saveAsNote: function () {
 
     },
     saveAs: function () {
-
+      var diff = merge.instance.mergedView(),
+        fname = (diff.target.getLine(0) || '').substr(0, 30) + '.note';
+      files.saveAs(diff.val(), fname);
     },
 
     // type 1 new instance, 2 panelsTgl, 3 collapseTgl, 4 alignTgl, 5 refresh,

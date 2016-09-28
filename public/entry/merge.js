@@ -62,8 +62,10 @@ var merge = {
           ddName: 'File',
           id: 'menu_dd_file',
           items: [
-            mni_item('Open Left...', false, false, 'Open File for Left...', 'loadLeft'),
-            mni_item('Open Right...', false, false, 'Open File for Right...', 'loadRight'),
+            mni_item('Load Left...', false, false, 'Open File for Left...', 'loadLeft'),
+            mni_item('Load Right...', false, false, 'Open File for Right...', 'loadRight'),
+            mni_item('separator'),
+            mni_item('Share This', false, false, 'Share', 'share'),
             mni_item('separator'),
             mni_item('Save As...', false, false, 'Save As...', 'saveAs'),
             mni_item('Save Note', false, false, 'Save Note or Create an New Note Directly', 'saveNote'),
@@ -293,7 +295,9 @@ var merge = {
     loadRight: function () {
 
     },
+    share: function () {
 
+    },
     saveNote: function () {
 
     },

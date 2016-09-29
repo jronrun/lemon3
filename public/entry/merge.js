@@ -306,7 +306,19 @@ var merge = {
 
     },
     saveAsNote: function () {
-
+      lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
+        var diff = merge.instance.mergedView(), m = diff.mode(), th = diff.theme();
+        view.tellEvent('SAVE_MERGED_TO_NOTE', {
+          th: th,
+          note: {
+            content: diff.val(),
+            language: {
+              name: m.name,
+              mime: m.chosenMimeOrExt || m.mime
+            }
+          }
+        });
+      });
     },
     saveAs: function () {
       var diff = merge.instance.mergedView(),

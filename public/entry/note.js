@@ -1442,6 +1442,11 @@ var note = {
               $(note.menu.triId).remove();
             }
             break;
+          case 'SAVE_MERGED_TO_NOTE':
+            note.load(note.make(evtData.note));
+            note.theme.change(evtData.th);
+            note.action.saveNoteCust();
+            break;
         }
       }
     });

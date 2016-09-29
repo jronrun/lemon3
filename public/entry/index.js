@@ -1135,6 +1135,16 @@ lemon.register({
 
     return lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions);
   },
+  /**
+   *
+   * @param text
+   * @param callback                function(view, previewM) {}  view: iframe instance, previewM: modal instance
+   * @param jsonOptions
+   * @param domReadyCallbackIfUrl   function(view, previewM) {}  view: iframe instance, previewM: modal instance
+   * @param modalOptions
+   * @param modalEvents
+   * @returns {*}
+   */
   preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents) {
     if (jsonOptions) {
       jsonOptions = lemon.extend({

@@ -571,6 +571,7 @@ lemon.register({
 
 var holdMsgId = {};
 //bootstrap
+
 lemon.register({
   iframes: function(target) {
     var iframe = null;
@@ -578,12 +579,51 @@ lemon.register({
       var selector = lemon.startWith(target, '#') ? target : ('iframe[name="' + target + '"]');
       if ($(selector).length) {
         iframe = $(selector)[0];
+      } else {
+        if (parent.$(selector).length) {
+          iframe = parent.$(selector)[0];
+        }
       }
     } else {
       iframe = target || window.frameElement;
     }
 
-    var meta = {
+    var ackCalls = function(eventId, ackCallback) {
+      var rootW = lemon.isRootWin() ? window : parent.window, varN = '__defineIframeACKer__';
+      rootW[varN] = rootW[varN] || {};
+      if (lemon.isUndefined(ackCallback)) {
+        return rootW[varN][eventId];
+      }
+
+      if (lemon.isNull(ackCallback)) {
+        delete rootW[varN][eventId];
+      } else {
+        rootW[varN][eventId] = ackCallback;
+      }
+    };
+
+    /**
+     *
+     * @param eventName
+     * @param type     1 tell, 2 reply, 3 ack
+     * @param data
+     * @param sendFunction
+     */
+    var eventOn = function(eventName, type, data, sendFunction, ackCallback, eventId) {
+      if (sendFunction && eventName && eventName.length > 0) {
+        eventId = eventId || (type + lemon.uniqueId() + '_' + lemon.now());
+        if (lemon.isFunc(ackCallback)) {
+          ackCalls(eventId, ackCallback);
+        }
+
+        sendFunction({
+          id: eventId,
+          event: eventName,
+          type: type,
+          data: data || {}
+        });
+      }
+    }, meta = {
       iframe: iframe,
       isAvailable: function() {
         return null != iframe;
@@ -668,19 +708,11 @@ lemon.register({
           meta.post(data, origin, target);
         } catch (e) { /**/ }
       },
-      event: function(eventName, data, sendFunction) {
-        if (sendFunction && eventName && eventName.length > 0) {
-          sendFunction({
-            event: eventName,
-            data: data || {}
-          });
-        }
+      tellEvent: function(eventName, data, ackCallback) {
+        eventOn(eventName, 1, data, meta.tell, ackCallback);
       },
-      tellEvent: function(eventName, data) {
-        meta.event(eventName, data, meta.tell);
-      },
-      replyEvent: function(eventName, data) {
-        meta.event(eventName, data, meta.reply);
+      replyEvent: function(eventName, data, ackCallback) {
+        eventOn(eventName, 2, data, meta.reply, ackCallback);
       },
       listen: function(callback, once, aListener) {
         if (aListener && aListener.postMessage) {
@@ -690,7 +722,30 @@ lemon.register({
               if (once) {
                 $(aListener).unbind('message', _cb);
               }
-              callback(lemon.deepDec(e.originalEvent.data), e);
+
+              var evtData = lemon.deepDec(e.originalEvent.data), ackFunc = ackCalls(evtData.id),
+              ackFuncAvail = lemon.isFunc(ackFunc), ackData = callback(evtData, e) || {};
+
+              if (3 == evtData.type) {
+                ackFuncAvail && ackFunc(ackData);
+                ackCalls(evtData.id, null);
+              } else if ([1, 2].indexOf(evtData.type) != -1) {
+                if (ackFuncAvail) {
+                  //1 tell, 2 reply
+                  switch (evtData.type) {
+                    case 1: ackFunc = meta.reply; break;
+                    case 2:
+                      ackFunc = function (data, origin) {
+                        var ackTell = lemon.iframes(evtData.iframe.id);
+                        if (ackTell.isAvailable()) {
+                          ackTell.tell(data, origin);
+                        }
+                      };
+                    break;
+                  }
+                  eventOn(evtData.event, 3, ackData, ackFunc, false, evtData.id);
+                }
+              }
             };
 
             $(aListener).bind('message', _cb);
@@ -1363,8 +1418,8 @@ function doTabHandle(e, type) {
 
 var aFrames = lemon.iframes();
 lemon.register({
-  pubEvent: function(eventName, data) {
-    aFrames.replyEvent(eventName, data);
+  pubEvent: function(eventName, data, callback) {
+    aFrames.replyEvent(eventName, data, callback);
   },
   pubMsg: function(data) {
     if (data && !lemon.isRootWin()) {

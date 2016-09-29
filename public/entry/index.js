@@ -723,13 +723,14 @@ lemon.register({
                 $(aListener).unbind('message', _cb);
               }
 
-              var evtData = lemon.deepDec(e.originalEvent.data), ackFunc = ackCalls(evtData.id),
-              ackFuncAvail = lemon.isFunc(ackFunc), ackData = callback(evtData, e) || {};
+              var evtData = lemon.deepDec(e.originalEvent.data),
+                ackFunc = ackCalls(evtData.id), ackFuncAvail = lemon.isFunc(ackFunc);
 
               if (3 == evtData.type) {
-                ackFuncAvail && ackFunc(ackData);
+                ackFuncAvail && ackFunc(evtData.data || {}, evtData);
                 ackCalls(evtData.id, null);
               } else if ([1, 2].indexOf(evtData.type) != -1) {
+                var ackData = callback(evtData, e) || {};
                 if (ackFuncAvail) {
                   //1 tell, 2 reply
                   switch (evtData.type) {

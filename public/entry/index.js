@@ -746,6 +746,8 @@ lemon.register({
                   }
                   eventOn(evtData.event, 3, ackData, ackFunc, false, evtData.id);
                 }
+              } else {
+                callback(evtData, e);
               }
             };
 

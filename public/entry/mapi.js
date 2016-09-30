@@ -345,6 +345,17 @@ var mapis = {
     return lemon.fullUrl(anURI);
   },
 
+  asShareData: function (inst, shared) {
+    return {
+      title: shared.title,
+      desc: shared.desc,
+      read_write: shared.read_write,
+      content: inst.snapdata,
+      from: shared.from,
+      userl: shared.userl
+    };
+  },
+
   loadsnap: function(mapiSnapdata, callback, shared) {
     if (lemon.isBlank(mapiSnapdata)) {
       return;
@@ -360,7 +371,7 @@ var mapis = {
     });
     insts.unshift(defaultInst);
 
-    var loadInst = function(inst) {
+    var isShareLoad = !lemon.isUndefined(shared), loadInst = function(inst) {
       if (!inst) {
         lemon.isFunc(callback) && callback();
         return;
@@ -371,12 +382,33 @@ var mapis = {
           mapis.instance.setDefault(instId);
         }
 
-        var anInst = mapis.instance.gets(instId);
-        if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE) || mapis.is(inst, TMERGE)) {
+        var anInst = mapis.instance.gets(instId), isInstAPI = mapis.is(inst, TAPI);
+        //api instance
+        if (isInstAPI) {
           anInst.view.tellEvent('SNAPLOAD', {
             id: anInst.view.getId(),
             snapdata: inst.snapdata
           });
+        } else {
+          //share load
+          if (isShareLoad) {
+            switch (mapis.type(inst)) {
+              case TNOTE:
+                anInst.view.tellEvent('SHARE_NOTE_SNAPSHOT', mapis.asShareData(inst, shared));
+                break;
+              case TMERGE:
+                anInst.view.tellEvent('SHARE_MERGE_SNAPSHOT', mapis.asShareData(inst, shared));
+                break;
+            }
+          } else {
+            //not TOTHER instance
+            if (!mapis.is(inst, TOTHER)) {
+              anInst.view.tellEvent('SNAPLOAD', {
+                id: anInst.view.getId(),
+                snapdata: inst.snapdata
+              });
+            }
+          }
         }
 
         if (!inst.iframe.isDefault) {
@@ -384,8 +416,8 @@ var mapis = {
           mapis.instance.active(instId);
         }
 
-        if (shared) {
-          if (mapis.is(inst, TAPI)) {
+        if (isShareLoad) {
+          if (isInstAPI) {
             var evtData = lemon.clone(shared);
             delete evtData.content;
             evtData.instanceId = inst.id;
@@ -396,7 +428,7 @@ var mapis = {
             });
           }
         } else {
-          if (mapis.is(inst, TAPI)) {
+          if (isInstAPI) {
             anInst.view.tellEvent('INST_RENDER');
           }
         }

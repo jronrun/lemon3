@@ -43,7 +43,7 @@ function getRespAPI(api, usr) {
 
 function parseExecutableAPICapture(apiCapture) {
   var parseR = { env: {}, group: {}, serv: {}, api: {} }, cur = null;
-  if (!(cur = apiCapture.cur)) {
+  if (!apiCapture || !(cur = apiCapture.cur)) {
     return parseR;
   }
 

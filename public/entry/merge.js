@@ -65,7 +65,7 @@ var merge = {
             mni_item('Load Left...', false, false, 'Open File for Left...', 'loadLeft'),
             mni_item('Load Right...', false, false, 'Open File for Right...', 'loadRight'),
             mni_item('separator'),
-            mni_item('Share This', false, false, 'Share', 'share'),
+            mni_item('Share This', false, false, 'Share', 'share', 1),
             mni_item('separator'),
             mni_item('Save As...', false, false, 'Save As...', 'saveAs'),
             mni_item('Save As Note...', false, false, 'Save As an Note...', 'saveAsNote'),
@@ -106,7 +106,8 @@ var merge = {
         act_item('assistive-listening-systems', 'Toggle Pad Changed Sections to Align Them', 'refresh', 4),
         act_item('list-ol', 'Toggle Line Numbers', 'refresh', 8),
         act_item('lightbulb-o', 'Toggle Highlight Differences', 'refresh', 9),
-        act_item('unlock-alt', 'Toggle Allow Editing Originals', 'refresh', 6)
+        act_item('unlock-alt', 'Toggle Allow Editing Originals', 'refresh', 6),
+        act_item('share-alt', 'Share', 'share', 2)
       ];
     },
 
@@ -297,7 +298,7 @@ var merge = {
     }
   },
   action: {
-    //0 self, 1 note
+    //0 self, 1 note, 2 share
     from: 0,
     loadLeft: function () {
       $('#load_left').click();
@@ -305,13 +306,41 @@ var merge = {
     loadRight: function () {
       $('#load_right').click();
     },
-    share: function () {
+    share: function (params) {
+      var shareData = null;
+      if (1 == params) {
+        shareData = {
+          title: 'Merge Snapshot',
+          type: 8,
+          content: merge.snapshoot()
+        };
 
+        sharing.createAndShow(shareData);
+      } else {
+        shareData = {
+          type: 8,
+          content: merge.snapshoot()
+        };
+
+        lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+          data: lemon.enc(shareData)
+        }));
+      }
     },
     saveAsNote: function () {
       var pg = lemon.homeProgress();
       switch (merge.action.from) {
-        case 0:
+        case 1:
+          lemon.pubEvent('SAVE_COMPARED_NOTE', {
+            note: {
+              content: merge.instance.mergedView().val()
+            }
+          }, function () {
+            pg.end();
+          });
+          break;
+
+        default:
           lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
             var diff = merge.instance.mergedView(), m = diff.mode(), th = diff.theme();
             view.tellEvent('SAVE_MERGED_TO_NOTE', {
@@ -328,15 +357,6 @@ var merge = {
             });
           });
           break;
-        case 1:
-          lemon.pubEvent('SAVE_COMPARED_NOTE', {
-            note: {
-              content: merge.instance.mergedView().val()
-            }
-          }, function () {
-            pg.end();
-          });
-          break;
       }
     },
     saveAs: function () {
@@ -351,8 +371,11 @@ var merge = {
       var inst = null, minst = merge.instance;
       switch (type = type || 1) {
         case 1:
-          var elId = '#merge_view', navH = $(merge.nav.id).height(),
-            height = $(window).height() - navH - 25, top = navH + 14; $(elId).empty();
+          var elId = '#merge_view', navH = 0, height = $(window).height() - 18, top = 10; $(elId).empty();
+
+          if ($(merge.nav.id).length) {
+            navH = $(merge.nav.id).height(); height = $(window).height() - navH - 25; top = navH + 14;
+          }
 
           merge.instance = mirror.merge(lemon.extend({
             elId: elId,
@@ -427,6 +450,17 @@ var merge = {
       merge.render.lang();
     }
   },
+
+  shareShow: function (shareData) {
+    $('#share_this').show({
+      complete: function() {
+        $('#share_this').click(function() {
+          sharing.createAndShow(shareData);
+        });
+      }
+    });
+  },
+
   initialize: function () {
     if (lemon.isMediumUpView()) {
       lemon.console();
@@ -448,6 +482,34 @@ var merge = {
           case 'COMPARE_NOTE':
             merge.action.from = 1;
             merge.snapload(evtData.mergeData);
+            break;
+          case 'SHARE_MERGE_SNAPSHOT':
+            merge.action.from = 2;
+            $('a[data-menuact="M4CwhgTgpkA"]').remove();
+
+            if (1 == evtData.preview) {
+              merge.shareShow({
+                title: 'Merge Snapshot',
+                type: 8,
+                content: evtData.content
+              });
+            }
+
+            if (1 == evtData.read_write) {
+              $(merge.nav.id).remove();
+              lemon.extend(evtData.content.merge, {
+                revertButtons: false,
+                allowEditingOriginals: false
+              });
+            }
+
+            merge.snapload(evtData.content);
+
+            if (1 == evtData.read_write) {
+              merge.instance.actions(function (anInst) {
+                anInst.readonlyTgl(true);
+              });
+            }
             break;
           case 'SNAPSHOOT':
             break;

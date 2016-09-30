@@ -26,6 +26,7 @@ var shar = {
         case 4: shar.note.render(ans.result); break;
         case 5: shar.note.snapshotRender(ans.result); break;
         case 7: shar.api.apisSnapshotRender(ans.result); break;
+        case 8: shar.merge.render(ans.result); break;
       }
     } else {
       lemon.warn(ans.msg);
@@ -97,6 +98,14 @@ var shar = {
       }
 
       return true;
+    }
+  },
+
+  merge: {
+    render: function (share) {
+      lemon.previews(lemon.fullUrl('/merge'), false, false, function(view) {
+        view.tellEvent('SHARE_MERGE_SNAPSHOT', share);
+      });
     }
   },
 

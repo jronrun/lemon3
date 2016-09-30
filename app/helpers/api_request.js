@@ -431,7 +431,7 @@ module.exports = function(commOptions) {
                 log.warn(accessAns.msg, 'ShareAccess.add');
               }
 
-              Share.addUseCount(shareId, function(adducAns) {
+              Share.addUseCount(requestOptions.share, function(adducAns) {
                 if (!isAnswerSucc(adducAns)) {
                   log.warn(adducAns.msg, 'Share.addUseCount');
                 }
@@ -769,7 +769,7 @@ module.exports = function(commOptions) {
 
             var apisCapture = null;
             _.each(apiscAns.get(), function (inst) {
-              if (inst.id.toString() == sourceData.sid.toString) {
+              if (inst.id.toString() == sourceData.sid.toString()) {
                 apisCapture = inst.snapdata;
                 return false;
               }

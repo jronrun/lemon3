@@ -449,6 +449,10 @@ var merge = {
       merge.lang.change(info.mime, info.mime);
       merge.render.lang();
     }
+
+    if (true === merge.instance.attrs('collapseIdentical')) {
+      merge.instance.refresh();
+    }
   },
 
   shareShow: function (shareData) {

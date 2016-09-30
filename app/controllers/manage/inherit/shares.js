@@ -235,7 +235,7 @@ module.exports = function (router, index, root) {
 
         forms.afterEl('share_to.scope', scopeDefine);
 
-        forms.remOption('type', [2, 5, 6, 7]);
+        forms.remOption('type', [2, 5, 6, 7, 8]);
       },
       resultHandle: function(item, def) {
         var now = moment().hours(0).minutes(0);

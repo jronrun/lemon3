@@ -4,14 +4,15 @@ var model = schema({
   id: { type: 'integer', required: true },
   title: { type: 'string', allowEmpty: false },
   desc: { type: 'string' },
-  type: { type: 'integer', enum: [1, 2, 3, 4, 5, 6, 7], required: true, const: {
+  type: { type: 'integer', enum: [1, 2, 3, 4, 5, 6, 7, 8], required: true, const: {
       1: 'API',
       2: 'API Capture',
       3: 'API History',
       4: 'Note',
       5: 'Note Capture',
       6: 'Blank Text',
-      7: 'APIs || Notes Capture'
+      7: 'APIs || Notes Capture',
+      8: 'Merge Capture'
     }
   },
   read_write: { type: 'integer', enum: [1, 2, 3], required: true, const: { 1: 'Readonly', 2: 'User Power', 3: 'Executable'} },

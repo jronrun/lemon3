@@ -239,6 +239,26 @@ var note = {
       note.instance.wordwrap();
     },
 
+    compareNote: function () {
+      note.views(lemon.fullUrl('/merge'), false, true, function (view, previewM) {
+        var cMode = note.instance.mode();
+        view.tellEvent('COMPARE_NOTE', {
+          mergeData: {
+            info: {
+              theme: note.instance.theme(),
+              mime: cMode.chosenMimeOrExt || cMode.mime
+            },
+            vals: {
+              right: note.instance.val()
+            },
+            merge: {
+              allowEditingOriginals: false
+            }
+          }
+        });
+      });
+    },
+
     helps: {
       vim: {
         link: 'http://vimdoc.sourceforge.net/htmldoc/'
@@ -553,7 +573,7 @@ var note = {
     current(aNote);
   },
 
-  views: function (text, hiddenCall, noneWrapJSON) {
+  views: function (text, hiddenCall, noneWrapJSON, domReadyCall) {
     var jsonOptions = false;
     if (!noneWrapJSON) {
       if (mirror.mirrors.isJson(text, true)) {
@@ -568,7 +588,7 @@ var note = {
     //lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents)
     return lemon.preview(text, function () {
       note.menu.whenModalShow();
-    }, jsonOptions, false, false, {
+    }, jsonOptions, domReadyCall, false, {
       hidden: function () {
         note.menu.whenModalHide();
         lemon.isFunc(hiddenCall) && hiddenCall();
@@ -686,6 +706,7 @@ var note = {
         }
       }, ex = mirror.defineEx;
 
+      ex('compare', function (args, cm) { na('compareNote', args, cm); }, 'Compare Note, Merge & Diff', 'comp');
       ex('foldall', function (args, cm) { na('foldAll', args, cm); }, 'Fold All', 'folda');
       ex('unfoldall', function (args, cm) { na('unfoldAll', args, cm); }, 'Unfold All', 'unfolda');
 
@@ -795,6 +816,7 @@ var note = {
           ddName: 'Theme',
           id: 'menu_dd_theme'
         },
+        { type: 'link', item: note.menu.item('Compare', false, false, 'Compare Note, Merge & Diff', 'compareNote') },
         {
           type: 'dropdown',
           ddName: 'Help',

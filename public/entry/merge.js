@@ -296,6 +296,8 @@ var merge = {
     }
   },
   action: {
+    //0 self, 1 note
+    from: 0,
     loadLeft: function () {
       $('#load_left').click();
     },
@@ -306,19 +308,26 @@ var merge = {
 
     },
     saveAsNote: function () {
-      lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
-        var diff = merge.instance.mergedView(), m = diff.mode(), th = diff.theme();
-        view.tellEvent('SAVE_MERGED_TO_NOTE', {
-          th: th,
-          note: {
-            content: diff.val(),
-            language: {
-              name: m.name,
-              mime: m.chosenMimeOrExt || m.mime
-            }
-          }
-        });
-      });
+      switch (merge.action.from) {
+        case 0:
+          lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
+            var diff = merge.instance.mergedView(), m = diff.mode(), th = diff.theme();
+            view.tellEvent('SAVE_MERGED_TO_NOTE', {
+              th: th,
+              note: {
+                content: diff.val(),
+                language: {
+                  name: m.name,
+                  mime: m.chosenMimeOrExt || m.mime
+                }
+              }
+            });
+          });
+          break;
+        case 1:
+          alert(1);
+          break;
+      }
     },
     saveAs: function () {
       var diff = merge.instance.mergedView(),
@@ -397,7 +406,7 @@ var merge = {
     if (vals = snapdata.vals) {
       merge.instance.left.val(vals.left);
       merge.instance.right.val(vals.right);
-      if (!vals.is2Panels) {
+      if (!vals.is2Panels && null != merge.instance.middle) {
         merge.instance.middle.val(vals.middle);
       }
     }
@@ -422,10 +431,14 @@ var merge = {
     }
 
     lemon.subMsg(function (data) {
-      // lemon.info(data, 'Merge received msg');
+      lemon.info(data, 'Merge received msg');
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {
+          case 'COMPARE_NOTE':
+            merge.action.from = 1;
+            merge.snapload(evtData.mergeData);
+            break;
           case 'SNAPSHOOT':
             break;
           case 'SNAPLOAD':

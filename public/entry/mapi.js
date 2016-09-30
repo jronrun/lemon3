@@ -1,7 +1,7 @@
 /**
  *
  */
-var sharing =  require('../js/sharing'), TAPI = 2, TNOTE = 3, TOTHER = 1;
+var sharing =  require('../js/sharing'), TOTHER = 1, TAPI = 2, TNOTE = 3, TMERGE = 4;
 
 function $$(selector, instanceId) {
   var aInstance = mapis.instance.gets(instanceId || mapis.instance.defaultId);
@@ -170,6 +170,9 @@ var mapis = {
                     case TNOTE:
                       vurl = lemon.fullUrl('/note');
                       break;
+                    case TMERGE:
+                      vurl = lemon.fullUrl('/merge');
+                      break;
                   }
 
                   $('#' + inputURLId).val(vurl);
@@ -336,6 +339,7 @@ var mapis = {
     switch (mapis.type()) {
       case TAPI: anURI = '/api'; break;
       case TNOTE: anURI = '/note'; break;
+      case TMERGE: anURI = '/merge'; break;
     }
 
     return lemon.fullUrl(anURI);
@@ -368,7 +372,7 @@ var mapis = {
         }
 
         var anInst = mapis.instance.gets(instId);
-        if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE)) {
+        if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE) || mapis.is(inst, TMERGE)) {
           anInst.view.tellEvent('SNAPLOAD', {
             id: anInst.view.getId(),
             snapdata: inst.snapdata
@@ -406,7 +410,7 @@ var mapis = {
   },
   snapshoot: function() {
     lemon.each(mapis.instances, function (inst) {
-      if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE)) {
+      if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE) || mapis.is(inst, TMERGE)) {
         inst.view.tellEvent('SNAPSHOOT', {
           id: inst.instanceId,
           tabName: inst.name,
@@ -445,7 +449,11 @@ var mapis = {
       return TAPI;
     } else if ((lo + '/note') == href || (lo + '/notes') == href) {
       return TNOTE;
-    } else {
+    } else if ((lo + '/merge') == href || (lo + '/merges') == href) {
+      return TMERGE;
+    }
+
+    else {
       return TOTHER;
     }
   },
@@ -459,6 +467,8 @@ var mapis = {
       switch (mapis.type()) {
         case TAPI: return lemon.href('/api');
         case TNOTE: return lemon.href('/note');
+        case TMERGE: return lemon.href('/merge');
+
         default: return;
       }
     }

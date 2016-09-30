@@ -41,6 +41,7 @@ var resource = [
 
   {id: 21, name: 'notes', desc: 'Multiple Note', protect: false, page: 'apis/index'},
   {id: 22, name: 'merge', desc: 'Merge', protect: false},
+  {id: 23, name: 'merges', desc: 'Multiple Merge', protect: false, page: 'apis/index'},
 
   {
     id: 30, name: 'user', desc: 'User', children: [

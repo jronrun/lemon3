@@ -516,8 +516,21 @@ var merge = {
             }
             break;
           case 'SNAPSHOOT':
+            var shoot = {};
+            shoot[data.iframe.name] = {
+              id: evtData.id,
+              iframe: {
+                type: 4,
+                isDefault: evtData.isDefault,
+                name: evtData.tabName,
+                src: data.iframe.src
+              },
+              snapdata: merge.snapshoot()
+            };
+            lemon.persist('mapi_snapshoot', shoot);
             break;
           case 'SNAPLOAD':
+            merge.snapload(evtData.snapdata);
             break;
         }
       }

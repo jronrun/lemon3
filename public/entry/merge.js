@@ -309,6 +309,7 @@ var merge = {
 
     },
     saveAsNote: function () {
+      var pg = lemon.homeProgress();
       switch (merge.action.from) {
         case 0:
           lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
@@ -322,6 +323,8 @@ var merge = {
                   mime: m.chosenMimeOrExt || m.mime
                 }
               }
+            }, function () {
+              pg.end();
             });
           });
           break;
@@ -330,6 +333,8 @@ var merge = {
             note: {
               content: merge.instance.mergedView().val()
             }
+          }, function () {
+            pg.end();
           });
           break;
       }
@@ -436,7 +441,7 @@ var merge = {
     }
 
     lemon.subMsg(function (data) {
-      lemon.info(data, 'Merge received msg');
+      // lemon.info(data, 'Merge received msg');
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {

@@ -460,8 +460,4 @@ var merge = {
   }
 };
 
-//TODO remove
-global.merge = merge;
-global.mirror = mirror;
-
 $(function () { merge.initialize(); });

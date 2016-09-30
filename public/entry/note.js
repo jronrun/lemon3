@@ -240,7 +240,7 @@ var note = {
     },
 
     compareNote: function () {
-      note.views(lemon.fullUrl('/merge'), false, true, function (view, previewM) {
+      note.compareInst = note.views(lemon.fullUrl('/merge'), false, true, function (view, previewM) {
         var cMode = note.instance.mode();
         view.tellEvent('COMPARE_NOTE', {
           mergeData: {
@@ -1463,6 +1463,11 @@ var note = {
               note.action.menuHide();
               $(note.menu.triId).remove();
             }
+            break;
+          case 'SAVE_COMPARED_NOTE':
+            note.instance.val(evtData.note.content);
+            note.compareInst.destroy();
+            note.action.saveNoteCust();
             break;
           case 'SAVE_MERGED_TO_NOTE':
             note.load(note.make(evtData.note));

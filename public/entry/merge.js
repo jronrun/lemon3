@@ -98,6 +98,7 @@ var merge = {
           id: 'menu_dd_mode'
         },
 
+        act_item('save', 'Save As an Note...', 'saveAsNote'),
         act_item('chevron-down', 'Go Next Diff', 'next'),
         act_item('chevron-up', 'Go Previous Diff', 'prev'),
         act_item('compress', 'Toggle Collapse Unchanged Fragments', 'refresh', 3),
@@ -325,7 +326,11 @@ var merge = {
           });
           break;
         case 1:
-          alert(1);
+          lemon.pubEvent('SAVE_COMPARED_NOTE', {
+            note: {
+              content: merge.instance.mergedView().val()
+            }
+          });
           break;
       }
     },

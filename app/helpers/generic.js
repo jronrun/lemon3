@@ -207,6 +207,9 @@ module.exports = function(model, index, defineForm) {
           title: 'Create By',
           prop: function (item) {
             var aUser = item.create_by;
+            if (-1 == aUser.id) {
+              return aUser.name;
+            }
             return generic.info(getAction(routes.manage.users.retrieve, aUser.id), aUser.name);
           },
           clazz: 'item-col-author'

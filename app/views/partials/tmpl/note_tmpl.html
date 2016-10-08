@@ -187,11 +187,14 @@
                             <% } %>
                         </h5>
                         <small class="card-subtitle linebreak text-silver">Defined Tags</small>
+                        <button type="button" id="n_newtag_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
+                            <em class="fa fa-tag" title="Define New Tag"></em>
+                        </button>
                         <h5 class="invisible"></h5>
                         <div class="row" style="margin-left: 0;">
                             <% lemon.each(tags, function(tag){ %>
                             <button type="button" class="btn btn-sm btn-info" data-nid="<%= lemon.enc(n._id) %>" id="add_tag_<%= n._id %>_<%= tag.id %>"
-                                    data-add-tag="<%= lemon.enc (tag) %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
+                                    data-add-tag="<%= lemon.enc(tag) %>" title="<%= tag.desc %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
                                 <%= tag.name %>
                             </button>
                             <% }); %>
@@ -201,9 +204,6 @@
                         <small class="card-subtitle linebreak text-silver">Note Tags</small>
                         <button type="button" id="n_info_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
                             <em class="fa fa-info" title="Note Info"></em>
-                        </button>
-                        <button type="button" id="n_newtag_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
-                            <em class="fa fa-tag" title="New Tag"></em>
                         </button>
 
                         <h5 class="invisible"></h5>
@@ -225,19 +225,19 @@
 
 <script type="text/html" id="note_tag_tmpl">
     <button type="button" class="btn btn-sm btn-info" id="note_tag_<%= nid %>_<%= tag.id %>"
-            data-nid="<%= lemon.enc(nid) %>" data-note-tag="<%= lemon.enc(tag) %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
+            data-nid="<%= lemon.enc(nid) %>" data-note-tag="<%= lemon.enc(tag) %>" title="<%= tag.desc %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
         <%= tag.name %>
     </button>
 </script>
 <script type="text/html" id="rem_tag_tmpl">
     <button type="button" class="btn btn-sm btn-info" id="rem_tag_<%= nid %>_<%= tag.id %>"
-            data-nid="<%= lemon.enc(nid) %>" data-rem-tag="<%= lemon.enc(tag) %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
+            data-nid="<%= lemon.enc(nid) %>" data-rem-tag="<%= lemon.enc(tag) %>" title="<%= tag.desc %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
         <%= tag.name %>
     </button>
 </script>
 <script type="text/html" id="qry_tag_tmpl">
     <button type="button" class="btn btn-sm btn-info" id="qry_tag_<%= nid %>_<%= tag.id %>"
-            data-nid="<%= lemon.enc(nid) %>" data-qry-tag="<%= lemon.enc(tag) %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
+            data-nid="<%= lemon.enc(nid) %>" data-qry-tag="<%= lemon.enc(tag) %>" title="<%= tag.desc %>" style="margin:0.1rem;border: none; background-color: <%= tag.color %>;">
         <%= tag.name %>
     </button>
 </script>

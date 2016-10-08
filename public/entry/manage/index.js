@@ -2,10 +2,6 @@
 
 require('metisMenu/dist/metisMenu.css');
 var sharing =  require('../../js/sharing');
-//Comment follow code  public/components/metisMenu/dist/metisMenu.js line 227
-//if (this._transitioning || $(element).hasClass(this._config.collapsingClass)) {
-//  return;
-//}
 var metisMenu = require('metisMenu/dist/metisMenu');
 
 lemon.register({

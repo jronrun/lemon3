@@ -76,12 +76,13 @@ module.exports = function (router, index, root) {
   ].join(' ');
   var serverEls = generic.schemaEl('server.scope',
     generic.getSchema('server.properties.scope'), {
-      label: 'Scope'
+      label: 'Scope',
+      selected: 2
     });
   serverEls.push(
     generic.textareaEl('server.define', {
       label: serverLabel,
-      desc: 'Server ID, Multiple separated by commas'
+      desc: 'Server ID, Multiple separated by commas',
     })
   );
 
@@ -106,7 +107,8 @@ module.exports = function (router, index, root) {
   ].join(' ');
   var interfaceEls = generic.schemaEl('interface.scope',
     generic.getSchema('interface.properties.scope'), {
-      label: 'Scope'
+      label: 'Scope',
+      selected: 2
     });
   interfaceEls.push(
     generic.textareaEl('interface.define', {

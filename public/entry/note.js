@@ -479,6 +479,7 @@ var note = {
     },
     loadById: function (noteId, callback) {
       note.entity.get(noteId, function (rNote) {
+        current(note.make());
         note.load(rNote);
         lemon.isFunc(callback) && callback();
       });

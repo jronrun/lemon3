@@ -158,18 +158,20 @@
                             </div>
                         <% } %>
 
-                        <small class="card-subtitle linebreak text-silver">Tags</small>
-                        <button type="button" id="n_tags_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
-                            <em class="fa fa-tags" title="Tags"></em>
-                        </button>
-                        <h5 class="invisible"></h5>
-                        <div id="note_tags_<%= n._id %>" class="row" style="margin-left: 0;">
-                            <% lemon.each(n.tags, function(nt){
-                                var tag = tags[nt]; if (tag) { %>
-                                    <%= lemon.tmpls('#note_tag_tmpl', {nid: n._id, tag: tag}) %>
-                                <% } %>
-                            <% }); %>
-                        </div>
+                        <% if (n._id && n._id.length > 0) { %>
+                            <small class="card-subtitle linebreak text-silver">Tags</small>
+                            <button type="button" id="n_tags_<%= n._id %>" data-nid="<%= lemon.enc(n._id) %>" class="btn btn-info-outline icondh" style="border: 0px;">
+                                <em class="fa fa-tags" title="Tags"></em>
+                            </button>
+                            <h5 class="invisible"></h5>
+                            <div id="note_tags_<%= n._id %>" class="row" style="margin-left: 0;">
+                                <% lemon.each(n.tags, function(nt){
+                                    var tag = tags[nt]; if (tag) { %>
+                                        <%= lemon.tmpls('#note_tag_tmpl', {nid: n._id, tag: tag}) %>
+                                    <% } %>
+                                <% }); %>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             </div>

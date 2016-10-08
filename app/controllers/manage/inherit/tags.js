@@ -80,7 +80,7 @@ module.exports = function (router, index, root) {
     generic.editor({
       schemaExclude: ['create_by'],
       formElHandle: function (forms) {
-
+        forms.remOption('type', [1, 2]);
       }
     }, req, res, next);
   });
@@ -119,7 +119,10 @@ module.exports = function (router, index, root) {
    */
   router.get(index.retrieve.do, function (req, res, next) {
     generic.retrieve({
-      schemaExclude: ['create_by']
+      schemaExclude: ['create_by'],
+      formElHandle: function (forms) {
+        forms.remOption('type', [1, 2]);
+      }
     }, req, res, next);
   });
 

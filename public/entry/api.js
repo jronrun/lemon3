@@ -1921,6 +1921,38 @@ var mapi = {
       }
     });
 
+    var noteId = '#api_note', doApiNote = function (snapData) {
+      lemon.preview(lemon.fullUrl('/note'), false, false, function(view, previewM) {
+        mapi.noteView = view;
+        mapi.noteView.tellEvent('SNAPLOAD', snapData || {});
+      }, false, {
+        hide: function () {
+          mapi.noteView.tellEvent('LEAVE_NOTE', false, function () {
+            mapi.noteView = null;
+          });
+        }
+      });
+    };
+    $(noteId).click(function () {
+      doApiNote();
+    });
+    lemon.rightclick(noteId, function() {
+      var snap = mapi.snapshoot(), content = lemon.enc(['/** Request **/', snap.requ, '\n/** Response **/', snap.resp].join('\n'));
+      doApiNote({
+        snapdata: {
+          note: {
+            content: content
+          },
+          mirror: {
+            mode: {
+              name: 'JSON-LD',
+              chosen: 'application/ld+json'
+            }
+          }
+        }
+      });
+    });
+
   },
   intlDD: function() {
     if (lemon.isRootWin()) {

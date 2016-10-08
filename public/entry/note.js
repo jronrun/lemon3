@@ -1422,6 +1422,9 @@ var note = {
             };
             lemon.persist('mapi_snapshoot', shoot);
             break;
+          case 'LEAVE_NOTE':
+            leave();
+            break;
           case 'SNAPLOAD':
             note.snapload(evtData.snapdata);
             break;

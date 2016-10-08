@@ -215,7 +215,9 @@ var note = {
           pg.end();
         });
       } else {
-        ashow(note.make(current()));
+        var cn = current();
+        delete cn.language;
+        ashow(note.make(cn));
       }
     },
     login: function () {

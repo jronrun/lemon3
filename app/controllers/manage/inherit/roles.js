@@ -47,10 +47,10 @@ module.exports = function (router, index, root) {
               if (aPower) {
                 if (1 == aPower.type) {
                   aType = generic.label('URL');
-                  powerName.push(generic.info(getAction(root.powers.retrieve, aPower._id), aPower.name) + aType);
+                  powerName.push(aType + generic.info(getAction(root.powers.retrieve, aPower._id), aPower.name));
                 } else if (2 == aPower.type) {
                   aType = generic.label('API');
-                  powerName.push(generic.info(getAction(root['api-power'].retrieve, aPower._id), aPower.name) + aType);
+                  powerName.push(aType + generic.info(getAction(root['api-power'].retrieve, aPower._id), aPower.name));
                 }
               }
             });

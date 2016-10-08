@@ -47,7 +47,7 @@ module.exports = function(model, index, defineForm) {
     },
 
     info: function(href, text, dataset) {
-      return format('<a href="%s" data-%s><em class="fa fa-info-circle"></em> %s</a>', href, dataset || 'pjax', text || '');
+      return format('<a href="%s" data-%s><em class="fa fa-info-circle"></em> %s</a>', href, dataset || 'preview', text || '');
     },
 
     label: function(text, clazz) {

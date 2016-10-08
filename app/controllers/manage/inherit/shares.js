@@ -77,7 +77,11 @@ module.exports = function (router, index, root) {
     }
   };
 
-  function accessHref(item) {
+  function accessHref(item, req) {
+    if (!ownResource(req.user, root['share-access'])) {
+      return '';
+    }
+
     var href = '/manage/share-access/1', data = crypto.compress({
         share: item._id.toString()
       });
@@ -175,7 +179,7 @@ module.exports = function (router, index, root) {
           var html = [
             previewHref(item),
             shareHref(item),
-            accessHref(item)
+            accessHref(item, req)
           ];
 
           return html.join('');
@@ -294,7 +298,7 @@ module.exports = function (router, index, root) {
           'Share Content',
           previewHref(forms.item),
           shareHref(forms.item, true),
-          accessHref(forms.item)
+          accessHref(forms.item, req)
         ].join(' ');
 
         var theTitle = forms.get('title');
@@ -302,7 +306,7 @@ module.exports = function (router, index, root) {
           'Share Content',
           previewHref(forms.item),
           shareHref(forms.item, true),
-          accessHref(forms.item)
+          accessHref(forms.item, req)
         ].join(' ');
 
         forms.disable(['type', 'used_count']);

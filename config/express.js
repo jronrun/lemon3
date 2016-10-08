@@ -135,7 +135,8 @@ module.exports = function(app, config, passport) {
       }
 
       //has power
-      if (req.user.resource.indexOf(req.resource.id) != -1) {
+      if (ownResource(req.user, req.resource)) {
+      //if (req.user.resource.indexOf(req.resource.id) != -1) {
         next();
         return;
       }

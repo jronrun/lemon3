@@ -293,6 +293,14 @@ module.exports = function(scope, config) {
     return tree;
   };
 
+  scope.ownResource = function (aUser, aResource) {
+    if (aUser.isAdmin) {
+      return true;
+    }
+
+    return (aUser.resource || []).indexOf(aResource.id) != -1;
+  };
+
   scope.isURL = function(target) {
     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i;
     return regexp.test(target || '');

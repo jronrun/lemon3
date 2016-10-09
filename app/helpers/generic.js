@@ -332,7 +332,23 @@ module.exports = function(model, index, defineForm) {
             ownerQuery = generic.selfOwnerQuery(req);
           }
 
-          realQuery = _.extend(realQuery, ownerQuery);
+          if (_.has(realQuery, '$or') && _.has(ownerQuery, '$or')) {
+            var $and = [
+              { $or: _.cloneDeep(realQuery['$or'])},
+              { $or: _.cloneDeep(ownerQuery['$or'])}
+            ];
+
+            _.each(ownerQuery, function (v, k) {
+              if ('$or' != k) {
+                realQuery[k] = v;
+              }
+            });
+
+            realQuery['$and'] = $and;
+            delete realQuery['$or'];
+          } else {
+            realQuery = _.extend(realQuery, ownerQuery);
+          }
         }
 
         model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {

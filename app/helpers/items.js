@@ -217,12 +217,21 @@ var helper = {
         return {"create_by.id": aUser.id};
       }
 
-      return {};
+      return {
+        $or: [
+          { owner: 1},
+          {"create_by.id": aUser.id}
+        ]
+      };
     }
 
     //2: 'Include only in Define'
     else if (2 == defined.scope) {
-      var ids = { id: {$in: (defined.define || []) }};
+      var ids = {
+        owner: 1,
+        id: {$in: (defined.define || []) }
+      };
+
       if (nonePublic) {
         _.extend(ids, {"create_by.id": aUser.id});
       }
@@ -258,6 +267,7 @@ var helper = {
     }
 
     var itemIds = aUser[property] || [], ids = {
+      owner: 1,
       id: {$in: itemIds }
     };
 

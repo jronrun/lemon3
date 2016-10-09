@@ -529,6 +529,9 @@ var merge = {
             };
             lemon.persist('mapi_snapshoot', shoot);
             break;
+          case 'LEAVE':
+            leave();
+            break;
           case 'SNAPLOAD':
             merge.snapload(evtData.snapdata);
             break;

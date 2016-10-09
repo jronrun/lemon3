@@ -1921,24 +1921,24 @@ var mapi = {
       }
     });
 
-    var noteId = '#api_note', doApiNote = function (snapData) {
-      lemon.preview(lemon.fullUrl('/note'), false, false, function(view, previewM) {
+    var noteId = '#api_note', mergeId = '#api_merge', doOpens = function (uri, snapData) {
+      lemon.preview(lemon.fullUrl(uri), false, false, function(view, previewM) {
         mapi.noteView = view;
         mapi.noteView.tellEvent('SNAPLOAD', snapData || {});
       }, false, {
         hide: function () {
-          mapi.noteView.tellEvent('LEAVE_NOTE', false, function () {
+          mapi.noteView.tellEvent('LEAVE', false, function () {
             mapi.noteView = null;
           });
         }
       });
     };
     $(noteId).click(function () {
-      doApiNote();
+      doOpens('/note');
     });
     lemon.rightclick(noteId, function() {
       var snap = mapi.snapshoot(), content = lemon.enc(['/** Request **/', snap.requ, '\n/** Response **/', snap.resp].join('\n'));
-      doApiNote({
+      doOpens('/note', {
         snapdata: {
           note: {
             content: content
@@ -1948,6 +1948,23 @@ var mapi = {
               name: 'JSON-LD',
               chosen: 'application/ld+json'
             }
+          }
+        }
+      });
+    });
+
+    $(mergeId).click(function () {
+      doOpens('/merge');
+    });
+    lemon.rightclick(mergeId, function() {
+      doOpens('/merge', {
+        snapdata: {
+          info: {
+            mime: 'application/ld+json'
+          },
+          vals: {
+            is2Panels: true,
+            right: mapi.resp.val()
           }
         }
       });

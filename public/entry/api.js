@@ -715,7 +715,12 @@ var qry = {
     });
 
     $('#search_dd a').click(function () {
-      qry.searchType = parseInt($(this).data('type'));
+      var sType = parseInt($(this).data('type'));
+      if (-1 == sType) {
+        return;
+      }
+
+      qry.searchType = sType;
       if (1 == qry.searchType) {
         qry.openSearch(qry.searchType);
       } else {

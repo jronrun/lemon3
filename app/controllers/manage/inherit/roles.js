@@ -146,11 +146,17 @@ module.exports = function (router, index, root) {
         var thePowers = doc.powers || [];
 
         _.each(items, function (item) {
+          var desc = '';
+          if (1 == item.type) {
+            desc = generic.info(getAction(root.powers.retrieve, item._id));
+          } else if (2 == item.type) {
+            desc = generic.info(getAction(root['api-power'].retrieve, item._id));
+          }
           powerData.push({
             tip: item.name,
             val: item.id,
             selected: thePowers.indexOf(String(item.id)) != -1 ? 1 : 0,
-            desc: generic.info(getAction(root.powers.retrieve, item._id))
+            desc: desc
           });
         });
 

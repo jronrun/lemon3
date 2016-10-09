@@ -25,6 +25,7 @@ module.exports = function (passport) {
         user.group = userResource.group;
         user.server = userResource.server;
         user.interface = userResource.interface;
+        user.innerPowers = userResource.innerPowers;
 
         done(err, user);
       });

@@ -129,71 +129,75 @@ var user = model_bind('user', model);
               if (error3) {
                 deferred.reject(error3);
               } else {
-                var theResources = [], theEnv = [], theGroup = [];
+                var theResources = [], theEnv = [], theGroup = [], theInnerPowers = [];
                 var serverScope = [], serverIncludeDefine = [], serverExcludeDefine = [];
                 var interfaceScope = [], interfaceIncludeDefine = [], interfaceExcludeDefine = [];
 
                 _.each(items || [], function (item) {
-                  //resource
-                  _.each(item.resources || [], function (aSource) {
-                    theResources.push(parseInt(aSource));
-                  });
+                  if (3 == item.type) {
+                    theInnerPowers.push(parseInt(item.id));
+                  } else {
+                    //resource
+                    _.each(item.resources || [], function (aSource) {
+                      theResources.push(parseInt(aSource));
+                    });
 
-                  //env
-                  _.each(item.env || [], function (aEnv) {
-                    theEnv.push(parseInt(aEnv));
-                  });
+                    //env
+                    _.each(item.env || [], function (aEnv) {
+                      theEnv.push(parseInt(aEnv));
+                    });
 
-                  //group
-                  _.each(item.group || [], function (aGroup) {
-                    theGroup.push(parseInt(aGroup));
-                  });
+                    //group
+                    _.each(item.group || [], function (aGroup) {
+                      theGroup.push(parseInt(aGroup));
+                    });
 
-                  if (_.has(item, 'server') && _.has(item.server, 'scope')) {
-                    if (item.server.scope && serverScope.indexOf(item.server.scope) == -1) {
-                      serverScope.push(item.server.scope);
+                    if (_.has(item, 'server') && _.has(item.server, 'scope')) {
+                      if (item.server.scope && serverScope.indexOf(item.server.scope) == -1) {
+                        serverScope.push(item.server.scope);
+                      }
+
+                      if (2 == item.server.scope) {
+                        _.each(item.server.define || [], function (v) {
+                          var aDefine = parseInt(v);
+                          if (serverIncludeDefine.indexOf(aDefine) == -1) {
+                            serverIncludeDefine.push(aDefine);
+                          }
+                        });
+                      }
+
+                      if (4 == item.server.scope) {
+                        _.each(item.server.define || [], function (v) {
+                          var aDefine = parseInt(v);
+                          if (serverExcludeDefine.indexOf(aDefine) == -1) {
+                            serverExcludeDefine.push(aDefine);
+                          }
+                        });
+                      }
                     }
 
-                    if (2 == item.server.scope) {
-                      _.each(item.server.define || [], function (v) {
-                        var aDefine = parseInt(v);
-                        if (serverIncludeDefine.indexOf(aDefine) == -1) {
-                          serverIncludeDefine.push(aDefine);
-                        }
-                      });
-                    }
+                    if (_.has(item, 'interface') && _.has(item.interface, 'scope')) {
+                      if (item.interface.scope && interfaceScope.indexOf(item.interface.scope) == -1) {
+                        interfaceScope.push(item.interface.scope);
+                      }
 
-                    if (4 == item.server.scope) {
-                      _.each(item.server.define || [], function (v) {
-                        var aDefine = parseInt(v);
-                        if (serverExcludeDefine.indexOf(aDefine) == -1) {
-                          serverExcludeDefine.push(aDefine);
-                        }
-                      });
-                    }
-                  }
+                      if (2 == item.interface.scope) {
+                        _.each(item.interface.define || [], function (v) {
+                          var aDefine = parseInt(v);
+                          if (interfaceIncludeDefine.indexOf(aDefine) == -1) {
+                            interfaceIncludeDefine.push(aDefine);
+                          }
+                        });
+                      }
 
-                  if (_.has(item, 'interface') && _.has(item.interface, 'scope')) {
-                    if (item.interface.scope && interfaceScope.indexOf(item.interface.scope) == -1) {
-                      interfaceScope.push(item.interface.scope);
-                    }
-
-                    if (2 == item.interface.scope) {
-                      _.each(item.interface.define || [], function (v) {
-                        var aDefine = parseInt(v);
-                        if (interfaceIncludeDefine.indexOf(aDefine) == -1) {
-                          interfaceIncludeDefine.push(aDefine);
-                        }
-                      });
-                    }
-
-                    if (4 == item.interface.scope) {
-                      _.each(item.interface.define || [], function (v) {
-                        var aDefine = parseInt(v);
-                        if (interfaceExcludeDefine.indexOf(aDefine) == -1) {
-                          interfaceExcludeDefine.push(aDefine);
-                        }
-                      });
+                      if (4 == item.interface.scope) {
+                        _.each(item.interface.define || [], function (v) {
+                          var aDefine = parseInt(v);
+                          if (interfaceExcludeDefine.indexOf(aDefine) == -1) {
+                            interfaceExcludeDefine.push(aDefine);
+                          }
+                        });
+                      }
                     }
                   }
                 });
@@ -206,7 +210,8 @@ var user = model_bind('user', model);
                   env: theEnv,
                   group: theGroup,
                   server: theServer,
-                  interface: theInterface
+                  interface: theInterface,
+                  innerPowers: theInnerPowers
                 };
                 userReourceCache.set(userId, theSource);
                 deferred.resolve(theSource);

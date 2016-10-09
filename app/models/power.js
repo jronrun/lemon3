@@ -1,6 +1,10 @@
 'use strict';
 
-var log = log_from('power');
+var log = log_from('power'),
+  innerPowersCache = LRU({
+    max: 20,
+    maxAge: 1000 * 60 * 60 * 5
+  });
 
 var model = schema({
   id: { type: 'integer', required: true },
@@ -44,8 +48,58 @@ var innerPowers = [
   }
 ];
 
+power.hasInnerPower = function (powerKey, resultCall, usr) {
+  if (usr.isAdmin) {
+    return resultCall(true);
+  }
+
+  power.getInnerPowers(function (innerAns) {
+    var ans = ansWrap(innerAns);
+    if (ans.isFail()) {
+      log.warn(ans.message, 'hasInnerPower');
+      return resultCall(false);
+    }
+
+    var checkPower = null;
+    _.each(ans.get(), function (innerPower) {
+      if (powerKey === innerPower.name) {
+        checkPower = innerPower;
+        return false;
+      }
+    });
+
+    if (null == checkPower) {
+      return resultCall(false);
+    }
+
+    if ((usr.innerPowers || []).indexOf(checkPower.id) == -1) {
+      return resultCall(false);
+    }
+
+    return resultCall(true);
+  });
+};
+
+power.getInnerPowers = function (resultCall) {
+  var key = 'INNER_POWERS', cacheResource = innerPowersCache.get(key);
+  if (cacheResource) {
+    return resultCall(answer.succ(cacheResource));
+  } else {
+    power.find({type: 3}).toArray(function (err, items) {
+      if (err) {
+        return resultCall(answer.fail(err.message));
+      }
+
+      items = items || [];
+      innerPowersCache.set(key, items);
+      return resultCall(answer.succ(items));
+    });
+  }
+};
+
 power.createInnerPowers = function (requestInfo) {
   if (requestInfo.usr.isAdmin) {
+    innerPowersCache.reset();
     _.each(innerPowers, function (inner) {
       power.find({
         name: inner.name,

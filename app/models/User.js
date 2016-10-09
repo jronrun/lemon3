@@ -114,12 +114,12 @@ var user = model_bind('user', model);
           theRoles.push(parseInt(aPower));
         });
 
-        Role.find({id: {$in: theRoles}}).toArray(function (error, theRoles) {
+        Role.find({id: {$in: theRoles}}).toArray(function (error, theRoleItems) {
           if (error) {
             deferred.reject(error);
           } else {
             var thePowers = [];
-            _.each(theRoles || [], function (aRole) {
+            _.each(theRoleItems || [], function (aRole) {
               _.each(aRole.powers, function (aPower) {
                 thePowers.push(parseInt(aPower));
               });
@@ -178,8 +178,8 @@ var user = model_bind('user', model);
                       interfaceScope.push(item.interface.scope);
                     }
 
-                    if (2 == item.server.scope) {
-                      _.each(item.server.define || [], function (v) {
+                    if (2 == item.interface.scope) {
+                      _.each(item.interface.define || [], function (v) {
                         var aDefine = parseInt(v);
                         if (interfaceIncludeDefine.indexOf(aDefine) == -1) {
                           interfaceIncludeDefine.push(aDefine);
@@ -187,7 +187,7 @@ var user = model_bind('user', model);
                       });
                     }
 
-                    if (4 == item.server.scope) {
+                    if (4 == item.interface.scope) {
                       _.each(item.interface.define || [], function (v) {
                         var aDefine = parseInt(v);
                         if (interfaceExcludeDefine.indexOf(aDefine) == -1) {

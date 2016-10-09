@@ -200,7 +200,7 @@ var helper = {
    * @param property
    * @returns {{}}
    */
-  scopeOwnerQuery: function(req, property) {
+  scopeOwnerQuery: function(req, property, nonePublic) {
     var aUser = req.user || {};
     if (aUser.isAdmin) {
       return {};
@@ -213,14 +213,23 @@ var helper = {
 
     //1: 'Include All'
     if (1 == defined.scope) {
+      if (nonePublic) {
+        return {"create_by.id": aUser.id};
+      }
+
       return {};
     }
 
     //2: 'Include only in Define'
     else if (2 == defined.scope) {
+      var ids = { id: {$in: (defined.define || []) }};
+      if (nonePublic) {
+        _.extend(ids, {"create_by.id": aUser.id});
+      }
+
       return {
         $or:[
-          { id: {$in: (defined.define || []) }},
+          ids,
           { "create_by.id": aUser.id }
         ]
       };
@@ -242,16 +251,25 @@ var helper = {
     }
   },
 
-  idsOwnerQuery: function(req, property) {
+  idsOwnerQuery: function(req, property, nonePublic) {
     var aUser = req.user || {};
     if (aUser.isAdmin) {
       return {};
     }
 
-    var itemIds = aUser[property] || [];
+    var itemIds = aUser[property] || [], ids = {
+      id: {$in: itemIds }
+    };
+
+    if (nonePublic) {
+      _.extend(ids, {
+        "create_by.id": aUser.id
+      });
+    }
+
     return {
       $or:[
-        { id: {$in: itemIds }},
+        ids,
         { "create_by.id": aUser.id }
       ]
     };
@@ -266,20 +284,20 @@ var helper = {
     return { "create_by.id": aUser.id };
   },
 
-  envOwnerQuery: function(req) {
-    return helper.idsOwnerQuery(req, 'env');
+  envOwnerQuery: function(req, nonePublic) {
+    return helper.idsOwnerQuery(req, 'env', nonePublic);
   },
 
-  groupOwnerQuery: function(req) {
-    return helper.idsOwnerQuery(req, 'group');
+  groupOwnerQuery: function(req, nonePublic) {
+    return helper.idsOwnerQuery(req, 'group', nonePublic);
   },
 
-  serverOwnerQuery: function(req) {
-    return helper.scopeOwnerQuery(req, 'server');
+  serverOwnerQuery: function(req, nonePublic) {
+    return helper.scopeOwnerQuery(req, 'server', nonePublic);
   },
 
-  interfaceOwnerQuery: function(req) {
-    return helper.scopeOwnerQuery(req, 'interface');
+  interfaceOwnerQuery: function(req, nonePublic) {
+    return helper.scopeOwnerQuery(req, 'interface', nonePublic);
   },
 
   /**

@@ -2,7 +2,8 @@
 
 var log = log_from('generic'),
   items = require('./items'),
-  forms = require('./forms');
+  forms = require('./forms'),
+  Power = app_require('models/power');
 
 var BREAK = -1;
 
@@ -307,23 +308,6 @@ module.exports = function(model, index, defineForm) {
         }
       }
 
-      if (1 == options.ownerQuery) {
-        var ownerQuery = {};
-        if ('env' == model.modelName) {
-          ownerQuery = generic.envOwnerQuery(req);
-        } else if ('group' == model.modelName) {
-          ownerQuery = generic.groupOwnerQuery(req);
-        } else if ('server' == model.modelName) {
-          ownerQuery = generic.serverOwnerQuery(req);
-        } else if ('interf' == model.modelName) {
-          ownerQuery = generic.interfaceOwnerQuery(req);
-        } else {
-          ownerQuery = generic.selfOwnerQuery(req);
-        }
-
-        realQuery = _.extend(realQuery, ownerQuery);
-      }
-
       var slen = Math.ceil((options.search.length - 1) / 3) + 1;
       var searchLenCeil = [];
       if (slen >= 2 && options.search.length > 3) {
@@ -332,23 +316,43 @@ module.exports = function(model, index, defineForm) {
         }
       }
 
-      model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
-        res.render(index.page, {
-          pagename: 'items-list-page',
-          pageedit: index.editor ? index.editor.action : '',
-          list: items.asShowData(options.defines, result.items),
-          page: result.page,
-          action: actionWrap(index.action).base,
-          retrieveAction: index.retrieve ? actionWrap(index.retrieve.action).base : '',
-          desc: options.listName,
-          search: options.search,
-          searchLastEl: options.search.length - 1,
-          searchLenCeil: searchLenCeil,
-          queryStr: queryStr,
-          itemAction: options.itemAction,
-          listchoose: options.listchoose
+      Power.hasInnerPower('PUBLIC_LIST', function (hasPublicList) {
+        var nonePublicList = !hasPublicList && generic.getSchema('create_by');
+        if (1 == options.ownerQuery) {
+          var ownerQuery = {};
+          if ('env' == model.modelName) {
+            ownerQuery = generic.envOwnerQuery(req, nonePublicList);
+          } else if ('group' == model.modelName) {
+            ownerQuery = generic.groupOwnerQuery(req, nonePublicList);
+          } else if ('server' == model.modelName) {
+            ownerQuery = generic.serverOwnerQuery(req, nonePublicList);
+          } else if ('interf' == model.modelName) {
+            ownerQuery = generic.interfaceOwnerQuery(req, nonePublicList);
+          } else {
+            ownerQuery = generic.selfOwnerQuery(req);
+          }
+
+          realQuery = _.extend(realQuery, ownerQuery);
+        }
+
+        model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
+          res.render(index.page, {
+            pagename: 'items-list-page',
+            pageedit: index.editor ? index.editor.action : '',
+            list: items.asShowData(options.defines, result.items),
+            page: result.page,
+            action: actionWrap(index.action).base,
+            retrieveAction: index.retrieve ? actionWrap(index.retrieve.action).base : '',
+            desc: options.listName,
+            search: options.search,
+            searchLastEl: options.search.length - 1,
+            searchLenCeil: searchLenCeil,
+            queryStr: queryStr,
+            itemAction: options.itemAction,
+            listchoose: options.listchoose
+          });
         });
-      });
+      }, req.user);
     },
 
     /**

@@ -45,24 +45,28 @@ module.exports = function (router, index, root) {
     async.waterfall([
       function (callback) {
         Environment.find(generic.envOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
-          var envData = {};
+          var envData = {}, envIds = [];
           _.each(items, function (item) {
             envData[item.id] = item;
+            envIds.push(item.id);
           });
 
-          callback(null, envData);
+          callback(null, envData, envIds);
         });
       },
-      function(envData, callback) {
+      function(envData, envIds, callback) {
         Group.find(generic.groupOwnerQuery(req)).sort({_id: -1}).toArray(function (err, items) {
-          var groupData = {};
+          var groupData = {}, groupIds = [];
           _.each(items, function (item) {
             groupData[item.id] = item;
+            groupIds.push(item.id);
           });
 
           callback(null, {
             env: envData,
-            group: groupData
+            envIds: envIds,
+            group: groupData,
+            groupIds: groupIds
           });
         });
       }
@@ -154,9 +158,22 @@ module.exports = function (router, index, root) {
           if (realQry['env_id']) {
             realQry['env_id'] = parseInt(qry['env_id']);
           }
+
+          _.extend(realQry, {
+            env_id: {
+              $in: result.envIds
+            }
+          });
+
           if (realQry['group_id']) {
             realQry['group_id'] = parseInt(qry['group_id']);
           }
+
+          _.extend(realQry, {
+            group_id: {
+              $in: result.groupIds
+            }
+          });
         }
       }, req, res, next);
     });

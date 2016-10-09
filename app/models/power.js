@@ -35,6 +35,10 @@ var power = model_bind('power', model);
 
 var innerPowers = [
   {
+    name: 'PUBLIC_LIST',
+    desc: 'List Public Resource'
+  },
+  {
     name: 'PUBLIC_RETRIEVE',
     desc: 'Retrieve Public Resource'
   },

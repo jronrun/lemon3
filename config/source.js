@@ -234,8 +234,10 @@ var resource = [
           {id: 2000144, extend: 2000143, method: M.PUT, page: P.list, desc: 'Update'},
           {id: 2000145, extend: 2000143, method: M.DELETE, page: P.list, desc: 'Delete'}
         ]
-      }
-    ]
+      },
+
+      { id: 200015, name: 'initialize', desc: 'Manage', page: 'manage/index'}
+  ]
   }
 ];
 

@@ -3,6 +3,7 @@
 var express = require('express'),
   router = express.Router(),
   log = log_from('manage'),
+  Power = app_require('models/power'),
   index = routes.manage;
 
 module.exports = function (app) {
@@ -35,6 +36,14 @@ router.get(index.do, function (req, res, next) {
     username: usr.name,
     menus: getUserMenu(usr.resource)
   });
+});
+
+/**
+ * Initialize
+ */
+router.get(index.initialize.do, function (req, res, next) {
+  Power.createInnerPowers(requestInfo(req));
+  res.render(index.initialize);
 });
 
 /**

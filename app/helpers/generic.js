@@ -807,7 +807,7 @@ module.exports = function(model, index, defineForm) {
               return res.json(answer.fail('item not exists.'));
             }
 
-            var check = model.validate(_.extend(result, item));
+            var check = model.validate(_.extend({}, result, item));
             if (!check.valid) {
               return res.json(answer.fail(check.msg));
             }
@@ -904,6 +904,10 @@ module.exports = function(model, index, defineForm) {
           }
         },
         function (target, itemObj, callback) {
+          if (target.create_by) {
+            delete target.create_by;
+          }
+
           model.updateById(itemId, {$set: target}, function (err) {
             if (err) {
               return res.json(answer.fail(err.message));
@@ -948,14 +952,22 @@ module.exports = function(model, index, defineForm) {
           return res.json(answer.fail('item not exists.'));
         }
 
-        model.removeById(req.params.id, function(err) {
-          if (err) {
-            return res.json(answer.fail(err.message));
+        Power.hasInnerPower('PUBLIC_DELETE', function (hasPublicDelete) {
+          if (!hasPublicDelete && generic.getSchema('create_by')) {
+            if (!result.create_by || result.create_by.id !== req.user.id) {
+              return res.json(answer.fail('Do not have permission to delete the requested resource.'));
+            }
           }
 
-          var desc = options.descField ? result[options.descField] : '';
-          return res.json(answer.succ(false, 'Remove ' + desc + ' success.'));
-        });
+          model.removeById(req.params.id, function(err) {
+            if (err) {
+              return res.json(answer.fail(err.message));
+            }
+
+            var desc = options.descField ? result[options.descField] : '';
+            return res.json(answer.succ(false, 'Remove ' + desc + ' success.'));
+          });
+        }, req.user);
 
       });
     }

@@ -51,6 +51,8 @@ module.exports = function (router, index, root) {
                 } else if (2 == aPower.type) {
                   aType = generic.label('API');
                   powerName.push(aType + generic.info(getAction(root['api-power'].retrieve, aPower._id), aPower.name));
+                } else if (3 == aPower.type) {
+                  powerName.push(generic.infoTip(aPower.name, aPower.desc));
                 }
               }
             });

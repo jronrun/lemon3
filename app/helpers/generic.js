@@ -51,6 +51,10 @@ module.exports = function(model, index, defineForm) {
       return format('<a href="%s" data-%s><em class="fa fa-info-circle"></em> %s</a>', href, dataset || 'preview', text || '');
     },
 
+    infoTip: function (text, title) {
+      return format('<em class="fa fa-info-circle text-info" title="%s"></em> %s', title, text);
+    },
+
     label: function(text, clazz) {
       //style="font-size:60%;"
       return format('<span class="label %s"><small>%s</small></span>', clazz || 'label-default pull-right', text);

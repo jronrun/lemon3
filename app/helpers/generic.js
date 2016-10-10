@@ -525,59 +525,69 @@ module.exports = function(model, index, defineForm) {
           return res.json(answer.fail('item not exists.'));
         }
 
-        var formEls = {}, addition = {};
-        if (1 == options.masterFormType) {
-          formEls = forms.fromSchema(model.define.schema,
-            _.extend({}, defineForm.element, options.defineElement),
-            _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
+        Power.hasInnerPower('PUBLIC_RETRIEVE', function (hasPublicRetrieve) {
+          if (!hasPublicRetrieve && generic.getSchema('create_by')) {
+            if (result.create_by && result.create_by.id !== req.user.id) {
+              return res.json(answer.fail('Do not have permission to retrieve the requested resource.'));
+            }
+          }
 
-          if (_.isFunction(options.formElHandle)) {
-            if (BREAK == options.formElHandle(forms.helper(formEls, result))) {
+          var formEls = {}, addition = {};
+          if (1 == options.masterFormType) {
+            formEls = forms.fromSchema(model.define.schema,
+              _.extend({}, defineForm.element, options.defineElement),
+              _.extend({}, defineForm.form, options.defineForm), options.schemaExclude);
+
+            if (_.isFunction(options.formElHandle)) {
+              if (BREAK == options.formElHandle(forms.helper(formEls, result))) {
+                return;
+              }
+            }
+          }
+
+          var schema = model.desc(options.schemaExclude);
+          var value = model.getEditVal(schema, true, result, true, options.resultHandle);
+
+          if (_.isFunction(options.additionHandle)) {
+            if (BREAK == options.additionHandle(result, addition)) {
               return;
             }
           }
-        }
 
-        var schema = model.desc(options.schemaExclude);
-        var value = model.getEditVal(schema, true, result, true, options.resultHandle);
-
-        if (_.isFunction(options.additionHandle)) {
-          if (BREAK == options.additionHandle(result, addition)) {
-            return;
+          var listchoosebackStr = req.header('listchooseback') || '';
+          if (listchoosebackStr.length > 0) {
+            options.listchooseback = {
+              has: 1,
+              body: listchoosebackStr
+            }
           }
-        }
 
-        var listchoosebackStr = req.header('listchooseback') || '';
-        if (listchoosebackStr.length > 0) {
-          options.listchooseback = {
-            has: 1,
-            body: listchoosebackStr
-          }
-        }
+          _.each(options.tabs, function (aTab) {
+            aTab.tabId = aTab.tabName;
+            aTab.tabId = aTab.tabId.replace(/\s/g,'-');
+          });
 
-        _.each(options.tabs, function (aTab) {
-          aTab.tabId = aTab.tabName;
-          aTab.tabId = aTab.tabId.replace(/\s/g,'-');
-        });
+          res.render(index.retrieve.page, {
+            pagename: 'item-editor-page',
+            schema: crypto.compress(schema),
+            value: value,
+            res_tab: options.resourceTab,
+            res_action: options.resourceAction,
+            desc: options.modelName,
+            hasButtons: options.hasButtons,
+            method: HttpMethod.PUT,
+            action: actionWrap(index.retrieve.action, itemId).action,
+            listAction: actionWrap(index.action, options.listHomePageArg).action,
+            tabs: options.tabs,
+            update: 1,
+            form: formEls,
+            form_type: options.masterFormType,
+            addition: crypto.compress(addition),
+            listchooseback: options.listchooseback
+          });
 
-        res.render(index.retrieve.page, {
-          pagename: 'item-editor-page',
-          schema: crypto.compress(schema),
-          value: value,
-          res_tab: options.resourceTab,
-          res_action: options.resourceAction,
-          desc: options.modelName,
-          hasButtons: options.hasButtons,
-          method: HttpMethod.PUT,
-          action: actionWrap(index.retrieve.action, itemId).action,
-          listAction: actionWrap(index.action, options.listHomePageArg).action,
-          tabs: options.tabs,
-          update: 1,
-          form: formEls,
-          form_type: options.masterFormType,
-          addition: crypto.compress(addition),
-          listchooseback: options.listchooseback
-        });
+        }, req.user);
+
       });
     },
 

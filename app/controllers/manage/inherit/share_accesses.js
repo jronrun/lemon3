@@ -80,7 +80,15 @@ module.exports = function (router, index, root) {
       },
       {
         title: 'Create',
-        prop: 'create_time',
+        prop: function(item) {
+          var createT = datefmt(item.create_time);
+          if (req.user.isAdmin) {
+            var text = '<span title="' + item.share_user_id + '">' + createT + '</span>';
+            return generic.info(getAction(root.users.retrieve, item.share_user_id), text);
+          }
+
+          return createT;
+        },
         clazz: 'item-col-date',
         type: 'date'
       }

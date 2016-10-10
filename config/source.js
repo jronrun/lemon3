@@ -255,14 +255,14 @@ var menu = [
       {sourceId: 200003, args: '1'},
       {sourceId: 200011, args: '1'},
       {sourceId: 200014, args: '1'},
+      {sourceId: 200013, args: '1'}
     ]
   },
   {
     name: 'Settings', children: [
       {sourceId: 200001, args: '1'},
       {sourceId: 200010, args: '1'},
-      {sourceId: 200002, args: '1'},
-      {sourceId: 200013, args: '1'}
+      {sourceId: 200002, args: '1'}
     ]
   },
   {

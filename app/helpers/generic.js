@@ -527,7 +527,7 @@ module.exports = function(model, index, defineForm) {
 
         Power.hasInnerPower('PUBLIC_RETRIEVE', function (hasPublicRetrieve) {
           if (!hasPublicRetrieve && generic.getSchema('create_by')) {
-            if (result.create_by && result.create_by.id !== req.user.id) {
+            if (!result.create_by || result.create_by.id !== req.user.id) {
               return res.json(answer.fail('Do not have permission to retrieve the requested resource.'));
             }
           }
@@ -814,6 +814,19 @@ module.exports = function(model, index, defineForm) {
 
             callback(null, item, result);
           });
+        },
+        function(target, itemObj, callback) {
+          Power.hasInnerPower('PUBLIC_UPDATE', function (hasPublicUpdate) {
+            if (!hasPublicUpdate && generic.getSchema('create_by')) {
+              if (!itemObj.create_by || itemObj.create_by.id !== req.user.id) {
+                return res.json(answer.fail('Do not have permission to update the requested resource.'));
+              } else {
+                callback(null, target, itemObj);
+              }
+            } else {
+              callback(null, target, itemObj);
+            }
+          }, req.user);
         },
         function(target, itemObj, callback) {
           var field = options.checkExistsField;

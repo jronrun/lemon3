@@ -140,8 +140,6 @@ function shares(shareId, sharesResultCall, requestInfo) {
       ShareAccess.add({
         type: 3,
         fail: sharesAns.msg,
-        share_id: 0,
-        share_read_write: 4,
         share: shareId.toString()
       }, function (accessAns) {
         if (!isAnswerSucc(accessAns)) {
@@ -181,8 +179,6 @@ function shares(shareId, sharesResultCall, requestInfo) {
         };
 
         ShareAccess.add({
-          share_id: aShare.id,
-          share_read_write: aShare.read_write,
           share: shareId.toString()
         }, function (accessAns) {
           if (!isAnswerSucc(accessAns)) {

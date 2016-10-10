@@ -423,9 +423,7 @@ module.exports = function(commOptions) {
             ShareAccess.add({
               type: 2,
               history: theAns.result.hisId,
-              share_id: requestOptions.share.id,
               share: shareId,
-              share_read_write: requestOptions.share.read_write
             }, function (accessAns) {
               if (!isAnswerSucc(accessAns)) {
                 log.warn(accessAns.msg, 'ShareAccess.add');
@@ -554,8 +552,6 @@ module.exports = function(commOptions) {
               ShareAccess.add({
                 type: 4,
                 fail: execAns.msg,
-                share_id: 0,
-                share_read_write: 4,
                 share: source
               }, function (accessAns) {
                 if (!isAnswerSucc(accessAns)) {

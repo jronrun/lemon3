@@ -1,9 +1,12 @@
 'use strict';
 
+var Share = app_require('models/share');
+
 var model = schema({
   id: { type: 'integer', required: true },
   share: { type: 'string', allowEmpty: false, required: true },
   share_id: { type: 'integer', required: true },
+  share_user_id: { type: 'string', allowEmpty: false, required: true },
   share_read_write: { type: 'integer', enum: [1, 2, 3, 4], required: true, const: {
       1: 'Readonly',
       2: 'User Power',
@@ -57,7 +60,31 @@ shareAccess.add = function(access, resultCall, requestInfo) {
         return resultCall(answer.fail('try access must provide fail message'));
       }
 
+      if (!shareAccess.isObjectID(target.share)) {
+        return resultCall(answer.fail('invalid access share id ' + target.share));
+      }
+
       callback(null, target);
+    },
+
+    function(target, callback) {
+      Share.findById(target.share, function (err, aShare) {
+        if (err) {
+          return resultCall(answer.fail(err.message));
+        }
+
+        if (!aShare) {
+          return resultCall(answer.fail('can not find access share.'));
+        }
+
+        _.extend(target, {
+          share_id: aShare.id,
+          share_read_write: aShare.read_write,
+          share_user_id: aShare.create_by.id
+        });
+
+        callback(null, target);
+      });
     },
 
     function(target, callback) {

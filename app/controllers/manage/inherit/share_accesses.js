@@ -116,7 +116,17 @@ module.exports = function (router, index, root) {
       defines: defines,
       search: search,
       queryHandle: function(realQry, qry, options) {
-        var shareId = qry['share'], backHref = '/manage/shares/1';
+        var shareId = qry['share'], backHref = '/manage/shares/1', validShareId = false;
+
+        if (!shareId || shareId.length < 1) {
+          realQry['share'] = '-1';
+        } else {
+          validShareId = true;
+          if (req.reference && req.reference.length > 0 && req.reference.indexOf('/share/') > 0) {
+            backHref = '/manage/share/' + shareId;
+          }
+        }
+
         var listName = [
           'Share Access',
           '<h4 class="invisible"></h4>',
@@ -125,15 +135,10 @@ module.exports = function (router, index, root) {
           '</a>'
         ];
 
-        if (!shareId || shareId.length < 1) {
-          realQry['share'] = '-1';
-        } else {
-          if (req.reference && req.reference.length > 0 && req.reference.indexOf('/share/') > 0) {
-            backHref = '/manage/share/' + shareId;
-          }
-
+        if (validShareId) {
           listName.push(shareHref(shareId));
         }
+
         options.listName = listName.join('');
 
         if (realQry['share_read_write']) {

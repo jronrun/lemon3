@@ -207,7 +207,10 @@ module.exports = function(model, index, defineForm) {
         }
       }, options || {});
 
-      if (req.user.isAdmin && generic.getSchema('create_by')) {
+      var noneAutoCreateByModel = ['share_access'];
+      if (req.user.isAdmin
+        && generic.getSchema('create_by')
+        && noneAutoCreateByModel.indexOf(model.modelName) == -1) {
         options.defines.push({
           title: 'Create By',
           prop: function (item) {
@@ -332,6 +335,13 @@ module.exports = function(model, index, defineForm) {
             ownerQuery = generic.serverOwnerQuery(req, nonePublicList);
           } else if ('interf' == model.modelName) {
             ownerQuery = generic.interfaceOwnerQuery(req, nonePublicList);
+          } else if ('share_access' == model.modelName) {
+            ownerQuery = {};
+            if (!req.user.isAdmin) {
+              _.extend(ownerQuery, {
+                share_user_id: req.user.id
+              });
+            }
           } else {
             ownerQuery = generic.selfOwnerQuery(req);
           }
@@ -355,6 +365,9 @@ module.exports = function(model, index, defineForm) {
           }
         }
 
+        if ('share_access' == model.modelName) {
+          log.info(JSON.stringify(realQuery), 'share_access qry');
+        }
         model.page(realQuery, req.params.page, options.pageCallback, options.pageSize, options.pageOptions).then(function (result) {
           res.render(index.page, {
             pagename: 'items-list-page',

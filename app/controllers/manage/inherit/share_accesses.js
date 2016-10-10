@@ -125,6 +125,8 @@ module.exports = function (router, index, root) {
           if (req.reference && req.reference.length > 0 && req.reference.indexOf('/share/') > 0) {
             backHref = '/manage/share/' + shareId;
           }
+
+          realQry['share'] = shareId;
         }
 
         var listName = [

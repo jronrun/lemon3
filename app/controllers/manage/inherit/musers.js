@@ -16,22 +16,6 @@ module.exports = function (router, index, root) {
   });
 
   /**
-   * User Profile
-   */
-  router.get(index.profile.do, function (req, res, next) {
-    res.render(index.profile, {
-      action: index.profile.action
-    });
-  });
-
-  /**
-   * Update User Profile
-   */
-  router.put(index.profile.do, function (req, res, next) {
-
-  });
-
-  /**
    * User list
    */
   router.get(index.do, function (req, res, next) {

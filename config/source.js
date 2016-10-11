@@ -128,10 +128,7 @@ var resource = [
 
           {id: 2000033, name: 'retrieve', action: '/manage/user/:id', page: P.edit, desc: 'Retrieve'},
           {id: 2000034, extend: 2000033, method: M.PUT, page: P.list, desc: 'Update'},
-          {id: 2000035, extend: 2000033, method: M.DELETE, page: P.list, desc: 'Delete'},
-
-          {id: 2000036, name: 'profile', desc: 'User Profile', action: '/manage/user/profile'},
-          {id: 2000037, extend: 2000036, method: M.PUT, desc: 'Update User Profile'}
+          {id: 2000035, extend: 2000033, method: M.DELETE, page: P.list, desc: 'Delete'}
         ]
       },
 
@@ -239,7 +236,13 @@ var resource = [
         ]
       },
 
-      { id: 200015, name: 'initialize', desc: 'Manage', page: 'manage/index'}
+      { id: 200015, name: 'initialize', desc: 'Manage', page: 'manage/index'},
+
+      {
+        id: 200016, name: 'profile', desc: 'User Profile', children: [
+          {id: 2000161, name: 'update', desc: 'Reset User Password', action: '/manage/profile', method: M.POST}
+        ]
+      }
   ]
   }
 ];

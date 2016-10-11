@@ -183,6 +183,11 @@ module.exports = function(app, config, passport) {
         _.extend(options, {
           layout: (req.isGet ? 'manage/layout' : (options.layout || false))
         });
+
+        if (true === options.layout) {
+          options.layout = 'manage/layout';
+        }
+
         if (req.isGet) {
           _.extend(options, {
             username: req.user.name,

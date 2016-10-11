@@ -106,5 +106,6 @@ router.post(index.signup.do, function (req, res, next) {
 router.get(index.signout.do, function (req, res, next) {
   req.logout();
   publishEvent(req, 'SIGNOUT');
-  res.redirect(routes.home.action);
+  var redirectTo = req.session.returnTo ? req.session.returnTo : routes.home.action;
+  res.redirect(redirectTo);
 });

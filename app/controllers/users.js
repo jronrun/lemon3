@@ -16,7 +16,7 @@ module.exports = function (app, passport) {
     }), function (req, res, next) {
 
     publishEvent(req, 'SIGNIN');
-    var redirectTo = req.session.returnTo ? req.session.returnTo : routes.home.action;
+    var to = req.session.returnTo, redirectTo = (to && (index.signin.action !== to)) ? to : routes.home.action;
     delete req.session.returnTo;
     res.redirect(redirectTo);
   });

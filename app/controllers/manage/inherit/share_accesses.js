@@ -79,7 +79,7 @@ module.exports = function (router, index, root) {
         clazz: 'item-col-author'
       },
       {
-        title: 'Create',
+        title: 'Share Create',
         prop: function(item) {
           var createT = datefmt(item.create_time);
           if (req.user.isAdmin) {

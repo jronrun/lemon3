@@ -10,8 +10,7 @@ var host = '192.168.20.19';
 // var host = '192.168.0.100';
 
 module.exports = {
-  //'mongodb://localhost/noobjs_dev'
-  db: 'mongodb://lemon3:kfvahtmgtlemon3@' + host + ':27017/lemon3',
+  db: process.env.MONGOHQ_URL,
   morganFmt: 'dev',
   port: 3000,
 

@@ -19,5 +19,5 @@ gulp.task('default', ['build-pickadate', 'build-style', 'serv-develop']);
 //this & 'gulp' || this & 'npm start'
 gulp.task("webpack", ['serv-webpack']);
 
-//production, export MONGOHQ_URL="mongodb://lemon3:kfvahtmgtlemon3@localhost:27017/lemon3"
+//export MONGOHQ_URL="mongodb://{usr}:{passwd}@localhost:27017/{db}"
 gulp.task("production", ['env-product', 'build-pickadate', 'build-style', 'serv-product']);

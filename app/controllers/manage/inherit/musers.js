@@ -19,7 +19,9 @@ module.exports = function (router, index, root) {
    * User Profile
    */
   router.get(index.profile.do, function (req, res, next) {
-    res.render(index.profile);
+    res.render(index.profile, {
+      action: index.profile.action
+    });
   });
 
   /**

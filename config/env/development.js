@@ -2,13 +2,6 @@
 
 var format = require('util').format;
 
-// var host = '10.0.4.35';
-var host = '192.168.20.19';
-// var host = 'localhost';
-// var host = '127.0.0.1';
-// var host = '192.168.1.105';
-// var host = '192.168.0.100';
-
 module.exports = {
   db: process.env.MONGOHQ_URL,
   morganFmt: 'dev',
@@ -17,6 +10,6 @@ module.exports = {
   webpackPort: 8080,
   inspectorWebPort: 8000,
   inspectorDebugPort: 5858,
-  host: host,
-  livereload: format('http://%s:35729/livereload.js', host)
+  host: process.env.LEMON3_HOST,
+  livereload: format('http://%s:35729/livereload.js', process.env.LEMON3_HOST)
 };

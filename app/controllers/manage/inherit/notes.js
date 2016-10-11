@@ -91,9 +91,12 @@ module.exports = function (router, index, root) {
 
     var search = [
       generic.searchInput('id', 'search id...'),
-      generic.searchInput('title', 'search note...'),
-      generic.searchSelect('state', 'All State', stateOptions)
+      generic.searchInput('title', 'search note...')
     ];
+
+    if (req.user.isAdmin) {
+      search.push(generic.searchSelect('state', 'All State', stateOptions));
+    }
 
     generic.list({
       ownerQuery: 1,

@@ -25,7 +25,7 @@ module.exports = function (router, index, root) {
   /**
    * Update User Profile
    */
-  router.post(index.profile.do, function (req, res, next) {
+  router.put(index.profile.do, function (req, res, next) {
 
   });
 

@@ -131,7 +131,7 @@ var resource = [
           {id: 2000035, extend: 2000033, method: M.DELETE, page: P.list, desc: 'Delete'},
 
           {id: 2000036, name: 'profile', desc: 'User Profile', action: '/manage/user/profile'},
-          {id: 2000037, extend: 2000036, method: M.POST, desc: 'Update User Profile'}
+          {id: 2000037, extend: 2000036, method: M.PUT, desc: 'Update User Profile'}
         ]
       },
 

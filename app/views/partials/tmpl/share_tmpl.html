@@ -51,6 +51,7 @@
                     <% if (share.userl) { %>
                         <h6 class="invisible"></h6>
                         <footer class="blockquote-footer">
+                            {{!--
                             Created by
                             <% if (his.user.id) { %>
                             <a href="/manage/user/<%= his.user.id %>" data-preview><%= (his.user.name || '') %></a>
@@ -59,6 +60,7 @@
                             <% } %>
                             <cite><%= (his.user.ip || '') %></cite>
                             ;&nbsp;&nbsp;
+                            --}}
                             Sharing from
                             <% if (share.from.id) { %>
                             <a href="/manage/user/<%= share.from.id %>" data-preview><%= (share.from.name || '') %></a>
@@ -68,14 +70,15 @@
                             <cite><%= (share.from.ip || '') %></cite>
                         </footer>
                     <% } else { %>
-                    <h6 class="invisible"></h6>
-                    <footer class="blockquote-footer">
-                        Created by <%= (his.user.name || '') %>
-                        <cite><%= (his.user.ip || '') %></cite>
-                        ;&nbsp;&nbsp;
-                        Sharing from <%= (share.from.name || '') %>
-                        <cite><%= (share.from.ip || '') %></cite>
-                    </footer>
+                        <h6 class="invisible"></h6>
+                        <footer class="blockquote-footer">
+                            {{!--
+                            Created by <%= (his.user.name || '') %>
+                            <cite><%= (his.user.ip || '') %></cite>
+                            ;&nbsp;&nbsp;
+                            --}}
+                            Sharing from <%= (share.from.name || '') %>
+                        </footer>
                     <% } %>
                 </div>
             </div>

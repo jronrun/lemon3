@@ -1,18 +1,24 @@
 /**
  *
  */
-// var mirror = require('../js/notemirror');
-// require('summernote/dist/summernote.css');
-// require('summernote');
-
-var files = require('../js/files'),
+var mirror = require('../js/codemirror'),
+  files = require('../js/files'),
   sharing =  require('../js/sharing');
+
+require('imports?require=>false,define=>false,module=>false!summernote');
 
 function leave() {
   lemon.persist('rich_snapshoot', rich.snapshoot());
 }
 
 var rich = {
+
+  summer: {
+    id: '#rich_view',
+    intl: function () {
+      $(rich.summer.id).summernote();
+    }
+  },
 
   snapshoot: function () {
 
@@ -25,6 +31,7 @@ var rich = {
       lemon.console();
     }
 
+    rich.summer.intl();
 
     if (lemon.isRootWin()) {
       rich.snapload();

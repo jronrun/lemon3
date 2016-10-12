@@ -1,4 +1,7 @@
 {{#content "head" mode="append"}}
+    <!--<script src="/components/jquery/dist/jquery.min.js"></script>-->
+    <link href="/components/summernote/dist/summernote.css" rel="stylesheet">
+    <!--<script src="/components/summernote/dist/summernote.min.js"></script>-->
     <script src="/dist/rich.js"></script>
 {{/content}}
 
@@ -29,7 +32,9 @@
             <em class="fa fa-share-alt"></em>&nbsp;&nbsp;Share&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         </button>
 
-        <div id="rich_view"></div>
+        <div id="rich_view">
+            <p>Hello Summernote</p>
+        </div>
         <input type="file" id="load_file" class="hidden" style="display: none;"/>
     </div>
     <div class="tab-pane" id="rich-tab2" role="tabpanel"></div>

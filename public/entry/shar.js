@@ -67,7 +67,7 @@ var shar = {
         }
 
         var vid = 'note_share_view', bid = '#n_preview', rightTip = [
-          '<button type="button" id="n_preview" class="btn btn-secondary-outline icondh" style="border:0">',
+          '<button type="button" id="n_preview" class="btn btn-secondary icondh" style="border:0">',
           '<em class="fa fa-eye"></em>',
           '</button>'
         ].join('');
@@ -138,7 +138,7 @@ var shar = {
 
   his: {
     button: function(tip, id, mark) {
-      return lemon.format('<button class="btn btn-sm btn-secondary-outline text-muted" id="{0}" ' +
+      return lemon.format('<button class="btn btn-sm btn-secondary text-muted" id="{0}" ' +
         'style="border: 0px;" type="button" data-mark="{2}">{1}</button>', id || lemon.uniqueId(), tip, lemon.enc(mark || ''));
     },
     tglComment: function(share, el) {

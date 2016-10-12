@@ -80,7 +80,7 @@ $(function () {
         '<div class="card-footer">',
         '<section class="section">',
         '<button type="button" class="btn btn-primary-outline" data-from="{1}" data-base="{2}" id="lc-card-choose">Choose</button>&nbsp;&nbsp;',
-        '<button type="button" class="btn btn-secondary-outline" data-from="{1}" data-base="{2}" id="lc-card-cancel">Cancel</button>',
+        '<button type="button" class="btn btn-secondary" data-from="{1}" data-base="{2}" id="lc-card-cancel">Cancel</button>',
         '</section>',
         '</div>'
       ];

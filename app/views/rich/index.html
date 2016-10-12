@@ -1,0 +1,39 @@
+{{#content "head" mode="append"}}
+    <script src="/dist/rich.js"></script>
+{{/content}}
+
+<ul class="nav nav-tabs" style="display: none;" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="tri-rich-tab1" data-toggle="tab" data-target="#rich-tab1" href="#rich-tab1" role="tab"></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="tri-rich-tab2" data-toggle="tab" data-target="#rich-tab2" href="#rich-tab2" role="tab"></a>
+    </li>
+</ul>
+<div class="tab-content" id="rich-layout">
+    <div class="tab-pane active" id="rich-tab1" role="tabpanel">
+        <div class="pos-f-t">
+            <div class="collapse" id="rich-header">
+                <div class="container-fluid bg-inverse p-a-1">
+
+                </div>
+            </div>
+            <div class="navbar navbar-light bg-faded navbar-static-top" style="background-color: white;" id="rich_nav">
+                <button class="navbar-toggler navbar-brand" type="button" data-toggle="collapse"
+                        data-target="#rich-header" title="Rich Text - WYSIWYG">
+                  {{> logo}}
+                </button>
+            </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-secondary text-info icondh pull-right" style="border: 0px;position: absolute;right: 0;z-index: 50000;display: none;" id="share_this">
+            <em class="fa fa-share-alt"></em>&nbsp;&nbsp;Share&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </button>
+
+        <div id="rich_view"></div>
+        <input type="file" id="load_file" class="hidden" style="display: none;"/>
+    </div>
+    <div class="tab-pane" id="rich-tab2" role="tabpanel"></div>
+</div>
+
+{{> tmpl/sharing_tmpl}}
+{{> tmpl/rich_tmpl}}

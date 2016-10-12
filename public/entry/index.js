@@ -96,7 +96,7 @@ lemon.href = function (uri) {
   global.location.href = uri;
 };
 
-global.$ = $;
+// global.$ = global.jQuery = $;
 
 var initlock = {};
 function callinit(source) {

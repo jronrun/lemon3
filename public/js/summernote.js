@@ -9,16 +9,14 @@ var helper = function () {
 
 };
 
-var summer = function (options) {
+var summer = function (elId, options) {
   options = lemon.extend({
-    elId: ''
-  }, options || {});
-
-  $(options.elId).summernote({
     onInit: function () {
 
     }
-  });
+  }, options || {});
+
+  $(elId).summernote(options);
 };
 
 lemon.extend(summer, {

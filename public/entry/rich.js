@@ -14,9 +14,7 @@ var rich = {
   instance: null,
   summer: {
     intl: function () {
-      rich.instance = summer({
-        elId: '#rich_view'
-      });
+      rich.instance = summer('#rich_view');
     }
   },
 

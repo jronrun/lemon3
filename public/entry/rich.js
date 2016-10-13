@@ -14,7 +14,12 @@ var rich = {
   instance: null,
   summer: {
     intl: function () {
-      rich.instance = summer('#rich_view');
+      rich.instance = summer('#rich_view', false, {
+        init: function (layoutInfo) {
+          console.log(layoutInfo);
+          global.test=layoutInfo;
+        }
+      });
     }
   },
 

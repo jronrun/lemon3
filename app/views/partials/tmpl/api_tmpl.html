@@ -143,10 +143,7 @@
                     <% } %>
                     <% if (api.owner && 2 == api.owner) { %>
                     <h6 class="invisible"></h6>
-                    <a class="btn btn-secondary btn-sm text-muted icondh" data-preview
-                       href="/manage/interface/<%= api._id %>"
-                       title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; "
-                       type="button">
+                    <a class="btn btn-secondary btn-sm text-muted icondh" data-preview href="/manage/interface/<%= api._id %>" title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; ">
                         <em class="fa fa-pencil-square-o"></em>
                     </a>
                     <% } %>
@@ -211,11 +208,8 @@
                 <% } %>
                 <% if (api.owner && 2 == api.owner) { %>
                     <h6 class="invisible"></h6>
-                    <a class="btn btn-secondary btn-sm text-muted icondh" data-preview
-                       href="/manage/interface/<%= api._id %>"
-                       title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; "
-                       type="button">
-                    <em class="fa fa-pencil-square-o"></em>
+                    <a class="btn btn-secondary btn-sm text-muted icondh" data-preview href="/manage/interface/<%= api._id %>" title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; ">
+                        <em class="fa fa-pencil-square-o"></em>
                     </a>
                 <% } %>
                 <h6 class="invisible"></h6>
@@ -393,9 +387,7 @@
                   <em class="fa fa-sticky-note-o"></em>
               </button>
               <h6 class="invisible"></h6>
-              <button class="btn btn-secondary btn-sm text-muted icondh"
-                      id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>" style="border: none;
-" type="button">
+              <button class="btn btn-secondary btn-sm text-muted icondh" id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>" style="border: none; " type="button">
                   <em class="fa fa-share-alt"></em>
               </button>
           </td>

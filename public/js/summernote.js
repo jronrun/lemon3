@@ -34,14 +34,14 @@ var helper = function (elId) {
   lemon.each(theAPIs, function (v, k) {
     lemon.each(v, function (n) {
       tools[n] = function () {
-        var len = arguments.length, arg = arguments;
+        var len = arguments.length, arg = arguments, sn = $(tools.id).summernote;
         switch (len) {
-          case 1: return $(tools.id).summernote(n, arg[0]);
-          case 2: return $(tools.id).summernote(n, arg[0], arg[1]);
-          case 3: return $(tools.id).summernote(n, arg[0], arg[1], arg[2]);
-          case 4: return $(tools.id).summernote(n, arg[0], arg[1], arg[2], arg[3]);
-          case 5: return $(tools.id).summernote(n, arg[0], arg[1], arg[2], arg[3], arg[4]);
-          default: return $(tools.id).summernote(n);
+          case 1: return sn(n, arg[0]);
+          case 2: return sn(n, arg[0], arg[1]);
+          case 3: return sn(n, arg[0], arg[1], arg[2]);
+          case 4: return sn(n, arg[0], arg[1], arg[2], arg[3]);
+          case 5: return sn(n, arg[0], arg[1], arg[2], arg[3], arg[4]);
+          default: return sn(n);
         }
       };
     });

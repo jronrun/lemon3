@@ -44,9 +44,9 @@ module.exports = function (router, index, root) {
           prop: function(item) {
             var descs = [];
             if (MUTATION == item.mutation) {
-              descs.push(generic.label('Mutation of ' + item.name, 'label-success'));
+              descs.push(generic.label('Mutation of ' + item.name, 'tag-success'));
             } else {
-              descs.push(generic.label('Define API', 'label-info'));
+              descs.push(generic.label('Define API', 'tag-info'));
             }
 
             descs.push('<small>' + item.desc + '</small>');

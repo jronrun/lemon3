@@ -148,8 +148,8 @@ var apis = {
                   '<span class="font-weight-bold text-muted">',
                   interf.name,
                   '</span>',
-                  (2 == interf.mutation ? '<span class="label label-success pull-right">Mutation </span>' : ''),
-                  '<span class="label label-info pull-right">',
+                  (2 == interf.mutation ? '<span class="tag tag-success pull-right">Mutation </span>' : ''),
+                  '<span class="tag tag-info pull-right">',
                   group.info.name,
                   '</span>'
                 ].join('');
@@ -1446,8 +1446,8 @@ var mapi = {
   mediumUpViewDoc: function(rdata, thiz) {
     var title = [
       '<span class="text-muted">API Document</span>',
-      (2 == rdata.item.mutation ? '<span class="label label-success pull-right">Mutation </span>' : ''),
-      '<span class="label label-info pull-right">',
+      (2 == rdata.item.mutation ? '<span class="tag tag-success pull-right">Mutation </span>' : ''),
+      '<span class="tag tag-info pull-right">',
       rdata.item.name,
       '</span>'
     ].join('');

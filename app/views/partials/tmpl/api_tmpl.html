@@ -1,7 +1,7 @@
 <script type="text/html" id="dd_env_tmpl">
     <div class="dropdown-header" id="envh_<%= id %>">
         <h5>
-            <span class="label label-<%= level %>">
+            <span class="tag tag-<%= level %>">
                 <%= name %>
                 <% if (desc.length > 0) { %>
                 <br/>
@@ -43,7 +43,7 @@
 <script type="text/html" id="dd_api_group_tmpl">
     <div class="dropdown-header" id="api_group_<%= id %>">
         <h5>
-            <span class="label label-info">
+            <span class="tag tag-info">
                 <%= name %>
                 <% if (desc.length > 0) { %>
                 <br/>
@@ -59,7 +59,7 @@
         <blockquote class="blockquote" style="font-size: 110%" apig="<%= group.id %>">
             <p class="m-b-0 linebreak icondh">
                 <% if (2 == mutation) { %>
-                    <span class="label label-success">Mutation </span>
+                    <span class="tag tag-success">Mutation </span>
                 <% } %>
                 <%= name %>
             </p>
@@ -103,7 +103,7 @@
           <tr id="apitgl_group_<%= group.info.id %>" apigroupable="<%= batchNo %>" data-group-id="<%= lemon.enc(group.info.id) %>">
               <td>
                   <h5>
-                      <span class="label label-info">
+                      <span class="tag tag-info">
                           <span class="fa fa-flag"></span>
                           &nbsp;<%= group.info.name %>
                       </span>
@@ -156,7 +156,7 @@
                 <h6 class="invisible"></h6>
 
                 <% if (2 == api.mutation) { %>
-                  <span class="label label-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
+                  <span class="tag tag-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
                   <h5 class="invisible"></h5>
                 <% } %>
                 <%= highlight(api.request_doc, 'Request', {
@@ -259,7 +259,7 @@
               <tr id="histgl_time_<%= theTimeId %>" timegroupable="<%= batchNo %>" data-time-id="<%= lemon.enc(theTimeId) %>">
                   <td>
                       <h5>
-                            <span class="label label-info">
+                            <span class="tag tag-info">
                                 <span class="fa fa-clock-o"></span> &nbsp;<%= curInterval %>
                             </span>
                       </h5>
@@ -272,7 +272,7 @@
       <tr tgl-timegroup="tgl" timegroupc="<%= theTimeId %>">
           <td clickable="<%= batchNo %>" data-his="<%= lemon.enc(his) %>" id="ahis_<%= his.id %>">
               <% if (2 == his.api.mutation) { %>
-                  <span class="label label-success" style="font-size: 65%;">Mutation of <%= his.api.name %></span>
+                  <span class="tag tag-success" style="font-size: 65%;">Mutation of <%= his.api.name %></span>
                   <h5 class="invisible"></h5>
               <% } %>
               <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
@@ -427,9 +427,9 @@
               <span class="text-muted">
               API Document -
                   <% if (2 == api.mutation) { %>
-                      <span class="label label-success"><%= 'Mutation of ' + api.name %></span>
+                      <span class="tag tag-success"><%= 'Mutation of ' + api.name %></span>
                   <% } else { %>
-                      <span class="label label-info"><%= api.name %></span>
+                      <span class="tag tag-info"><%= api.name %></span>
                   <% } %>
               </span>
               <% if (api.desc && api.desc.length > 0) { %>
@@ -448,7 +448,7 @@
               <div id="api_doc_<%= host.id %>" style="display: none;">
                   <span class="text-muted">
                       API Document -
-                      <span class="label label-info"> <%= host.name %> </span>
+                      <span class="tag tag-info"> <%= host.name %> </span>
                   </span>
                   <% if (host.desc && host.desc.length > 0) { %>
                       <br/><br/>
@@ -574,7 +574,7 @@
 <div class="dropdown-divider invisible"></div>
 <div class="dropdown-header">
     <h5>
-        <span class="label label-danger">
+        <span class="tag tag-danger">
             Product Environment
             <br/>
             <small class="linebreak">Add a header to label sections of actions in any dropdown menu.</small>

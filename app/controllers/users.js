@@ -88,7 +88,7 @@ router.post(index.signup.do, function (req, res, next) {
           return res.err(err.message, index.signup, fill);
         }
 
-        if (1 != result.insertedCount) {
+        if (1 != result.insertedCount && !History.isObjectID(result.insertedId)) {
           return res.err('Sign up fail, Try again?', index.signup, fill);
         }
 

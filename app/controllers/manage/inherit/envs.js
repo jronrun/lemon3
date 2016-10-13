@@ -37,7 +37,7 @@ module.exports = function (router, index, root) {
       {
         title: 'Alert Level',
         prop: function(item) {
-          return format('<span class="label label-%s">%s</span>', item.alert_level, item.alert_level);
+          return format('<span class="tag tag-%s">%s</span>', item.alert_level, item.alert_level);
         },
         clazz: 'item-col-author'
       },

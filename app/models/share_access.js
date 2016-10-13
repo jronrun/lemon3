@@ -101,7 +101,7 @@ shareAccess.add = function(access, resultCall, requestInfo) {
             return resultCall(answer.fail(err.message));
           }
 
-          if (1 != result.insertedCount) {
+          if (1 != result.insertedCount && !History.isObjectID(result.insertedId)) {
             return resultCall(answer.fail('create fail'));
           }
 

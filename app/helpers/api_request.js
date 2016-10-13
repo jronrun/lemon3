@@ -403,7 +403,7 @@ module.exports = function(commOptions) {
                   return resultCall(answer.fail(err.message));
                 }
 
-                if (1 != result.insertedCount) {
+                if (1 != result.insertedCount && !History.isObjectID(result.insertedId)) {
                   return resultCall(answer.fail('Request fail, Try again?'));
                 }
 

@@ -1,23 +1,22 @@
 /**
  *
  */
-require('bootstrap/js/dist/tooltip');
-var mirror = require('../js/codemirror'),
+
+var summer = require('../js/summernote'),
   files = require('../js/files'),
   sharing =  require('../js/sharing');
-
-require('imports?require=>false,define=>false,module=>false!summernote');
 
 function leave() {
   lemon.persist('rich_snapshoot', rich.snapshoot());
 }
 
 var rich = {
-
+  instance: null,
   summer: {
-    id: '#rich_view',
     intl: function () {
-      $(rich.summer.id).summernote();
+      rich.instance = summer({
+        elId: '#rich_view'
+      });
     }
   },
 
@@ -74,5 +73,8 @@ var rich = {
     });
   }
 };
+
+//TODO remove
+global.rich=rich;
 
 $(function () { rich.initialize(); });

@@ -1,6 +1,7 @@
 /**
  *
  */
+require('bootstrap/js/dist/tooltip');
 var mirror = require('../js/codemirror'),
   files = require('../js/files'),
   sharing =  require('../js/sharing');

@@ -754,7 +754,7 @@ module.exports = function(model, index, defineForm) {
               return res.json(answer.fail(err.message));
             }
 
-            if (1 != result.insertedCount && !History.isObjectID(result.insertedId)) {
+            if (1 != result.insertedCount && !model.isObjectID(result.insertedId)) {
               return res.json(answer.fail('Create fail, Try again?'));
             }
 

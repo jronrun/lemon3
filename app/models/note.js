@@ -181,7 +181,7 @@ note.fastNote = function (params, resultCall, requestInfo) {
             return resultCall(answer.fail(err.message));
           }
 
-          if (1 != result.insertedCount && !History.isObjectID(result.insertedId)) {
+          if (1 != result.insertedCount && !note.isObjectID(result.insertedId)) {
             return resultCall(answer.fail('create fail'));
           }
 

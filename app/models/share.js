@@ -234,7 +234,7 @@ share.fastShare = function(params, resultCall, requestInfo) {
             return resultCall(answer.fail(err.message));
           }
 
-          if (1 != result.insertedCount && !History.isObjectID(result.insertedId)) {
+          if (1 != result.insertedCount && !share.isObjectID(result.insertedId)) {
             return resultCall(answer.fail('create fail'));
           }
 

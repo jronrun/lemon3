@@ -123,7 +123,7 @@ power.createInnerPowers = function (requestInfo) {
             }, function(errinsert, result) {
               if (errinsert) {
                 log.error(inner.name + ': ' + errinsert.message);
-              } else if (1 != result.insertedCount && !History.isObjectID(result.insertedId)) {
+              } else if (1 != result.insertedCount && !power.isObjectID(result.insertedId)) {
                 log.error(inner.name + ': Create fail');
               }
             });

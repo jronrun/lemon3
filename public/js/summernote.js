@@ -91,6 +91,7 @@ var helper = function (elId, events, options) {
       });
     },
     refresh: function (refreshOptions, refreshEvents) {
+      $('.tooltip').tooltip('hide');
       tools.action('destroy');
       refreshOptions = lemon.extend(options, refreshOptions || {});
       refreshEvents = lemon.extend(events, refreshEvents || {});

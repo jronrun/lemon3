@@ -3,6 +3,7 @@
  */
 var mirror = require('../js/codemirror');
 require('bootstrap/js/dist/tooltip');
+require('bootstrap/js/dist/modal');
 require('imports?require=>false,define=>false,module=>false!summernote');
 mirror.requireMode('html');
 
@@ -22,6 +23,9 @@ var theAPIs = {
   ],
   insert: [
     'insertImage', 'insertNode', 'insertText', 'createLink', 'unlink'
+  ],
+  findInCode: [
+    'setHeight', 'empty', 'hasFocus'
   ]
 };
 
@@ -32,12 +36,72 @@ var helper = function (elId, events) {
     layout: null,
     ui: $.summernote.ui,
 
+    action: function () {
+      var len = arguments.length, arg = arguments, $el = $(tools.id);
+      switch (len) {
+        case 1: return $el.summernote(arg[0]);
+        case 2: return $el.summernote(arg[0], arg[1]);
+        case 3: return $el.summernote(arg[0], arg[1], arg[2]);
+        case 4: return $el.summernote(arg[0], arg[1], arg[2], arg[3]);
+        case 5: return $el.summernote(arg[0], arg[1], arg[2], arg[3], arg[4]);
+        case 6: return $el.summernote(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5]);
+        default: return $el.summernote();
+      }
+    },
+    contextReset: function () {
+      return tools.action('reset');
+    },
+    val: function (html) {
+      if (lemon.isUndefined(html)) {
+        return tools.action('code');
+      }
+
+      if (tools.isMirrorActivated()) {
+        tools.mirror().val(html);
+      } else {
+        tools.action('code', html);
+      }
+
+      return tools.action('code');
+    },
+    toolbarDeactivate: function (isIncludeCodeview) {
+      return tools.action('toolbar.deactivate', isIncludeCodeview);
+    },
+    toolbarActivate: function (isIncludeCodeview) {
+      return tools.action('toolbar.activate', isIncludeCodeview);
+    },
+    //1 toggle, 2 active, 3 unactive
+    toolbarTgl: function (opt) {
+      var bar = null;
+      if (!tools.layout || !(bar = tools.layout.toolbar)) {
+        return false;
+      }
+      opt = opt || 1;
+      switch (opt) {
+        case 1: bar.toggle(); break;
+        case 2: if (bar.is(':hidden')) { bar.show(); } break;
+        case 3: if (bar.is(':visible')) { bar.hide(); } break;
+      }
+      return bar.is(':visible');
+    },
+    fullscreenTgl: function () {
+      return tools.action('fullscreen.toggle');
+    },
+    isFullscreen: function () {
+      return tools.action('fullscreen.isFullscreen');
+    },
+    isMirrorActivated: function () {
+      return tools.action('codeview.isActivated');
+    },
+    mirrorTgl: function () {
+      return tools.action('codeview.toggle');
+    },
     mirror: function () {
-      if (null == tools.layout || !tools.layout.codable) {
+      if (!tools.isMirrorActivated()) {
         return null;
       }
 
-      var inst = $(tools.layout.codable).data('cmEditor');
+      var inst = (!tools.layout || !tools.layout.codable) ? null : $(tools.layout.codable).data('cmEditor');
       if (!inst) {
         return null;
       }
@@ -49,18 +113,16 @@ var helper = function (elId, events) {
   lemon.each(theAPIs, function (v, k) {
     lemon.each(v, function (n) {
       tools[n] = function () {
-        var len = arguments.length, arg = arguments, $el = $(tools.id);
-        switch (len) {
-          case 1: return $el.summernote(n, arg[0]);
-          case 2: return $el.summernote(n, arg[0], arg[1]);
-          case 3: return $el.summernote(n, arg[0], arg[1], arg[2]);
-          case 4: return $el.summernote(n, arg[0], arg[1], arg[2], arg[3]);
-          case 5: return $el.summernote(n, arg[0], arg[1], arg[2], arg[3], arg[4]);
-          default: return $el.summernote(n);
-        }
+        var args = [n];
+        Array.prototype.push.apply(args, arguments);
+        return tools.action.apply(this, args);
       };
     });
   });
+
+  if (!lemon.isFunc(events.init)) {
+    events.init = function () {/**/}
+  }
 
   lemon.each(events, function (v, k) {
     if (lemon.isFunc(v)) {

@@ -85,6 +85,11 @@ var helper = function (elId, events, options) {
         default: return $el.summernote();
       }
     },
+    modeTgl: function () {
+      return tools.refresh({
+        airMode: !options.airMode
+      });
+    },
     refresh: function (refreshOptions, refreshEvents) {
       tools.action('destroy');
       refreshOptions = lemon.extend(options, refreshOptions || {});

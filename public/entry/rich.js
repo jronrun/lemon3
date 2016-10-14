@@ -15,17 +15,7 @@ var rich = {
   summer: {
     //type 1 air, 2 normal
     option: function (type) {
-      var ui = $.summernote.ui, modeTgl = function (context, airMode) {
-        return ui.button({
-          contents: '<em class="fa fa-toggle-on"></em>',
-          tooltip: '',
-          click: function () {
-            rich.instance = rich.instance.refresh({
-              airMode: airMode
-            });
-          }
-        }).render();
-      }, toolBtns = function (target, isAirBar, isAddHead) {
+      var ui = $.summernote.ui, toolBtns = function (target, isAirBar, isAddHead) {
         var btns = [
           ['lemon', ['logo']],
           ['style', ['style']],
@@ -60,20 +50,15 @@ var rich = {
             contents: lemon.tmpls('#rich_logo_tmpl'),
             tooltip: '',
             click: function () {
+              rich.instance.modeTgl();
             }
           }).render();
-        },
-        tonor: function (context) {
-          return modeTgl(context, false);
-        },
-        toair: function (context) {
-          return modeTgl(context, true);
         }
-      }, toolbarB = toolBtns(['cust', ['toair']]);
+      }, toolbarB = toolBtns(['cust', []]);
 
       switch (type = type || 1) {
         case 1:
-          var aribarB = toolBtns(['cust', ['tonor']], true);
+          var aribarB = toolBtns(['cust', []], true);
           return {
             buttons: buttons,
             toolbar: toolbarB,

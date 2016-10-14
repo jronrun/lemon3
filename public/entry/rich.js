@@ -13,11 +13,70 @@ function leave() {
 var rich = {
   instance: null,
   summer: {
+    //type 1 air, 2 normal
+    option: function (type) {
+      var ui = $.summernote.ui, modeTgl = function (context, airMode) {
+        return ui.button({
+          contents: '<em class="fa fa-toggle-on"></em>',
+          tooltip: '',
+          click: function () {
+            rich.instance = rich.instance.refresh({
+              airMode: airMode
+            });
+          }
+        }).render();
+      }, toolBtns = function (target, isAddHead) {
+        var btns = [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'picture', 'video', 'help']]
+        ];
+
+        if (isAddHead) {
+          btns.unshift(target);
+        } else {
+          btns.push(target);
+        }
+
+        return btns;
+      };
+
+      var buttons = {
+        tonor: function (context) {
+          return modeTgl(context, false);
+        },
+        toair: function (context) {
+          return modeTgl(context, true);
+        }
+      }, toolbarB = toolBtns(['view', ['toair']]);
+
+      switch (type = type || 1) {
+        case 1:
+          var aribarB = toolBtns(['view', ['tonor']]);
+
+          return {
+            buttons: buttons,
+            toolbar: toolbarB,
+            airMode: true,
+            popover: {
+              air: aribarB
+            }
+          };
+
+        case 2:
+          return {
+            buttons: buttons,
+            toolbar: toolbarB
+          };
+      }
+    },
     intl: function () {
-      rich.instance = summer('#rich_view', {
-        // height: $(window).height()
-      });
-    }
+      rich.instance = summer('#rich_view', rich.summer.option());
+    },
   },
 
   snapshoot: function () {

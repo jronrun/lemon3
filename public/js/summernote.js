@@ -181,7 +181,7 @@ var helper = function (elId, events, options) {
 };
 
 var summer = function (elId, options, events) {
-  return createInstance(elId, options, events);
+  return createInstance(elId, events, options);
 };
 
 lemon.extend(summer, {

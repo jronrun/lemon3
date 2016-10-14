@@ -25,7 +25,7 @@ var rich = {
             });
           }
         }).render();
-      }, toolBtns = function (target, isAddHead) {
+      }, toolBtns = function (target, isAirBar, isAddHead) {
         var btns = [
           ['lemon', ['logo']],
           ['style', ['style']],
@@ -34,16 +34,24 @@ var rich = {
           ['color', ['color']],
           ['para', ['ul', 'ol', 'paragraph']],
           ['table', ['table']],
-          ['insert', ['link', 'picture', 'video', 'help']]
+          ['insert', ['link', 'picture', 'video']],
+          ['view', ['codeview', 'help']]
+        ], airBtns = [
+          ['lemon', ['logo']],
+          ['color', ['color']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['para', ['ul', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'picture']]
         ];
 
         if (isAddHead) {
-          btns.unshift(target);
+          (isAirBar ? airBtns : btns).unshift(target);
         } else {
-          btns.push(target);
+          (isAirBar ? airBtns : btns).push(target);
         }
 
-        return btns;
+        return (isAirBar ? airBtns : btns);
       };
 
       var buttons = {
@@ -61,12 +69,11 @@ var rich = {
         toair: function (context) {
           return modeTgl(context, true);
         }
-      }, toolbarB = toolBtns(['cust', ['toair', 'codeview']]);
+      }, toolbarB = toolBtns(['cust', ['toair']]);
 
       switch (type = type || 1) {
         case 1:
-          var aribarB = toolBtns(['cust', ['tonor']]);
-
+          var aribarB = toolBtns(['cust', ['tonor']], true);
           return {
             buttons: buttons,
             toolbar: toolbarB,

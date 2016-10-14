@@ -918,7 +918,7 @@ lemon.register({
     return lemon.attrTgl(selector, 'evented', 2);
   },
   tmpls: function (selector, data, appendToSelector) {
-    var aHtml = lemon.tmpl($(selector).html(), data);
+    var aHtml = lemon.tmpl($(selector).html(), data || {});
     if (appendToSelector) {
       $(appendToSelector).append(aHtml);
     }

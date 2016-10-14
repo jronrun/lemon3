@@ -27,6 +27,7 @@ var rich = {
         }).render();
       }, toolBtns = function (target, isAddHead) {
         var btns = [
+          ['lemon', ['logo']],
           ['style', ['style']],
           ['font', ['bold', 'underline', 'clear']],
           ['fontname', ['fontname']],
@@ -46,17 +47,25 @@ var rich = {
       };
 
       var buttons = {
+        logo: function (context) {
+          return ui.button({
+            contents: lemon.tmpls('#rich_logo_tmpl'),
+            tooltip: '',
+            click: function () {
+            }
+          }).render();
+        },
         tonor: function (context) {
           return modeTgl(context, false);
         },
         toair: function (context) {
           return modeTgl(context, true);
         }
-      }, toolbarB = toolBtns(['view', ['toair']]);
+      }, toolbarB = toolBtns(['cust', ['toair', 'codeview']]);
 
       switch (type = type || 1) {
         case 1:
-          var aribarB = toolBtns(['view', ['tonor']]);
+          var aribarB = toolBtns(['cust', ['tonor']]);
 
           return {
             buttons: buttons,

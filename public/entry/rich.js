@@ -50,7 +50,7 @@ var rich = {
             contents: lemon.tmpls('#rich_logo_tmpl'),
             tooltip: '',
             click: function () {
-              rich.instance.modeTgl();
+              rich.instance = rich.instance.modeTgl();
             }
           }).render();
         }

@@ -91,6 +91,10 @@ var helper = function (elId, events) {
       return tools.action('fullscreen.isFullscreen');
     },
     isMirrorActivated: function () {
+      if (!tools.layout || !tools.layout.codable || !$(tools.layout.codable).data('cmEditor')) {
+        return false;
+      }
+
       return tools.action('codeview.isActivated');
     },
     mirrorTgl: function () {
@@ -101,12 +105,7 @@ var helper = function (elId, events) {
         return null;
       }
 
-      var inst = (!tools.layout || !tools.layout.codable) ? null : $(tools.layout.codable).data('cmEditor');
-      if (!inst) {
-        return null;
-      }
-
-      return mirror.helpers(inst);
+      return mirror.helpers($(tools.layout.codable).data('cmEditor'));
     }
   };
 

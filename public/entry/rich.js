@@ -74,8 +74,8 @@ var rich = {
           };
       }
     },
-    intl: function () {
-      rich.instance = summer('#rich_view', rich.summer.option());
+    intl: function (type) {
+      rich.instance = summer('#rich_view', rich.summer.option(type));
     },
   },
 

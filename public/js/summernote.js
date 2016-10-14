@@ -41,7 +41,7 @@ var theAPIs = {
   }, events || {});
 
   options = lemon.extend({
-    fullscreen: true
+    fullsize: true
   }, options || {});
 
   delete options.callbacks;
@@ -52,8 +52,14 @@ var theAPIs = {
     inst.airbarHide();
   }
 
-  if (true === options.fullscreen && !inst.isFullscreen()) {
-    inst.fullscreenTgl();
+  if (true === options.fullsize) {
+    inst.setHeight($(window).height() - 50);
+  }
+
+  if (inst.layout && inst.layout.editor) {
+    inst.layout.editor.css({
+      'border-color': '#d9edf7'
+    });
   }
 
   return inst;

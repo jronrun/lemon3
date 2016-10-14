@@ -27,10 +27,41 @@ var theAPIs = {
   findInCode: [
     'setHeight', 'empty', 'hasFocus'
   ]
+}, createInstance = function (elId, events, options) {
+  events = lemon.extend({
+    init: null,
+    enter: null,
+    focus: null,
+    blur: null,
+    keyup: null,
+    keydown: null,
+    paste: null,
+    'image.upload': null,
+    change: null
+  }, events || {});
+
+  options = lemon.extend({
+    fullscreen: true
+  }, options || {});
+
+  delete options.callbacks;
+  var inst = helper(elId, events, options);
+  $(elId).summernote(options);
+
+  if (true === options.airMode) {
+    inst.airbarHide();
+  }
+
+  if (true === options.fullscreen && !inst.isFullscreen()) {
+    inst.fullscreenTgl();
+  }
+
+  return inst;
 };
 
-var helper = function (elId, events) {
+var helper = function (elId, events, options) {
   events = events || {};
+  options = options || {};
   var tools = {
     id: elId,
     layout: null,
@@ -48,8 +79,11 @@ var helper = function (elId, events) {
         default: return $el.summernote();
       }
     },
-    contextReset: function () {
-      return tools.action('reset');
+    refresh: function (refreshOptions, refreshEvents) {
+      tools.action('destroy');
+      refreshOptions = lemon.extend(options, refreshOptions || {});
+      refreshEvents = lemon.extend(events, refreshEvents || {});
+      return createInstance(tools.id, refreshEvents, refreshOptions);
     },
     val: function (html) {
       if (lemon.isUndefined(html)) {
@@ -63,6 +97,9 @@ var helper = function (elId, events) {
       }
 
       return tools.action('code');
+    },
+    airbarHide: function () {
+      return tools.action('airPopover.hide');
     },
     toolbarDeactivate: function (isIncludeCodeview) {
       return tools.action('toolbar.deactivate', isIncludeCodeview);
@@ -138,26 +175,7 @@ var helper = function (elId, events) {
 };
 
 var summer = function (elId, options, events) {
-  events = lemon.extend({
-    init: null,
-    enter: null,
-    focus: null,
-    blur: null,
-    keyup: null,
-    keydown: null,
-    paste: null,
-    'image.upload': null,
-    change: null
-  }, events || {});
-
-  options = lemon.extend({
-  }, options || {});
-
-  delete options.callbacks;
-  var inst = helper(elId, events);
-
-  $(elId).summernote(options);
-  return inst;
+  return createInstance(elId, options, events);
 };
 
 lemon.extend(summer, {

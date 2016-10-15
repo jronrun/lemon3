@@ -80,6 +80,7 @@ var rich = {
         case 1:
           var aribarB = toolBtns(['cust', ['save', 'share']], true);
           return {
+            fullsize: true,
             buttons: buttons,
             toolbar: toolbarB,
             airMode: true,
@@ -90,6 +91,7 @@ var rich = {
 
         case 2:
           return {
+            fullsize: true,
             buttons: buttons,
             toolbar: toolbarB
           };

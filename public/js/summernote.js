@@ -36,13 +36,18 @@ var theAPIs = {
     keyup: null,
     keydown: null,
     paste: null,
+    change: null,
     'image.upload': null,
-    change: null
+    'codeview.toggled': null
   }, events || {});
 
   options = lemon.extend({
     fullsize: true
   }, options || {});
+
+  if (!options.height && true === options.fullsize) {
+    options.height = options.minHeight = options.maxHeight = ($(window).height() - 50);
+  }
 
   delete options.callbacks;
   var inst = helper(elId, events, options);
@@ -50,10 +55,6 @@ var theAPIs = {
 
   if (true === options.airMode) {
     inst.airbarHide();
-  }
-
-  if (true === options.fullsize) {
-    inst.setHeight($(window).height() - 50);
   }
 
   if (inst.layout && inst.layout.editor) {
@@ -82,7 +83,6 @@ var helper = function (elId, events, options) {
         case 4: return $el.summernote(arg[0], arg[1], arg[2], arg[3]);
         case 5: return $el.summernote(arg[0], arg[1], arg[2], arg[3], arg[4]);
         case 6: return $el.summernote(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5]);
-        default: return $el.summernote();
       }
     },
     modeTgl: function () {
@@ -168,15 +168,21 @@ var helper = function (elId, events, options) {
     });
   });
 
-  if (!lemon.isFunc(events.init)) {
-    events.init = function () {/**/}
-  }
+  lemon.each(['codeview.toggled', 'init'], function (chk) {
+    if (!lemon.isFunc(events[chk])) {
+      events[chk] = function () {/**/}
+    }
+  });
 
   lemon.each(events, function (v, k) {
     if (lemon.isFunc(v)) {
       $(tools.id).on('summernote.' + k, function(a, b, c, d) {
         if ('init' === k) {
           tools.layout = b;
+        } else if ('codeview.toggled' === k) {
+          if (options.height) {
+            tools.setHeight(options.height);
+          }
         }
         return v(a, b, c, d);
       });

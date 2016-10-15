@@ -45,6 +45,26 @@ var rich = {
       };
 
       var buttons = {
+        save: function (context) {
+          return ui.button({
+            className: 'icondh',
+            contents: '<em class="fa fa-save"></em>',
+            tooltip: 'Save As an Note...',
+            click: function () {
+
+            }
+          }).render();
+        },
+        share: function (context) {
+          return ui.button({
+            className: 'icondh',
+            contents: '<em class="fa fa-share-alt"></em>',
+            tooltip: 'Share',
+            click: function () {
+
+            }
+          }).render();
+        },
         logo: function (context) {
           return ui.button({
             contents: lemon.tmpls('#rich_logo_tmpl'),
@@ -54,11 +74,11 @@ var rich = {
             }
           }).render();
         }
-      }, toolbarB = toolBtns(['cust', []]);
+      }, toolbarB = toolBtns(['cust', ['save', 'share']]);
 
       switch (type = type || 1) {
         case 1:
-          var aribarB = toolBtns(['cust', []], true);
+          var aribarB = toolBtns(['cust', ['save', 'share']], true);
           return {
             buttons: buttons,
             toolbar: toolbarB,

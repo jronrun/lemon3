@@ -168,7 +168,7 @@ var helper = function (elId, events, options) {
     });
   });
 
-  lemon.each(['codeview.toggled', 'init'], function (chk) {
+  lemon.each(['codeview.toggled', 'init', 'keydown'], function (chk) {
     if (!lemon.isFunc(events[chk])) {
       events[chk] = function () {/**/}
     }
@@ -183,7 +183,12 @@ var helper = function (elId, events, options) {
           if (options.height) {
             tools.setHeight(options.height);
           }
+        } else if ('keydown' === k) {
+          if (27 === b.keyCode || 'Escape' === b.key) {
+            tools.modeTgl();
+          }
         }
+
         return v(a, b, c, d);
       });
     }

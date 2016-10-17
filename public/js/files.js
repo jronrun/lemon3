@@ -20,7 +20,7 @@ var files = {
       }, options || {})), filename);
     }
   },
-  read: function (selector, callback) {
+  read: function (selector, callback, options) {
     files.reads(selector, {
       loadstart: function (e, file) {
         lemon.info('start reading file ' + file.name);
@@ -38,7 +38,7 @@ var files = {
       skip: function (e, file) {
         lemon.info('skipped reading file ' + JSON.stringify(file));
       },
-    });
+    }, options);
   },
   reads: function (selector, events, options) {
     events = lemon.extend({

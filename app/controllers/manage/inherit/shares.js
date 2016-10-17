@@ -87,8 +87,8 @@ module.exports = function (router, index, root) {
       });
 
     var html = [
-      format('<a class="btn btn-secondary text-info icondh" data-pjax title="Share Access" href="%s" ' +
-        'style="border: 0px;" data-queries="%s" type="button">', href, data),
+      format('<a class="btn btn-primary-outline text-info icondh" data-pjax title="Share Access" href="%s" ' +
+        'style="border: 0px;" data-queries="%s">', href, data),
       generic.em('tasks'),
       '</a>'
     ];
@@ -99,8 +99,8 @@ module.exports = function (router, index, root) {
   function shareHref(item, readonly) {
     var sData = crypto.compress(Share.shareData(item, readonly));
     var html = [
-      format('<a class="btn btn-secondary text-info icondh" data-share="%s" title="Share Link" href="javascript:void(0);" ' +
-        'style="border: 0px;" type="button">', sData),
+      format('<a class="btn btn-primary-outline text-info icondh" data-share="%s" title="Share Link" href="javascript:void(0);" ' +
+        'style="border: 0px;">', sData),
       generic.em('share-alt'),
       '</a>'
     ];

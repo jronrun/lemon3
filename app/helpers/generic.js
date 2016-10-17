@@ -67,7 +67,7 @@ module.exports = function(model, index, defineForm) {
     previewHref: function(href, text, title) {
       var html = [
         format('<a class="btn btn-secondary text-info icondh" data-preview title="%s" href="%s" ' +
-          'style="border: 0px;" type="button">', _.escape(title || ''), href || ''),
+          'style="border: 0px;">', _.escape(title || ''), href || ''),
         text || '',
         '</a>'
       ];

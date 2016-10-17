@@ -27,6 +27,7 @@ var shar = {
         case 5: shar.note.snapshotRender(ans.result); break;
         case 7: shar.api.apisSnapshotRender(ans.result); break;
         case 8: shar.merge.render(ans.result); break;
+        case 9: shar.rich.render(ans.result); break;
       }
     } else {
       lemon.warn(ans.msg);
@@ -98,6 +99,14 @@ var shar = {
       }
 
       return true;
+    }
+  },
+
+  rich: {
+    render: function (share) {
+      lemon.previews(lemon.fullUrl('/rich'), false, false, function(view) {
+        view.tellEvent('SHARE_RICH_SNAPSHOT', share);
+      });
     }
   },
 

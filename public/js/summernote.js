@@ -63,16 +63,25 @@ var theAPIs = {
   }, options || {});
 
   if (!options.height && true === options.fullsize) {
-    options.height = options.minHeight = options.maxHeight = ($(window).height() - 50);
+    var offset = 50, summerH = ($(window).height() - offset);
+    if (true !== options.airMode && (options.toolbar || []).length < 1) {
+      summerH = summerH + offset;
+    }
+    options.height = options.minHeight = options.maxHeight = summerH;
   }
 
   delete options.callbacks;
   var inst = helper(elId, events, options);
   $(elId).summernote(options);
 
-  if (true === options.airMode) {
-    inst.airbarHide();
-  }
+  try {
+    if (true === options.airMode) {
+      inst.airbarHide();
+    }
+
+    inst.imgbarHide();
+    inst.linkbarHide();
+  } catch (e) {/**/}
 
   if (inst.layout && inst.layout.editor) {
     inst.layout.editor.css({
@@ -134,6 +143,12 @@ var helper = function (elId, events, options) {
     },
     airbarHide: function () {
       return tools.action('airPopover.hide');
+    },
+    imgbarHide: function () {
+      return tools.action('imagePopover.hide');
+    },
+    linkbarHide: function () {
+      return tools.action('linkPopover.hide');
     },
     toolbarDeactivate: function (isIncludeCodeview) {
       return tools.action('toolbar.deactivate', isIncludeCodeview);

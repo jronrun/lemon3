@@ -74,8 +74,8 @@ function views(share, callback, requestInfo) {
       });
     });
   }
-  //API Snapshot, APIs Snapshot, Note Snapshot, Merge Snapshot
-  else if (2 == share.type || 7 == share.type || 5 == share.type || 8 == share.type) {
+  //API Snapshot, APIs Snapshot, Note Snapshot, Merge Snapshot, Rich Snapshot
+  else if (2 == share.type || 7 == share.type || 5 == share.type || 8 == share.type || 9 == share.type) {
     _.extend(share, {
       content: crypto.compress(share.content)
     });

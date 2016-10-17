@@ -46,10 +46,24 @@ var rich = {
           break;
       }
     },
+    share: function () {
+      if (2 === rich.action.from) {
+        return;
+      }
+
+      var shareData = {
+        type: 9,
+        content: rich.snapshoot()
+      };
+
+      lemon.preview(lemon.getUrl(lemon.fullUrl('/share/preview'), {
+        data: lemon.enc(shareData)
+      }));
+    }
   },
   summer: {
     //type 1 air, 2 normal
-    option: function (type) {
+    option: function (type, isReadonly) {
       var ui = $.summernote.ui, toolBtns = function (target, isAirBar, isAddHead) {
         var btns = [
           ['lemon', ['logo']],
@@ -85,6 +99,9 @@ var rich = {
             className: 'icondh',
             contents: '<em class="fa fa-save"></em>',
             tooltip: 'Save As an Note...',
+            data: {
+              act: 'save'
+            },
             click: function () {
               if (rich.instance.isAirMode()) {
                 rich.instance.airbarHide();
@@ -98,8 +115,14 @@ var rich = {
             className: 'icondh',
             contents: '<em class="fa fa-share-alt"></em>',
             tooltip: 'Share',
+            data: {
+              act: 'share'
+            },
             click: function () {
-
+              if (rich.instance.isAirMode()) {
+                rich.instance.airbarHide();
+              }
+              rich.action.share();
             }
           }).render();
         },
@@ -112,31 +135,47 @@ var rich = {
             }
           }).render();
         }
-      }, toolbarB = toolBtns(['cust', ['save', 'share']]);
+      },
+        toolbarB = toolBtns(['cust', ['save', 'share']]),
+        imagePopover = [
+          ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+          ['float', ['floatLeft', 'floatRight', 'floatNone']],
+          ['remove', ['removeMedia']]
+        ], linkPopover = [
+          ['link', ['linkDialogShow', 'unlink']]
+        ];
 
       switch (type = type || 1) {
         case 1:
           var aribarB = toolBtns(['cust', ['save', 'share']], true);
           return {
             fullsize: true,
-            buttons: buttons,
-            toolbar: toolbarB,
+            buttons: isReadonly ? [] : buttons,
+            toolbar: isReadonly ? [] : toolbarB,
             airMode: true,
             popover: {
-              air: aribarB
+              air: isReadonly ? [] : aribarB,
+              image: isReadonly ? [] : imagePopover,
+              link: isReadonly ? [] : linkPopover,
             }
           };
 
         case 2:
           return {
             fullsize: true,
-            buttons: buttons,
-            toolbar: toolbarB
+            buttons: isReadonly ? [] : buttons,
+            toolbar: isReadonly ? [] : toolbarB
           };
       }
     },
-    intl: function (type) {
-      rich.instance = summer('#rich_view', rich.summer.option(type));
+    noneShareBtn: function () {
+      $('button[data-act="share"]').remove();
+    },
+    intl: function (type, isReadonly) {
+      rich.instance = summer('#rich_view', rich.summer.option(type, isReadonly));
+      if (!isReadonly && 2 === rich.action.from) {
+        rich.summer.noneShareBtn();
+      }
     },
   },
 
@@ -148,15 +187,24 @@ var rich = {
 
     return snapdata;
   },
-  snapload: function (snapdata) {
+  snapload: function (snapdata, isReadonly) {
     snapdata = snapdata ? lemon.deepDec(snapdata) : lemon.persist('rich_snapshoot');
     if (snapdata.type && snapdata.val) {
-      rich.summer.intl(snapdata.type);
+      rich.summer.intl(snapdata.type, isReadonly);
       rich.instance.val(snapdata.val);
       return true;
     }
 
     return false;
+  },
+  shareShow: function (shareData) {
+    $('#share_this').show({
+      complete: function() {
+        $('#share_this').click(function() {
+          sharing.createAndShow(shareData);
+        });
+      }
+    });
   },
   initialize: function () {
     if (lemon.isMediumUpView()) {
@@ -200,6 +248,24 @@ var rich = {
             break;
           case 'SHARE_RICH_SNAPSHOT':
             rich.action.from = 2;
+            rich.summer.noneShareBtn();
+
+            if (1 == evtData.preview) {
+              rich.shareShow({
+                title: 'Rich Snapshot',
+                type: 9,
+                content: evtData.content
+              });
+            }
+
+            var isReadonly = true;
+            if (1 == evtData.read_write) {
+
+            } else {
+              isReadonly = false;
+            }
+
+            rich.snapload(evtData.content, isReadonly);
             break;
         }
       }

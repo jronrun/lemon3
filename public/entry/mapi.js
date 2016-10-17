@@ -140,8 +140,10 @@ var mapis = {
 
           $(mapis.newId).click(function () {
             var thiz = this; lemon.buttonTgl(thiz);
-            mapis.addView(false, function() {
+            mapis.addView(false, function(instanceId) {
               lemon.buttonTgl(thiz);
+
+              mapis.instance.gets(instanceId).view.tellEvent('MAPI_NEW');
             });
           });
 
@@ -324,15 +326,17 @@ var mapis = {
   createView: function(domReadyCallback, theURL, name) {
     theURL = theURL || mapis.theURL();
     return lemon.previews(theURL, false, false, function(view, preview) {
-      if (lemon.endWith(theURL, '/api')) {
-        $('body', view.getDocument()).css({
-          'padding-top': '4.15rem'
-        });
+      var instanceId = mapis.instance.add(view, preview, name);
+      switch (mapis.type(mapis.instance.gets(instanceId))) {
+        case TAPI:
+          $('body', view.getDocument()).css({
+            'padding-top': '4.15rem'
+          });
 
-        view.tellEvent('INST_RENDER');
+          view.tellEvent('INST_RENDER');
+          break;
       }
 
-      var instanceId = mapis.instance.add(view, preview, name);
       lemon.isFunc(domReadyCallback) && domReadyCallback(instanceId, view, preview);
     });
   },

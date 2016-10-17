@@ -194,7 +194,7 @@ var rich = {
   },
   snapload: function (snapdata, isReadonly) {
     snapdata = snapdata ? lemon.deepDec(snapdata) : lemon.persist('rich_snapshoot');
-    if (snapdata.type && snapdata.val) {
+    if (snapdata.type && lemon.has(snapdata, 'val')) {
       rich.summer.intl(snapdata.type, isReadonly);
       rich.instance.val(snapdata.val);
       return true;
@@ -227,6 +227,9 @@ var rich = {
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {
+          case 'MAPI_NEW':
+            rich.summer.intl();
+            break;
           case 'SNAPSHOOT':
             var shoot = {};
             shoot[data.iframe.name] = {

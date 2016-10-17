@@ -241,6 +241,21 @@ var note = {
       note.instance.wordwrap();
     },
 
+    richNote: function () {
+      var cMode = note.instance.mode();
+      if ('HTML' === cMode.name.toUpperCase()) {
+        note.richInst = note.views(lemon.fullUrl('/rich'), false, true, function (view, previewM) {
+          view.tellEvent('RICH_NOTE', {
+            richData: {
+              type: 1,
+              val: note.instance.val()
+            }
+          });
+        });
+      } else {
+        note.instance.tip('Current note is not html language.');
+      }
+    },
     compareNote: function () {
       note.compareInst = note.views(lemon.fullUrl('/merge'), false, true, function (view, previewM) {
         var cMode = note.instance.mode();
@@ -709,6 +724,7 @@ var note = {
         }
       }, ex = mirror.defineEx;
 
+      ex('rich', function (args, cm) { na('richNote', args, cm); }, 'Rich Note (WYSIWYG)');
       ex('compare', function (args, cm) { na('compareNote', args, cm); }, 'Compare Note, Merge & Diff', 'comp');
       ex('foldall', function (args, cm) { na('foldAll', args, cm); }, 'Fold All', 'folda');
       ex('unfoldall', function (args, cm) { na('unfoldAll', args, cm); }, 'Unfold All', 'unfolda');
@@ -785,6 +801,8 @@ var note = {
             note.menu.item('separator'),
             note.menu.item('Edit Mode', 'i', 'visual', 'Edit Mode', 'editMode'),
             note.menu.item('Visual Mode', 'Esc', 'edit', 'Visual Mode', 'visualMode'),
+            note.menu.item('Rich Mode', ':rich', 'visual & edit', 'Rich Mode (WYSIWYG)', 'richNote'),
+            note.menu.item('Compare Mode', ':comp', 'visual & edit', 'Compare Mode', 'compareNote'),
             note.menu.item('separator'),
             note.menu.item('Content Assist', 'Ctrl-J', 'visual & edit', 'Content Assist', 'autocomplete'),
             note.menu.item('Word Wrap', ':wrap', 'visual & edit', 'Word Wrap (:wrapword)', 'wrapword'),
@@ -1469,6 +1487,16 @@ var note = {
               note.action.menuHide();
               $(note.menu.triId).remove();
             }
+            break;
+          case 'SAVE_RICH_NOTE':
+            note.instance.val(evtData.note.content);
+            note.richInst.destroy();
+            note.action.saveNoteCust();
+            break;
+          case 'SAVE_RICH_TO_NOTE':
+            note.load(note.make(evtData.note));
+            note.theme.change(evtData.th);
+            note.action.saveNoteCust();
             break;
           case 'SAVE_COMPARED_NOTE':
             note.instance.val(evtData.note.content);

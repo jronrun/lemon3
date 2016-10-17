@@ -129,6 +129,9 @@ var helper = function (elId, events, options) {
 
       return tools.action('code');
     },
+    isAirMode: function () {
+      return options.airMode;
+    },
     airbarHide: function () {
       return tools.action('airPopover.hide');
     },

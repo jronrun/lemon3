@@ -12,6 +12,41 @@ function leave() {
 
 var rich = {
   instance: null,
+  action: {
+    //0 self, 1 note, 2 share
+    from: 0,
+    saveAsNote: function () {
+      var pg = lemon.homeProgress();
+      switch (rich.action.from) {
+        case 1:
+          lemon.pubEvent('SAVE_RICH_NOTE', {
+            note: {
+              content: rich.instance.val()
+            }
+          }, function () {
+            pg.end();
+          });
+          break;
+
+        default:
+          lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
+            view.tellEvent('SAVE_RICH_TO_NOTE', {
+              th: 'lemon',
+              note: {
+                content: rich.instance.val(),
+                language: {
+                  name: 'html',
+                  mime: 'text/html'
+                }
+              }
+            }, function () {
+              pg.end();
+            });
+          });
+          break;
+      }
+    },
+  },
   summer: {
     //type 1 air, 2 normal
     option: function (type) {
@@ -51,7 +86,10 @@ var rich = {
             contents: '<em class="fa fa-save"></em>',
             tooltip: 'Save As an Note...',
             click: function () {
-
+              if (rich.instance.isAirMode()) {
+                rich.instance.airbarHide();
+              }
+              rich.action.saveAsNote();
             }
           }).render();
         },
@@ -155,6 +193,13 @@ var rich = {
             break;
           case 'SNAPLOAD':
             rich.snapload(evtData.snapdata);
+            break;
+          case 'RICH_NOTE':
+            rich.action.from = 1;
+            rich.snapload(evtData.richData);
+            break;
+          case 'SHARE_RICH_SNAPSHOT':
+            rich.action.from = 2;
             break;
         }
       }

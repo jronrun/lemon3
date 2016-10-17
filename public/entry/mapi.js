@@ -192,7 +192,9 @@ var mapis = {
                 }
 
                 if (lemon.isUrl(aURL)) {
-                  mapis.addView(aURL);
+                  mapis.addView(aURL, function(instanceId) {
+                    mapis.instance.gets(instanceId).view.tellEvent('MAPI_NEW');
+                  });
                 }
 
                 $(mapis.toolsId).slideDown();

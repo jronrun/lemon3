@@ -42,7 +42,24 @@ var theAPIs = {
   }, events || {});
 
   options = lemon.extend({
-    fullsize: true
+    fullsize: true,
+    codemirror: {
+      htmlMode: true,
+      lineNumbers: true,
+      matchBrackets: true,
+      theme: 'lemon',
+      styleActiveLine: true,
+      mode: 'text/html',
+      autoCloseBrackets: true,
+      autoCloseTags: true,
+      lineWrapping: true,
+      foldGutter: true,
+      content: '',
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+      matchTags: {
+        bothTags: true
+      }
+    }
   }, options || {});
 
   if (!options.height && true === options.fullsize) {
@@ -71,6 +88,8 @@ var helper = function (elId, events, options) {
   options = options || {};
   var tools = {
     id: elId,
+    //type 1 air, 2 normal
+    type: true === options.airMode ? 1 : 2,
     layout: null,
     ui: $.summernote.ui,
 

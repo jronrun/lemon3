@@ -103,20 +103,32 @@ var rich = {
   },
 
   snapshoot: function () {
+    var snapdata = {
+      type: rich.instance.type,
+      val: rich.instance.val()
+    };
 
+    return snapdata;
   },
   snapload: function (snapdata) {
+    snapdata = snapdata ? lemon.deepDec(snapdata) : lemon.persist('rich_snapshoot');
+    if (snapdata.type && snapdata.val) {
+      rich.summer.intl(snapdata.type);
+      rich.instance.val(snapdata.val);
+      return true;
+    }
 
+    return false;
   },
   initialize: function () {
     if (lemon.isMediumUpView()) {
       lemon.console();
     }
 
-    rich.summer.intl();
-
     if (lemon.isRootWin()) {
-      rich.snapload();
+      if (!rich.snapload()) {
+        rich.summer.intl();
+      }
     }
 
     lemon.subMsg(function (data) {

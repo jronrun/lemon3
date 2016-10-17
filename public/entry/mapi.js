@@ -569,6 +569,14 @@ var mapis = {
               }
             }, data.data);
             break;
+          case 'NOTE_CLOSE':
+            var closeInstId = mapis.instance.current;
+            if (closeInstId != mapis.instance.defaultId) {
+              mapis.instance.destroy(closeInstId);
+              $('#mapi_tool_' + closeInstId).remove();
+              mapis.instance.activePrevious();
+            }
+            break;
         }
       }
     });

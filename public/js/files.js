@@ -23,7 +23,7 @@ var files = {
   read: function (selector, callback, options) {
     files.reads(selector, {
       loadstart: function (e, file) {
-        lemon.info('start reading file ' + file.name);
+        lemon.info('start reading ' + file.type + ' file ' + file.name);
         lemon.homeProgress();
       },
       progress: function (e, file) {

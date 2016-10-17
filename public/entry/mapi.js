@@ -1,7 +1,7 @@
 /**
  *
  */
-var sharing =  require('../js/sharing'), TOTHER = 1, TAPI = 2, TNOTE = 3, TMERGE = 4;
+var sharing =  require('../js/sharing'), TOTHER = 1, TAPI = 2, TNOTE = 3, TMERGE = 4, TRICH = 5;
 
 function $$(selector, instanceId) {
   var aInstance = mapis.instance.gets(instanceId || mapis.instance.defaultId);
@@ -173,6 +173,9 @@ var mapis = {
                     case TMERGE:
                       vurl = lemon.fullUrl('/merge');
                       break;
+                    case TRICH:
+                      vurl = lemon.fullUrl('/rich');
+                      break;
                   }
 
                   $('#' + inputURLId).val(vurl);
@@ -340,6 +343,7 @@ var mapis = {
       case TAPI: anURI = '/api'; break;
       case TNOTE: anURI = '/note'; break;
       case TMERGE: anURI = '/merge'; break;
+      case TRICH: anURI = '/rich'; break;
     }
 
     return lemon.fullUrl(anURI);
@@ -399,6 +403,9 @@ var mapis = {
               case TMERGE:
                 anInst.view.tellEvent('SHARE_MERGE_SNAPSHOT', mapis.asShareData(inst, shared));
                 break;
+              case TRICH:
+                anInst.view.tellEvent('SHARE_RICH_SNAPSHOT', mapis.asShareData(inst, shared));
+                break;
             }
           } else {
             //not TOTHER instance
@@ -442,7 +449,7 @@ var mapis = {
   },
   snapshoot: function() {
     lemon.each(mapis.instances, function (inst) {
-      if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE) || mapis.is(inst, TMERGE)) {
+      if (mapis.is(inst, TAPI) || mapis.is(inst, TNOTE) || mapis.is(inst, TMERGE) || mapis.is(inst, TRICH)) {
         inst.view.tellEvent('SNAPSHOOT', {
           id: inst.instanceId,
           tabName: inst.name,
@@ -483,6 +490,8 @@ var mapis = {
       return TNOTE;
     } else if ((lo + '/merge') == href || (lo + '/merges') == href) {
       return TMERGE;
+    } else if ((lo + '/rich') == href || (lo + '/riches') == href) {
+      return TRICH;
     }
 
     else {
@@ -500,6 +509,7 @@ var mapis = {
         case TAPI: return lemon.href('/api');
         case TNOTE: return lemon.href('/note');
         case TMERGE: return lemon.href('/merge');
+        case TRICH: return lemon.href('/rich');
 
         default: return;
       }

@@ -239,7 +239,7 @@ var rich = {
               },
               snapdata: rich.snapshoot()
             };
-            lemon.persist('rich_snapshoot', shoot);
+            lemon.persist('mapi_snapshoot', shoot);
             break;
           case 'LEAVE':
             leave();

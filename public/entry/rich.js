@@ -284,9 +284,4 @@ var rich = {
   }
 };
 
-//TODO remove
-global.$ = $;
-global.rich=rich;
-global.summer = summer;
-
 $(function () { rich.initialize(); });

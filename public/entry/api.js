@@ -1927,7 +1927,7 @@ var mapi = {
     });
 
     var noteId = '#api_note', mergeId = '#api_merge', doOpens = function (uri, snapData) {
-      lemon.preview(lemon.fullUrl(uri), false, false, function(view, previewM) {
+      apis.apiNoteInst = lemon.preview(lemon.fullUrl(uri), false, false, function(view, previewM) {
         mapi.noteView = view;
         mapi.noteView.tellEvent('SNAPLOAD', snapData || {});
       }, false, {
@@ -2164,6 +2164,9 @@ var mapi = {
           case 'INST_RENDER':
             envs.render();
             apis.render();
+            break;
+          case 'NOTE_CLOSE':
+            apis.apiNoteInst && apis.apiNoteInst.destroy();
             break;
         }
       }

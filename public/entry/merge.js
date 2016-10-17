@@ -341,7 +341,7 @@ var merge = {
           break;
 
         default:
-          lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
+          merge.saveNoteInst = lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
             var diff = merge.instance.mergedView(), m = diff.mode(), th = diff.theme();
             view.tellEvent('SAVE_MERGED_TO_NOTE', {
               th: th,
@@ -534,6 +534,9 @@ var merge = {
             break;
           case 'SNAPLOAD':
             merge.snapload(evtData.snapdata);
+            break;
+          case 'NOTE_CLOSE':
+            merge.saveNoteInst && merge.saveNoteInst.destroy();
             break;
         }
       }

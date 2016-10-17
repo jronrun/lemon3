@@ -29,7 +29,7 @@ var rich = {
           break;
 
         default:
-          lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
+          rich.saveNoteInst = lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
             view.tellEvent('SAVE_RICH_TO_NOTE', {
               th: 'lemon',
               note: {
@@ -271,6 +271,9 @@ var rich = {
             }
 
             rich.snapload(evtData.content, isReadonly);
+            break;
+          case 'NOTE_CLOSE':
+            rich.saveNoteInst && rich.saveNoteInst.destroy();
             break;
         }
       }

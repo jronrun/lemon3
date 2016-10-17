@@ -50,8 +50,8 @@ module.exports = function(app, config, passport) {
   // app.use(favicon(config.root + '/public/img/favicon.ico'));
   app.use(morgan(config.morganFmt));
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json({ limit: '50mb'}));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   app.use(expressValidator({}));
   app.use(multer().array('image', 1));
   app.use(methodOverride(function (req) {

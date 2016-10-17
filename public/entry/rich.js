@@ -3,7 +3,7 @@
  */
 
 var summer = require('../js/summernote'),
-  files = require('../js/files'),
+  //files = require('../js/files'),
   sharing =  require('../js/sharing');
 
 function leave() {

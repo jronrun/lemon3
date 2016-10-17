@@ -176,6 +176,9 @@ var rich = {
       if (!isReadonly && 2 === rich.action.from) {
         rich.summer.noneShareBtn();
       }
+      if (isReadonly) {
+        rich.instance.disable();
+      }
     },
   },
 

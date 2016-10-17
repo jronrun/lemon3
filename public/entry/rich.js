@@ -137,36 +137,38 @@ var rich = {
         }
       },
         toolbarB = toolBtns(['cust', ['save', 'share']]),
+        aribarB = toolBtns(['cust', ['save', 'share']], true),
         imagePopover = [
           ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
           ['float', ['floatLeft', 'floatRight', 'floatNone']],
           ['remove', ['removeMedia']]
-        ], linkPopover = [
+        ],
+        linkPopover = [
           ['link', ['linkDialogShow', 'unlink']]
-        ];
+        ],
+        summerOpts = {
+          fullsize: true,
+          buttons: isReadonly ? [] : buttons,
+          toolbar: isReadonly ? [] : toolbarB,
+          popover: {
+            air: isReadonly ? [] : aribarB,
+            image: isReadonly ? [] : imagePopover,
+            link: isReadonly ? [] : linkPopover,
+          }
+        };
 
       switch (type = type || 1) {
         case 1:
-          var aribarB = toolBtns(['cust', ['save', 'share']], true);
-          return {
-            fullsize: true,
-            buttons: isReadonly ? [] : buttons,
-            toolbar: isReadonly ? [] : toolbarB,
-            airMode: true,
-            popover: {
-              air: isReadonly ? [] : aribarB,
-              image: isReadonly ? [] : imagePopover,
-              link: isReadonly ? [] : linkPopover,
-            }
-          };
+          lemon.extend(summerOpts, {
+            airMode: true
+          });
+          break;
 
         case 2:
-          return {
-            fullsize: true,
-            buttons: isReadonly ? [] : buttons,
-            toolbar: isReadonly ? [] : toolbarB
-          };
+          break;
       }
+
+      return summerOpts;
     },
     noneShareBtn: function () {
       $('button[data-act="share"]').remove();

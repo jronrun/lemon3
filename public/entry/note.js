@@ -1244,9 +1244,14 @@ var note = {
         }
       });
 
-      files.read('#note_open_file', function(context){
+      files.read('#note_open_file', function(context, file){
         note.instance.val('');
         note.instance.val(context);
+        if (file && file.type) {
+          note.instance.mode(file.type, file.type);
+        } else {
+          note.instance.mode('text', 'text/plain');
+        }
       });
 
       note.menu.instance = lemon.popover(note.menu.id, {

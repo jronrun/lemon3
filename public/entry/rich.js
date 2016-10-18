@@ -3,7 +3,7 @@
  */
 
 var summer = require('../js/summernote'),
-  //files = require('../js/files'),
+  files = require('../js/files'),
   sharing =  require('../js/sharing');
 
 function leave() {
@@ -15,6 +15,7 @@ var rich = {
   action: {
     //0 self, 1 note, 2 share
     from: 0,
+    fileId: '#load_file',
     saveAsNote: function () {
       var pg = lemon.homeProgress();
       switch (rich.action.from) {
@@ -94,10 +95,43 @@ var rich = {
       };
 
       var buttons = {
-        save: function (context) {
+        open: function (context) {
+          return ui.button({
+            className: 'icondh',
+            contents: '<em class="fa fa-folder-open"></em>',
+            tooltip: 'Open File...',
+            data: {
+              act: 'open'
+            },
+            click: function () {
+              if (rich.instance.isAirMode()) {
+                rich.instance.airbarHide();
+              }
+              $(rich.action.fileId).click();
+            }
+          }).render();
+        },
+        saveAs: function (context) {
           return ui.button({
             className: 'icondh',
             contents: '<em class="fa fa-save"></em>',
+            tooltip: 'Save As...',
+            data: {
+              act: 'saveas'
+            },
+            click: function () {
+              if (rich.instance.isAirMode()) {
+                rich.instance.airbarHide();
+              }
+
+              files.saveAs(rich.instance.val(), lemon.now() + '.html');
+            }
+          }).render();
+        },
+        save: function (context) {
+          return ui.button({
+            className: 'icondh',
+            contents: '<em class="fa fa-lemon-o"></em>',
             tooltip: 'Save As an Note...',
             data: {
               act: 'save'
@@ -136,8 +170,8 @@ var rich = {
           }).render();
         }
       },
-        toolbarB = toolBtns(['cust', ['save', 'share']]),
-        aribarB = toolBtns(['cust', ['save', 'share']], true),
+        toolbarB = toolBtns(['cust', ['open', 'saveAs', 'save', 'share']]),
+        aribarB = toolBtns(['cust', ['open', 'saveAs', 'save', 'share']], true),
         imagePopover = [
           ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
           ['float', ['floatLeft', 'floatRight', 'floatNone']],
@@ -279,6 +313,14 @@ var rich = {
             rich.saveNoteInst && rich.saveNoteInst.destroy();
             break;
         }
+      }
+    });
+
+    files.read(rich.action.fileId, function(context){
+      rich.instance.val(context);
+    }, { accept: 'text/html'}, {
+      skip: function (file) {
+        lemon.alert(file.name + ' is not a html file.', 'Receive HTML File Only');
       }
     });
 

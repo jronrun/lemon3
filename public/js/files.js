@@ -20,8 +20,8 @@ var files = {
       }, options || {})), filename);
     }
   },
-  read: function (selector, callback, options) {
-    files.reads(selector, {
+  read: function (selector, callback, options, events) {
+    files.reads(selector, lemon.extend({
       loadstart: function (e, file) {
         lemon.info('start reading ' + file.type + ' file ' + file.name);
         lemon.homeProgress();
@@ -35,10 +35,10 @@ var files = {
         lemon.info('end reading file ' + file.name + ', size: ' + e.total);
         lemon.isFunc(callback) && callback(e.target.result, file);
       },
-      skip: function (e, file) {
+      skip: function (file) {
         lemon.info('skipped reading file ' + JSON.stringify(file));
       },
-    }, options);
+    }, events || {}), options || {});
   },
   reads: function (selector, events, options) {
     events = lemon.extend({

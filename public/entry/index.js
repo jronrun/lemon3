@@ -1074,6 +1074,41 @@ lemon.register({
       }
     });
   },
+  alert: function (text, title, okCallback, modalEvents) {
+    var okId = 'alert_id_' + lemon.uniqueId();
+    var footer = [
+      lemon.format('<button type="button" id="{0}" class="btn btn-primary" data-dismiss="modal">OK</button>', okId)
+    ].join('');
+
+    var body = [
+      '<p class="text-info icondh"><em class="fa fa-info">&nbsp;</em></p>',
+      text
+    ].join('');
+
+    modalEvents = modalEvents || {};
+    var shownFunc = modalEvents.shown;
+    delete modalEvents.shown;
+
+    var mEvents = lemon.extend(modalEvents, {
+      shown: function() {
+        $('#' + okId).focus();
+        lemon.isFunc(shownFunc) && shownFunc();
+      }
+    });
+
+    lemon.modal({
+      title: title || '',
+      body: body,
+      footer: footer,
+      modal: {
+        show: true
+      }
+    }, mEvents);
+
+    $('#' + okId).click(function(e) {
+      lemon.isFunc(okCallback) && okCallback(e);
+    });
+  },
   confirm: function(text, okCallback, cancelCallback, title, modalEvents) {
     var okId = 'ok_id_' + lemon.uniqueId(), cid = 'cancel_id_' + lemon.uniqueId();
     var footer = [

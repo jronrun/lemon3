@@ -128,13 +128,22 @@ var merge = {
         menus: merge.nav.source()
       }, merge.nav.id);
 
-      files.read('#load_left', function(context){
-        merge.instance.left.val('');
-        merge.instance.left.val(context);
+      var loadsFile = function(inst, context, file){
+        inst.val('');
+        inst.val(context);
+        if (file && file.type) {
+          merge.lang.change(file.type, file.type);
+        } else {
+          merge.lang.change('text', 'text/plain');
+        }
+        merge.render.lang();
+      };
+
+      files.read('#load_left', function (context, file) {
+        loadsFile(merge.instance.left, context, file);
       });
-      files.read('#load_right', function(context){
-        merge.instance.right.val('');
-        merge.instance.right.val(context);
+      files.read('#load_right', function (context, file) {
+        loadsFile(merge.instance.right, context, file);
       });
     }
   },

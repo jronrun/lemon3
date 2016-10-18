@@ -1247,11 +1247,11 @@ var note = {
       files.read('#note_open_file', function(context, file){
         note.instance.val('');
         note.instance.val(context);
-        if (file && file.type) {
-          note.instance.mode(file.type, file.type);
-        } else {
-          note.instance.mode('text', 'text/plain');
+        var detectType = '', fType = { name: 'Plain Text', mime: 'text/plain'};
+        if (detectType = files.getType(file)) {
+          fType = { name: detectType, mime: detectType};
         }
+        note.instance.mode(fType.name, fType.mime);
       });
 
       note.menu.instance = lemon.popover(note.menu.id, {

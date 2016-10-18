@@ -131,11 +131,12 @@ var merge = {
       var loadsFile = function(inst, context, file){
         inst.val('');
         inst.val(context);
-        if (file && file.type) {
-          merge.lang.change(file.type, file.type);
-        } else {
-          merge.lang.change('text', 'text/plain');
+
+        var detectType = '', fType = { name: 'Plain Text', mime: 'text/plain'};
+        if (detectType = files.getType(file)) {
+          fType = { name: detectType, mime: detectType};
         }
+        merge.lang.change(fType.name, fType.mime);
         merge.render.lang();
       };
 

@@ -13,6 +13,17 @@ try {
 require('imports?this=>window!filereader/filereader');
 
 var files = {
+  getType: function (aFile) {
+    if ((aFile = (aFile || {})).type) {
+      return aFile.type;
+    }
+
+    if (aFile.extra && aFile.extra.extension) {
+      return aFile.extra.extension;
+    }
+
+    return '';
+  },
   saveAs: function(content, filename, options) {
     if (isFileSaverSupported) {
       saveAs(new Blob([content || ''], lemon.extend({

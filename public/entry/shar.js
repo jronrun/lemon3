@@ -68,7 +68,7 @@ var shar = {
         }
 
         var vid = 'note_share_view', bid = '#n_preview', rightTip = [
-          '<button type="button" id="n_preview" class="btn btn-secondary icondh" style="border:0">',
+          '<button type="button" id="n_preview" class="btn btn-outline-secondary icondh" style="border:0">',
           '<em class="fa fa-eye"></em>',
           '</button>'
         ].join('');

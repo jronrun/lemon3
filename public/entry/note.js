@@ -586,7 +586,7 @@ var note = {
     return rNote;
   },
   load: function (aNote) {
-    note.instance.mode(aNote.language.mime || 'text/plain');
+    note.instance.mode(aNote.language.name || 'text', aNote.language.mime || undefined);
     note.instance.val(aNote.content);
     current(aNote);
   },

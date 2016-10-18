@@ -1926,7 +1926,7 @@ var mapi = {
       }
     });
 
-    var noteId = '#api_note', mergeId = '#api_merge', doOpens = function (uri, snapData) {
+    var noteId = '#api_note', mergeId = '#api_merge', richId = '#api_rich', doOpens = function (uri, snapData) {
       apis.apiNoteInst = lemon.preview(lemon.fullUrl(uri), false, false, function(view, previewM) {
         mapi.noteView = view;
         mapi.noteView.tellEvent('SNAPLOAD', snapData || {});
@@ -1971,6 +1971,18 @@ var mapi = {
             is2Panels: true,
             right: mapi.resp.val()
           }
+        }
+      });
+    });
+
+    $(richId).click(function () {
+      doOpens('/rich');
+    });
+    lemon.rightclick(richId, function() {
+      doOpens('/rich', {
+        snapdata: {
+          type: 1,
+          val: apis.getHighlightDoc(mapi.resp.val(), '', false, true)
         }
       });
     });

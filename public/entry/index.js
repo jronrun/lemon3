@@ -582,6 +582,8 @@ lemon.register({
       } else {
         if (parent.$(selector).length) {
           iframe = parent.$(selector)[0];
+        } else if (top.$(selector).length) {
+          iframe = top.$(selector)[0];
         }
       }
     } else {
@@ -589,7 +591,7 @@ lemon.register({
     }
 
     var ackCalls = function(eventId, ackCallback) {
-      var rootW = lemon.isRootWin() ? window : parent.window, varN = '__defineIframeACKer__';
+      var rootW = lemon.isRootWin() ? window : top.window, varN = '__defineIframeACKer__';
       rootW[varN] = rootW[varN] || {};
       if (lemon.isUndefined(ackCallback)) {
         return rootW[varN][eventId];

@@ -1173,7 +1173,7 @@ lemon.register({
     return lemon.preview(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions);
   },
   /**
-   *
+   * Preview in top window
    * @param text
    * @param callback                function(view, previewM) {}  view: iframe instance, previewM: modal instance
    * @param jsonOptions
@@ -1183,6 +1183,20 @@ lemon.register({
    * @returns {*}
    */
   preview: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents) {
+    var rootW = lemon.isRootWin() ? window : top.window;
+    return rootW.lemon.previewInSelfWin(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents);
+  },
+  /**
+   * Preview in current self window
+   * @param text
+   * @param callback                function(view, previewM) {}  view: iframe instance, previewM: modal instance
+   * @param jsonOptions
+   * @param domReadyCallbackIfUrl   function(view, previewM) {}  view: iframe instance, previewM: modal instance
+   * @param modalOptions
+   * @param modalEvents
+   * @returns {*}
+   */
+  previewInSelfWin: function(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions, modalEvents) {
     if (jsonOptions) {
       jsonOptions = lemon.extend({
         mirror: null,

@@ -138,8 +138,8 @@ var mapis = {
             'padding': 0
           });
 
-          $(mapis.newId).click(function () {
-            var thiz = this; lemon.buttonTgl(thiz);
+          lemon.rightclick(mapis.newId, function() {
+            var thiz = mapis.newId; lemon.buttonTgl(thiz);
             mapis.addView(false, function(instanceId) {
               lemon.buttonTgl(thiz);
 
@@ -147,7 +147,7 @@ var mapis = {
             });
           });
 
-          lemon.rightclick(mapis.newId, function() {
+          $(mapis.newId).click(function () {
             var inputURLId = 'mapi_preview_url';
             var mapinM = lemon.modal({
               modal: {

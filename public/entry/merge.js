@@ -310,6 +310,7 @@ var merge = {
   action: {
     //0 self, 1 note, 2 share
     from: 0,
+    fromIframe: null,
     loadLeft: function () {
       $('#load_left').click();
     },
@@ -347,7 +348,7 @@ var merge = {
             }
           }, function () {
             pg.end();
-          });
+          }, merge.action.fromIframe);
           break;
 
         default:
@@ -495,6 +496,7 @@ var merge = {
         switch (data.event) {
           case 'COMPARE_NOTE':
             merge.action.from = 1;
+            merge.action.fromIframe = evtData.from;
             merge.snapload(evtData.mergeData);
             break;
           case 'SHARE_MERGE_SNAPSHOT':

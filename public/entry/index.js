@@ -580,10 +580,11 @@ lemon.register({
       if ($(selector).length) {
         iframe = $(selector)[0];
       } else {
-        if (parent.$(selector).length) {
-          iframe = parent.$(selector)[0];
-        } else if (top.$(selector).length) {
-          iframe = top.$(selector)[0];
+        var el = null;
+        if (parent && (el = parent.lemon.query(selector))) {
+          iframe = el;
+        } else if (top && (el = top.lemon.query(selector))) {
+          iframe = el;
         }
       }
     } else {
@@ -1485,8 +1486,15 @@ function doTabHandle(e, type) {
 
 var aFrames = lemon.iframes();
 lemon.register({
-  pubEvent: function(eventName, data, callback) {
-    aFrames.replyEvent(eventName, data, callback);
+  pubEvent: function(eventName, data, callback, fromIframe) {
+    if (fromIframe) {
+      var aFrame = lemon.iframes(fromIframe);
+      if (aFrame.isAvailable()) {
+        aFrame.tellEvent(eventName, data, callback);
+      }
+    } else {
+      aFrames.replyEvent(eventName, data, callback);
+    }
   },
   pubMsg: function(data) {
     if (data && !lemon.isRootWin()) {

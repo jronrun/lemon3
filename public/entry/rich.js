@@ -15,6 +15,7 @@ var rich = {
   action: {
     //0 self, 1 note, 2 share
     from: 0,
+    fromIframe: null,
     fileId: '#load_file',
     saveAsNote: function () {
       var pg = lemon.homeProgress();
@@ -26,7 +27,7 @@ var rich = {
             }
           }, function () {
             pg.end();
-          });
+          }, rich.action.fromIframe);
           break;
 
         default:
@@ -286,6 +287,7 @@ var rich = {
             break;
           case 'RICH_NOTE':
             rich.action.from = 1;
+            rich.action.fromIframe = evtData.from;
             rich.snapload(evtData.richData);
             break;
           case 'SHARE_RICH_SNAPSHOT':

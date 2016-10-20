@@ -244,8 +244,10 @@ var note = {
     richNote: function () {
       var cMode = note.instance.mode();
       if ('HTML' === cMode.name.toUpperCase()) {
+        var aFrame = lemon.iframes();
         note.richInst = note.views(lemon.fullUrl('/rich'), false, true, function (view, previewM) {
           view.tellEvent('RICH_NOTE', {
+            from: aFrame.isAvailable() ? aFrame.getName() : null,
             richData: {
               type: 1,
               val: note.instance.val()
@@ -257,9 +259,11 @@ var note = {
       }
     },
     compareNote: function () {
+      var aFrame = lemon.iframes();
       note.compareInst = note.views(lemon.fullUrl('/merge'), false, true, function (view, previewM) {
         var cMode = note.instance.mode();
         view.tellEvent('COMPARE_NOTE', {
+          from: aFrame.isAvailable() ? aFrame.getName() : null,
           mergeData: {
             info: {
               theme: note.instance.theme(),

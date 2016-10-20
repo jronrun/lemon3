@@ -1151,7 +1151,10 @@ lemon.register({
       lemon.isFunc(cancelCallback) && cancelCallback(e);
     });
   },
-  isRootWin: function() {
+  isRootWin: function(targetWin) {
+    if (targetWin) {
+      return window.top == targetWin;
+    }
     return window.top == window.self;
   },
   /**

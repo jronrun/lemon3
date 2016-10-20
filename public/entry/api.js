@@ -2178,7 +2178,7 @@ var mapi = {
             apis.render();
             break;
           case 'NOTE_CLOSE':
-            apis.apiNoteInst && apis.apiNoteInst.destroy();
+            apis.apiNoteInst && apis.apiNoteInst.hide();
             break;
         }
       }

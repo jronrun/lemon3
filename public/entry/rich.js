@@ -312,7 +312,7 @@ var rich = {
             rich.snapload(evtData.content, isReadonly);
             break;
           case 'NOTE_CLOSE':
-            rich.saveNoteInst && rich.saveNoteInst.destroy();
+            rich.saveNoteInst && rich.saveNoteInst.hide();
             break;
         }
       }

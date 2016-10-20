@@ -548,7 +548,7 @@ var merge = {
             merge.snapload(evtData.snapdata);
             break;
           case 'NOTE_CLOSE':
-            merge.saveNoteInst && merge.saveNoteInst.destroy();
+            merge.saveNoteInst && merge.saveNoteInst.hide();
             break;
         }
       }

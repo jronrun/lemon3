@@ -1,7 +1,11 @@
  'use strict';
 
 var Power = app_require('models/power'),
-  Role = app_require('models/role');
+  Role = app_require('models/role'),
+  Environment = app_require('models/api/env'),
+  Group = app_require('models/api/group'),
+  Server = app_require('models/api/server'),
+  Interface = app_require('models/api/interf');
 
 var model = schema({
   name: { type: 'string', required: true, allowEmpty: false },
@@ -105,12 +109,12 @@ var user = model_bind('user', model);
   if (cacheResource) {
     deferred.resolve(cacheResource);
   } else {
-    user.findById(userId, function (err, result) {
+    user.findById(userId, function (err, definedUser) {
       if (err) {
         deferred.reject(err);
       } else {
         var theRoles = [];
-        _.each(result.roles || [], function (aPower) {
+        _.each(definedUser.roles || [], function (aPower) {
           theRoles.push(parseInt(aPower));
         });
 
@@ -205,16 +209,99 @@ var user = model_bind('user', model);
                 var theServer = scopeMerge(serverScope, serverExcludeDefine, serverIncludeDefine);
                 var theInterface = scopeMerge(interfaceScope, interfaceExcludeDefine, interfaceIncludeDefine);
 
+                definedUser.isAdmin = isAdminUser(definedUser);
+                definedUser.innerPowers = theInnerPowers;
+
                 var theSource = {
                   resource: theResources,
-                  env: theEnv,
-                  group: theGroup,
-                  server: theServer,
-                  interface: theInterface,
                   innerPowers: theInnerPowers
                 };
-                userReourceCache.set(userId, theSource);
-                deferred.resolve(theSource);
+
+                Power.hasInnerPower('PUBLIC_LIST', function (hasPublicList) {
+                  if (hasPublicList) {
+                    _.extend(theSource, {
+                      env: theEnv,
+                      group: theGroup,
+                      server: theServer,
+                      interface: theInterface
+                    });
+
+                    userReourceCache.set(userId, theSource);
+                    deferred.resolve(theSource);
+                  } else {
+                    var definedUserId = definedUser._id.toString();
+
+                    //npl environment
+                    Environment.find({
+                      id: { $in: theEnv},
+                      'create_by.id': definedUserId
+                    }, {id:1}).sort({_id: -1}).toArray(function (envErr, envItems) {
+                      if (envErr) {
+                        deferred.reject(envErr);
+                      } else {
+                        var nplEnv = []; _.each(envItems || [], function (envItem) {
+                          nplEnv.push(envItem.id);
+                        });
+                        _.extend(theSource, { env: nplEnv});
+
+                        //npl group
+                        Group.find({
+                          id: { $in: theGroup},
+                          'create_by.id': definedUserId
+                        }, {id:1}).sort({_id: -1}).toArray(function (groupErr, groupItems) {
+                          if (groupErr) {
+                            deferred.reject(groupErr);
+                          } else {
+                            var nplGroup = []; _.each(groupItems || [], function (groupItem) {
+                              nplGroup.push(groupItem.id);
+                            });
+                            _.extend(theSource, { group: nplGroup});
+
+
+                            //npl server
+                            Server.find({
+                              id: { $in: theServer.define},
+                              'create_by.id': definedUserId
+                            }, {id:1}).sort({_id: -1}).toArray(function (serverErr, serverItems) {
+                              if (serverErr) {
+                                deferred.reject(serverErr);
+                              } else {
+                                var nplServer = []; _.each(serverItems || [], function (serverItem) {
+                                  nplServer.push(serverItem.id);
+                                });
+                                theServer.define = nplServer;
+                                _.extend(theSource, { server: theServer});
+
+
+                                //npl interface
+                                Interface.find({
+                                  id: { $in: theInterface.define},
+                                  'create_by.id': definedUserId
+                                }, {id:1}).sort({_id: -1}).toArray(function (interfErr, interfItems) {
+                                  if (interfErr) {
+                                    deferred.reject(interfErr);
+                                  } else {
+                                    var nplInterf = []; _.each(interfItems || [], function (interfItem) {
+                                      nplInterf.push(interfItem.id);
+                                    });
+                                    theInterface.define = nplInterf;
+                                    _.extend(theSource, { interface: theInterface});
+
+
+                                    //npl finish
+                                    userReourceCache.set(userId, theSource);
+                                    deferred.resolve(theSource);
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+
+                }, definedUser);
               }
             });
           }

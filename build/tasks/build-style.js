@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports.task = function (gulp, plugins, config) {
+module.exports.task = function (gulp, plugins, config, callback) {
   gulp.src('./public/css/*.scss')
     .pipe(
       plugins.sass({
@@ -9,5 +9,11 @@ module.exports.task = function (gulp, plugins, config) {
         .on('error', plugins.sass.logError)
     )
     .pipe(plugins.autoprefixer())
-    .pipe(gulp.dest('./public/dist/css'));
+    .pipe(gulp.dest('./public/dist/css'))
+
+    .on('finish', function () {
+      callback();
+    });
 };
+
+module.exports.deps = ['build-clean'];

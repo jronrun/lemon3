@@ -16,7 +16,7 @@ var gulp 	= require('gulp'),
 loader.loadTasks(gulp, plugins, config);
 
 // this & 'gulp webpack' || this & 'npm run dev'
-gulp.task('default', ['build-style', 'serv-develop']);
+gulp.task('default', ['serv-develop']);
 
 //this & 'gulp' || this & 'npm start'
 gulp.task("webpack", ['serv-webpack']);

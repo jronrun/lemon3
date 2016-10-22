@@ -35,4 +35,4 @@ module.exports.task = function (gulp, plugins, config) {
   });
 };
 
-module.exports.deps = [];
+module.exports.deps = ['build-style'];

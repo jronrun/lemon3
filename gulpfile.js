@@ -21,5 +21,5 @@ gulp.task('default', ['serv-develop']);
 //this & 'gulp' || this & 'npm start'
 gulp.task("webpack", ['serv-webpack']);
 
-//'gulp production'
-gulp.task("production", ['serv-product']);
+//'gulp product'
+gulp.task("product", ['serv-product']);

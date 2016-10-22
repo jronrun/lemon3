@@ -6,7 +6,7 @@ var bunyan = require('bunyan'),
 module.exports.task = function (gulp, plugins, config) {
   plugins.nodemon({
     script: 'app.js',
-    ext: 'js coffee jade',
+    ext: 'js coffee jade html',
     stdout: false,
     readable: false
   }).on('readable', function () {

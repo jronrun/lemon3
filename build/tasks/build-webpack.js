@@ -37,3 +37,5 @@ module.exports.task = function (gulp, plugins, config, callback) {
     callback();
   });
 };
+
+module.exports.deps = ['env-product', 'build-style'];

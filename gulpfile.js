@@ -22,4 +22,4 @@ gulp.task('default', ['serv-develop']);
 gulp.task("webpack", ['serv-webpack']);
 
 //'gulp production'
-gulp.task("production", ['env-product', 'build-style', 'serv-product']);
+gulp.task("production", ['serv-product']);

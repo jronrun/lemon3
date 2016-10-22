@@ -1,7 +1,14 @@
 
-require('./../../dist/picker');
-require('./../../dist/picker.css');
+// require('./../../dist/picker');
+// require('./../../dist/picker.css');
 
+require('imports!pickadate/lib/picker');
+require('imports?define=>false!pickadate/lib/picker.date');
+require('imports?define=>false!pickadate/lib/picker.time');
+
+require('pickadate/lib/themes/default.css');
+require('pickadate/lib/themes/default.date.css');
+require('pickadate/lib/themes/default.time.css');
 
 module.exports = function(selector, options) {
   options = options || {};

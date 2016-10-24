@@ -6,6 +6,9 @@ var glob = require('glob'),
   gutil = require("gulp-util"),
   root = path.join(__dirname, "../public/components");
 
+//npm i -D progress-bar-webpack-plugin --save-dev
+var ProgressBarPlugin = require('progress-bar-webpack-plugin');
+
 function entries (globPath) {
   var files = glob.sync(globPath);
   var entries = {}, entry, dirname, basename;
@@ -99,8 +102,14 @@ module.exports = {
     new webpack.DefinePlugin({
       VERSION: JSON.stringify("5fa3b9")
     }),
+    /* replace with ProgressBarPlugin
     new webpack.ProgressPlugin(function handler(percentage, msg) {
       gutil.log(gutil.colors.yellow(Math.floor((percentage * 100)) + '%'), msg);
+    })
+    */
+    new ProgressBarPlugin({
+      format: '  [webpack:build] [:msg] [:bar] ' + gutil.colors.green.bold(':percent') + '  ' + gutil.colors.magenta(':elapsed s'),
+      clear: false
     })
 
   ]

@@ -3,6 +3,7 @@
 var path = require("path");
 var webpack = require("webpack");
 var glob = require('glob'),
+  gutil = require("gulp-util"),
   root = path.join(__dirname, "../public/components");
 
 function entries (globPath) {
@@ -97,6 +98,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       VERSION: JSON.stringify("5fa3b9")
+    }),
+    new webpack.ProgressPlugin(function handler(percentage, msg) {
+      gutil.log(gutil.colors.yellow(Math.floor((percentage * 100)) + '%'), msg);
     })
 
   ]

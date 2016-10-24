@@ -11,7 +11,8 @@
 var gulp 	= require('gulp'),
   plugins = require('gulp-load-plugins')(),
   config = require('./config/config'),
-  loader = require('./build/loader');
+  loader = require('./build/loader'),
+  runSequence = require('run-sequence');
 
 loader.loadTasks(gulp, plugins, config);
 
@@ -22,4 +23,7 @@ gulp.task('default', ['serv-develop']);
 gulp.task("webpack", ['serv-webpack']);
 
 //'gulp product'
-gulp.task("product", ['serv-product']);
+gulp.task("product", function () {
+  return runSequence('build-webpack', 'serv-product');
+});
+

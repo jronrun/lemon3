@@ -22,4 +22,4 @@ module.exports.task = function (gulp, plugins, config) {
   });
 };
 
-module.exports.deps = ['env-product', 'build-webpack'];
+module.exports.deps = ['env-product'];

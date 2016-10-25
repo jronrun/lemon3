@@ -101,7 +101,7 @@ var resource = [
 
         ]
       },
-      {id: 70002, name: 'curl', desc: 'Import from curl', method: M.POST}
+      {id: 70002, name: 'curl', desc: 'Import from Curl', method: M.POST}
     ]
   },
 

@@ -96,6 +96,16 @@ var resource = [
   },
 
   {
+    id: 70, name: 'import', desc: 'Import', children: [
+      {id: 70001, name: 'swagger', desc: 'Import from Swagger', method: M.POST, children: [
+
+        ]
+      },
+      {id: 70002, name: 'curl', desc: 'Import from curl', method: M.POST}
+    ]
+  },
+
+  {
     id: 200, name: 'manage', desc: 'Manage', children: [
       {
         id: 200000, name: 'dashboard', desc: 'Dashboard', children: []
@@ -245,7 +255,7 @@ var resource = [
           {id: 2000161, name: 'update', desc: 'Reset User Password', action: '/manage/profile', method: M.POST}
         ]
       }
-  ]
+    ]
   }
 ];
 

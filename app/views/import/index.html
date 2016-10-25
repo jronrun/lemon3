@@ -1,0 +1,33 @@
+{{#content "head" mode="append"}}
+    <script src="/dist/import.js"></script>
+{{/content}}
+
+<ul class="nav nav-tabs" style="display: none;" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="tri-import-tab1" data-toggle="tab" data-target="#import-tab1" href="#import-tab1" role="tab"></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="tri-import-tab2" data-toggle="tab" data-target="#import-tab2" href="#import-tab2" role="tab"></a>
+    </li>
+</ul>
+<div class="tab-content" id="import-layout">
+    <div class="tab-pane active" id="import-tab1" role="tabpanel">
+        <div class="pos-f-t">
+            <div class="collapse" id="import-header">
+                <div class="container-fluid bg-inverse p-a-1">
+
+                </div>
+            </div>
+            <div class="navbar navbar-light bg-faded navbar-static-top" style="background-color: white;" id="import_nav">
+                <button class="navbar-toggler navbar-brand" type="button" data-toggle="collapse" data-target="#import-header" title="Imports">
+                  {{> logo}}
+                </button>
+            </div>
+        </div>
+
+        <div id="import_view"></div>
+    </div>
+    <div class="tab-pane" id="import-tab2" role="tabpanel"></div>
+</div>
+
+{{> tmpl/import_tmpl}}

@@ -1507,7 +1507,7 @@ var mapi = {
     $.post('/api/header').done(function (resp) {
       if (0 == resp.code) {
         var hdata = lemon.deepDec(resp.result);
-        $('#navbar-header .p-a-1').html(lemon.tmpl($('#api_navbar_header_tmpl').html(), hdata));
+        $('#navbar-header .p-1').html(lemon.tmpl($('#api_navbar_header_tmpl').html(), hdata));
       } else {
         lemon.msg(resp.msg);
       }

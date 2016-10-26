@@ -97,11 +97,7 @@ var resource = [
 
   {
     id: 70, name: 'import', desc: 'Import', children: [
-      {id: 70001, name: 'swagger', desc: 'Import from Swagger', method: M.POST, children: [
-
-        ]
-      },
-      {id: 70002, name: 'curl', desc: 'Import from Curl', method: M.POST}
+      {id: 70002, name: 'analyst', desc: 'Analyst Import Resource', method: M.POST}
     ]
   },
 

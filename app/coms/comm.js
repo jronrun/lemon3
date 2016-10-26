@@ -12,7 +12,8 @@ var path = require('path'),
   json5update = require('jju/lib/document').update,
   moment = require('moment'),
   LRU = require("lru-cache"),
-  format = require('util').format
+  format = require('util').format,
+  nUrl = require('url');
   ;
 
 /**
@@ -174,6 +175,7 @@ module.exports = function(scope, config) {
     return 0 == (anAnswer || {}).code;
   };
 
+  scope.nUrl = nUrl;
   scope.moment = moment;
   scope.answer = answer;
   scope.json5s = json5s;
@@ -302,8 +304,10 @@ module.exports = function(scope, config) {
   };
 
   scope.isURL = function(target) {
-    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i;
-    return regexp.test(target || '');
+    // var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i;
+    // return regexp.test(target || '');
+    var urlObj = nUrl.parse(target || '');
+    return null != urlObj.protocol && null != urlObj.host;
   };
 
   scope.requestInfo = function(req) {

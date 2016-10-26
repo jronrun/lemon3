@@ -37,27 +37,37 @@ var imp = {
       lemon.tmpls('#imp_start_tmpl', {}, imp.id);
 
       $('button[data-start]').click(function () {
-        switch (lemon.data(this, 'start')) {
-          case 1:
-            alert('swagger');
-            break;
-          case 2:
-            alert('curl');
-            break;
-          case 3:
-            imp.views($(imp.start.id).val());
-            break;
-        }
+        imp.start.analyst(this);
       });
     },
-  },
 
-  swagger: {
+    analyst: function (selector, callback) {
+      var iType = null, startVal = $(imp.start.id).val();
+      switch (iType = lemon.data(selector, 'start')) {
+        case 3:
+          imp.views(startVal);
+          break;
+        default:
+          if (!lemon.isBlank(startVal)) {
+            var pg = lemon.progress('#start_row');
+            $.post('/import/analyst', {
+              data: lemon.enc({
+                type: iType,
+                val: startVal
+              })
+            }).done(function (resp) {
+              if (0 == resp.code) {
+                var rdata = lemon.deepDec(resp.result);
 
-  },
+              }
 
-  curl: {
-
+              pg.end();
+              lemon.isFunc(callback) && callback();
+            });
+          }
+          break;
+      }
+    }
   },
 
   initialize: function () {

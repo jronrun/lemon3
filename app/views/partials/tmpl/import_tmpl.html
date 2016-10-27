@@ -12,9 +12,12 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" id="start_choose"></div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button type="button" data-start="ExA" class="btn btn-outline-info pull-right" title="Import From Curl" style="margin-left: 0.5rem;">Curl</button>
-                                <button type="button" data-start="IxA" class="btn btn-outline-info pull-right" title="Import From Swagger" style="margin-left: 0.5rem; ">Swagger</button>
-                                <button type="button" data-start="MxA" class="btn btn-outline-info pull-right icondh" title="View Import Resource" style="margin-left: 0.5rem; ">
+                                <button type="button" data-start="ExA" class="btn btn-outline-info pull-right"
+                                        title="Import From Curl" style="margin-left: 0.5rem;margin-top: 0.5rem;">Curl </button>
+                                <button type="button" data-start="IxA" class="btn btn-outline-info pull-right"
+                                        title="Import From Swagger" style="margin-left: 0.5rem; margin-top: 0.5rem;">Swagger</button>
+                                <button type="button" data-start="MxA" class="btn btn-outline-info pull-right icondh"
+                                        title="View Import Resource" style="margin-left: 0.5rem; margin-top: 0.5rem;">
                                     <em class="fa fa-eye"></em>
                                 </button>
                             </div>
@@ -29,7 +32,7 @@
 <script type="text/html" id="imp_choose_tmpl">
     <div class="list-group">
         <% lemon.each(items, function(item) { %>
-            <a href="javascript:void(0);" class="list-group-item list-group-item-action" data-choose="<%= lemon.enc(item) %>">
+            <a href="javascript:void(0);" class="list-group-item list-group-item-action borderinfo" data-choose="<%= lemon.enc(item) %>">
                 <h5 class="list-group-item-heading">
                     <%= item.name %>
                     <span class="tag tag-info tag-pill float-right" title="Swagger Version" style="font-size: 50%"><%= item.swaggerVersion %></span>

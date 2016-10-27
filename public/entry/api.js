@@ -1765,17 +1765,12 @@ var mapi = {
     });
 
     var fromUrlModal = lemon.modal({
-      title: 'Set Join Selection Separator',
       id: 'from_url_modal',
       cache: true,
-      body: [
-        '<div class="input-group input-group-lg">',
-        '<input type="text" id="input_sep" class="form-control" style="border: 0px;" placeholder="Separator default is \',\'">',
-        '</div>'
-      ].join('')
+      body: lemon.tmpls('#api_from_url_tmpl')
     }, {
       hidden: function() {
-        mapi.joinsep = $('#input_sep').val();
+        mapi.joinSelect = lemon.getParam('#set_join_sep');
       }
     });
 
@@ -1787,16 +1782,26 @@ var mapi = {
 
     $('#btn-from-url').click(function() {
       if (mapi.requ.doc().somethingSelected()) {
+        mapi.joinSelect = mapi.joinSelect || {};
         var sel = mapi.requ.doc().getSelection();
         if (!lemon.isBlank(sel)) {
           var join = [], tmp = null;
           lemon.each(sel.split(/\s/), function(v, idx) {
             if (!lemon.isBlank(tmp = lemon.trim(v))) {
+              if (!lemon.isBlank(mapi.joinSelect.joinL)) {
+                tmp = mapi.joinSelect.joinL + tmp;
+              }
+
+              if (!lemon.isBlank(mapi.joinSelect.joinR)) {
+                tmp = tmp + mapi.joinSelect.joinR;
+              }
+
               join.push(tmp);
             }
           });
         }
-        mapi.requ.doc().replaceSelection(join.join(mapi.joinsep || ','));
+
+        mapi.requ.doc().replaceSelection(join.join(mapi.joinSelect.joinSep || ','));
         return false;
       }
 

@@ -60,6 +60,17 @@ var imp = {
                 var rdata = lemon.deepDec(resp.result);
 
               }
+              //swagger resource
+              else if (3 == resp.code) {
+                var swaggerResource = lemon.deepDec(resp.result);
+                lemon.tmpls('#imp_choose_tmpl', {
+                  items: swaggerResource
+                }, '#start_choose');
+              } else {
+                lemon.msg(resp.msg, {
+                  containerId: '#start_msg'
+                });
+              }
 
               pg.end();
               lemon.isFunc(callback) && callback();

@@ -3,6 +3,7 @@
 var express = require('express'),
   router = express.Router(),
   log = log_from('imports'),
+  request = require('request'),
   index = routes.import;
 
 module.exports = function (app) {
@@ -11,26 +12,71 @@ module.exports = function (app) {
 
 function swagger(target, resultCall) {
   if (isURL(target)) {
-    //swagger-resources
-    if (target.indexOf('/swagger-resources') != -1) {
+    var urlObj = nUrl.parse(target);
 
+    //swagger-resources
+    if (urlObj.pathname.indexOf('/swagger-resources') != -1) {
+      swaggerResourceURL = target;
     }
     //api-docs
-    else if (target.indexOf('/api-docs') != -1) {
+    else if (urlObj.pathname.indexOf('/api-docs') != -1) {
 
     }
     //swagger-ui.html || swagger ui doc url
     else {
-
+      var swaggerResourceURL = _.extend({}, urlObj, {
+        hash: null,
+        search: null,
+        query: null,
+        path: null,
+        href: null,
+        pathname: 'swagger-resources'
+      }).format();
     }
+
+    request(swaggerResourceURL, function (error, response, body) {
+      if (error) {
+        return resultCall(answer.fail(error.message));
+      }
+
+      if (!response) {
+        return resultCall(answer.fail('none response'));
+      }
+
+      if (response.statusCode != 200) {
+        return resultCall(answer.fail('Http Error: http code ' + response.statusCode + ' ' + (response.body || '')));
+      }
+
+      var swaggerResource = null;
+      try {
+        swaggerResource = json5s.parse(body);
+      } catch (e) {/**/}
+
+      if (!swaggerResource) {
+        return resultCall(answer.fail('parse data error: ' + body));
+      }
+
+      /* [ {
+       "name": "pay-trade",
+       "location": "/v2/api-docs?group=pay-trade",
+       "swaggerVersion": "2.0"
+       } ] */
+
+      if (swaggerResource.length < 1) {
+        return resultCall(answer.fail('there is no swagger resource: ' + body));
+      }
+
+      resultCall(answer.resp(3, swaggerResource));
+    });
 
   } else {
     var swaggerData = null;
     try {
       swaggerData = json5s.parse(target);
     } catch (e) {/**/}
+
     if (!swaggerData) {
-      return resultCall(answer.fail('Invalid swagger api docs data'));
+      return resultCall(answer.fail('invalid swagger api docs data'));
     }
   }
 }

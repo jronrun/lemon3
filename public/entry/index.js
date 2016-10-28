@@ -886,6 +886,52 @@ lemon.register({
     }
     return lemon.isButtonActive(selector);
   },
+  isClazzActive: function (selector, clazz) {
+    return $(selector).hasClass(clazz);
+  },
+  //1 toggle, 2 active, 3 unactive
+  clazzTgl: function (selector, clazz, opt, oppositeClazz) {
+    opt = opt || 1;
+    var actived = lemon.isClazzActive(selector, clazz), cadd = function (aClazz) {
+      $(selector).addClass(aClazz);
+    }, crem = function (aClazz) {
+      $(selector).removeClass(aClazz);
+    };
+
+    switch (opt) {
+      case 1:
+        if (actived) {
+          crem(clazz);
+          if (oppositeClazz) {
+            cadd(oppositeClazz);
+          }
+        } else {
+          cadd(clazz);
+          if (oppositeClazz) {
+            crem(oppositeClazz);
+          }
+        }
+        break;
+      case 2:
+        if (!actived) {
+          cadd(clazz);
+          if (oppositeClazz) {
+            crem(oppositeClazz);
+          }
+        }
+        break;
+      case 3:
+        if (actived) {
+          crem(clazz);
+          if (oppositeClazz) {
+            cadd(oppositeClazz);
+          }
+        }
+        break;
+    }
+
+    return lemon.isClazzActive(selector, clazz);
+  },
   //opt 1 toggle, 2 mark, 3 unmark, 4 get
   attrTgl: function (selector, attrName, opt) {
     var markD = {};

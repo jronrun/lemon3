@@ -1778,6 +1778,10 @@ var mapi = {
       }
     });
 
+    $('#btn-batch').click(function () {
+      // var active = false, $(this).hasClass('btn-secondary')
+    });
+
     lemon.rightclick('#btn-from-url', function() {
       lemon.delay(function() {
         fromUrlModal.toggle();

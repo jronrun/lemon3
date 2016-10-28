@@ -495,7 +495,7 @@ var requs = {
     };
 
     var formChkAndRequ = function () {
-      if (lemon.isButtonActive('#btn-tgl-form')) {
+      if (mapi.isButtonActive('#btn-tgl-form em')) {
         mapi.form2json(function () {
           startRequ();
         });

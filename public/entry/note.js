@@ -682,7 +682,8 @@ var note = {
       }
 
       isOpened = note.menu.instance.opened();
-      lemon.buttonTgl(note.menu.triId, isOpened ? 2 : 3);
+      // lemon.buttonTgl(note.menu.triId, isOpened ? 2 : 3);
+      lemon.clazzTgl(note.menu.triId, 'btn-outline-info', isOpened ? 2 : 3, 'btn-outline-secondary');
       return isOpened;
     },
 

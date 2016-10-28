@@ -1384,6 +1384,14 @@ var mapi = {
   resp: null,
 
   docPopover: null,
+
+  buttonTgl: function (selector, opt, oppositeClazz) {
+    return lemon.clazzTgl(selector, 'text-info', opt, oppositeClazz || 'text-silver');
+  },
+  isButtonActive: function (selector) {
+    return lemon.isClazzActive(selector, 'text-info');
+  },
+
   setCur: function(env, serv, envGroup, apiGroup, api) {
     var cur = {};
     if (env) {
@@ -1553,8 +1561,8 @@ var mapi = {
         return lemon.msg('Please choose an Environment first.');
       }
 
-      var thiz = this;
-      if (lemon.buttonTgl(thiz)) {
+      var thiz = mapi.requDocId + ' em';
+      if (mapi.buttonTgl(thiz)) {
         lemon.progress(mapi.requToolId);
 
         var data = {
@@ -1575,7 +1583,7 @@ var mapi = {
               if (lemon.isMediumUpView()) {
                 mapi.mediumUpViewDoc(rdata, thiz);
               } else {
-                lemon.buttonTgl(thiz);
+                mapi.buttonTgl(thiz);
                 homes.tab2({
                   shown: function(elId) {
                     var aItemId = '#api_doc_' + rdata.item.id, aHostId = '#api_doc_' + (rdata.host || {}).id;
@@ -1604,11 +1612,11 @@ var mapi = {
                 });
               }
             } else {
-              lemon.buttonTgl(thiz);
+              mapi.buttonTgl(thiz);
               lemon.msg('There is none document defined.');
             }
           } else {
-            lemon.buttonTgl(thiz);
+            mapi.buttonTgl(thiz);
             lemon.msg(resp.msg);
           }
 
@@ -1633,10 +1641,10 @@ var mapi = {
         return lemon.msg('Please choose an Environment first.');
       }
 
-      var thiz = this;
+      var thiz = mapi.tglCommentId + ' em';
 
       //comment
-      if (lemon.buttonTgl(this)) {
+      if (mapi.buttonTgl(thiz)) {
         lemon.progress(mapi.requToolId);
         var data = {
           serv: choosed.serv.id,
@@ -1655,11 +1663,11 @@ var mapi = {
             if (rdata && rdata.length > 0) {
               mapi.requ.val(rdata);
             } else {
-              lemon.buttonTgl(thiz);
+              mapi.buttonTgl(thiz);
             }
           } else {
             lemon.msg(resp.msg);
-            lemon.buttonTgl(thiz);
+            mapi.buttonTgl(thiz);
           }
 
           lemon.progressEnd(mapi.requToolId);
@@ -1671,13 +1679,14 @@ var mapi = {
       }
     });
 
-    $('#btn-tgl-form').click(function () {
+    var tglformBid = '#btn-tgl-form';
+    $(tglformBid).click(function () {
       if (!mapi.requ.isJson()) {
         return lemon.msg('The Request Data is not a Valid JSON.');
       }
 
       //-> form
-      if (lemon.buttonTgl(this)) {
+      if (mapi.buttonTgl(tglformBid + ' em')) {
         lemon.progress(mapi.requToolId);
         $.post('/general/form', {data: lemon.enc(mapi.requ.json())}).done(function (resp) {
           $('#tab-form').html(resp);
@@ -1856,8 +1865,10 @@ var mapi = {
           }
         }
       });
-      $('#btn-terminal').click(function () {
-        if (lemon.buttonTgl(this)) {
+
+      var terminalBid = '#btn-terminal';
+      $(terminalBid).click(function () {
+        if (mapi.buttonTgl(terminalBid + ' em')) {
           lemon.tabShow('#tab-tri-terminal');
         } else {
           lemon.tabShow('#tab-tri-mirror');
@@ -1923,7 +1934,7 @@ var mapi = {
         doPreview();
       } else {
         lemon.pubEvent('BTN_TOGGLE', {
-          show: lemon.buttonTgl(btnPreviewId) ? 1 : 0
+          show: mapi.buttonTgl(btnPreviewId + ' em') ? 1 : 0
         });
       }
     });

@@ -1770,7 +1770,11 @@ var mapi = {
       body: lemon.tmpls('#api_from_url_tmpl')
     }, {
       hidden: function() {
-        mapi.joinSelect = lemon.getParam('#set_join_sep');
+        mapi.joinSelect = {
+          joinSep: $('#input_sep').val(),
+          joinL: $('#input_left').val(),
+          joinR: $('#input_right').val()
+        };
       }
     });
 
@@ -1788,13 +1792,8 @@ var mapi = {
           var join = [], tmp = null;
           lemon.each(sel.split(/\s/), function(v, idx) {
             if (!lemon.isBlank(tmp = lemon.trim(v))) {
-              if (!lemon.isBlank(mapi.joinSelect.joinL)) {
-                tmp = mapi.joinSelect.joinL + tmp;
-              }
-
-              if (!lemon.isBlank(mapi.joinSelect.joinR)) {
-                tmp = tmp + mapi.joinSelect.joinR;
-              }
+              tmp = (mapi.joinSelect.joinL || '') + tmp;
+              tmp = tmp + (mapi.joinSelect.joinR || '');
 
               join.push(tmp);
             }

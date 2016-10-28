@@ -33,11 +33,9 @@
     <div class="list-group">
         <% lemon.each(items, function(item) { %>
             <a href="javascript:void(0);" class="list-group-item list-group-item-action borderinfo" data-choose="<%= lemon.enc(item) %>">
-                <h5 class="list-group-item-heading">
-                    <%= item.name %>
-                    <span class="tag tag-info tag-pill float-right" title="Swagger Version" style="font-size: 50%"><%= item.swaggerVersion %></span>
-                </h5>
-                <p class="list-group-item-text"> <%= item.location %> </p>
+                <h6 class="list-group-item-heading"> <%= item.name %> </h6>
+                <span class="tag tag-info tag-pill float-right" title="Swagger Version" style="font-size: 50%"><%= item.swaggerVersion %></span>
+                <p class="list-group-item-text text-muted"> <%= item.location %> </p>
             </a>
         <% }); %>
     </div>

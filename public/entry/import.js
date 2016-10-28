@@ -39,6 +39,18 @@ var imp = {
       $('button[data-start]').click(function () {
         imp.start.analyst(this);
       });
+
+      lemon.live('click', 'a[data-choose]', function (evt, el) {
+        var anEl = 'A' == el.tagName ? el : $(el).parent(),
+          choo = lemon.data(anEl, 'choose');
+        if (!$(anEl).hasClass('disabled')) {
+          $(anEl).addClass('active disabled');
+          alert(el.tagName + JSON.stringify(choo));
+          lemon.delay(function () {
+            $(anEl).removeClass('active disabled');
+          }, 10000);
+        }
+      });
     },
 
     analyst: function (selector, callback) {
@@ -62,10 +74,11 @@ var imp = {
               }
               //swagger resource
               else if (3 == resp.code) {
-                var swaggerResource = lemon.deepDec(resp.result);
+                var swaggerResource = lemon.deepDec(resp.result), chooId = '#start_choose';
+                $(chooId).empty();
                 lemon.tmpls('#imp_choose_tmpl', {
                   items: swaggerResource
-                }, '#start_choose');
+                }, chooId);
               } else {
                 lemon.msg(resp.msg, {
                   containerId: '#start_msg'

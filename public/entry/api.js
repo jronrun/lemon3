@@ -2223,6 +2223,7 @@ var mapi = {
       }
     }
 
+    $(batch.id).remove();
     $(mapi.viewUrlId).remove();
     if (1 == share.read_write) {
       mapi.disableRequest();

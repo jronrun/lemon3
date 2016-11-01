@@ -138,7 +138,13 @@ router.post(index.batch.do, function (req, res, next) {
         "values: ''",
       '},',
       '//Prototype of Request API',
-      '$request$: {}',
+      '$request$: {},',
+      '$setting$: {',
+        '//Request interval (ms)',
+        'interval: 300,',
+        '//Show full request in result',
+        'full_request: false',
+      '}',
     '}'
   ].join('\n');
 

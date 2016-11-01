@@ -503,7 +503,24 @@ var requs = {
         batch.cfgdoc = lemon.enc(mapi.requ.val());
         batch.cfg = mapi.requ.json();
         batch.result = [];
-        var bcfg = batch.cfg['$batch$'];
+        var bcfg = batch.cfg['$batch$'], bsetting = lemon.extend({
+          interval: 300,
+          full_request: false
+        }, batch.cfg['$setting$']);
+
+        if (lemon.isJson(bcfg)) {
+          if (bcfg.param_name && lemon.isString(bcfg.param_name)
+            && bcfg.values && lemon.isString(bcfg.values)) {
+            var aValues = [];
+            lemon.each(bcfg.values.split(','), function (v) {
+              var aValue = {};
+              aValue[bcfg.param_name] = v;
+              aValues.push(aValue);
+            });
+
+            bcfg = aValues;
+          }
+        }
 
         if (lemon.isArray(bcfg)) {
           var unlocks = function() {
@@ -530,11 +547,12 @@ var requs = {
 
                 batch.setRequ(theRequ, rjsonData);
                 startRequ(function (apiResp, apiRequ) {
+                  var requInResult = true === bsetting.full_request ? apiRequ : rjsonData;
                   batch.result.push({
-                    request: apiRequ,
+                    request: requInResult,
                     response: apiResp
                   });
-                  lemon.sleep(500);
+                  lemon.sleep(bsetting.interval);
                   batchDo();
                 });
               } else {
@@ -547,7 +565,7 @@ var requs = {
 
           batchDo();
         } else {
-
+          lemon.msg('Invalid Batch Configuration in $batch$');
         }
       } else {
         startRequ();

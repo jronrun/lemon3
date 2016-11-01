@@ -486,17 +486,61 @@ var requs = {
     }
 
     lemon.disable(requs.id);
-    var startRequ = function () {
+    var startRequ = function (requcb) {
       var pg = lemon.progress(mapi.navbarId);
-      requs.request(function() {
+      requs.request(function(resp) {
         lemon.enable(requs.id);
         pg.end();
+        lemon.isFunc(requcb) && requcb(resp);
       }, advance);
     };
 
     var batchRequ = function () {
       if (batch.isBatch()) {
+        mapi.locktb(true);
+        mapi.lockRequTool();
+        mapi.lockRespTool();
+        batch.cfg = mapi.requ.json();
 
+        if (lemon.isArray(batch.cfg.batch)) {
+          var batchDo = function () {
+            if (batch.cfg.batch.length > 0) {
+              loadRequ(batch.cfg.batch.shift());
+            } else {
+              mapi.unlocktb(true);
+              mapi.unLockRequTool();
+              mapi.unLockRespTool();
+            }
+          };
+
+          var loadRequ = function (aRequ) {
+            var pg = lemon.progress(mapi.navbarId);
+            $.post('/general/convert', {
+              data: lemon.enc(aRequ)
+            }).done(function (resp) {
+              pg.end();
+              if (0 == resp.code) {
+                var rjsonData = lemon.deepDec(resp.result.data);
+                var theRequ = $.extend(true, {}, batch.cfg.request, rjsonData);
+
+                batch.setRequ(theRequ, rjsonData);
+                startRequ(function () {
+                  batchDo();
+                });
+              } else {
+                lemon.msg(resp.msg);
+
+                mapi.unlocktb(true);
+                mapi.unLockRequTool();
+                mapi.unLockRespTool();
+              }
+            });
+          };
+
+          batchDo();
+        } else {
+
+        }
       } else {
         startRequ();
       }
@@ -569,7 +613,7 @@ var requs = {
     $.post('/api/request', { data: lemon.enc(data)}).done(function (resp) {
       var rdata = lemon.deepDec(resp.result || {});
       if (401 == resp.code) {
-        lemon.isFunc(callback) && callback();
+        lemon.isFunc(callback) && callback(resp);
       } else if (0 == resp.code) {
         lemon.jsonp(rdata.path, rdata.data, {
           headers: rdata.headers
@@ -582,7 +626,7 @@ var requs = {
             mapi.resp.json(data);
           }
 
-          lemon.isFunc(callback) && callback();
+          lemon.isFunc(callback) && callback(resp);
 
           $.post('/api/history', {
             hisId: rdata.hisId,
@@ -604,7 +648,7 @@ var requs = {
             errorThrown: errorThrown
           });
 
-          lemon.isFunc(callback) && callback();
+          lemon.isFunc(callback) && callback(resp);
         });
       } else if (2 == resp.code) {
         if (lemon.isString(rdata.data)) {
@@ -613,7 +657,7 @@ var requs = {
           mapi.resp.json(rdata.data);
         }
 
-        lemon.isFunc(callback) && callback();
+        lemon.isFunc(callback) && callback(resp);
       } else {
         lemon.msg(resp.msg);
         if (lemon.isBlank(rdata)) {
@@ -622,7 +666,7 @@ var requs = {
           lemon.warn(rdata, resp.msg);
         }
 
-        lemon.isFunc(callback) && callback();
+        lemon.isFunc(callback) && callback(resp);
       }
     });
   }
@@ -1366,9 +1410,20 @@ var homes = {
 
 var batch = {
   id: '#btn-batch',
-  cfg: '',
+  cfg: null,
   isBatch: function () {
     return mapi.isButtonActive(batch.id + ' em');
+  },
+
+  setRequ: function (aRequ, aRequCfg) {
+    var requStr = [
+      '/*',
+      ' * Batch Request',
+      ' * ' + JSON.stringify(aRequCfg),
+      ' */'
+    ];
+    requStr.push(JSON.stringify(aRequ));
+    mapi.requ.val(lemon.fmtjson(requStr.join('\n')));
   }
 };
 
@@ -1457,6 +1512,10 @@ var mapi = {
   },
   snapshoot: function() {
     return {
+      btns: {
+        batch: mapi.isButtonActive(batch.id + ' em'),
+        comment: mapi.isButtonActive(mapi.tglCommentId + ' em')
+      },
       cur: current(),
       requ: mapi.requ.val(),
       resp: mapi.resp.val()
@@ -1476,6 +1535,16 @@ var mapi = {
 
     mapi.requ.val(snapdata.requ);
     mapi.resp.val(snapdata.resp);
+
+    if (snapdata.btns) {
+      if (true === snapdata.btns.batch) {
+        mapi.buttonTgl(batch.id + ' em', 2);
+      }
+
+      if (true === snapdata.btns.comment) {
+        mapi.buttonTgl(mapi.tglCommentId + ' em', 2);
+      }
+    }
   },
   mirror: function(elId, sizeElId, options) {
     var instance = mirror(elId, options, {
@@ -1688,9 +1757,9 @@ var mapi = {
 
         $.post('/api/batch', { params: lemon.enc(data) }).done(function (resp) {
           if (0 == resp.code) {
-            batch.cfg = resp.result;
-            var rdata = lemon.dec(batch.cfg);
+            var rdata = lemon.dec(resp.result);
             if (rdata && rdata.length > 0) {
+              batch.cfg = mirror.parse(rdata);
               mapi.requ.val(rdata);
             }
           } else {
@@ -1700,10 +1769,12 @@ var mapi = {
           pg.end();
         });
       } else {
-        if (batch.cfg.length > 0) {
-          var cfg = mirror.parse(lemon.dec(batch.cfg));
-          mapi.requ.json(cfg.request);
-          batch.cfg = '';
+        if (null == batch.cfg && mapi.requ.isJson()) {
+          batch.cfg = mapi.requ.json();
+        }
+        if (null != batch.cfg) {
+          mapi.requ.json(batch.cfg.request);
+          batch.cfg = null;
         }
       }
     });
@@ -2292,6 +2363,8 @@ var mapi = {
 
 //TODO remove
 global.mapi=mapi;
+global.$ = $;
+global.batch=batch;
 
 $(function () { mapi.initialize(); });
 

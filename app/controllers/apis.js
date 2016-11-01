@@ -112,6 +112,44 @@ router.post(index.define.do, function (req, res, next) {
 });
 
 /**
+ * API Batch Configuration
+ */
+router.post(index.batch.do, function (req, res, next) {
+  var paramsParse = deepParse(req.body.params);
+  if (paramsParse.isFail()) {
+    return res.json(paramsParse.target);
+  }
+
+  var params = paramsParse.get();
+  var batchCfg = [
+    '/**',
+    ' * Batch Request Configuration',
+    ' * 1. Config same filed with different values with Object',
+    " *   { param_name: 'data.field', values: '1,2,3' }",
+    ' * 2. Config different filed and multi-field with Array',
+    " *   [ { 'test.field1': 'test', 'data.field2': 12 } ]",
+    ' */',
+
+    '{',
+      '//Configuration',
+      'batch: {',
+        "param_name: '',",
+        '//Split with comma ","',
+        "values: ''",
+      '},',
+      '//Prototype of Request API',
+      'request: {}',
+    '}'
+  ].join('\n');
+
+  var updateData = json5s.parse(batchCfg);
+  updateData.request = params.requ;
+
+  var aResult = json5s.format(json5update(batchCfg, updateData));
+  return res.json(ansEncode(answer.succ(aResult)));
+});
+
+/**
  * API comment
  */
 router.post(index.comment.do, function (req, res, next) {

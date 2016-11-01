@@ -494,13 +494,21 @@ var requs = {
       }, advance);
     };
 
+    var batchRequ = function () {
+      if (batch.isBatch()) {
+
+      } else {
+        startRequ();
+      }
+    };
+
     var formChkAndRequ = function () {
       if (mapi.isButtonActive('#btn-tgl-form em')) {
         mapi.form2json(function () {
-          startRequ();
+          batchRequ();
         });
       } else {
-        startRequ();
+        batchRequ();
       }
     };
 
@@ -795,8 +803,7 @@ var qry = {
           'overflow-y': 'scroll'
         });
 
-        lemon.disable(mapi.navbarId + ' [navel="1"]');
-        $(mapi.navbarId + ' [navel="2"]').addClass('disabled');
+        mapi.locktb();
       },
       shown: function(current, previous) {
         qry.openSearch(qry.searchType);
@@ -804,8 +811,7 @@ var qry = {
       hidden: function(current, soonToBeActive) {
         qry.prevMutation = null;
         qry.searchType = 0;
-        lemon.enable(mapi.navbarId + ' [navel="1"]');
-        $(mapi.navbarId + ' [navel="2"]').removeClass('disabled');
+        mapi.unlocktb();
       }
     });
   },
@@ -1358,6 +1364,14 @@ var homes = {
   }
 };
 
+var batch = {
+  id: '#btn-batch',
+  cfg: '',
+  isBatch: function () {
+    return mapi.isButtonActive(batch.id + ' em');
+  }
+};
+
 var mapi = {
   share: '#share_this',
   shareSnap: '#btn-share-snap',
@@ -1384,6 +1398,36 @@ var mapi = {
   resp: null,
 
   docPopover: null,
+
+  locktb: function (includeSearch) {
+    lemon.disable(mapi.navbarId + ' [navel="1"]');
+    $(mapi.navbarId + ' [navel="2"]').addClass('disabled');
+    if (true === includeSearch) {
+      lemon.disable(qry.searchId);
+    }
+  },
+
+  unlocktb: function (includeSearch) {
+    lemon.enable(mapi.navbarId + ' [navel="1"]');
+    $(mapi.navbarId + ' [navel="2"]').removeClass('disabled');
+    if (true === includeSearch) {
+      lemon.enable(qry.searchId);
+    }
+  },
+
+  lockRequTool: function () {
+    lemon.disable(mapi.requToolId + ' button');
+  },
+  unLockRequTool: function () {
+    lemon.enable(mapi.requToolId + ' button');
+  },
+
+  lockRespTool: function () {
+    lemon.disable(mapi.respToolId + ' button');
+  },
+  unLockRespTool: function () {
+    lemon.enable(mapi.respToolId + ' button');
+  },
 
   buttonTgl: function (selector, opt, oppositeClazz) {
     return lemon.clazzTgl(selector, 'text-info', opt, oppositeClazz || 'text-silver');
@@ -1631,6 +1675,39 @@ var mapi = {
 
     });
 
+    $(batch.id).click(function () {
+      if (mapi.buttonTgl(batch.id + ' em')) {
+        if (!mapi.requ.isJson()) {
+          return lemon.msg('The Request Data is not a Valid JSON.');
+        }
+
+        var pg = lemon.progress(mapi.requToolId);
+        var data = {
+          requ: mapi.requ.json()
+        };
+
+        $.post('/api/batch', { params: lemon.enc(data) }).done(function (resp) {
+          if (0 == resp.code) {
+            batch.cfg = resp.result;
+            var rdata = lemon.dec(batch.cfg);
+            if (rdata && rdata.length > 0) {
+              mapi.requ.val(rdata);
+            }
+          } else {
+            lemon.msg(resp.msg);
+          }
+
+          pg.end();
+        });
+      } else {
+        if (batch.cfg.length > 0) {
+          var cfg = mirror.parse(lemon.dec(batch.cfg));
+          mapi.requ.json(cfg.request);
+          batch.cfg = '';
+        }
+      }
+    });
+
     $(mapi.tglCommentId).click(function () {
       if (!mapi.requ.isJson()) {
         return lemon.msg('The Request Data is not a Valid JSON.');
@@ -1785,10 +1862,6 @@ var mapi = {
           joinR: $('#input_right').val()
         };
       }
-    });
-
-    $('#btn-batch').click(function () {
-      // var active = false, $(this).hasClass('btn-secondary')
     });
 
     lemon.rightclick('#btn-from-url', function() {
@@ -2216,6 +2289,9 @@ var mapi = {
     }, 900);
   }
 };
+
+//TODO remove
+global.mapi=mapi;
 
 $(function () { mapi.initialize(); });
 

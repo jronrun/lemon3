@@ -504,6 +504,13 @@ mirror.isJson = function(target, noneLogWarnMsg) {
   return true;
 };
 
+mirror.parse = function (target) {
+  if (!lemon.isString(target)) {
+    target = json5s.stringify(target);
+  }
+  return json5s.parse(target);
+};
+
 mirror.highlight = function(target, mode, output) {
   CodeMirror.runMode(lemon.query(target).value, mode, lemon.query(output));
 };

@@ -132,18 +132,18 @@ router.post(index.batch.do, function (req, res, next) {
 
     '{',
       '//Configuration',
-      'batch: {',
+      '$batch$: {',
         "param_name: '',",
         '//Split with comma ","',
         "values: ''",
       '},',
       '//Prototype of Request API',
-      'request: {}',
+      '$request$: {}',
     '}'
   ].join('\n');
 
   var updateData = json5s.parse(batchCfg);
-  updateData.request = params.requ;
+  updateData['$request$'] = params.requ;
 
   var aResult = json5s.format(json5update(batchCfg, updateData));
   return res.json(ansEncode(answer.succ(aResult)));

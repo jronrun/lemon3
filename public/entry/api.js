@@ -488,10 +488,10 @@ var requs = {
     lemon.disable(requs.id);
     var startRequ = function (requcb) {
       var pg = lemon.progress(mapi.navbarId);
-      requs.request(function(resp) {
+      requs.request(function(apiResp, apiRequ) {
         lemon.enable(requs.id);
         pg.end();
-        lemon.isFunc(requcb) && requcb(resp);
+        lemon.isFunc(requcb) && requcb(apiResp, apiRequ);
       }, advance);
     };
 
@@ -500,20 +500,25 @@ var requs = {
         mapi.locktb(true);
         mapi.lockRequTool();
         mapi.lockRespTool();
+        batch.cfgdoc = lemon.enc(mapi.requ.val());
         batch.cfg = mapi.requ.json();
+        batch.result = [];
+        var bcfg = batch.cfg['$batch$'];
 
-        if (lemon.isArray(batch.cfg.batch)) {
-          var batchDo = function () {
-            if (batch.cfg.batch.length > 0) {
-              loadRequ(batch.cfg.batch.shift());
+        if (lemon.isArray(bcfg)) {
+          var unlocks = function() {
+            mapi.unlocktb(true);
+            mapi.unLockRequTool();
+            mapi.unLockRespTool();
+          }, batchDo = function () {
+            if (bcfg.length > 0) {
+              loadRequ(bcfg.shift());
             } else {
-              mapi.unlocktb(true);
-              mapi.unLockRequTool();
-              mapi.unLockRespTool();
+              mapi.requ.val(lemon.dec(batch.cfgdoc));
+              mapi.resp.json(batch.result);
+              unlocks();
             }
-          };
-
-          var loadRequ = function (aRequ) {
+          }, loadRequ = function (aRequ) {
             var pg = lemon.progress(mapi.navbarId);
             $.post('/general/convert', {
               data: lemon.enc(aRequ)
@@ -521,18 +526,21 @@ var requs = {
               pg.end();
               if (0 == resp.code) {
                 var rjsonData = lemon.deepDec(resp.result.data);
-                var theRequ = $.extend(true, {}, batch.cfg.request, rjsonData);
+                var theRequ = $.extend(true, {}, batch.cfg['$request$'], rjsonData);
 
                 batch.setRequ(theRequ, rjsonData);
-                startRequ(function () {
+                startRequ(function (apiResp, apiRequ) {
+                  batch.result.push({
+                    request: apiRequ,
+                    response: apiResp
+                  });
+                  lemon.sleep(500);
                   batchDo();
                 });
               } else {
                 lemon.msg(resp.msg);
 
-                mapi.unlocktb(true);
-                mapi.unLockRequTool();
-                mapi.unLockRespTool();
+                unlocks();
               }
             });
           };
@@ -600,20 +608,20 @@ var requs = {
   },
 
   request: function(callback, advance) {
-    var choosed = current(), data = {
+    var choosed = current(), requ = mapi.requ.json(), data = {
       source: mapi.source(),
       env: choosed.env.id,
       group: choosed.envGroup.id,
       serv: choosed.serv.id,
       api: choosed.api ? choosed.api.id : -1,
-      requ: lemon.enc(mapi.requ.json()),
+      requ: lemon.enc(requ),
       advance: advance || {}
     };
 
     $.post('/api/request', { data: lemon.enc(data)}).done(function (resp) {
       var rdata = lemon.deepDec(resp.result || {});
       if (401 == resp.code) {
-        lemon.isFunc(callback) && callback(resp);
+        lemon.isFunc(callback) && callback(resp, requ);
       } else if (0 == resp.code) {
         lemon.jsonp(rdata.path, rdata.data, {
           headers: rdata.headers
@@ -626,7 +634,7 @@ var requs = {
             mapi.resp.json(data);
           }
 
-          lemon.isFunc(callback) && callback(resp);
+          lemon.isFunc(callback) && callback(data, requ);
 
           $.post('/api/history', {
             hisId: rdata.hisId,
@@ -648,7 +656,7 @@ var requs = {
             errorThrown: errorThrown
           });
 
-          lemon.isFunc(callback) && callback(resp);
+          lemon.isFunc(callback) && callback(resp, requ);
         });
       } else if (2 == resp.code) {
         if (lemon.isString(rdata.data)) {
@@ -657,7 +665,7 @@ var requs = {
           mapi.resp.json(rdata.data);
         }
 
-        lemon.isFunc(callback) && callback(resp);
+        lemon.isFunc(callback) && callback(resp, requ);
       } else {
         lemon.msg(resp.msg);
         if (lemon.isBlank(rdata)) {
@@ -666,7 +674,7 @@ var requs = {
           lemon.warn(rdata, resp.msg);
         }
 
-        lemon.isFunc(callback) && callback(resp);
+        lemon.isFunc(callback) && callback(resp, requ);
       }
     });
   }
@@ -1411,6 +1419,8 @@ var homes = {
 var batch = {
   id: '#btn-batch',
   cfg: null,
+  cfgdoc: '',
+  result: [],
   isBatch: function () {
     return mapi.isButtonActive(batch.id + ' em');
   },
@@ -1773,7 +1783,7 @@ var mapi = {
           batch.cfg = mapi.requ.json();
         }
         if (null != batch.cfg) {
-          mapi.requ.json(batch.cfg.request);
+          mapi.requ.json(batch.cfg['$request$']);
           batch.cfg = null;
         }
       }

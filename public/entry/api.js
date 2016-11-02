@@ -1447,23 +1447,7 @@ var batch = {
   },
 
   getResult: function (shortRequ, apiRequ, apiResp, bSetting) {
-    var aResult = {}, getV = function (fields, target) {
-      var newObj = {}; lemon.each(fields, function (field) {
-        var fieldVal = null, fk = null, fas = null;
-        if (field.indexOf('|') != -1) {
-          var tmp = field.split('|');
-          fk = tmp[0]; fas = tmp[1];
-        } else {
-          fk = field; fas = field;
-        }
-
-        if (fieldVal = lemon.gets(target, fk)) {
-          newObj[fas] = fieldVal;
-        }
-      });
-      return newObj;
-    };
-
+    var aResult = {};
     if (lemon.isString(bSetting.request)) {
       bSetting.request = [bSetting.request];
     }
@@ -1472,8 +1456,8 @@ var batch = {
     }
 
     if (lemon.isArray(bSetting.request) && lemon.isArray(bSetting.response)) {
-      lemon.extend(aResult, getV(bSetting.request, apiRequ));
-      lemon.extend(aResult, getV(bSetting.response, apiResp));
+      lemon.extend(aResult, lemon.queries({}, apiRequ, bSetting.request));
+      lemon.extend(aResult, lemon.queries({}, apiResp, bSetting.response));
 
       return aResult;
     }
@@ -1483,13 +1467,13 @@ var batch = {
     } else if (1 == bSetting.request) {
       aResult.request = apiRequ;
     } else if (lemon.isArray(bSetting.request)) {
-      aResult.request = getV(bSetting.request, apiRequ);
+      aResult.request = lemon.queries({}, apiRequ, bSetting.request);
     }
 
     if (1 == bSetting.response) {
       aResult.response = apiResp;
     } else if (lemon.isArray(bSetting.response)) {
-      aResult.response = getV(bSetting.response, apiResp);
+      aResult.response = lemon.queries({}, apiResp, bSetting.response);
     }
 
     return aResult;

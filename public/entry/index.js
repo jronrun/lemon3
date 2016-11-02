@@ -157,7 +157,60 @@ function values(json, prop) {
 var homeProgress = null;
 lemon.register({
   gets: function(json, path) {
+    if (!lemon.isJson(json)) {
+      return json;
+    }
+
     return values(json, path);
+  },
+  queries: function (mongoStyleQry, sourceOrSelectFunc, fields) {
+    var isSourceArr = false;
+    if (!lemon.isJson(sourceOrSelectFunc) && !(isSourceArr = lemon.isArray(sourceOrSelectFunc))) {
+      return sourceOrSelectFunc;
+    }
+
+    if (lemon.isFunc(sourceOrSelectFunc)) {
+
+    } else if (!isSourceArr) {
+      sourceOrSelectFunc = [sourceOrSelectFunc];
+    }
+
+    var siftR = lemon.sift(mongoStyleQry || {}, sourceOrSelectFunc);
+    if (lemon.isFunc(siftR) || lemon.isUndefined(fields)) {
+      return siftR;
+    }
+
+    if (!lemon.isArray(fields)) {
+      fields = [fields];
+    }
+
+    var getV = function (aTarget, aFields) {
+      var newObj = {}; lemon.each(aFields, function (field) {
+        var fieldVal = null, fk = null, fas = null;
+        if (field.indexOf('|') != -1) {
+          var tmp = field.split('|');
+          fk = tmp[0]; fas = tmp[1];
+        } else {
+          fk = field; fas = field;
+        }
+
+        if (fieldVal = lemon.gets(aTarget, fk)) {
+          newObj[fas] = fieldVal;
+        }
+      });
+      return newObj;
+    };
+
+    var qryR = [];
+    lemon.each(siftR, function (item) {
+      qryR.push(getV(item, fields));
+    });
+
+    if (qryR.length == 1) {
+      return qryR[0];
+    }
+
+    return qryR;
   },
   escape: function (target) {
     return $('<div>').text(target).html();

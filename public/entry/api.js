@@ -1448,6 +1448,44 @@ var batch = {
     return mapi.isButtonActive(batch.id + ' em');
   },
 
+  tgl: function (showPrev) {
+    if (mapi.buttonTgl(batch.id + ' em')) {
+      if (!mapi.requ.isJson()) {
+        return lemon.msg('The Request Data is not a Valid JSON.');
+      }
+
+      var pg = lemon.progress(mapi.requToolId);
+      var data = {
+        requ: mapi.requ.json(),
+        prev: (true === showPrev ? (lemon.dec(batch.cfgdoc) || null) : null)
+      };
+
+      $.post('/api/batch', { params: lemon.enc(data) }).done(function (resp) {
+        if (0 == resp.code) {
+          var rdata = lemon.dec(resp.result);
+          if (rdata && rdata.length > 0) {
+            batch.cfg = mirror.parse(rdata);
+            batch.cfgdoc = lemon.enc(rdata);
+            mapi.requ.val(rdata);
+          }
+        } else {
+          lemon.msg(resp.msg);
+        }
+
+        pg.end();
+      });
+    } else {
+      if (null == batch.cfg && mapi.requ.isJson()) {
+        batch.cfg = mapi.requ.json();
+      }
+      if (null != batch.cfg) {
+        batch.cfgdoc = lemon.enc(mapi.requ.val());
+        mapi.requ.json(batch.cfg['$request$']);
+        batch.cfg = null;
+      }
+    }
+  },
+
   getResult: function (shortRequ, apiRequ, apiResp, bSetting) {
     var aResult = {};
     if (lemon.isString(bSetting.request)) {
@@ -1605,6 +1643,7 @@ var mapi = {
     if (snapdata.btns) {
       if (true === snapdata.btns.batch) {
         mapi.buttonTgl(batch.id + ' em', 2);
+        batch.cfgdoc = lemon.enc(mapi.requ.val());
       }
 
       if (true === snapdata.btns.comment) {
@@ -1811,38 +1850,10 @@ var mapi = {
     });
 
     $(batch.id).click(function () {
-      if (mapi.buttonTgl(batch.id + ' em')) {
-        if (!mapi.requ.isJson()) {
-          return lemon.msg('The Request Data is not a Valid JSON.');
-        }
-
-        var pg = lemon.progress(mapi.requToolId);
-        var data = {
-          requ: mapi.requ.json()
-        };
-
-        $.post('/api/batch', { params: lemon.enc(data) }).done(function (resp) {
-          if (0 == resp.code) {
-            var rdata = lemon.dec(resp.result);
-            if (rdata && rdata.length > 0) {
-              batch.cfg = mirror.parse(rdata);
-              mapi.requ.val(rdata);
-            }
-          } else {
-            lemon.msg(resp.msg);
-          }
-
-          pg.end();
-        });
-      } else {
-        if (null == batch.cfg && mapi.requ.isJson()) {
-          batch.cfg = mapi.requ.json();
-        }
-        if (null != batch.cfg) {
-          mapi.requ.json(batch.cfg['$request$']);
-          batch.cfg = null;
-        }
-      }
+      batch.tgl(true);
+    });
+    lemon.rightclick(batch.id, function () {
+      batch.tgl(false);
     });
 
     $(mapi.tglCommentId).click(function () {

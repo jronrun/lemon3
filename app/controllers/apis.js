@@ -120,38 +120,42 @@ router.post(index.batch.do, function (req, res, next) {
     return res.json(paramsParse.target);
   }
 
-  var params = paramsParse.get();
-  var batchCfg = [
-    '/**',
-    ' * Batch Request Configuration',
-    ' * 1. Config same filed with different values with Object',
-    " *   { param_name: 'data.field', values: '1,2,3' }",
-    ' * 2. Config different filed and multi-field with Array',
-    " *   [ { 'test.field1': 'test', 'data.field2': 12 } ]",
-    ' */',
+  var params = paramsParse.get(), batchCfg = '';
+  if (!params.prev) {
+    batchCfg = [
+      '/**',
+      ' * Batch Request Configuration',
+      ' * 1. Config same filed with different values with Object',
+      " *   { param_name: 'data.field', values: '1,2,3' }",
+      ' * 2. Config different filed and multi-field with Array',
+      " *   [ { 'test.field1': 'test', 'data.field2': 12 } ]",
+      ' */',
 
-    '{',
-      '//Configuration',
-      '$batch$: {',
-        "param_name: '',",
-        '//Split with comma ","',
-        "values: ''",
-      '},',
-      '//Prototype of Request API',
-      '$request$: {},',
-      '$setting$: {',
-        '//Request interval (ms)',
-        'interval: 300,',
-        '//Request in Result: 0 short, 1 full, [] Field Array',
-        '//Field eg: da[0].id, or rename as uid: da[0].id|uid',
-        'request: 0,',
-        '//Response in Result: 1 full, [] Field Array',
-        'response: 1,',
-        '//Query result (Mongo Style Query)',
-        'query: null',
-      '}',
-    '}'
-  ].join('\n');
+      '{',
+        '//Configuration',
+        '$batch$: {',
+          "param_name: '',",
+          '//Split with comma ","',
+          "values: ''",
+        '},',
+        '//Prototype of Request API',
+        '$request$: {},',
+        '$setting$: {',
+          '//Request interval (ms)',
+          'interval: 300,',
+          '//Request in Result: 0 short, 1 full, [] Field Array',
+          '//Field eg: da[0].id, or rename as uid: da[0].id|uid',
+          'request: 0,',
+          '//Response in Result: 1 full, [] Field Array',
+          'response: 1,',
+          '//Query result (Mongo Style Query)',
+          'query: null',
+        '}',
+      '}'
+    ].join('\n');
+  } else {
+    batchCfg = params.prev;
+  }
 
   var updateData = json5s.parse(batchCfg);
   updateData['$request$'] = params.requ;

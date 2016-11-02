@@ -2438,11 +2438,6 @@ var mapi = {
   }
 };
 
-//TODO remove
-global.mapi=mapi;
-global.$ = $;
-global.batch=batch;
-
 $(function () { mapi.initialize(); });
 
 

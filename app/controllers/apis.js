@@ -142,8 +142,11 @@ router.post(index.batch.do, function (req, res, next) {
       '$setting$: {',
         '//Request interval (ms)',
         'interval: 300,',
-        '//Show full request in result',
-        'full_request: false',
+        '//Request in Result: 0 short, 1 full, [] Field Array',
+        '//Field eg: da[0].id, or rename as uid: da[0].id|uid',
+        'request: 0,',
+        '//Response in Result: 1 full, [] Field Array',
+        'response: 1',
       '}',
     '}'
   ].join('\n');

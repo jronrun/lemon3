@@ -505,7 +505,8 @@ var requs = {
         batch.result = [];
         var bcfg = batch.cfg['$batch$'], bsetting = lemon.extend({
           interval: 300,
-          full_request: false
+          request: 0,
+          response: 1
         }, batch.cfg['$setting$']);
 
         if (lemon.isJson(bcfg)) {
@@ -547,11 +548,7 @@ var requs = {
 
                 batch.setRequ(theRequ, rjsonData);
                 startRequ(function (apiResp, apiRequ) {
-                  var requInResult = true === bsetting.full_request ? apiRequ : rjsonData;
-                  batch.result.push({
-                    request: requInResult,
-                    response: apiResp
-                  });
+                  batch.result.push(batch.getResult(rjsonData, apiRequ, apiResp, bsetting));
                   lemon.sleep(bsetting.interval);
                   batchDo();
                 });
@@ -1441,6 +1438,55 @@ var batch = {
   result: [],
   isBatch: function () {
     return mapi.isButtonActive(batch.id + ' em');
+  },
+
+  getResult: function (shortRequ, apiRequ, apiResp, bSetting) {
+    var aResult = {}, getV = function (fields, target) {
+      var newObj = {}; lemon.each(fields, function (field) {
+        var fieldVal = null, fk = null, fas = null;
+        if (field.indexOf('|') != -1) {
+          var tmp = field.split('|');
+          fk = tmp[0]; fas = tmp[1];
+        } else {
+          fk = field; fas = field;
+        }
+
+        if (fieldVal = lemon.gets(target, fk)) {
+          newObj[fas] = fieldVal;
+        }
+      });
+      return newObj;
+    };
+
+    if (lemon.isString(bSetting.request)) {
+      bSetting.request = [bSetting.request];
+    }
+    if (lemon.isString(bSetting.response)) {
+      bSetting.response = [bSetting.response];
+    }
+
+    if (lemon.isArray(bSetting.request) && lemon.isArray(bSetting.response)) {
+      lemon.extend(aResult, getV(bSetting.request, apiRequ));
+      lemon.extend(aResult, getV(bSetting.response, apiResp));
+
+      return aResult;
+    }
+
+    if (0 === bSetting.request) {
+      aResult.request = shortRequ;
+    } else if (1 == bSetting.request) {
+      aResult.request = apiRequ;
+    } else if (lemon.isArray(bSetting.request)) {
+      aResult.request = getV(bSetting.request, apiRequ);
+    }
+
+    if (1 == bSetting.response) {
+      aResult.response = apiResp;
+    } else if (lemon.isArray(bSetting.response)) {
+      aResult.response = getV(bSetting.response, apiResp);
+    }
+
+    return aResult;
   },
 
   setRequ: function (aRequ, aRequCfg) {

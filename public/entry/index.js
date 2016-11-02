@@ -152,8 +152,8 @@ function values(json, prop) {
 
 var homeProgress = null;
 lemon.register({
-  gets: function(json, prop) {
-    return values(json, prop);
+  gets: function(json, path) {
+    return values(json, path);
   },
   escape: function (target) {
     return $('<div>').text(target).html();

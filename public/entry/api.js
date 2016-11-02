@@ -488,12 +488,12 @@ var requs = {
     lemon.disable(requs.id);
     var startRequ = function (requcb) {
       var pg = lemon.progress(mapi.navbarId);
-      requs.request(function(apiResp, apiRequ) {
+      requs.request(function(apiResp, apiRequ, isSucc) {
         if (!batch.isBatch()) {
           lemon.enable(requs.id);
         }
         pg.end();
-        lemon.isFunc(requcb) && requcb(apiResp, apiRequ);
+        lemon.isFunc(requcb) && requcb(apiResp, apiRequ, isSucc);
       }, advance);
     };
 
@@ -549,14 +549,18 @@ var requs = {
                 var theRequ = $.extend(true, {}, batch.cfg['$request$'], rjsonData);
 
                 batch.setRequ(theRequ, rjsonData, '[' + (++currentRs) + ' / ' + totalRs + ']');
-                startRequ(function (apiResp, apiRequ) {
-                  batch.result.push(batch.getResult(rjsonData, apiRequ, apiResp, bsetting));
-                  lemon.sleep(bsetting.interval);
-                  batchDo();
+                startRequ(function (apiResp, apiRequ, isSucc) {
+                  if (true === isSucc) {
+                    batch.result.push(batch.getResult(rjsonData, apiRequ, apiResp, bsetting));
+                    lemon.sleep(bsetting.interval);
+                    batchDo();
+                  } else {
+                    lemon.msg(resp.msg);
+                    unlocks();
+                  }
                 });
               } else {
                 lemon.msg(resp.msg);
-
                 unlocks();
               }
             });
@@ -651,7 +655,7 @@ var requs = {
             mapi.resp.json(data);
           }
 
-          lemon.isFunc(callback) && callback(data, requ);
+          lemon.isFunc(callback) && callback(data, requ, true);
 
           $.post('/api/history', {
             hisId: rdata.hisId,
@@ -2271,9 +2275,9 @@ var mapi = {
       }
     }
 
-    $(batch.id).remove();
     $(mapi.viewUrlId).remove();
     if (1 == share.read_write) {
+      $(batch.id).remove();
       mapi.disableRequest();
     }
 

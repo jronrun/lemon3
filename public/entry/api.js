@@ -508,7 +508,8 @@ var requs = {
         var bcfg = batch.cfg['$batch$'], bsetting = lemon.extend({
           interval: 300,
           request: 0,
-          response: 1
+          response: 1,
+          query: null
         }, batch.cfg['$setting$']);
 
         if (lemon.isJson(bcfg)) {
@@ -535,7 +536,8 @@ var requs = {
               loadRequ(bcfg.shift());
             } else {
               mapi.requ.val(lemon.dec(batch.cfgdoc));
-              mapi.resp.json(batch.result);
+              // mapi.resp.json(batch.result);
+              mapi.resp.json(lemon.queries(bsetting.query, batch.result));
               unlocks();
             }
           }, loadRequ = function (aRequ) {

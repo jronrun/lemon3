@@ -146,7 +146,9 @@ router.post(index.batch.do, function (req, res, next) {
         '//Field eg: da[0].id, or rename as uid: da[0].id|uid',
         'request: 0,',
         '//Response in Result: 1 full, [] Field Array',
-        'response: 1',
+        'response: 1,',
+        '//Query result (Mongo Style Query)',
+        'query: null',
       '}',
     '}'
   ].join('\n');

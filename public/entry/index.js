@@ -175,7 +175,7 @@ lemon.register({
       sourceOrSelectFunc = [sourceOrSelectFunc];
     }
 
-    var siftR = lemon.sift(mongoStyleQry || {}, sourceOrSelectFunc);
+    var siftR = lemon.sift(lemon.deepCopy(mongoStyleQry || {}), sourceOrSelectFunc);
     if (lemon.isFunc(siftR) || lemon.isUndefined(fields)) {
       return siftR;
     }

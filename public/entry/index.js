@@ -206,7 +206,7 @@ lemon.register({
       qryR.push(getV(item, fields));
     });
 
-    if (qryR.length == 1) {
+    if (!isSourceArr) {
       return qryR[0];
     }
 

@@ -489,7 +489,9 @@ var requs = {
     var startRequ = function (requcb) {
       var pg = lemon.progress(mapi.navbarId);
       requs.request(function(apiResp, apiRequ) {
-        lemon.enable(requs.id);
+        if (!batch.isBatch()) {
+          lemon.enable(requs.id);
+        }
         pg.end();
         lemon.isFunc(requcb) && requcb(apiResp, apiRequ);
       }, advance);

@@ -526,7 +526,7 @@ var requs = {
         }
 
         if (lemon.isArray(bcfg)) {
-          var unlocks = function() {
+          var totalRs = bcfg.length, currentRs = 0, unlocks = function() {
             mapi.unlocktb(true);
             mapi.unLockRequTool();
             mapi.unLockRespTool();
@@ -548,7 +548,7 @@ var requs = {
                 var rjsonData = lemon.deepDec(resp.result.data);
                 var theRequ = $.extend(true, {}, batch.cfg['$request$'], rjsonData);
 
-                batch.setRequ(theRequ, rjsonData);
+                batch.setRequ(theRequ, rjsonData, '[' + (++currentRs) + ' / ' + totalRs + ']');
                 startRequ(function (apiResp, apiRequ) {
                   batch.result.push(batch.getResult(rjsonData, apiRequ, apiResp, bsetting));
                   lemon.sleep(bsetting.interval);
@@ -1491,10 +1491,10 @@ var batch = {
     return aResult;
   },
 
-  setRequ: function (aRequ, aRequCfg) {
+  setRequ: function (aRequ, aRequCfg, aProgress) {
     var requStr = [
       '/*',
-      ' * Batch Request',
+      ' * Batch Request ' + aProgress,
       ' * ' + JSON.stringify(aRequCfg),
       ' */'
     ];

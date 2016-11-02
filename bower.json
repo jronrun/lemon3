@@ -33,6 +33,6 @@
     "jquery-console": "*",
     "file-saver": "^1.3.2",
     "filereader": "*",
-    "sift": "*"
+    "sift": "siftjs#^3.2.6"
   }
 }

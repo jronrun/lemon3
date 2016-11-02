@@ -27,3 +27,8 @@ gulp.task("product", function () {
   return runSequence('build-webpack', 'serv-product');
 });
 
+/**
+ * bower register lemon git@github.com:jronrun/lemon.git
+ * bower register filereader git@github.com:bgrins/filereader.js.git
+ * bower register jju git@github.com:rlidwka/jju.git
+ */

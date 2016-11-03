@@ -166,7 +166,7 @@ function intlJsonQueries(host) {
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
       'data-qry-intl="PQKhAIEUFcFMCcCWsDO5EDtwCkDKB5AOXBGACgBvMgSAEc54BPALnCuupoF8AaG4YADFEAGwAuCcMNgiAJqwCM4AO4ALAPYjYPcAG0AulORzwAQXjwAho37BYAc1azLugAz6AdIlk718cPCwGJYAtrDglmjQ3k4u7l6yAD7RsjQAZqKwsiiKZFxkoGTgUAyMOATEALTgALLqGPbq4LhijFpF4AoezdAADr1+ErLg6r0IlmJ+OeAAJJg6Mxjzs7AAHogoYigL9hI7Ygvi2rPiC7C0CxjHMyHqPrOWIiILlhj3M36Xn7MY6gezKEQAC9rq0xgtAvY1gs1AhrjJYCEahMAMaqDoAJm6ACUHGteuAULBLPA0agOgBmbqCaAYFFiRD1cAZI5IBodAAs3RQ0AARiNeQArWD0wnE0mqTD2DoAVm6sj+4F+YgmjKwRJJaKlZFIZCAA">',
-      '<em class="fa fa-filter" title="Filter"></em> Filter',
+      '<em class="fa fa-search" title="Query"></em> Query',
       '</button>'
     ].join(' ');
 

@@ -58,7 +58,7 @@ var json5format = function(target) {
           out += tabs(indent);
         }
         if (/^\/\*/.test(sep)) {
-          sep = sep.replace(/\n/g, nl + tabs(indent));
+          sep = nl + sep.replace(/\n/g, nl + tabs(indent));
         }
         out += sep + nl;
         break;

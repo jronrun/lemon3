@@ -165,7 +165,7 @@ function intlJsonQueries(host) {
     ].join(''), footer = [
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
-      'data-qry-intl="PQKhAIEUFcFMCcCWsDO5EDtwCkDKB5AOXBGACgBvMgSAEc54BPALnCuupoF8AaG4YADFEAGwAuCcMNgiAJqwCM4AO4ALAPYjYPcAG0AulORzwAQXjwAho37BYAc1azLugAz6AdIlk718cPCwGJYAtrDglmjQ3k4u7l6yAD7RsjQAZqKwsiiKZFxkoGTgUAyMOATEALTgALLqGPbq4LhijFpF4AoezdAADr1+ErLg6r0IlmJ+OeAAJJg6Mxjzs7AAHogoYigL9hI7Ygvi2rPiC7C0CxjHMyHqPrOWIiILlhj3M36Xn7MY6gezKEQAC9rq0xgtAvY1gs1AhrjJYCEahMAMaqDoAJm6ACUHGteuAULBLPA0agOgBmbqCaAYFFiRD1cAZI5IBodAAs3RQ0AARiNeQArWD0wnE0mqTD2DoAVm6sj+4F+YgmjKwRJJaKlZFIZCAA">',
+      'data-qry-intl="FAegVGAECKCuCmAnAlvAzpZA7SApAygPIBykYIwA3sAJACOCiAngFyTU020C+ANLSBABxeABdIAMVQAbACZsAjJADuACwD20+L0gBtALqSZsyAEFEiAIZMBIeAHM2sy7oAM+gHTJZO9YkiI8FiWALbwkJYYsN5OLu5esgA+0bK0AGbIWrJoisDcoGDAkDCMTHhEpAC0kACy6lj26pD4okxaRZAKHs2wAA69fqLwJuq9SJaifjmQACTYOjNY87PwAB7IaKJoC-ZDO6IL0nuzRwvwdAtY2rMh6j6zltLSC5ZY9zN+l5+zWOoHs2hkAAva4zVpjBaBexrBZqJCg+BaEI1CYAY1UHQATN0AEoONa9SBoeCWRDo9AdADM3TQsAARpB1HSAFbwVHiYmk9HYewdAAs3Vkf0gv1EE2Q9SJJLJqh5wHIwCAA">',
       '<em class="fa fa-search" title="Query"></em> Query',
       '</button>'
     ].join(' ');

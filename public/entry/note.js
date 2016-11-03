@@ -750,6 +750,7 @@ var note = {
       ex('share', function (args, cm) { na('shareNote', args, cm); }, 'Share Note with Preview');
       ex('view', function (args, cm) { na('preview', args, cm); }, 'Preview', 'v');
       ex('fullscreen', function (args, cm) { na('fullscreenTgl', args, cm); }, 'Toggle Fullscreen', 'full');
+      ex('query', function (args, cm) { na('queriesTgl', args, cm); }, 'JSON Quieres', 'que');
 
       //CodeMirror.commands.save = note.action.saveNote;
       ex('w', function (args, cm) { na('saveNote', args, cm); }, 'Save Note');
@@ -818,6 +819,7 @@ var note = {
             note.menu.item('Matching Tag', 'Ctrl-K', 'visual & edit', 'To Matching Tag', 'toMatchingTag'),
             note.menu.item('separator'),
             note.menu.item('Select All', 'Ctrl-A', 'visual & edit', 'Select All', 'selectAll'),
+            note.menu.item('Filter...', 'Ctrl-E', 'visual & edit', 'Filter... (/)', 'queriesTgl'),
             note.menu.item('Find...', 'Cmd-F', 'edit', 'Find... (/)', 'find'),
             note.menu.item('Find Next', 'Cmd-G', 'edit', 'Find Next (n)', 'findNext'),
             note.menu.item('Find Previous', 'Shift-Cmd-G', 'edit', 'Find Previous (shift + n)', 'findPrev'),

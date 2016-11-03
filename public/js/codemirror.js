@@ -194,6 +194,11 @@ function intlJsonQueries(host) {
               var pg = lemon.homeProgress();
               var qrys = host.queries.qMirror.json(),
                 qryResult = host.queryJson(qrys.query, 1 === qrys.filter ? undefined : qrys.filter);
+              if (-1 === qryResult) {
+                lemon.alert('There is none valid json.'); pg.end();
+                return;
+              }
+
               lemon.info(qrys, 'JSON queries');
               lemon.info(qryResult, 'JSON queries result');
 
@@ -348,12 +353,17 @@ var helper = function(cm, events) {
       cm.setCursor((line || 1) - 1, ch || 0)
     },
     queriesTgl: function () {
+      if (!mirror.isJson(tools.selected())) {
+        lemon.alert('The selected or content is not a valid json.');
+        return;
+      }
+
       tools.queries.qModal && tools.queries.qModal.toggle();
     },
     queryJson: function (mongoStyleQry, fields) {
       var text = tools.selected();
       if (!mirror.isJson(text)) {
-        lemon.alert('There is none valid json.');
+        return -1;
       }
 
       return lemon.queries(mongoStyleQry, mirror.parse(text), fields);

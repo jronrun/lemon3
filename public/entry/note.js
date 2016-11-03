@@ -1518,6 +1518,10 @@ var note = {
             note.theme.change(evtData.th);
             note.action.saveNoteCust();
             break;
+          case 'SHOW_JSON_QRY_IN_NOTE':
+            note.load(note.make(evtData.note));
+            note.theme.change(evtData.th);
+            break;
         }
       }
     });

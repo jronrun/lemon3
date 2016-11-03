@@ -153,10 +153,86 @@ function loadTheme(th) {
 
 var customEvts = [ 'fullscreen' ];
 
+function intlJsonQueries(host) {
+  if (!host.queries.qModal) {
+    var doId = '#do_json_qry' + lemon.uniqueId(), mid = '#json_qry_mirror' + lemon.uniqueId(),
+      fid = '#json_qry_form' + lemon.uniqueId(),
+      body = [
+      '<form class="form-inline" id="' + lemon.ltrim(fid, '#') + '">',
+      '<h1 class="invisible"></h1>',
+      '<textarea class="form-control" rows="3" style="border:none;" id="' + lemon.ltrim(mid, '#') + '"></textarea>',
+      '</form>'
+    ].join(''), footer = [
+      '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
+      '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
+      'data-qry-intl="PQKhAIEUFcFMCcCWsDO5EDtwCkDKB5AOXBGACgBvMgSGGBgQE8cDiAKAWQHsMBzL8LgAujADawoceIwCUNAI5TGALnBVq1GgF8ANDToAxRKKEJwR2KIAmqgIzgA7gAsu4neADaAXXPJr4AEF4eABDRn1gWF5VKxCPAAYvADpEK3cueHB4WAwQgFsJELRoVJi4xJSrAB8SqxoAM2NTeDsyLSA">',
+      '<em class="fa fa-filter" title="Filter"></em> Filter',
+      '</button>'
+    ].join(' ');
+
+    host.queries.qModal = lemon.modal({
+      cache: true,
+      body: body,
+      footer: footer,
+      modal: {
+        backdrop: 'static',
+        keyboard: false
+      }
+    }, {
+      shown: function(evt, el) {
+        if (!lemon.isEvented(doId)) {
+          host.queries.qMirror = mirror(mid, false, {
+            gutters: [],
+            cust: {
+              escKey: false
+            }
+          });
+          host.queries.qMirror.val(lemon.data(doId, 'qryIntl'));
+
+          $(doId).click(function () {
+            if (host.queries.qMirror.isJson()) {
+              var pg = lemon.homeProgress();
+              var qrys = host.queries.qMirror.json(),
+                qryResult = host.queryJson(qrys.query, 1 === qrys.filter ? undefined : qrys.filter);
+              lemon.info(qrys, 'JSON queries');
+              lemon.info(qryResult, 'JSON queries result');
+
+              host.queries.qModal.hide();
+              lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
+                view.tellEvent('SHOW_JSON_QRY_IN_NOTE', {
+                  th: 'lemon',
+                  note: {
+                    content: lemon.fmtjson(qryResult),
+                    language: {
+                      name: 'JSON-LD',
+                      mime: 'application/ld+json'
+                    }
+                  }
+                }, function () {
+                  pg.end();
+                });
+              });
+            } else {
+              lemon.msg('Not a valid Query', {
+                containerId: fid
+              });
+            }
+          });
+          lemon.setEvented(doId);
+        }
+      }
+    });
+  }
+}
+
 var helper = function(cm, events) {
   events = events || {};
   var tools = {
     target: cm,
+    queries: {
+      qModal: null,
+      qMirror: null
+    },
     handleCmd: function (input) {
       return cm.execCommand(input);
     },
@@ -270,6 +346,17 @@ var helper = function(cm, events) {
     },
     toLine: function (line, ch) {
       cm.setCursor((line || 1) - 1, ch || 0)
+    },
+    queriesTgl: function () {
+      tools.queries.qModal && tools.queries.qModal.toggle();
+    },
+    queryJson: function (mongoStyleQry, fields) {
+      var text = tools.selected();
+      if (!mirror.isJson(text)) {
+        lemon.alert('There is none valid json.');
+      }
+
+      return lemon.queries(mongoStyleQry, mirror.parse(text), fields);
     },
     //opt 1 toggle, 2 show, 3 unshow, 4 get
     guttersTgl: function (opt, options) {
@@ -418,6 +505,8 @@ var helper = function(cm, events) {
     tools.cmds.push(k);
   });
 
+  intlJsonQueries(tools);
+
   return tools;
 };
 
@@ -445,7 +534,7 @@ var mirror = function (elId, options, events) {
     //http://codemirror.net/doc/manual.html#commands
     'Ctrl-K': 'toMatchingTag',
     'Ctrl-J': 'autocomplete',
-    'Ctrl-Q': 'toggleFold'
+    'Ctrl-Q': 'toggleFold',
   }, options.extraKeys || {});
   delete options.extraKeys;
 
@@ -481,6 +570,9 @@ var mirror = function (elId, options, events) {
   }
 
   aHelp.mapkey({
+    'Ctrl-E': function () {
+      aHelp.queriesTgl();
+    },
     'Ctrl-L': function () {
       aHelp.guttersTgl();
     }

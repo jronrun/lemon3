@@ -165,7 +165,7 @@ function intlJsonQueries(host) {
     ].join(''), footer = [
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
-      'data-qry-intl="PQKhAIEUFcFMCcCWsDO5EDtwCkDKB5AOXBGACgBvMgSGGBgQE8cDiAKAWQHsMBzL8LgAujADawoceIwCUNAI5TGALnBVq1GgF8ANDToAxRKKEJwR2KIAmqgIzgA7gAsu4neADaAXXPJr4AEF4eABDRn1gWF5VKxCPAAYvADpEK3cueHB4WAwQgFsJELRoVJi4xJSrAB8SqxoAM2NTeDsyLSA">',
+      'data-qry-intl="PQKhAIEUFcFMCcCWsDO5EDtwCkDKB5AOXBGACgBvMgSAEc54BPALnCuupoF8AaG4YADFEAGwAuCcMNgiAJqwCM4AO4ALAPYjYPcAG0AulORzwAQXjwAho37BYAc1azLugAz6AdIlk718cPCwGJYAtrDglmjQ3k4u7l6yAD7RsjQAZqKwsiiKZFxkoGTgUAyMOATEALTgALLqGPbq4LhijFpF4AoezdAADr1+ErLg6r0IlmJ+OeAAJJg6Mxjzs7AAHogoYigL9hI7Ygvi2rPiC7C0CxjHMyHqPrOWIiILlhj3M36Xn7MY6gezKEQAC9rq0xgtAvY1gs1AhrjJYCEahMAMaqDoAJm6ACUHGteuAULBLPA0agOgBmbqCaAYFFiRD1cAZI5IBodAAs3RQ0AARiNeQArWD0wnE0mqTD2DoAVm6sj+4F+YgmjKwRJJaKlZFIZCAA">',
       '<em class="fa fa-filter" title="Filter"></em> Filter',
       '</button>'
     ].join(' ');
@@ -193,7 +193,7 @@ function intlJsonQueries(host) {
             if (host.queries.qMirror.isJson()) {
               var pg = lemon.homeProgress();
               var qrys = host.queries.qMirror.json(),
-                qryResult = host.queryJson(qrys.query, 1 === qrys.filter ? undefined : qrys.filter);
+                qryResult = host.queryJson(qrys.query, 1 === qrys.fileds ? undefined : qrys.fileds);
               if (-1 === qryResult) {
                 lemon.alert('There is none valid json.'); pg.end();
                 return;

@@ -181,10 +181,11 @@ function intlJsonQueries(host) {
     }, {
       shown: function(evt, el) {
         if (!lemon.isEvented(doId)) {
-          host.queries.qMirror = mirror(mid, false, {
+          host.queries.qMirror = mirror(mid, {
             gutters: [],
             cust: {
-              escKey: false
+              escKey: false,
+              ctrlEKey: false
             }
           });
           host.queries.qMirror.val(lemon.data(doId, 'qryIntl'));
@@ -538,7 +539,9 @@ var mirror = function (elId, options, events) {
   options = options || {}, events = events || {};
 
   var custOptions = lemon.extend({
-    escKey: true
+    escKey: true,
+    ctrlEKey: true,
+    ctrlLKey: true
   }, options.cust || {});
   delete options.cust;
 
@@ -571,24 +574,35 @@ var mirror = function (elId, options, events) {
     }, options)
   );
 
-  var aHelp = helper(rich, events);
+  var aHelp = helper(rich, events), custKeys = {};
 
-  if (custOptions.escKey) {
-    aHelp.mapkey({
-      "Esc": function (cm) {
+  if (true === custOptions.escKey) {
+    lemon.extend(custKeys, {
+      'Esc': function (cm) {
         aHelp.fullscreenTgl();
       }
     });
   }
 
-  aHelp.mapkey({
-    'Ctrl-E': function () {
-      aHelp.queriesTgl();
-    },
-    'Ctrl-L': function () {
-      aHelp.guttersTgl();
-    }
-  });
+  if (true === custOptions.ctrlEKey) {
+    lemon.extend(custKeys, {
+      'Ctrl-E': function () {
+        aHelp.queriesTgl();
+      }
+    });
+  }
+
+  if (true === custOptions.ctrlLKey) {
+    lemon.extend(custKeys, {
+      'Ctrl-L': function () {
+        aHelp.guttersTgl();
+      }
+    });
+  }
+
+  if (!lemon.isBlank(custKeys)) {
+    aHelp.mapkey(custKeys);
+  }
 
   return aHelp;
 };

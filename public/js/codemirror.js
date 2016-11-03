@@ -352,10 +352,12 @@ var helper = function(cm, events) {
     toLine: function (line, ch) {
       cm.setCursor((line || 1) - 1, ch || 0)
     },
-    queriesTgl: function () {
-      if (!mirror.isJson(tools.selected())) {
-        lemon.alert('The selected or content is not a valid json.');
-        return;
+    queriesTgl: function (uncheck) {
+      if (true !== uncheck) {
+        if (!mirror.isJson(tools.selected())) {
+          lemon.alert('The selected or content is not a valid json.');
+          return;
+        }
       }
 
       tools.queries.qModal && tools.queries.qModal.toggle();

@@ -199,7 +199,11 @@ lemon.register({
         }
 
         if (fieldVal = lemon.gets(aTarget, fk)) {
-          newObj[fas] = fieldVal;
+          if (lemon.isBlank(fas)) {
+            newObj = fieldVal;
+          } else {
+            newObj[fas] = fieldVal;
+          }
         }
       });
       return newObj;

@@ -15,6 +15,16 @@ var shar = {
     shar.render();
   },
 
+  views: function(share, text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions) {
+    modalOptions = lemon.extend({
+      contentClose: false
+    }, modalOptions || {}, {
+      cache: true
+    });
+
+    return lemon.previewInSelfWin(text, callback, jsonOptions, domReadyCallbackIfUrl, modalOptions);
+  },
+
   render: function() {
     var ans = lemon.data(shar.id, 'ans');
     if (0 == ans.code) {
@@ -37,7 +47,7 @@ var shar = {
   note: {
     render: function (share) {
       if (shar.note.detectRW(share, 4)) {
-        lemon.previews(lemon.fullUrl('/note'), false, false, function (view) {
+        shar.views(share, lemon.fullUrl('/note'), false, false, function (view) {
           view.tellEvent('SHARE_NOTE', share);
         });
       }
@@ -45,7 +55,7 @@ var shar = {
 
     snapshotRender: function (share) {
       if (shar.note.detectRW(share, 5)) {
-        lemon.previews(lemon.fullUrl('/note'), false, false, function(view) {
+        shar.views(share, lemon.fullUrl('/note'), false, false, function(view) {
           view.tellEvent('SHARE_NOTE_SNAPSHOT', share);
         });
       }
@@ -104,7 +114,7 @@ var shar = {
 
   rich: {
     render: function (share) {
-      lemon.previews(lemon.fullUrl('/rich'), false, false, function(view) {
+      shar.views(share, lemon.fullUrl('/rich'), false, false, function(view) {
         view.tellEvent('SHARE_RICH_SNAPSHOT', share);
       });
     }
@@ -112,7 +122,7 @@ var shar = {
 
   merge: {
     render: function (share) {
-      lemon.previews(lemon.fullUrl('/merge'), false, false, function(view) {
+      shar.views(share, lemon.fullUrl('/merge'), false, false, function(view) {
         view.tellEvent('SHARE_MERGE_SNAPSHOT', share);
       });
     }
@@ -120,7 +130,7 @@ var shar = {
 
   api: {
     render: function(share) {
-      lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
+      shar.views(share, lemon.fullUrl('/api'), false, false, function(view) {
         $('body', view.getDocument()).css({
           'padding-top': '4.15rem'
         });
@@ -129,7 +139,7 @@ var shar = {
     },
 
     snapshotRender: function(share) {
-      lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
+      shar.views(share, lemon.fullUrl('/api'), false, false, function(view) {
         $('body', view.getDocument()).css({
           'padding-top': '4.15rem'
         });
@@ -138,7 +148,7 @@ var shar = {
     },
 
     apisSnapshotRender: function(share) {
-      lemon.previews(lemon.fullUrl('/apis'), false, false, function(view) {
+      shar.views(share, lemon.fullUrl('/apis'), false, false, function(view) {
         view.tellEvent('SHARE_APIs_SNAPSHOT', share);
       });
     }
@@ -191,7 +201,7 @@ var shar = {
     },
     render: function(share) {
       if ([2, 3].indexOf(share.read_write) != -1) {
-        lemon.previews(lemon.fullUrl('/api'), false, false, function(view) {
+        shar.views(share, lemon.fullUrl('/api'), false, false, function(view) {
           view.tellEvent('SHARE_HIS', share);
         });
         return;

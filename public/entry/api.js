@@ -1131,27 +1131,27 @@ var qry = {
       //1 batchNo, 2 type, 3 apiId
       var bid = $(this).attr('id'), binfo = bid.split('_'), prefixT = prefixBtn, prefixA = prefixItem,
         btype = binfo[2], tid = '#' + bid.replace(prefixT, prefixA), realId = null;
-      if (mapi.buttonTgl(this)) {
+      if (lemon.buttonTgl(this)) {
         //requ
         if (['1', '3'].indexOf(btype) != -1) {
           $(realId = tid.replace('_3_', '_1_')).slideUp();
-          mapi.buttonTgl(realId.replace(prefixA, prefixT), 2);
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 2);
         }
         //resp
         if (['2', '3'].indexOf(btype) != -1) {
           $(realId = tid.replace('_3_', '_2_')).slideUp();
-          mapi.buttonTgl(realId.replace(prefixA, prefixT), 2);
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 2);
         }
       } else {
         //requ
         if (['1', '3'].indexOf(btype) != -1) {
           $(realId = tid.replace('_3_', '_1_')).fadeIn();
-          mapi.buttonTgl(realId.replace(prefixA, prefixT), 3);
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
         }
         //resp
         if (['2', '3'].indexOf(btype) != -1) {
           $(realId = tid.replace('_3_', '_2_')).fadeIn();
-          mapi.buttonTgl(realId.replace(prefixA, prefixT), 3);
+          lemon.buttonTgl(realId.replace(prefixA, prefixT), 3);
         }
       }
     });

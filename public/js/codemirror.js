@@ -670,7 +670,7 @@ mirror.xmlJsonTgl = function (text, opt) {
     return lemon.fmtxml(xmlT + X2JS.json2xml_str(jsonObj));
   }, toJ = function (aText) {
     var theJ = null, jsonObj = X2JS.xml_str2json(aText);
-    if (lemon.has(jsonObj, 'lemon')) {
+    if (jsonObj && lemon.has(jsonObj, 'lemon')) {
       theJ = jsonObj.lemon;
     } else {
       theJ = jsonObj;

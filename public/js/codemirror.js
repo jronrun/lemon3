@@ -656,7 +656,6 @@ mirror.asStandardJsonObj = function (target) {
   return JSON.parse(JSON.stringify(target));
 };
 
-global.tt=X2JSFactory;
 mirror.xmlJsonTgl = function (text, opt) {
   //opt 1 toggle, 2 json -> xml, 3 xml -> json
   var toX = function (aText) {

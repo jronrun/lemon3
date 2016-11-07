@@ -4,8 +4,11 @@
 require('codemirror/lib/codemirror.css');
 
 global.CodeMirror = require('codemirror/lib/codemirror'),
-  json5s = require('./json5s')
+  json5s = require('./json5s'),
+  X2JSFactory = require('abdmob/x2js')
   ;
+
+var X2JS = new X2JSFactory();
 
 require('./lib/vkBeautify');
 global._ = {};  //for json5s
@@ -380,6 +383,19 @@ var helper = function(cm, events) {
 
       return lemon.queries(mongoStyleQry, mirror.parse(text), fields);
     },
+    //opt 1 toggle, 2 json -> xml, 3 xml -> json
+    xmlJsonTgl: function (opt) {
+      var isSelected = tools.doc().somethingSelected(),
+        text = tools.selected(), afterT = mirror.xmlJsonTgl(text);
+
+      if (afterT) {
+        if (isSelected) {
+          tools.doc().replaceSelection(afterT);
+        } else {
+          tools.val(afterT);
+        }
+      }
+    },
     //opt 1 toggle, 2 show, 3 unshow, 4 get
     guttersTgl: function (opt, options) {
       var hasGutters = ((tools.attrs('gutters') || []).length > 0);
@@ -555,9 +571,10 @@ var mirror = function (elId, options, events) {
   options = options || {}, events = events || {};
 
   var custOptions = lemon.extend({
-    escKey: true,
-    ctrlEKey: true,
-    ctrlLKey: true
+    escKey: true,     //fullscreen toggle
+    ctrlEKey: true,   //query JSON
+    ctrlLKey: true,   //gutters toggle
+    ctrlMKey: true    //JSON <=> XML
   }, options.cust || {});
   delete options.cust;
 
@@ -616,11 +633,50 @@ var mirror = function (elId, options, events) {
     });
   }
 
+  if (true === custOptions.ctrlMKey) {
+    lemon.extend(custKeys, {
+      'Ctrl-M': function () {
+        aHelp.xmlJsonTgl();
+      }
+    });
+  }
+
   if (!lemon.isBlank(custKeys)) {
     aHelp.mapkey(custKeys);
   }
 
   return aHelp;
+};
+
+mirror.asStandardJsonObj = function (target) {
+  if (lemon.isString(target)) {
+    target = mirror.parse(target);
+  }
+
+  return JSON.parse(JSON.stringify(target));
+};
+
+mirror.xmlJsonTgl = function (text, opt) {
+  //opt 1 toggle, 2 json -> xml, 3 xml -> json
+  switch (opt = opt || 1) {
+    case 1:
+      if (mirror.isJson(text, true)) {
+        return lemon.fmtxml(X2JS.json2xml_str(mirror.asStandardJsonObj(text)));
+      } else if (mirror.isXml(text, true)) {
+        return lemon.fmtjson(X2JS.xml_str2json(text));
+      }
+      break;
+    case 2:
+      if (mirror.isJson(text, true)) {
+        return lemon.fmtxml(X2JS.json2xml_str(mirror.asStandardJsonObj(text)));
+      }
+      break;
+    case 3:
+      if (mirror.isXml(text, true)) {
+        return lemon.fmtjson(X2JS.xml_str2json(text));
+      }
+      break;
+  }
 };
 
 mirror.isXml = function (target, noneLogWarnMsg) {
@@ -773,6 +829,8 @@ mirror.script = function (target, callback) {
 
 mirror.themes = themes;
 mirror.languages = languages;
+mirror.X2JS = X2JS;
+mirror.X2JSFactory = X2JSFactory;
 mirror.css = function (target) {
   lemon.css(lemon.fullUrl('/components/codemirror' + target));
 };

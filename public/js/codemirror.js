@@ -659,8 +659,9 @@ mirror.asStandardJsonObj = function (target) {
 mirror.xmlJsonTgl = function (text, opt) {
   //opt 1 toggle, 2 json -> xml, 3 xml -> json
   var toX = function (aText) {
-    var xmlT = '<?xml version="1.0" encoding="UTF-8"?>', jsonObj = mirror.asStandardJsonObj(aText);
+    var xmlT = '', jsonObj = mirror.asStandardJsonObj(aText);
     if (lemon.keys(jsonObj).length > 1) {
+      xmlT = '<?xml version="1.0" encoding="UTF-8"?>';
       jsonObj = {
         lemon: jsonObj
       };

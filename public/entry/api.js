@@ -1439,11 +1439,6 @@ var homes = {
   }
 };
 
-var xj = {
-  lid: '#btn-xj-requ',
-  rid: '#btn-xj-resp'
-};
-
 var batch = {
   id: '#btn-batch',
   cfg: null,

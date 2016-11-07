@@ -751,6 +751,7 @@ var note = {
       ex('view', function (args, cm) { na('preview', args, cm); }, 'Preview', 'v');
       ex('fullscreen', function (args, cm) { na('fullscreenTgl', args, cm); }, 'Toggle Fullscreen', 'full');
       ex('query', function (args, cm) { na('queriesTgl', args, cm); }, 'JSON Quieres', 'que');
+      ex('xjson', function (args, cm) { na('xmlJsonTgl', args, cm); }, 'Convert between JSON and XML');
 
       //CodeMirror.commands.save = note.action.saveNote;
       ex('w', function (args, cm) { na('saveNote', args, cm); }, 'Save Note');
@@ -815,6 +816,7 @@ var note = {
             tgl_item('Toggle Comment', 'Ctrl-/', 'Toggle Comment (Ctrl-/)', 'toggleComment'),
             note.menu.item('Fold All', ':folda', 'visual & edit', 'Fold All (:foldall)', 'foldAll'),
             note.menu.item('Unfold All', ':unfoldall', 'visual & edit', 'Unfold All (:unfolda)', 'unfoldAll'),
+            note.menu.item('JSON <-> XML', 'Ctrl-M', 'visual & edit', 'Convert between JSON and XML', 'xmlJsonTgl'),
             tgl_item('Toggle Fold', 'Ctrl-Q', 'Toggle Fold (Ctrl-Q)', 'toggleFold'),
             note.menu.item('Matching Tag', 'Ctrl-K', 'visual & edit', 'To Matching Tag', 'toMatchingTag'),
             note.menu.item('separator'),

@@ -656,24 +656,32 @@ mirror.asStandardJsonObj = function (target) {
   return JSON.parse(JSON.stringify(target));
 };
 
+global.tt=X2JSFactory;
 mirror.xmlJsonTgl = function (text, opt) {
   //opt 1 toggle, 2 json -> xml, 3 xml -> json
+  var toX = function (aText) {
+    // <?xml version="1.0" encoding="UTF-8"?>
+    return lemon.fmtxml(X2JS.json2xml_str(mirror.asStandardJsonObj(aText)));
+  }, toJ = function (aText) {
+    return lemon.fmtjson(X2JS.xml_str2json(aText));
+  };
+
   switch (opt = opt || 1) {
     case 1:
       if (mirror.isJson(text, true)) {
-        return lemon.fmtxml(X2JS.json2xml_str(mirror.asStandardJsonObj(text)));
+        return toX(text);
       } else if (mirror.isXml(text, true)) {
-        return lemon.fmtjson(X2JS.xml_str2json(text));
+        return toJ(text);
       }
       break;
     case 2:
       if (mirror.isJson(text, true)) {
-        return lemon.fmtxml(X2JS.json2xml_str(mirror.asStandardJsonObj(text)));
+        return toX(text);
       }
       break;
     case 3:
       if (mirror.isXml(text, true)) {
-        return lemon.fmtjson(X2JS.xml_str2json(text));
+        return toJ(text);
       }
       break;
   }

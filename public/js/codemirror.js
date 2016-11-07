@@ -6,6 +6,8 @@ require('codemirror/lib/codemirror.css');
 global.CodeMirror = require('codemirror/lib/codemirror'),
   json5s = require('./json5s')
   ;
+
+require('./lib/vkBeautify');
 global._ = {};  //for json5s
 _.each = lemon.each;
 
@@ -68,6 +70,13 @@ lemon.fmtjson = function(target) {
     target = json5s.stringify(target);
   }
   return json5s.format(target);
+};
+lemon.fmtxml = function (target, isMin) {
+  if (!lemon.isString(target)) {
+    return target;
+  }
+
+  return vkbeautify[isMin ? 'xmlmin' : 'xml'](target);
 };
 
 var languages = {}, modes = {}, loadedTheme = ['default', 'lemon'], themes = [
@@ -436,7 +445,13 @@ var helper = function(cm, events) {
     },
     format: function () {
       var cursor = cm.getCursor();
-      cm.setValue(lemon.fmtjson(cm.getValue()));
+      if (tools.isJson()) {
+        cm.setValue(lemon.fmtjson(cm.getValue()));
+      } else if (tools.isXml()) {
+        cm.setValue(lemon.fmtxml(cm.getValue()));
+      } else {
+        return;
+      }
       cm.setCursor(cursor);
       tools.refreshDelay();
     },
@@ -466,6 +481,9 @@ var helper = function(cm, events) {
     isJson: function() {
       return mirror.isJson(cm.getValue());
     },
+    isXml: function () {
+      return mirror.isXml(cm.getValue());
+    },
     refreshDelay: function(delay) {
       lemon.delay(function () {
         cm.refresh();
@@ -483,9 +501,7 @@ var helper = function(cm, events) {
 
   events = lemon.extend({
     inputRead: function(cm, changeObj) {
-      if (tools.isJson()) {
-        tools.format();
-      }
+      tools.format();
     }
   }, events);
 
@@ -605,6 +621,18 @@ var mirror = function (elId, options, events) {
   }
 
   return aHelp;
+};
+
+mirror.isXml = function (target, noneLogWarnMsg) {
+  try {
+    $.parseXML(target);
+  } catch (e) {
+    if (!noneLogWarnMsg) {
+      lemon.warn('mirror.isXML: ' + e.message);
+    }
+    return false;
+  }
+  return true;
 };
 
 mirror.isJson = function(target, noneLogWarnMsg) {

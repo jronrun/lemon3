@@ -660,10 +660,23 @@ global.tt=X2JSFactory;
 mirror.xmlJsonTgl = function (text, opt) {
   //opt 1 toggle, 2 json -> xml, 3 xml -> json
   var toX = function (aText) {
-    // <?xml version="1.0" encoding="UTF-8"?>
-    return lemon.fmtxml(X2JS.json2xml_str(mirror.asStandardJsonObj(aText)));
+    var xmlT = '<?xml version="1.0" encoding="UTF-8"?>', jsonObj = mirror.asStandardJsonObj(aText);
+    if (lemon.keys(jsonObj).length > 1) {
+      jsonObj = {
+        lemon: jsonObj
+      };
+    }
+
+    return lemon.fmtxml(xmlT + X2JS.json2xml_str(jsonObj));
   }, toJ = function (aText) {
-    return lemon.fmtjson(X2JS.xml_str2json(aText));
+    var theJ = null, jsonObj = X2JS.xml_str2json(aText);
+    if (lemon.has(jsonObj, 'lemon')) {
+      theJ = jsonObj.lemon;
+    } else {
+      theJ = jsonObj;
+    }
+
+    return lemon.fmtjson(theJ);
   };
 
   switch (opt = opt || 1) {

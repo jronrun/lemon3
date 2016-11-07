@@ -1439,6 +1439,11 @@ var homes = {
   }
 };
 
+var xj = {
+  lid: '#btn-xj-requ',
+  rid: '#btn-xj-resp'
+};
+
 var batch = {
   id: '#btn-batch',
   cfg: null,
@@ -2045,7 +2050,7 @@ var mapi = {
 
       }
 
-      if (mapi.requ.isJson()) {
+      if (mapi.requ.isJson() || mapi.requ.isXml()) {
         mapi.requ.format();
         return false;
       }

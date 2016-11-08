@@ -5,7 +5,7 @@ require('codemirror/lib/codemirror.css');
 
 global.CodeMirror = require('codemirror/lib/codemirror'),
   json5s = require('./json5s'),
-  X2JSFactory = require('abdmob/x2js')
+  X2JSFactory = require('./lib/xml2json')
   ;
 
 var X2JS = new X2JSFactory();

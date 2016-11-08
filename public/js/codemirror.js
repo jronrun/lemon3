@@ -386,14 +386,16 @@ var helper = function(cm, events) {
     //opt 1 toggle, 2 json -> xml, 3 xml -> json
     xmlJsonTgl: function (opt) {
       var isSelected = tools.doc().somethingSelected(),
-        text = tools.selected(), afterT = mirror.xmlJsonTgl(text);
+        text = tools.selected(), afterT = mirror.xmlJsonTgl(text, opt);
 
       if (afterT) {
         if (isSelected) {
-          tools.doc().replaceSelection(afterT);
+          tools.doc().replaceSelection(afterT.data);
         } else {
-          tools.val(afterT);
+          tools.val(afterT.data);
         }
+
+        return afterT.opt;
       }
     },
     //opt 1 toggle, 2 show, 3 unshow, 4 get
@@ -667,7 +669,10 @@ mirror.xmlJsonTgl = function (text, opt) {
       };
     }
 
-    return lemon.fmtxml(xmlT + X2JS.json2xml_str(jsonObj));
+    return {
+      opt: 2,
+      data: lemon.fmtxml(xmlT + X2JS.json2xml_str(jsonObj))
+    };
   }, toJ = function (aText) {
     var theJ = null, jsonObj = X2JS.xml_str2json(aText);
     if (jsonObj && lemon.has(jsonObj, 'lemon')) {
@@ -676,7 +681,10 @@ mirror.xmlJsonTgl = function (text, opt) {
       theJ = jsonObj;
     }
 
-    return lemon.fmtjson(theJ);
+    return {
+      opt: 3,
+      data: lemon.fmtjson(theJ)
+    };
   };
 
   switch (opt = opt || 1) {

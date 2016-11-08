@@ -119,42 +119,44 @@
         <tr tgl-group="tgl" apigroupc="<%= group.info.id %>">
             <td clickable="<%= batchNo %>" id="anapi_<%= api.id %>" data-group="<%= lemon.enc(group.info) %>" data-api="<%= lemon.enc(api) %>">
             <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
-                <div class="row hidden-md-up">
-                    <span class="invisible">&nbsp;&nbsp;</span>
-                    <% if (hasResp) { %>
-                    <button class="btn btn-secondary btn-sm text-muted icondh" id="btgl_<%= batchNo %>_3_<%= api.id%>"
-                            title="Toggle <%= api.name %> Request & Response" style="border: none;" type="button">
-                        <em class="fa fa-eye"></em>
-                    </button>
+                <% if (lemon.isSmallDownView()) { %>
+                    <div class="row hidden-md-up">
+                        <span class="invisible">&nbsp;&nbsp;</span>
+                        <% if (hasResp) { %>
+                        <button class="btn btn-secondary btn-sm text-muted icondh" id="btgl_<%= batchNo %>_3_<%= api.id%>"
+                                title="Toggle <%= api.name %> Request & Response" style="border: none;" type="button">
+                            <em class="fa fa-eye"></em>
+                        </button>
+                        <h6 class="invisible"></h6>
+                        <% } %>
+                        <button class="btn btn-secondary btn-sm text-muted icondh"
+                                id="btgl_<%= batchNo %>_1_<%= api.id%>" title="Toggle <%= api.name %> Request"
+                                style="border: none;" type="button">
+                            <em class="fa fa-mail-reply"></em>
+                        </button>
+                        <% if (hasResp) { %>
+                        <h6 class="invisible"></h6>
+                        <button class="btn btn-secondary btn-sm text-muted icondh"
+                                id="btgl_<%= batchNo %>_2_<%= api.id%>" title="Toggle <%= api.name %> Response"
+                                style="border: none; " type="button">
+                            <em class="fa fa-mail-forward"></em>
+                        </button>
+                        <% } %>
+                        <% if (api.owner && 2 == api.owner) { %>
+                        <h6 class="invisible"></h6>
+                        <a class="btn btn-secondary btn-sm text-muted icondh" data-preview href="/manage/interface/<%= api._id %>" title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; ">
+                            <em class="fa fa-pencil-square-o"></em>
+                        </a>
+                        <% } %>
+                        <h6 class="invisible"></h6>
+                        <button class="btn btn-secondary btn-sm text-muted icondh"
+                                id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border:
+                                none; " type="button">
+                            <em class="fa fa-share-alt"></em>
+                        </button>
+                    </div>
                     <h6 class="invisible"></h6>
-                    <% } %>
-                    <button class="btn btn-secondary btn-sm text-muted icondh"
-                            id="btgl_<%= batchNo %>_1_<%= api.id%>" title="Toggle <%= api.name %> Request"
-                            style="border: none;" type="button">
-                        <em class="fa fa-mail-reply"></em>
-                    </button>
-                    <% if (hasResp) { %>
-                    <h6 class="invisible"></h6>
-                    <button class="btn btn-secondary btn-sm text-muted icondh"
-                            id="btgl_<%= batchNo %>_2_<%= api.id%>" title="Toggle <%= api.name %> Response"
-                            style="border: none; " type="button">
-                        <em class="fa fa-mail-forward"></em>
-                    </button>
-                    <% } %>
-                    <% if (api.owner && 2 == api.owner) { %>
-                    <h6 class="invisible"></h6>
-                    <a class="btn btn-secondary btn-sm text-muted icondh" data-preview href="/manage/interface/<%= api._id %>" title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; ">
-                        <em class="fa fa-pencil-square-o"></em>
-                    </a>
-                    <% } %>
-                    <h6 class="invisible"></h6>
-                    <button class="btn btn-secondary btn-sm text-muted icondh"
-                            id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border:
-                            none; " type="button">
-                        <em class="fa fa-share-alt"></em>
-                    </button>
-                </div>
-                <h6 class="invisible"></h6>
+                <% } %>
 
                 <% if (2 == api.mutation) { %>
                   <span class="tag tag-success" style="font-size: 65%;">Mutation of <%= api.name %></span>
@@ -185,40 +187,42 @@
                 </footer>
                 </blockquote>
             </td>
-            <td class="hidden-sm-down">
-                <% if (hasResp) { %>
-                    <button class="btn btn-secondary btn-sm text-muted icondh" id="btgl_<%= batchNo %>_3_<%= api.id%>"
-                            title="Toggle <%= api.name %> Request & Response" style="border: none;" type="button">
-                    <em class="fa fa-eye"></em>
+            <% if (lemon.isMediumUpView()) { %>
+                <td class="hidden-sm-down">
+                    <% if (hasResp) { %>
+                        <button class="btn btn-secondary btn-sm text-muted icondh" id="btgl_<%= batchNo %>_3_<%= api.id%>"
+                                title="Toggle <%= api.name %> Request & Response" style="border: none;" type="button">
+                        <em class="fa fa-eye"></em>
+                        </button>
+                        <h6 class="invisible"></h6>
+                    <% } %>
+                    <button class="btn btn-secondary btn-sm text-muted icondh"
+                            id="btgl_<%= batchNo %>_1_<%= api.id%>" title="Toggle <%= api.name %> Request" style="border:
+                             none;" type="button">
+                    <em class="fa fa-mail-reply"></em>
                     </button>
-                    <h6 class="invisible"></h6>
-                <% } %>
-                <button class="btn btn-secondary btn-sm text-muted icondh"
-                        id="btgl_<%= batchNo %>_1_<%= api.id%>" title="Toggle <%= api.name %> Request" style="border:
-                         none;" type="button">
-                <em class="fa fa-mail-reply"></em>
-                </button>
-                <% if (hasResp) { %>
+                    <% if (hasResp) { %>
+                        <h6 class="invisible"></h6>
+                        <button class="btn btn-secondary btn-sm text-muted icondh"
+                                id="btgl_<%= batchNo %>_2_<%= api.id%>" title="Toggle <%= api.name %> Response"
+                                style="border: none; " type="button">
+                        <em class="fa fa-mail-forward"></em>
+                        </button>
+                    <% } %>
+                    <% if (api.owner && 2 == api.owner) { %>
+                        <h6 class="invisible"></h6>
+                        <a class="btn btn-secondary btn-sm text-muted icondh" data-preview href="/manage/interface/<%= api._id %>" title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; ">
+                            <em class="fa fa-pencil-square-o"></em>
+                        </a>
+                    <% } %>
                     <h6 class="invisible"></h6>
                     <button class="btn btn-secondary btn-sm text-muted icondh"
-                            id="btgl_<%= batchNo %>_2_<%= api.id%>" title="Toggle <%= api.name %> Response"
-                            style="border: none; " type="button">
-                    <em class="fa fa-mail-forward"></em>
+                            id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border: none; "
+                            type="button">
+                        <em class="fa fa-share-alt"></em>
                     </button>
-                <% } %>
-                <% if (api.owner && 2 == api.owner) { %>
-                    <h6 class="invisible"></h6>
-                    <a class="btn btn-secondary btn-sm text-muted icondh" data-preview href="/manage/interface/<%= api._id %>" title="Edit <%= (2 == api.mutation ? 'Mutation of ' : '') + api.name %>" style="border: none; ">
-                        <em class="fa fa-pencil-square-o"></em>
-                    </a>
-                <% } %>
-                <h6 class="invisible"></h6>
-                <button class="btn btn-secondary btn-sm text-muted icondh"
-                        id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border: none; "
-                        type="button">
-                    <em class="fa fa-share-alt"></em>
-                </button>
-            </td>
+                </td>
+            <% } %>
         </tr>
       <% }); %>
     <% }); %>
@@ -278,39 +282,41 @@
                   <h5 class="invisible"></h5>
               <% } %>
               <blockquote class="<%= lemon.isSmallDownView() ? '' : 'blockquote' %>" style="overflow: auto">
-                  <div class="row hidden-md-up">
-                      <span class="invisible">&nbsp;&nbsp;</span>
-                      <button class="btn btn-secondary btn-sm text-muted icondh" id="histgl_<%= batchNo %>_3_<%= his.id%>"
-                              title="Toggle <%= his.api.name %> Request & Response" style="border: none;" type="button">
-                          <em class="fa fa-eye"></em>
-                      </button>
-                      <button class="btn btn-secondary btn-sm text-muted icondh"
-                              id="histgl_<%= batchNo %>_1_<%= his.id%>" title="Toggle <%= his.api.name %> Request"
-                              style="border: none;" type="button">
-                          <em class="fa fa-mail-reply"></em>
-                      </button>
-                      <button class="btn btn-secondary btn-sm text-muted icondh"
-                              id="histgl_<%= batchNo %>_2_<%= his.id%>" title="Toggle <%= his.api.name %> Response"
-                              style="border: none; " type="button">
-                          <em class="fa fa-mail-forward"></em>
-                      </button>
-                      <button class="btn btn-secondary btn-sm text-muted icondh"
-                              id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API
-                              Document" style="border: none; " type="button">
-                          <em class="fa fa-comment"></em>
-                      </button>
-                      <button class="btn btn-secondary btn-sm text-muted icondh"
-                              id="hisnote_<%= batchNo %>_<%= his.id %>" title="Add Note for <%= his.api.name %>"
-                              style="border: none; " type="button">
-                          <em class="fa fa-sticky-note-o"></em>
-                      </button>
-                      <button class="btn btn-secondary btn-sm text-muted icondh"
-                              id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>"
-                              style="border: none; " type="button">
-                          <em class="fa fa-share-alt"></em>
-                      </button>
-                  </div>
-                  <h6 class="invisible"></h6>
+                  <% if (lemon.isSmallDownView()) { %>
+                      <div class="row hidden-md-up">
+                          <span class="invisible">&nbsp;&nbsp;</span>
+                          <button class="btn btn-secondary btn-sm text-muted icondh" id="histgl_<%= batchNo %>_3_<%= his.id%>"
+                                  title="Toggle <%= his.api.name %> Request & Response" style="border: none;" type="button">
+                              <em class="fa fa-eye"></em>
+                          </button>
+                          <button class="btn btn-secondary btn-sm text-muted icondh"
+                                  id="histgl_<%= batchNo %>_1_<%= his.id%>" title="Toggle <%= his.api.name %> Request"
+                                  style="border: none;" type="button">
+                              <em class="fa fa-mail-reply"></em>
+                          </button>
+                          <button class="btn btn-secondary btn-sm text-muted icondh"
+                                  id="histgl_<%= batchNo %>_2_<%= his.id%>" title="Toggle <%= his.api.name %> Response"
+                                  style="border: none; " type="button">
+                              <em class="fa fa-mail-forward"></em>
+                          </button>
+                          <button class="btn btn-secondary btn-sm text-muted icondh"
+                                  id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API
+                                  Document" style="border: none; " type="button">
+                              <em class="fa fa-comment"></em>
+                          </button>
+                          <button class="btn btn-secondary btn-sm text-muted icondh"
+                                  id="hisnote_<%= batchNo %>_<%= his.id %>" title="Add Note for <%= his.api.name %>"
+                                  style="border: none; " type="button">
+                              <em class="fa fa-sticky-note-o"></em>
+                          </button>
+                          <button class="btn btn-secondary btn-sm text-muted icondh"
+                                  id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>"
+                                  style="border: none; " type="button">
+                              <em class="fa fa-share-alt"></em>
+                          </button>
+                      </div>
+                      <h6 class="invisible"></h6>
+                  <% } %>
                   <%= highlight(his.api.request, 'Request', {
                       'tgl-requ': 'tgl',
                       id: ('bhis_' + batchNo + '_1_' + his.id)
@@ -357,40 +363,42 @@
                   <% } %>
               </blockquote>
           </td>
-          <td class="hidden-sm-down">
-              <button class="btn btn-secondary btn-sm text-muted icondh" id="histgl_<%= batchNo %>_3_<%= his.id%>"
-                      title="Toggle <%= his.api.name %> Request & Response" style="border: none;" type="button">
-              <em class="fa fa-eye"></em>
-              </button>
-              <h6 class="invisible"></h6>
-              <button class="btn btn-secondary btn-sm text-muted icondh"
-                      id="histgl_<%= batchNo %>_1_<%= his.id%>" title="Toggle <%= his.api.name %> Request"
-                      style="border: none;" type="button">
-                  <em class="fa fa-mail-reply"></em>
-              </button>
-              <h6 class="invisible"></h6>
-              <button class="btn btn-secondary btn-sm text-muted icondh"
-                      id="histgl_<%= batchNo %>_2_<%= his.id%>" title="Toggle <%= his.api.name %> Response"
-                      style="border: none; " type="button">
-                  <em class="fa fa-mail-forward"></em>
-              </button>
-              <h6 class="invisible"></h6>
-              <button class="btn btn-secondary btn-sm text-muted icondh"
-                      id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API Document"
-                      style="border: none; " type="button">
-                  <em class="fa fa-comment"></em>
-              </button>
-              <h6 class="invisible"></h6>
-              <button class="btn btn-secondary btn-sm text-muted icondh"
-                      id="hisnote_<%= batchNo %>_<%= his.id %>" title="Add Note for <%= his.api.name %>"
-                      style="border: none; " type="button">
-                  <em class="fa fa-sticky-note-o"></em>
-              </button>
-              <h6 class="invisible"></h6>
-              <button class="btn btn-secondary btn-sm text-muted icondh" id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>" style="border: none; " type="button">
-                  <em class="fa fa-share-alt"></em>
-              </button>
-          </td>
+          <% if (lemon.isMediumUpView()) { %>
+              <td class="hidden-sm-down">
+                  <button class="btn btn-secondary btn-sm text-muted icondh" id="histgl_<%= batchNo %>_3_<%= his.id%>"
+                          title="Toggle <%= his.api.name %> Request & Response" style="border: none;" type="button">
+                  <em class="fa fa-eye"></em>
+                  </button>
+                  <h6 class="invisible"></h6>
+                  <button class="btn btn-secondary btn-sm text-muted icondh"
+                          id="histgl_<%= batchNo %>_1_<%= his.id%>" title="Toggle <%= his.api.name %> Request"
+                          style="border: none;" type="button">
+                      <em class="fa fa-mail-reply"></em>
+                  </button>
+                  <h6 class="invisible"></h6>
+                  <button class="btn btn-secondary btn-sm text-muted icondh"
+                          id="histgl_<%= batchNo %>_2_<%= his.id%>" title="Toggle <%= his.api.name %> Response"
+                          style="border: none; " type="button">
+                      <em class="fa fa-mail-forward"></em>
+                  </button>
+                  <h6 class="invisible"></h6>
+                  <button class="btn btn-secondary btn-sm text-muted icondh"
+                          id="commenttgl_<%= batchNo %>_<%= his.id %>" title="Toggle <%= his.api.name %> API Document"
+                          style="border: none; " type="button">
+                      <em class="fa fa-comment"></em>
+                  </button>
+                  <h6 class="invisible"></h6>
+                  <button class="btn btn-secondary btn-sm text-muted icondh"
+                          id="hisnote_<%= batchNo %>_<%= his.id %>" title="Add Note for <%= his.api.name %>"
+                          style="border: none; " type="button">
+                      <em class="fa fa-sticky-note-o"></em>
+                  </button>
+                  <h6 class="invisible"></h6>
+                  <button class="btn btn-secondary btn-sm text-muted icondh" id="hisshare_<%= batchNo %>_<%= his.id %>" title="Share <%= his.api.name %>" style="border: none; " type="button">
+                      <em class="fa fa-share-alt"></em>
+                  </button>
+              </td>
+          <% } %>
       </tr>
 
     <% }); %>

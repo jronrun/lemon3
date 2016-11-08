@@ -2034,7 +2034,7 @@ var mapi = {
           });
         }
 
-        mapi.requ.doc().replaceSelection(join.join(mapi.joinSelect.joinSep || ','));
+        mapi.requ.repSelected(join.join(mapi.joinSelect.joinSep || ','));
         return false;
       }
 

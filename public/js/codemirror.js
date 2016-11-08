@@ -251,6 +251,7 @@ var helper = function(cm, events) {
       qModal: null,
       qMirror: null
     },
+    langInfo: langInfo,
     handleCmd: function (input) {
       return cm.execCommand(input);
     },
@@ -265,7 +266,10 @@ var helper = function(cm, events) {
 
       return text;
     },
-    langInfo: langInfo,
+    repSelected: function (code, collapse, origin) {
+      tools.doc().replaceSelection(code, collapse, origin);
+      tools.format();
+    },
     attrs: function (optionKey, optionVal) {
       if (lemon.isJson(optionKey)) {
         lemon.each(optionKey, function (v, k) {
@@ -390,7 +394,7 @@ var helper = function(cm, events) {
 
       if (afterT) {
         if (isSelected) {
-          tools.doc().replaceSelection(afterT.data);
+          tools.repSelected(afterT.data);
         } else {
           tools.val(afterT.data);
         }

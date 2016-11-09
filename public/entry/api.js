@@ -1487,7 +1487,7 @@ var batch = {
   },
 
   getResult: function (shortRequ, apiRequ, apiResp, bSetting) {
-    var aResult = {};
+    var aResult = {}, isRequNull = false, isRespNull = false;
     if (lemon.isString(bSetting.request)) {
       bSetting.request = [bSetting.request];
     }
@@ -1502,7 +1502,9 @@ var batch = {
       return aResult;
     }
 
-    if (0 === bSetting.request) {
+    if (isRequNull = (null == bSetting.request)) {
+
+    } else if (0 === bSetting.request) {
       aResult.request = shortRequ;
     } else if (1 == bSetting.request) {
       aResult.request = apiRequ;
@@ -1510,10 +1512,19 @@ var batch = {
       aResult.request = lemon.queries({}, apiRequ, bSetting.request);
     }
 
-    if (1 == bSetting.response) {
+    if (isRespNull = (null == bSetting.response)) {
+
+    } else if (1 == bSetting.response) {
       aResult.response = apiResp;
     } else if (lemon.isArray(bSetting.response)) {
       aResult.response = lemon.queries({}, apiResp, bSetting.response);
+    }
+
+    if (isRequNull) {
+      aResult = aResult.response || {};
+    }
+    if (isRespNull) {
+      aResult = aResult.request || {};
     }
 
     return aResult;

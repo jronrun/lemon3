@@ -371,8 +371,7 @@ var helper = function(cm, events) {
     },
     queriesTgl: function (uncheck) {
       if (true !== uncheck) {
-        if (!mirror.isJson(tools.selected())) {
-          lemon.alert('The selected or content is not a valid json.');
+        if (!tools.checkIsJson()) {
           return;
         }
       }
@@ -386,6 +385,19 @@ var helper = function(cm, events) {
       }
 
       return lemon.queries(mongoStyleQry, mirror.parse(text), fields);
+    },
+    standardJsonTgl: function () {
+      if (!tools.checkIsJson()) {
+        return;
+      }
+
+      var text = tools.selected();
+      if (mirror.isStandardJson(text)) {
+        text = json5s.stringify(mirror.parse(text));
+      } else {
+        text = JSON.stringify(mirror.parse(text));
+      }
+      tools.val(lemon.fmtjson(text));
     },
     //opt 1 toggle, 2 json -> xml, 3 xml -> json
     xmlJsonTgl: function (opt) {
@@ -500,6 +512,14 @@ var helper = function(cm, events) {
       tools.refreshDelay();
       return data;
     },
+    checkIsJson: function (text) {
+      if (!mirror.isJson(text || tools.selected())) {
+        lemon.alert('The selected or content is not a valid json.');
+        return false;
+      }
+
+      return true;
+    },
     isJson: function() {
       return mirror.isJson(cm.getValue());
     },
@@ -578,6 +598,7 @@ var mirror = function (elId, options, events) {
 
   var custOptions = lemon.extend({
     escKey: true,     //fullscreen toggle
+    ctrl1Key: true,   //standard JSON string toggle
     ctrlEKey: true,   //query JSON
     ctrlLKey: true,   //gutters toggle
     ctrlMKey: true    //JSON <=> XML
@@ -616,35 +637,33 @@ var mirror = function (elId, options, events) {
   var aHelp = helper(rich, events), custKeys = {};
 
   if (true === custOptions.escKey) {
-    lemon.extend(custKeys, {
-      'Esc': function (cm) {
-        aHelp.fullscreenTgl();
-      }
-    });
+    custKeys['Esc'] = function (cm) {
+      aHelp.fullscreenTgl();
+    };
   }
 
   if (true === custOptions.ctrlEKey) {
-    lemon.extend(custKeys, {
-      'Ctrl-E': function () {
-        aHelp.queriesTgl();
-      }
-    });
+    custKeys['Ctrl-E'] = function (cm) {
+      aHelp.queriesTgl();
+    };
   }
 
   if (true === custOptions.ctrlLKey) {
-    lemon.extend(custKeys, {
-      'Ctrl-L': function () {
-        aHelp.guttersTgl();
-      }
-    });
+    custKeys['Ctrl-L'] = function (cm) {
+      aHelp.guttersTgl();
+    };
   }
 
   if (true === custOptions.ctrlMKey) {
-    lemon.extend(custKeys, {
-      'Ctrl-M': function () {
-        aHelp.xmlJsonTgl();
-      }
-    });
+    custKeys['Ctrl-M'] = function (cm) {
+      aHelp.xmlJsonTgl();
+    };
+  }
+
+  if (true === custOptions.ctrl1Key) {
+    custKeys['Ctrl-1'] = function (cm) {
+      aHelp.standardJsonTgl();
+    };
   }
 
   if (!lemon.isBlank(custKeys)) {
@@ -733,6 +752,21 @@ mirror.isJson = function(target, noneLogWarnMsg) {
   } catch (e) {
     if (!noneLogWarnMsg) {
       lemon.warn('mirror.isJson: ' + e.message);
+    }
+    return false;
+  }
+  return true;
+};
+
+mirror.isStandardJson = function(target, noneLogWarnMsg) {
+  try {
+    if (!lemon.isString(target)) {
+      target = JSON.stringify(target);
+    }
+    JSON.parse(target);
+  } catch (e) {
+    if (!noneLogWarnMsg) {
+      lemon.warn('mirror.isStandardJson: ' + e.message);
     }
     return false;
   }

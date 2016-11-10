@@ -806,6 +806,10 @@ var qry = {
       if (-1 == sType) {
         return;
       }
+      if (100 == sType) {
+        requs.advRequestM.show();
+        return;
+      }
 
       qry.searchType = sType;
       if (1 == qry.searchType) {

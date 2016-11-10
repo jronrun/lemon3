@@ -788,6 +788,10 @@ var qry = {
       $(qry.searchId).click();
     });
 
+    lemon.rightclick(qry.searchId, function () {
+      qry.advModal.toggle();
+    });
+
     $(qry.searchId).click(function () {
       if (lemon.buttonTgl(this)) {
         lemon.progress(mapi.navbarId);

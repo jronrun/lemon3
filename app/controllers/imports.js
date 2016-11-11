@@ -12,19 +12,30 @@ module.exports = function (app) {
 
 function swagger(target, resultCall) {
   if (isURL(target)) {
-    var urlObj = nUrl.parse(target);
+    var urlObj = nUrl.parse(target), swaggerResourceURL = '', respCode = null,
+      urlBase = _.extend({}, urlObj, {
+        hash: null,
+        search: null,
+        query: null,
+        path: null,
+        href: null,
+        pathname: null
+      }).format();
 
     //swagger-resources
     if (urlObj.pathname.indexOf('/swagger-resources') != -1) {
+      respCode = 3;
       swaggerResourceURL = target;
     }
     //api-docs
     else if (urlObj.pathname.indexOf('/api-docs') != -1) {
-
+      respCode = 0;
+      swaggerResourceURL = target;
     }
     //swagger-ui.html || swagger ui doc url
     else {
-      var swaggerResourceURL = _.extend({}, urlObj, {
+      respCode = 3;
+      swaggerResourceURL = _.extend({}, urlObj, {
         hash: null,
         search: null,
         query: null,
@@ -56,17 +67,28 @@ function swagger(target, resultCall) {
         return resultCall(answer.fail('parse data error: ' + body));
       }
 
-      /* [ {
-       "name": "pay-trade",
-       "location": "/v2/api-docs?group=pay-trade",
-       "swaggerVersion": "2.0"
-       } ] */
+      // api-docs?group=
+      if (0 == respCode) {
 
-      if (swaggerResource.length < 1) {
-        return resultCall(answer.fail('there is no swagger resource: ' + body));
       }
+      // swagger-resources
+      else if (3 === respCode) {
+        /* [ {
+           "name": "pay-trade",
+           "location": "/v2/api-docs?group=pay-trade",
+           "swaggerVersion": "2.0"
+         } ] */
 
-      resultCall(answer.resp(3, swaggerResource));
+        if (swaggerResource.length < 1) {
+          return resultCall(answer.fail('there is no swagger resource: ' + body));
+        }
+
+        _.each(swaggerResource, function (sr) {
+          sr.location = urlBase + sr.location;
+        });
+
+        resultCall(answer.resp(respCode, swaggerResource));
+      }
     });
 
   } else {

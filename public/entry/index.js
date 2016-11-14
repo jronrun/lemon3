@@ -175,7 +175,27 @@ lemon.register({
       sourceOrSelectFunc = [sourceOrSelectFunc];
     }
 
-    var siftR = lemon.sift(lemon.deepCopy(mongoStyleQry || {}), sourceOrSelectFunc);
+    var theQry = {}, asRegex = function (anObj, holder) {
+      lemon.each(anObj, function (v, k) {
+        if (lemon.isObject(v)) {
+          holder[k] = asRegex(v, {});
+        } else if (lemon.isString(v)) {
+          if (lemon.startWith(v, '/') && lemon.endWith(v, '/')) {
+            holder[k] = new RegExp(lemon.trim(v, '/'));
+          } else {
+            holder[k] = v;
+          }
+        } else {
+          holder[k] = v;
+        }
+      });
+
+      return holder;
+    };
+
+    asRegex(lemon.deepCopy(mongoStyleQry || {}), theQry);
+
+    var siftR = lemon.sift(theQry, sourceOrSelectFunc);
     if (lemon.isFunc(siftR) || lemon.isUndefined(fields)) {
       if (!isSourceArr && lemon.isArray(siftR)) {
         return siftR[0];

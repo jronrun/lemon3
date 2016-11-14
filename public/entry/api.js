@@ -2186,9 +2186,11 @@ var mapi = {
     });
 
     var noteId = '#api_note', mergeId = '#api_merge', richId = '#api_rich', doOpens = function (uri, snapData) {
+      var pg = lemon.homeProgress();
       apis.apiNoteInst = lemon.preview(lemon.fullUrl(uri), false, false, function(view, previewM) {
         mapi.noteView = view;
         mapi.noteView.tellEvent('SNAPLOAD', snapData || {});
+        pg.end();
       }, false, {
         hide: function () {
           mapi.noteView.tellEvent('LEAVE', false, function () {

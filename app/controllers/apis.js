@@ -120,8 +120,8 @@ router.post(index.batch.do, function (req, res, next) {
     return res.json(paramsParse.target);
   }
 
-  var params = paramsParse.get(), batchCfg = '';
-  if (!params.prev) {
+  var params = paramsParse.get(), batchCfg = '', hasPrevCfg = false;
+  if (!(hasPrevCfg = params.prev)) {
     batchCfg = [
       '/**',
       ' * Batch Request Configuration',
@@ -157,33 +157,38 @@ router.post(index.batch.do, function (req, res, next) {
     batchCfg = params.prev;
   }
 
-  var updateData = json5s.parse(batchCfg);
+  var updateData = json5s.parse(batchCfg), aResult = null;
   updateData['$request$'] = params.requ;
 
-  requs.apiDefine(params, function(defineAns) {
-    var aDef = defineAns.result.item;
-    if (null != aDef && _.has(aDef, 'batch_setting')) {
-      var aBatchCfg = aDef.batch_setting;
-      if (aBatchCfg.has(aBatchCfg, '$batch$')) {
-        updateData['$batch$'] = _.extend({
-          param_name: '',
-          values: ''
-        }, aBatchCfg['$batch$'] || {});
+  if (!hasPrevCfg) {
+    requs.apiDefine(params, function(defineAns) {
+      var aDef = defineAns.result.item;
+      if (null != aDef && _.has(aDef, 'batch_setting')) {
+        var aBatchCfg = aDef.batch_setting, keyBatch = '$batch$', keySetting = '$setting$';
+        if (aBatchCfg.has(aBatchCfg, keyBatch)) {
+          updateData[keyBatch] = _.extend({
+            param_name: '',
+            values: ''
+          }, aBatchCfg[keyBatch] || {});
+        }
+
+        if (aBatchCfg.has(aBatchCfg, keySetting)) {
+          updateData[keySetting] = _.extend({
+            interval: 300,
+            request: 0,
+            response: 1,
+            query: null
+          }, aBatchCfg[keySetting] || {});
+        }
       }
 
-      if (aBatchCfg.has(aBatchCfg, '$setting$')) {
-        updateData['$setting$'] = _.extend({
-          interval: 300,
-          request: 0,
-          response: 1,
-          query: null
-        }, aBatchCfg['$setting$'] || {});
-      }
-    }
-
-    var aResult = json5s.format(json5update(batchCfg, updateData));
+      aResult = json5s.format(json5update(batchCfg, updateData));
+      return res.json(ansEncode(answer.succ(aResult)));
+    }, true, req.user);
+  } else {
+    aResult = json5s.format(json5update(batchCfg, updateData));
     return res.json(ansEncode(answer.succ(aResult)));
-  }, true, req.user);
+  }
 });
 
 /**

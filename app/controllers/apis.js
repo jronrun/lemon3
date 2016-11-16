@@ -160,8 +160,30 @@ router.post(index.batch.do, function (req, res, next) {
   var updateData = json5s.parse(batchCfg);
   updateData['$request$'] = params.requ;
 
-  var aResult = json5s.format(json5update(batchCfg, updateData));
-  return res.json(ansEncode(answer.succ(aResult)));
+  requs.apiDefine(params, function(defineAns) {
+    var aDef = defineAns.result.item;
+    if (null != aDef && _.has(aDef, 'batch_setting')) {
+      var aBatchCfg = aDef.batch_setting;
+      if (aBatchCfg.has(aBatchCfg, '$batch$')) {
+        updateData['$batch$'] = _.extend({
+          param_name: '',
+          values: ''
+        }, aBatchCfg['$batch$'] || {});
+      }
+
+      if (aBatchCfg.has(aBatchCfg, '$setting$')) {
+        updateData['$setting$'] = _.extend({
+          interval: 300,
+          request: 0,
+          response: 1,
+          query: null
+        }, aBatchCfg['$setting$'] || {});
+      }
+    }
+
+    var aResult = json5s.format(json5update(batchCfg, updateData));
+    return res.json(ansEncode(answer.succ(aResult)));
+  }, true, req.user);
 });
 
 /**

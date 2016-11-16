@@ -1457,16 +1457,28 @@ var batch = {
   },
 
   tgl: function (showPrev) {
-    if (mapi.buttonTgl(batch.id + ' em')) {
-      if (!mapi.requ.isJson()) {
-        return lemon.msg('The Request Data is not a Valid JSON.');
-      }
+    if (!mapi.requ.isJson()) {
+      return lemon.msg('The Request Data is not a Valid JSON.');
+    }
 
+    var choosed = current();
+    if (!choosed.serv) {
+      return lemon.msg('Please choose an Environment first.');
+    }
+
+    if (mapi.buttonTgl(batch.id + ' em')) {
       var pg = lemon.progress(mapi.requToolId);
       var data = {
+        serv: choosed.serv.id,
         requ: mapi.requ.json(),
         prev: (true === showPrev ? (lemon.dec(batch.cfgdoc) || null) : null)
       };
+
+      if (choosed.api) {
+        lemon.extend(data, {
+          api: choosed.api.id
+        });
+      }
 
       $.post('/api/batch', { params: lemon.enc(data) }).done(function (resp) {
         if (0 == resp.code) {

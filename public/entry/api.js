@@ -1092,6 +1092,7 @@ var qry = {
 
           qry.toggleItem(batchNo, 'btgl', 'btgl_', 'bapi_');
           qry.apiShare(lemon.format('button[id^="apishare_{0}_"]', batchNo));
+          qry.apiBatchCfg(lemon.format('button[id^="apicfgbatchrequ_{0}_"]', batchNo));
 
           if (qry.prevKey && qry.prevKey.length > 0) {
             lemon.blast(qry.prevKey, qry.partApiId);
@@ -1200,6 +1201,60 @@ var qry = {
           if (aNote.length < 1) {
             $(viewNoteId).text('').hide();
           }
+        }
+      });
+    });
+  },
+
+  apiBatchCfg: function (selector) {
+    $(selector).click(function () {
+      var eId = $(this).attr('id'), tmp = eId.split('_'), apiId = tmp[2],
+        anAPI = lemon.data('#anapi_' + apiId, 'api'), bid = '#' + eId + ' em';
+
+      qry.batchCfgModal = lemon.modal({
+        body: lemon.tmpls('#batchcfg_body_tmpl'),
+        footer: lemon.tmpls('#batchcfg_footer_tmpl'),
+        modal: {
+          show: true,
+          backdrop: 'static',
+          keyboard: false
+        }
+      }, {
+        hidden: function () {
+          mapi.buttonTgl(bid, 3);
+        },
+        shown: function(evt, el) {
+          mapi.buttonTgl(bid, 2);
+          var doId = '#do_set_batchcfg', mid = '#batchcfg_mirror', fid = '#batchcfg_form';
+          qry.batchCfgMirror = mirror(mid, {
+            gutters: [],
+            cust: {
+              escKey: false,
+              ctrlEKey: false
+            }
+          });
+
+          var placeH = [
+            '/** Config Batch Request for ' + anAPI.name + ' */',
+            lemon.data(batch.id, 'cfgInit')
+          ];
+          qry.batchCfgMirror.val(placeH.join('\n'));
+
+          $(doId).click(function () {
+            var aCfg = null;
+            if (qry.batchCfgMirror.isJson()
+              && lemon.has((aCfg = qry.batchCfgMirror.json()), '$batch$')
+              && lemon.has(aCfg, '$setting$')) {
+
+              alert(JSON.stringify(aCfg));
+
+              qry.batchCfgModal.hide();
+            } else {
+              lemon.msg('Not a valid Configuration', {
+                containerId: fid
+              });
+            }
+          });
         }
       });
     });
@@ -2471,6 +2526,7 @@ var mapi = {
     }, 900);
   }
 };
+global.mapi=mapi;
 
 $(function () { mapi.initialize(); });
 

@@ -149,10 +149,12 @@
                         </a>
                         <% } %>
                         <h6 class="invisible"></h6>
-                        <button class="btn btn-secondary btn-sm text-muted icondh"
-                                id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border:
-                                none; " type="button">
+                        <button class="btn btn-secondary btn-sm text-muted icondh" id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border: none; " type="button">
                             <em class="fa fa-share-alt"></em>
+                        </button>
+                        <h6 class="invisible"></h6>
+                        <button class="btn btn-secondary btn-sm text-muted icondh" id="apicfgbatchrequ_<%= batchNo %>_<%= api.id %>" title="Batch Request Configuration <%= api.name %>" style="border: none; " type="button">
+                            <em class="fa fa-legal"></em>
                         </button>
                     </div>
                     <h6 class="invisible"></h6>
@@ -216,10 +218,12 @@
                         </a>
                     <% } %>
                     <h6 class="invisible"></h6>
-                    <button class="btn btn-secondary btn-sm text-muted icondh"
-                            id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border: none; "
-                            type="button">
+                    <button class="btn btn-secondary btn-sm text-muted icondh" id="apishare_<%= batchNo %>_<%= api.id %>" title="Share <%= api.name %>" style="border: none; " type="button">
                         <em class="fa fa-share-alt"></em>
+                    </button>
+                    <h6 class="invisible"></h6>
+                    <button class="btn btn-secondary btn-sm text-muted icondh" id="apicfgbatchrequ_<%= batchNo %>_<%= api.id %>" title="Batch Request Configuration <%= api.name %>" style="border: none; " type="button">
+                        <em class="fa fa-legal"></em>
                     </button>
                 </td>
             <% } %>
@@ -422,6 +426,20 @@
     <button type="button" id="do_adv_search" class="btn btn-primary icondh"
             data-advinit="PQKhAIEEBMDcEMB2BjApuAyq+AnZALcACgAkBLAZwBcB7HATwEpwRgAoAbzYEhhgBtAPIAHKmRqJ4AGwC64AEqoAjgFdU1cKtQNwyCdDLIxEnjmVrqALnBdu3HgF8ANDz5DR4ybIXrhEiuhaOnqIBkaepr7+qNa29tzOrgIixl5yWDiw2uCSALaoPHkx4ADkJWwOQA">
         <em class="fa fa-search" title="Search"></em> Search
+    </button>
+</script>
+
+<script type="text/html" id="batchcfg_body_tmpl">
+    <form class="form-inline" id="batchcfg_form">
+        <h1 class="invisible"></h1>
+        <textarea class="form-control" rows="3" style="border:0px;" id="batchcfg_mirror"></textarea>
+    </form>
+</script>
+
+<script type="text/html" id="batchcfg_footer_tmpl">
+    <button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>
+    <button type="button" id="do_set_batchcfg" class="btn btn-primary icondh">
+        <em class="fa fa-legal" title="Set Batch Request Configuration"></em> Config Batch Request
     </button>
 </script>
 

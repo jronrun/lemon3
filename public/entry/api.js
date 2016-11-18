@@ -2526,7 +2526,6 @@ var mapi = {
     }, 900);
   }
 };
-global.mapi=mapi;
 
 $(function () { mapi.initialize(); });
 

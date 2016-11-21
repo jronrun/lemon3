@@ -151,16 +151,23 @@ function values(json, prop) {
         aVal = tmp;
       }
     } else if (!aVal) {
-      var exp = new RegExp(v || '.*'), tmp1 = null;
+      var exp = new RegExp(v || '.*', 'i'), newO = {}, matched = 0, matchedFirstK = null;
       lemon.each(val, function (rv, rk) {
         if (exp.test(rk)) {
-          tmp1 = rv;
-          return false;
+          newO[rk] = rv;
+          if (0 == matched) {
+            matchedFirstK = rk;
+          }
+          ++matched;
         }
       });
 
-      if (tmp1) {
-        aVal = tmp1;
+      if (!lemon.isBlank(newO)) {
+        if (1 == matched) {
+          aVal = newO[matchedFirstK];
+        } else {
+          aVal = newO;
+        }
       }
     }
 

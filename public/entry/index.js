@@ -131,26 +131,42 @@ global.register = function(call) {
 
 function values(json, prop) {
   prop = prop || '';
-  var props = prop.indexOf('.') > 0 ? prop.split('.') : [prop];
+  var props = prop.indexOf('.') != -1 ? prop.split('.') : [prop];
   var val = json;
   lemon.each(props, function(v, k) {
-    var original = v;
+    var original = v, aVal = null;
     if (v.indexOf('[') > 0 && v.indexOf(']') > 0) {
       var tags = lemon.betn(v, '[', ']', true);
       v = v.replace(tags.join(''), '');
     }
-    val = val && val[v];
-    if (lemon.isArray(val)) {
+
+    aVal = val && val[v];
+    if (lemon.isArray(aVal)) {
       var idxs = lemon.betn(original, '[', ']');
       if (idxs.length > 0) {
-        var tmp = val;
-        lemon.each(idxs, function(v, k) {
-          tmp = tmp && tmp[parseInt(v)];
+        var tmp = aVal;
+        lemon.each(idxs, function(idx) {
+          tmp = tmp && tmp[parseInt(idx)];
         });
-        val = tmp;
+        aVal = tmp;
+      }
+    } else if (!aVal) {
+      var exp = new RegExp(v || '.*'), tmp1 = null;
+      lemon.each(val, function (rv, rk) {
+        if (exp.test(rk)) {
+          tmp1 = rv;
+          return false;
+        }
+      });
+
+      if (tmp1) {
+        aVal = tmp1;
       }
     }
+
+    val = aVal;
   });
+
   return val;
 }
 

@@ -111,6 +111,170 @@ router.post(index.define.do, function (req, res, next) {
   }, false, req.user);
 });
 
+router.post(index.batchgetset.do, function (req, res, next) {
+  var paramsParse = deepParse(req.body.params);
+  if (paramsParse.isFail()) {
+    return res.json(paramsParse.target);
+  }
+
+  var warnMsg = 'There is no authority for config batch request',
+    keyBatch = '$batch$', keySetting = '$setting$', aData = _.extend({
+    apiId: 0,
+    update: null
+  }, paramsParse.get() || {});
+
+  async.waterfall([
+    function (callback) {
+      requs.isExecutableAPIShareSource(req.body.source, function(shareAns) {
+        var executable = ansWrap(shareAns);
+        if (executable.isSucc()) {
+          req.user = items.grantExecutableShare(req.anonymous, req.user, executable.get());
+          callback(null);
+        } else {
+          if (req.anonymous) {
+            return res.json(answer.fail(warnMsg));
+          }
+
+          callback(null);
+        }
+      }, requestInfo(req));
+    },
+    function(callback) {
+      if (!items.ownInterface(req.user, aData.apiId)) {
+        return res.json(answer.fail(warnMsg));
+      }
+
+      Interface.find({id: aData.apiId}).limit(1).next(function(err, anInterf){
+        if (err) {
+          return res.json(answer.fail(err.message));
+        }
+
+        if (!anInterf) {
+          return res.json(answer.fail('API none exist ' + aData.apiId));
+        }
+
+        callback(null, anInterf);
+      });
+    },
+    function (target, callback) {
+      //batch request config update
+      if (aData.update) {
+        var hasB = _.has(aData.update, keyBatch), hasS = _.has(aData.update, keySetting);
+        if (!hasB && !hasS) {
+          return res.json(answer.fail('Invalid params to set batch request ' + aData.apiId));
+        }
+
+        var updateD = {};
+        target.batch_setting = target.batch_setting || {};
+        if (hasB) {
+          updateD.batch = _.extend({
+            param_name: '',
+            values: ''
+          }, target.batch_setting.batch || {}, aData.update[keyBatch]);
+        }
+
+        if (hasS) {
+          updateD.setting = _.extend({
+            interval: 300,
+            request: 0,
+            response: 1,
+            query: null
+          }, target.batch_setting.setting || {}, aData.update[keySetting]);
+        }
+
+        Interface.findOneAndUpdate(
+          {_id: target._id},
+          {
+            $set: {
+              batch_setting: updateD
+            }
+          },
+          {upsert: true, returnOriginal: false},
+          function (err, doc) {
+            if (err) {
+              return res.json(answer.fail(err.message));
+            }
+
+            //end for update
+            return res.json(ansEncode(answer.succ()));
+          }
+        );
+
+      } else {
+        //continue get
+        callback(null, target);
+      }
+    },
+    function (target, callback) {
+      var batchCfg = [
+        '/** Config Batch Request for ' + target.name + ' */',
+        '{',
+          '$batch$: {',
+            "param_name: '',",
+            '//Split with comma ","',
+            "values: ''",
+          '},',
+          '$setting$: {',
+            '//Request interval (ms)',
+            'interval: 300,',
+            '//In Result: 0 short, 1 full, [] Field Array',
+            '//Field eg: da[0].id, or rename as uid: da[0].id|uid',
+            'request: 0,',
+            '//In Result: 1 full, [] Field Array',
+            'response: 1,',
+            '//Query result (Mongo Style)',
+            'query: null',
+          '}',
+        '}',
+        '/**',
+        '  Configuration $batch$',
+        '    1. Config same filed with different values with Object',
+        "  { param_name: 'data.field', values: '1,2,3' }",
+        '    2. Config different filed and multi-field with Array',
+        "  [ { 'test.field1': 'test', 'data.field2': 12 } ]",
+        '\n',
+        '  Query Final Result - Mongo Style',
+        '    1. Supported operators: $in, $nin, $exists, $gte, $gt, $lte, $lt, $eq, $ne, $mod, $all, $and, $or,' +
+        ' $nor, $not, $size, $type, $regex, $where, $elemMatch',
+        '    2. Regexp searches',
+        '    3. sub object searching',
+        '    4. dot notation searching',
+        '*/'
+      ].join('\n');
+
+      var aResult = null;
+      if (_.has(target, 'batch_setting')) {
+        var updateData = {};
+        var aBatchCfg = target.batch_setting;
+        if (_.has(aBatchCfg, 'batch')) {
+          updateData[keyBatch] = _.extend({
+            param_name: '',
+            values: ''
+          }, aBatchCfg.batch || {});
+        }
+
+        if (_.has(aBatchCfg, 'setting')) {
+          updateData[keySetting] = _.extend({
+            interval: 300,
+            request: 0,
+            response: 1,
+            query: null
+          }, aBatchCfg.setting || {});
+        }
+
+        aResult = json5update(batchCfg, updateData);
+      } else {
+        aResult = batchCfg;
+      }
+
+      callback(null, aResult);
+    }
+  ], function(err, result) {
+    return res.json(ansEncode(answer.succ(result)));
+  });
+
+});
+
 /**
  * API Batch Configuration
  */
@@ -123,16 +287,8 @@ router.post(index.batch.do, function (req, res, next) {
   var params = paramsParse.get(), batchCfg = '', hasPrevCfg = false;
   if (!(hasPrevCfg = params.prev)) {
     batchCfg = [
-      '/**',
-      ' * Batch Request Configuration',
-      ' * 1. Config same filed with different values with Object',
-      " *   { param_name: 'data.field', values: '1,2,3' }",
-      ' * 2. Config different filed and multi-field with Array',
-      " *   [ { 'test.field1': 'test', 'data.field2': 12 } ]",
-      ' */',
-
+      '/** Batch Request Configuration  */',
       '{',
-        '//Configuration',
         '$batch$: {',
           "param_name: '',",
           '//Split with comma ","',
@@ -143,15 +299,29 @@ router.post(index.batch.do, function (req, res, next) {
         '$setting$: {',
           '//Request interval (ms)',
           'interval: 300,',
-          '//Request in Result: 0 short, 1 full, [] Field Array',
+          '//In Result: 0 short, 1 full, [] Field Array',
           '//Field eg: da[0].id, or rename as uid: da[0].id|uid',
           'request: 0,',
-          '//Response in Result: 1 full, [] Field Array',
+          '//In Result: 1 full, [] Field Array',
           'response: 1,',
           '//Query result (Mongo Style Query)',
           'query: null',
         '}',
-      '}'
+      '}',
+      '/**',
+      '  Configuration $batch$',
+      '    1. Config same filed with different values with Object',
+      "  { param_name: 'data.field', values: '1,2,3' }",
+      '    2. Config different filed and multi-field with Array',
+      "  [ { 'test.field1': 'test', 'data.field2': 12 } ]",
+      '\n',
+      '  Query Final Result - Mongo Style',
+      '    1. Supported operators: $in, $nin, $exists, $gte, $gt, $lte, $lt, $eq, $ne, $mod, $all, $and, $or,' +
+      ' $nor, $not, $size, $type, $regex, $where, $elemMatch',
+      '    2. Regexp searches',
+      '    3. sub object searching',
+      '    4. dot notation searching',
+      '*/'
     ].join('\n');
   } else {
     batchCfg = params.prev;
@@ -164,21 +334,21 @@ router.post(index.batch.do, function (req, res, next) {
     requs.apiDefine(params, function(defineAns) {
       var aDef = defineAns.result.item;
       if (null != aDef && _.has(aDef, 'batch_setting')) {
-        var aBatchCfg = aDef.batch_setting, keyBatch = '$batch$', keySetting = '$setting$';
-        if (aBatchCfg.has(aBatchCfg, keyBatch)) {
+        var aBatchCfg = aDef.batch_setting || {}, keyBatch = '$batch$', keySetting = '$setting$';
+        if (_.has(aBatchCfg, 'batch')) {
           updateData[keyBatch] = _.extend({
             param_name: '',
             values: ''
-          }, aBatchCfg[keyBatch] || {});
+          }, aBatchCfg.batch || {});
         }
 
-        if (aBatchCfg.has(aBatchCfg, keySetting)) {
+        if (_.has(aBatchCfg, 'setting')) {
           updateData[keySetting] = _.extend({
             interval: 300,
             request: 0,
             response: 1,
             query: null
-          }, aBatchCfg[keySetting] || {});
+          }, aBatchCfg.setting || {});
         }
       }
 

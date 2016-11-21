@@ -1206,56 +1206,83 @@ var qry = {
     });
   },
 
+  showApiBatchCfg: function (bid, apiId, cfgInit) {
+    qry.batchCfgModal = lemon.modal({
+      body: lemon.tmpls('#batchcfg_body_tmpl'),
+      footer: lemon.tmpls('#batchcfg_footer_tmpl'),
+      modal: {
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+      }
+    }, {
+      hidden: function () {
+        mapi.buttonTgl(bid, 3);
+      },
+      shown: function(evt, el) {
+        mapi.buttonTgl(bid, 2);
+        var doId = '#do_set_batchcfg', mid = '#batchcfg_mirror', fid = '#batchcfg_form';
+        qry.batchCfgMirror = mirror(mid, {
+          gutters: [],
+          cust: {
+            escKey: false,
+            ctrlEKey: false
+          }
+        });
+
+        qry.batchCfgMirror.val(lemon.fmtjson(cfgInit));
+
+        $(doId).click(function () {
+          var aCfg = null;
+          if (qry.batchCfgMirror.isJson()
+            && lemon.has((aCfg = qry.batchCfgMirror.json()), '$batch$')
+            && lemon.has(aCfg, '$setting$')) {
+
+            var pg = lemon.progress(mapi.navbarId + ',' + doId);
+            $.post('/api/batchgetset', {
+              source: mapi.source(),
+              params: lemon.enc({
+                apiId: apiId,
+                update: aCfg
+              })
+            }).done(function (resp) {
+              if (0 == resp.code) {
+                qry.batchCfgModal.hide();
+              } else {
+                lemon.msg(resp.msg, {
+                  containerId: fid
+                });
+              }
+              pg.end();
+            });
+
+          } else {
+            lemon.msg('Not a valid Configuration', {
+              containerId: fid
+            });
+          }
+        });
+      }
+    });
+  },
+
   apiBatchCfg: function (selector) {
     $(selector).click(function () {
-      var eId = $(this).attr('id'), tmp = eId.split('_'), apiId = tmp[2],
-        anAPI = lemon.data('#anapi_' + apiId, 'api'), bid = '#' + eId + ' em';
+      var eId = $(this).attr('id'), tmp = eId.split('_'), apiId = parseInt(tmp[2]), bid = '#' + eId + ' em';
+        //anAPI = lemon.data('#anapi_' + apiId, 'api')
 
-      qry.batchCfgModal = lemon.modal({
-        body: lemon.tmpls('#batchcfg_body_tmpl'),
-        footer: lemon.tmpls('#batchcfg_footer_tmpl'),
-        modal: {
-          show: true,
-          backdrop: 'static',
-          keyboard: false
+      var pg = lemon.progress(mapi.navbarId);
+      $.post('/api/batchgetset', {
+        source: mapi.source(),
+        params: lemon.enc({ apiId: apiId})
+      }).done(function (resp) {
+        if (0 == resp.code) {
+          var rdata = lemon.dec(resp.result);
+          qry.showApiBatchCfg(bid, apiId, rdata);
+        } else {
+          lemon.alert(resp.msg);
         }
-      }, {
-        hidden: function () {
-          mapi.buttonTgl(bid, 3);
-        },
-        shown: function(evt, el) {
-          mapi.buttonTgl(bid, 2);
-          var doId = '#do_set_batchcfg', mid = '#batchcfg_mirror', fid = '#batchcfg_form';
-          qry.batchCfgMirror = mirror(mid, {
-            gutters: [],
-            cust: {
-              escKey: false,
-              ctrlEKey: false
-            }
-          });
-
-          var placeH = [
-            '/** Config Batch Request for ' + anAPI.name + ' */',
-            lemon.data(batch.id, 'cfgInit')
-          ];
-          qry.batchCfgMirror.val(placeH.join('\n'));
-
-          $(doId).click(function () {
-            var aCfg = null;
-            if (qry.batchCfgMirror.isJson()
-              && lemon.has((aCfg = qry.batchCfgMirror.json()), '$batch$')
-              && lemon.has(aCfg, '$setting$')) {
-
-              alert(JSON.stringify(aCfg));
-
-              qry.batchCfgModal.hide();
-            } else {
-              lemon.msg('Not a valid Configuration', {
-                containerId: fid
-              });
-            }
-          });
-        }
+        pg.end();
       });
     });
   },

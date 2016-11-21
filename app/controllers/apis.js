@@ -10,7 +10,8 @@ var express = require('express'),
   Environment = app_require('models/api/env'),
   Group = app_require('models/api/group'),
   Server = app_require('models/api/server'),
-  Interface = app_require('models/api/interf');
+  Interface = app_require('models/api/interf'),
+  Power = app_require('models/power');
 
 var requs = apiRequest();
 
@@ -153,53 +154,68 @@ router.post(index.batchgetset.do, function (req, res, next) {
           return res.json(answer.fail('API none exist ' + aData.apiId));
         }
 
-        callback(null, anInterf);
+        if (anInterf.create_by.id != req.user.id) {
+          Power.hasInnerPower('PUBLIC_RETRIEVE', function (hasPublicRetrieve) {
+            if (!hasPublicRetrieve) {
+              return res.json(answer.fail(warnMsg));
+            }
+
+            callback(null, anInterf);
+          }, req.user);
+        } else {
+          callback(null, anInterf);
+        }
       });
     },
     function (target, callback) {
       //batch request config update
       if (aData.update) {
-        var hasB = _.has(aData.update, keyBatch), hasS = _.has(aData.update, keySetting);
-        if (!hasB && !hasS) {
-          return res.json(answer.fail('Invalid params to set batch request ' + aData.apiId));
-        }
-
-        var updateD = {};
-        target.batch_setting = target.batch_setting || {};
-        if (hasB) {
-          updateD.batch = _.extend({
-            param_name: '',
-            values: ''
-          }, target.batch_setting.batch || {}, aData.update[keyBatch]);
-        }
-
-        if (hasS) {
-          updateD.setting = _.extend({
-            interval: 300,
-            request: 0,
-            response: 1,
-            query: null
-          }, target.batch_setting.setting || {}, aData.update[keySetting]);
-        }
-
-        Interface.findOneAndUpdate(
-          {_id: target._id},
-          {
-            $set: {
-              batch_setting: updateD
-            }
-          },
-          {upsert: true, returnOriginal: false},
-          function (err, doc) {
-            if (err) {
-              return res.json(answer.fail(err.message));
-            }
-
-            //end for update
-            return res.json(ansEncode(answer.succ()));
+        Power.hasInnerPower('PUBLIC_UPDATE', function (hasPublicUpdate) {
+          if (!hasPublicUpdate && target.create_by.id != req.user.id) {
+            return res.json(answer.fail(warnMsg));
           }
-        );
 
+          var hasB = _.has(aData.update, keyBatch), hasS = _.has(aData.update, keySetting);
+          if (!hasB && !hasS) {
+            return res.json(answer.fail('Invalid params to set batch request ' + aData.apiId));
+          }
+
+          var updateD = {};
+          target.batch_setting = target.batch_setting || {};
+          if (hasB) {
+            updateD.batch = _.extend({
+              param_name: '',
+              values: ''
+            }, target.batch_setting.batch || {}, aData.update[keyBatch]);
+          }
+
+          if (hasS) {
+            updateD.setting = _.extend({
+              interval: 300,
+              request: 0,
+              response: 1,
+              query: null
+            }, target.batch_setting.setting || {}, aData.update[keySetting]);
+          }
+
+          Interface.findOneAndUpdate(
+            {_id: target._id},
+            {
+              $set: {
+                batch_setting: updateD
+              }
+            },
+            {upsert: true, returnOriginal: false},
+            function (err, doc) {
+              if (err) {
+                return res.json(answer.fail(err.message));
+              }
+
+              //end for update
+              return res.json(ansEncode(answer.succ()));
+            }
+          );
+        }, req.user);
       } else {
         //continue get
         callback(null, target);

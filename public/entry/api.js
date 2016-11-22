@@ -2256,6 +2256,14 @@ var mapi = {
         lemon.preview(grant);
       }
     });
+    lemon.rightclick(mapi.grantId, function() {
+      var grant = lemon.dec(lemon.data(mapi.grantId, 'grant'));
+      if (grant && grant.length > 0) {
+        var grantW = window.open(grant, '_blank');
+        grantW.focus();
+      }
+    });
+
 
     var btnPreviewId = '#btn_preview', doPreview = function () {
       lemon.preview(mapi.resp.selected(), false, {

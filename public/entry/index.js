@@ -129,49 +129,73 @@ global.register = function(call) {
   }
 };
 
+function doGetValue(prop, val) {
+  var original = prop, aVal = null, arrIdxFlag = false, arrIdx = function (idxStr, idxTgt) {
+    var idxs = lemon.betn(idxStr, '[', ']');
+    if (idxs.length > 0) {
+      if ('*' === idxs[0]) {
+      } else {
+        var tmp = idxTgt;
+        lemon.each(idxs, function(idx) {
+          tmp = tmp && tmp[parseInt(idx)];
+        });
+        idxTgt = tmp;
+      }
+    }
+
+    return idxTgt;
+  };
+  if (prop.indexOf('[') != -1 && prop.indexOf(']') != -1) {
+    var tags = lemon.betn(prop, '[', ']', true);
+    prop = prop.replace(tags.join(''), '');
+    arrIdxFlag = true;
+  }
+
+  aVal = val && val[prop];
+  if (lemon.isArray(aVal)) {
+    aVal = arrIdx(original, aVal);
+  } else if (!aVal) {
+    var exp = new RegExp(prop || '.*', 'i'), newO = {}, matched = 0, matchedFirstK = null;
+    lemon.each(val, function (rv, rk) {
+      if (exp.test(rk)) {
+        newO[rk] = rv;
+        if (0 == matched) {
+          matchedFirstK = rk;
+        }
+        ++matched;
+      }
+    });
+
+    if (!lemon.isBlank(newO)) {
+      if (1 == matched) {
+        aVal = newO[matchedFirstK];
+      } else {
+        aVal = newO;
+      }
+    }
+  }
+
+  if (lemon.isArray(aVal) && lemon.isBlank(prop) && arrIdxFlag) {
+    aVal = arrIdx(original, aVal);
+  }
+
+  return aVal;
+}
+
 function values(json, prop) {
   prop = prop || '';
   var props = prop.indexOf('.') != -1 ? prop.split('.') : [prop];
   var val = json;
-  lemon.each(props, function(v, k) {
-    var original = v, aVal = null;
-    if (v.indexOf('[') > 0 && v.indexOf(']') > 0) {
-      var tags = lemon.betn(v, '[', ']', true);
-      v = v.replace(tags.join(''), '');
-    }
-
-    aVal = val && val[v];
-    if (lemon.isArray(aVal)) {
-      var idxs = lemon.betn(original, '[', ']');
-      if (idxs.length > 0) {
-        var tmp = aVal;
-        lemon.each(idxs, function(idx) {
-          tmp = tmp && tmp[parseInt(idx)];
-        });
-        aVal = tmp;
-      }
-    } else if (!aVal) {
-      var exp = new RegExp(v || '.*', 'i'), newO = {}, matched = 0, matchedFirstK = null;
-      lemon.each(val, function (rv, rk) {
-        if (exp.test(rk)) {
-          newO[rk] = rv;
-          if (0 == matched) {
-            matchedFirstK = rk;
-          }
-          ++matched;
-        }
+  lemon.each(props, function(prop) {
+    if (lemon.isArray(val)) {
+      var arrVals = [];
+      lemon.each(val, function (arrVal) {
+        arrVals.push(doGetValue(prop, arrVal));
       });
-
-      if (!lemon.isBlank(newO)) {
-        if (1 == matched) {
-          aVal = newO[matchedFirstK];
-        } else {
-          aVal = newO;
-        }
-      }
+      val = arrVals;
+    } else {
+      val = doGetValue(prop, val);
     }
-
-    val = aVal;
   });
 
   return val;

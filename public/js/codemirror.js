@@ -215,12 +215,17 @@ function intlJsonQueries(host) {
               lemon.info(qrys, 'JSON queries');
               lemon.info(qryResult, 'JSON queries result');
 
+              var aContent = qryResult;
+              try {
+                aContent = lemon.fmtjson(qryResult);
+              } catch (e) {/**/}
+
               host.queries.qModal.hide();
               lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
                 view.tellEvent('SHOW_JSON_QRY_IN_NOTE', {
                   th: 'lemon',
                   note: {
-                    content: lemon.fmtjson(qryResult),
+                    content: aContent,
                     language: {
                       name: 'JSON-LD',
                       mime: 'application/ld+json'

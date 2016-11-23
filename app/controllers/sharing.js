@@ -254,7 +254,8 @@ router.get(index.preview.do, function (req, res, next) {
     });
   }
 
-  var ans = deepParse(req.param('data'));
+  //var ans = deepParse(req.param('data'));
+  var ans = deepParse(req.query.data);
   if (ans.isFail()) {
     return res.render(index.preview, {
       ans: crypto.compress(ans.target)

@@ -224,7 +224,8 @@ module.exports = function(model, index, defineForm) {
         });
       }
 
-      var queryStr = req.header('query') || req.param('q') || '', query = {}, realQuery = {};
+      //var queryStr = req.header('query') || req.param('q') || '', query = {}, realQuery = {};
+      var queryStr = req.header('query') || req.query.q || '', query = {}, realQuery = {};
       if (queryStr.length > 0) {
         query = crypto.decompress(queryStr);
         try {

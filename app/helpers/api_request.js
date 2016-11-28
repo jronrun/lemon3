@@ -24,7 +24,7 @@ function getRespAPI(api, usr) {
     response: api.response,
     request_doc: api.request_doc,
     response_doc: api.response_doc,
-    batch_setting: api.batch_setting
+    settings: api.settings
   };
 
   if (usr) {

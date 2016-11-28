@@ -181,12 +181,14 @@ router.post(index.batchgetset.do, function (req, res, next) {
           }
 
           var updateD = {};
-          target.batch_setting = target.batch_setting || {};
+          target.settings = target.settings || {};
+          target.settings.batches = target.settings.batches || {};
+
           if (hasB) {
             updateD.batch = _.extend({
               param_name: '',
               values: ''
-            }, target.batch_setting.batch || {}, aData.update[keyBatch]);
+            }, target.settings.batches.batch || {}, aData.update[keyBatch]);
           }
 
           if (hasS) {
@@ -195,14 +197,14 @@ router.post(index.batchgetset.do, function (req, res, next) {
               request: 0,
               response: 1,
               query: null
-            }, target.batch_setting.setting || {}, aData.update[keySetting]);
+            }, target.settings.batches.setting || {}, aData.update[keySetting]);
           }
 
           Interface.findOneAndUpdate(
             {_id: target._id},
             {
               $set: {
-                batch_setting: updateD
+                'settings.batches': updateD
               }
             },
             {upsert: true, returnOriginal: false},
@@ -259,9 +261,9 @@ router.post(index.batchgetset.do, function (req, res, next) {
       ].join('\n');
 
       var aResult = null;
-      if (_.has(target, 'batch_setting')) {
+      if (_.has(target, 'settings') && _.has(target.settings, 'batches')) {
         var updateData = {};
-        var aBatchCfg = target.batch_setting;
+        var aBatchCfg = target.settings.batches;
         if (_.has(aBatchCfg, 'batch')) {
           updateData[keyBatch] = _.extend({
             param_name: '',
@@ -349,8 +351,8 @@ router.post(index.batch.do, function (req, res, next) {
   if (!hasPrevCfg) {
     requs.apiDefine(params, function(defineAns) {
       var aDef = defineAns.result.item;
-      if (null != aDef && _.has(aDef, 'batch_setting')) {
-        var aBatchCfg = aDef.batch_setting || {}, keyBatch = '$batch$', keySetting = '$setting$';
+      if (null != aDef && _.has(aDef, 'settings') && _.has(aDef.settings, 'batches')) {
+        var aBatchCfg = aDef.settings.batches || {}, keyBatch = '$batch$', keySetting = '$setting$';
         if (_.has(aBatchCfg, 'batch')) {
           updateData[keyBatch] = _.extend({
             param_name: '',

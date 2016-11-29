@@ -28,6 +28,8 @@ router.post(index.addcomment.do, function (req, res, next) {
     data: {},
     valueField: '',
     commentField: '',
+    //type 1 /** example */, 2 // example
+    type: 2
   }, paramsParse.get());
 
   var commentD = _.cloneDeep(_.get(params.data, params.commentField));
@@ -48,7 +50,12 @@ router.post(index.addcomment.do, function (req, res, next) {
 
         if (theComm = _.get(commentD, theProp)) {
           if (_.isString(theComm)) {
-            aResult += ('/** ' + theComm + ' */\n');
+            if (1 == params.type) {
+              aResult += ('/** ' + theComm + ' */\n');
+            } else if (2 == params.type) {
+              aResult += ('// ' + theComm + '\n');
+            }
+
             var prev = tokens[idx - 1];
             if (prev && 'whitespace' === prev.type) {
               aResult += prev.raw;

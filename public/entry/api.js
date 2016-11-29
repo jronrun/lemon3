@@ -678,6 +678,8 @@ var requs = {
             acPg.end();
           });
         }
+      } else {
+        showData(aResult);
       }
     } else {
       aResult = data;

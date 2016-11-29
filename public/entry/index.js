@@ -130,6 +130,10 @@ global.register = function(call) {
 };
 
 function doGetValue(prop, val) {
+  if (!prop || !val) {
+    return val;
+  }
+
   var original = prop, aVal = null, arrIdxFlag = false, arrIdx = function (idxStr, idxTgt) {
     var idxs = lemon.betn(idxStr, '[', ']');
     if (idxs.length > 0) {

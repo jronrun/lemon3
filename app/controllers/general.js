@@ -18,6 +18,48 @@ router.get(index.do, function (req, res, next) {
   res.render(index);
 });
 
+router.post(index.update5.do, function (req, res, next) {
+  var paramsParse = deepParse(req.body.params);
+  if (paramsParse.isFail()) {
+    return res.json(paramsParse.target);
+  }
+
+  var params = _.extend({
+    source: null,
+    value: null,
+    format: 1
+  }, paramsParse.get());
+
+  if (!params.source || !params.value) {
+    return res.json(answer.fail('invalid parameters'));
+  }
+
+  var asStr = function (aTarget) {
+    if (!_.isString(aTarget)) {
+      aTarget = json5s.stringify(aTarget);
+    }
+    json5s.parse(aTarget);
+    if (1 === params.format) {
+      aTarget = json5s.format(aTarget);
+    }
+
+    return aTarget;
+  };
+
+  try {
+    params.source = asStr(params.source);
+    params.value = asStr(params.value);
+
+    var aResult = json5update(params.source, params.value);
+    return res.json(ansEncode(answer.succ(aResult)));
+  } catch (e) {
+    return res.json(answer.fail('invalid parameters ' + e.message));
+  }
+});
+
+/**
+ * Add Comment to JSON
+ */
 router.post(index.addcomment.do, function (req, res, next) {
   var paramsParse = deepParse(req.body.params);
   if (paramsParse.isFail()) {

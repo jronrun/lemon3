@@ -211,13 +211,15 @@ router.post(index.settings.do, function (req, res, next) {
             }, target.settings.single || {}, aData.update[keySingle]);
             singleD.query = crypto.compress(singleD.query);
             if (singleD.comment) {
-              if (!_.isString(singleD.comment) || singleD.comment.indexOf('|') === -1) {
-                return res.json(answer.fail('$single$.comment is not a valid string'));
-              }
+              if (1 != singleD.comment) {
+                if (!_.isString(singleD.comment) || singleD.comment.indexOf('|') === -1) {
+                  return res.json(answer.fail('$single$.comment is not a valid string'));
+                }
 
-              var cArr = singleD.comment.split('|');
-              if (cArr[0] === cArr[1]) {
-                return res.json(answer.fail('$single$.comment must provide different values besides of "|"'));
+                var cArr = singleD.comment.split('|');
+                if (cArr[0] === cArr[1]) {
+                  return res.json(answer.fail('$single$.comment must provide different values besides of "|"'));
+                }
               }
             }
           }
@@ -274,7 +276,7 @@ router.post(index.settings.do, function (req, res, next) {
           '$single$: {',
             '//In Result: 1 full, [] Field Array',
             'field: 1,',
-            "//Comments ${value field}|${comment field}",
+            "//Comments (see below)",
             'comment: null,',
             '//Query result (Mongo Style)',
             'query: null',
@@ -288,6 +290,8 @@ router.post(index.settings.do, function (req, res, next) {
         "  [ { 'test.field1': 'test', 'data.field2': 12 } ]",
         '\n',
         '  Setting-up $single$.comment',
+        "  a. set 1 then update result to defined API response, eg: {comment: 1}",
+        "  b. set string ${value field}|${comment field} or string array",
         "    Result eg: {desc: {name: 'User Name'}, value: {name: 'jack', passwd: ''}}",
         "    then config is {comment: 'value|desc'} or {comment: ['value|desc']}",
         "    value from result, desc from result or defined API response",

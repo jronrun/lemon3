@@ -655,54 +655,78 @@ var requs = {
       aResult = lemon.queries(scfg.query, data, scfg.field) || {};
 
       if (!lemon.isBlank(scfg.comment)) {
-        var comments = null, validC = null, commentData = null, matchedC = false;
-        if (!lemon.isArray(scfg.comment)) {
-          comments = [scfg.comment];
-        } else {
-          comments = scfg.comment;
-        }
+        if (1 === scfg.comment) {
+          if (anApi.response_doc && anApi.response_doc.length > 0) {
+            var updatePg = lemon.progress(mapi.respToolId);
+            $.post('/general/update5', {
+              params: lemon.enc({
+                source: lemon.dec(anApi.response_doc),
+                value: aResult
+              })
+            }).done(function (resp) {
+              if (0 == resp.code) {
+                var rdata = lemon.deepDec(resp.result);
+                showData(rdata);
+              } else {
+                showData(aResult);
+                lemon.warn(resp.msg, 'update5');
+              }
 
-        lemon.each(comments, function (ac) {
-          if (!matchedC && lemon.isString(ac) && ac.indexOf('|') !== -1) {
-            var cArr = ac.split('|'), vPath = cArr[0], cPath = cArr[1];
-            if (lemon.gets(aResult, vPath)) {
-              if (lemon.gets(aResult, cPath)) {
-                matchedC = true;
-                validC = { vf: vPath, cf: cPath};
-                return false;
-              } else if (lemon.gets(anApi.response || {}, cPath)) {
-                matchedC = true;
-                commentData = anApi.response;
-                validC = { vf: vPath, cf: cPath};
-                return false;
+              updatePg.end();
+            });
+          } else {
+            showData(aResult);
+          }
+        } else {
+          var comments = null, validC = null, commentData = null, matchedC = false;
+          if (!lemon.isArray(scfg.comment)) {
+            comments = [scfg.comment];
+          } else {
+            comments = scfg.comment;
+          }
+
+          lemon.each(comments, function (ac) {
+            if (!matchedC && lemon.isString(ac) && ac.indexOf('|') !== -1) {
+              var cArr = ac.split('|'), vPath = cArr[0], cPath = cArr[1];
+              if (lemon.gets(aResult, vPath)) {
+                if (lemon.gets(aResult, cPath)) {
+                  matchedC = true;
+                  validC = { vf: vPath, cf: cPath};
+                  return false;
+                } else if (lemon.gets(anApi.response || {}, cPath)) {
+                  matchedC = true;
+                  commentData = anApi.response;
+                  validC = { vf: vPath, cf: cPath};
+                  return false;
+                }
               }
             }
-          }
-        });
-
-        if (lemon.isBlank(validC)) {
-          lemon.warn(scfg.comment, 'Invalid comment setting, valid setting ${value field}|${comment field}');
-          showData(aResult);
-        } else {
-          var acPg = lemon.progress(mapi.respToolId);
-          $.post('/general/addcomment', {
-            params: lemon.enc({
-              data: aResult,
-              commentData: commentData,
-              valueField: validC.vf,
-              commentField: validC.cf,
-            })
-          }).done(function (resp) {
-            if (0 == resp.code) {
-              var rdata = lemon.deepDec(resp.result);
-              showData(rdata);
-            } else {
-              showData(aResult);
-              lemon.msg(resp.msg);
-            }
-
-            acPg.end();
           });
+
+          if (lemon.isBlank(validC)) {
+            lemon.warn(scfg.comment, 'Invalid comment setting, valid setting ${value field}|${comment field}');
+            showData(aResult);
+          } else {
+            var acPg = lemon.progress(mapi.respToolId);
+            $.post('/general/addcomment', {
+              params: lemon.enc({
+                data: aResult,
+                commentData: commentData,
+                valueField: validC.vf,
+                commentField: validC.cf,
+              })
+            }).done(function (resp) {
+              if (0 == resp.code) {
+                var rdata = lemon.deepDec(resp.result);
+                showData(rdata);
+              } else {
+                showData(aResult);
+                lemon.msg(resp.msg);
+              }
+
+              acPg.end();
+            });
+          }
         }
       } else {
         showData(aResult);

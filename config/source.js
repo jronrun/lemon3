@@ -94,7 +94,8 @@ var resource = [
       {id: 60001, name: 'form', desc: 'Form', method: M.POST, protect: false},
       {id: 60002, name: 'convert', desc: 'Data Convert', method: M.POST, protect: false},
       {id: 60003, name: 'convertqs', desc: 'Convert Query String As JSON', method: M.POST, protect: false},
-      {id: 60004, name: 'addcomment', desc: 'Add Comment to JSON', method: M.POST, protect: false}
+      {id: 60004, name: 'addcomment', desc: 'Add Comment to JSON', method: M.POST, protect: false},
+      {id: 60005, name: 'update5', desc: 'Update JSON5', method: M.POST, protect: false}
     ]
   },
 

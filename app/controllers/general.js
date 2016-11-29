@@ -18,6 +18,55 @@ router.get(index.do, function (req, res, next) {
   res.render(index);
 });
 
+router.post(index.addcomment.do, function (req, res, next) {
+  var paramsParse = deepParse(req.body.params);
+  if (paramsParse.isFail()) {
+    return res.json(paramsParse.target);
+  }
+
+  var params = _.extend({
+    data: {},
+    valueField: '',
+    commentField: '',
+  }, paramsParse.get());
+
+  var commentD = _.cloneDeep(_.get(params.data, params.commentField));
+  _.unset(params.data, params.commentField);
+
+  var tokens = json5s.tokenize(json5s.format(json5s.stringify(params.data))),
+    keyPrefix = params.valueField + '.', aResult = '';
+  _.each(tokens, function (token, idx) {
+    switch (token.type) {
+      case 'key':
+        var theProp = token.raw, theComm = null;
+        if (token.stack.length > 0) {
+          var keys = _.slice(token.stack);
+          keys.push(token.raw);
+          theProp = keys.join('.');
+          theProp = theProp.replace(keyPrefix, '');
+        }
+
+        if (theComm = _.get(commentD, theProp)) {
+          if (_.isString(theComm)) {
+            aResult += ('/** ' + theComm + ' */\n');
+            var prev = tokens[idx - 1];
+            if (prev && 'whitespace' === prev.type) {
+              aResult += prev.raw;
+            }
+          }
+        }
+
+        aResult += token.raw;
+        break;
+      default:
+        aResult += token.raw;
+        break;
+    }
+  });
+
+  return res.json(ansEncode(answer.succ(aResult)));
+});
+
 /**
  * Convert Query String As JSON
  * https://github.com/ljharb/qs

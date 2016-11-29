@@ -83,7 +83,7 @@ var resource = [
       {id: 50007, name: 'viewurl', desc: 'Show API Request URL', method: M.POST, protect: false},
       {id: 50008, name: 'header', desc: 'User Information', method: M.POST, protect: false},
       {id: 50009, name: 'batch', desc: 'Batch Configuration', method: M.POST, protect: false},
-      {id: 50010, name: 'batchgetset', desc: 'Set Batch Configuration', method: M.POST, protect: false}
+      {id: 50010, name: 'settings', desc: 'Get & Set Interface Settings', method: M.POST, protect: false}
     ]
   },
 
@@ -93,7 +93,8 @@ var resource = [
     id: 60, name: 'general', desc: 'General', protect: false, children: [
       {id: 60001, name: 'form', desc: 'Form', method: M.POST, protect: false},
       {id: 60002, name: 'convert', desc: 'Data Convert', method: M.POST, protect: false},
-      {id: 60003, name: 'convertqs', desc: 'Convert Query String As JSON', method: M.POST, protect: false}
+      {id: 60003, name: 'convertqs', desc: 'Convert Query String As JSON', method: M.POST, protect: false},
+      {id: 60004, name: 'addcomment', desc: 'Add Comment to JSON', method: M.POST, protect: false}
     ]
   },
 

@@ -243,7 +243,7 @@ lemon.register({
     asRegex(lemon.deepCopy(mongoStyleQry || {}), theQry);
 
     var siftR = lemon.sift(theQry, sourceOrSelectFunc);
-    if (lemon.isFunc(siftR) || lemon.isUndefined(fields)) {
+    if (lemon.isFunc(siftR) || lemon.isBlank(fields)) {
       if (!isSourceArr && lemon.isArray(siftR)) {
         return siftR[0];
       }

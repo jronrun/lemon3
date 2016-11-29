@@ -112,14 +112,14 @@ router.post(index.define.do, function (req, res, next) {
   }, false, req.user);
 });
 
-router.post(index.batchgetset.do, function (req, res, next) {
+router.post(index.settings.do, function (req, res, next) {
   var paramsParse = deepParse(req.body.params);
   if (paramsParse.isFail()) {
     return res.json(paramsParse.target);
   }
 
   var warnMsg = 'There is no authority for config batch request',
-    keyBatch = '$batch$', keySetting = '$setting$', aData = _.extend({
+    keyBatch = '$batch$', keySetting = '$setting$', keySingle = '$single$', aData = _.extend({
     apiId: 0,
     update: null
   }, paramsParse.get() || {});
@@ -168,7 +168,7 @@ router.post(index.batchgetset.do, function (req, res, next) {
       });
     },
     function (target, callback) {
-      //batch request config update
+      //interface config update
       if (aData.update) {
         Power.hasInnerPower('PUBLIC_UPDATE', function (hasPublicUpdate) {
           if (!hasPublicUpdate && target.create_by.id != req.user.id) {
@@ -180,9 +180,10 @@ router.post(index.batchgetset.do, function (req, res, next) {
             return res.json(answer.fail('Invalid params to set batch request ' + aData.apiId));
           }
 
-          var updateD = {};
+          var updateD = {}, singleD = {};
           target.settings = target.settings || {};
           target.settings.batches = target.settings.batches || {};
+          target.settings.single = target.settings.single || {};
 
           if (hasB) {
             updateD.batch = _.extend({
@@ -198,13 +199,27 @@ router.post(index.batchgetset.do, function (req, res, next) {
               response: 1,
               query: null
             }, target.settings.batches.setting || {}, aData.update[keySetting]);
+
+            updateD.setting.query = crypto.compress(updateD.setting.query);
+          }
+
+          if (_.has(aData.update, keySingle)) {
+            singleD = _.extend({
+              field: 1,
+              comment: null,
+              query: null
+            }, target.settings.single || {}, aData.update[keySingle])
+            singleD.query = crypto.compress(singleD.query);
           }
 
           Interface.findOneAndUpdate(
             {_id: target._id},
             {
               $set: {
-                'settings.batches': updateD
+                settings: {
+                  batches: updateD,
+                  single: singleD
+                }
               }
             },
             {upsert: true, returnOriginal: false},
@@ -225,13 +240,15 @@ router.post(index.batchgetset.do, function (req, res, next) {
     },
     function (target, callback) {
       var batchCfg = [
-        '/** Config Batch Request for ' + target.name + ' */',
+        '/** Setting-up for ' + target.name + ' */',
         '{',
+          '//Batch Request - Parameters',
           '$batch$: {',
             "param_name: '',",
             '//Split with comma ","',
             "values: ''",
           '},',
+          '//Batch Request - Settings',
           '$setting$: {',
             '//Request interval (ms)',
             'interval: 300,',
@@ -242,14 +259,27 @@ router.post(index.batchgetset.do, function (req, res, next) {
             'response: 1,',
             '//Query result (Mongo Style)',
             'query: null',
-          '}',
+          '},',
+          '//Single Request',
+          '$single$: {',
+            '//In Result: 1 full, [] Field Array',
+            'field: 1,',
+            "//Comments ${value field}|${comment field}",
+            'comment: null,',
+            '//Query result (Mongo Style)',
+            'query: null',
+          '},',
         '}',
         '/**',
-        '  Configuration $batch$',
+        '  Setting-up $batch$',
         '    1. Config same filed with different values with Object',
         "  { param_name: 'data.field', values: '1,2,3' }",
         '    2. Config different filed and multi-field with Array',
         "  [ { 'test.field1': 'test', 'data.field2': 12 } ]",
+        '\n',
+        '  Setting-up $single$.comment',
+        "    Result eg: {desc: {name: 'User Name'}, value: {name: 'jack', passwd: ''}}",
+        "    then config is {comment: 'value|desc'}, both are from result",
         '\n',
         '  Query Final Result - Mongo Style',
         '    1. Supported operators: $in, $nin, $exists, $gte, $gt, $lte, $lt, $eq, $ne, $mod, $all, $and, $or,' +
@@ -261,24 +291,38 @@ router.post(index.batchgetset.do, function (req, res, next) {
       ].join('\n');
 
       var aResult = null;
-      if (_.has(target, 'settings') && _.has(target.settings, 'batches')) {
-        var updateData = {};
-        var aBatchCfg = target.settings.batches;
-        if (_.has(aBatchCfg, 'batch')) {
-          updateData[keyBatch] = _.extend({
-            param_name: '',
-            values: ''
-          }, aBatchCfg.batch || {});
+      if (_.has(target, 'settings')) {
+        var updateData = {}, aRespApi = requs.getRespAPI(target);
+
+        if (_.has(aRespApi.settings, 'batches')) {
+          var aBatchCfg = aRespApi.settings.batches;
+          if (_.has(aBatchCfg, 'batch')) {
+            updateData[keyBatch] = _.extend({
+              param_name: '',
+              values: ''
+            }, aBatchCfg.batch || {});
+          }
+
+          if (_.has(aBatchCfg, 'setting')) {
+            updateData[keySetting] = _.extend({
+              interval: 300,
+              request: 0,
+              response: 1,
+              query: null
+            }, aBatchCfg.setting || {});
+          }
         }
 
-        if (_.has(aBatchCfg, 'setting')) {
-          updateData[keySetting] = _.extend({
-            interval: 300,
-            request: 0,
-            response: 1,
-            query: null
-          }, aBatchCfg.setting || {});
+        var aSingleCfg = {
+          field: 1,
+          comment: null,
+          query: null
+        };
+
+        if (_.has(aRespApi.settings, 'single')) {
+          _.extend(aSingleCfg, aRespApi.settings.single || {});
         }
+        updateData[keySingle] = aSingleCfg;
 
         aResult = json5update(batchCfg, updateData);
       } else {

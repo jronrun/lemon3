@@ -24,8 +24,20 @@ function getRespAPI(api, usr) {
     response: api.response,
     request_doc: api.request_doc,
     response_doc: api.response_doc,
-    settings: api.settings
+    settings: api.settings || {}
   };
+
+  var apiCfg = respAPI.settings, qryDeepParse = null;
+  if (_.has(apiCfg, 'batches') && _.has(apiCfg.batches, 'setting')) {
+    apiCfg.batches.setting = apiCfg.batches.setting || {};
+    qryDeepParse = deepParse(apiCfg.batches.setting.query);
+    apiCfg.batches.setting.query = qryDeepParse.isSucc() ? qryDeepParse.get() : null;
+  }
+
+  if (_.has(apiCfg, 'single')) {
+    qryDeepParse = deepParse(apiCfg.single.query);
+    apiCfg.single.query = qryDeepParse.isSucc() ? qryDeepParse.get() : null;
+  }
 
   if (usr) {
     _.extend(respAPI, {

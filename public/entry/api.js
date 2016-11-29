@@ -630,6 +630,61 @@ var requs = {
     return choosed;
   },
 
+  doResponse: function (anApi, data) {
+    var aResult = null, showData = function (theData) {
+      if (lemon.isString(theData)) {
+        mapi.resp.val(theData);
+      } else {
+        mapi.resp.json(theData);
+      }
+    };
+
+    if (anApi && anApi.settings && anApi.settings.single) {
+      var scfg = lemon.extend({
+        field: 1,
+        comment: null,
+        query: null
+      }, anApi.settings.single || {});
+
+      scfg.query = scfg.query || {};
+      if (lemon.isBlank(scfg.field) || 1 === scfg.field) {
+        scfg.field = null;
+      }
+
+      lemon.info(scfg, 'API single request setting');
+      aResult = lemon.queries(scfg.query, data, scfg.field) || {};
+
+      if (!lemon.isBlank(scfg.comment)) {
+        if (!lemon.isString(scfg.comment) || scfg.comment.indexOf('|') === -1) {
+          lemon.warn(scfg.comment, 'Invalid comment setting, valid setting ${value field}|${comment field}');
+          showData(aResult);
+        } else {
+          var cArr = scfg.comment.split('|'), acPg = lemon.progress(mapi.respToolId);
+          $.post('/general/addcomment', {
+            params: lemon.enc({
+              data: aResult,
+              valueField: cArr[0],
+              commentField: cArr[1],
+            })
+          }).done(function (resp) {
+            if (0 == resp.code) {
+              var rdata = lemon.deepDec(resp.result);
+              showData(rdata);
+            } else {
+              showData(aResult);
+              lemon.msg(resp.msg);
+            }
+
+            acPg.end();
+          });
+        }
+      }
+    } else {
+      aResult = data;
+      showData(aResult);
+    }
+  },
+
   request: function(callback, advance) {
     var choosed = current(), requ = mapi.requ.json(), data = {
       source: mapi.source(),
@@ -651,11 +706,7 @@ var requs = {
         }).done(function (data, textStatus, jqXHR) {
           lemon.info(textStatus, 'request status');
           lemon.info(data, 'response');
-          if (lemon.isString(data)) {
-            mapi.resp.val(data);
-          } else {
-            mapi.resp.json(data);
-          }
+          requs.doResponse(choosed.api, data);
 
           lemon.isFunc(callback) && callback(data, requ, true);
 
@@ -682,11 +733,7 @@ var requs = {
           lemon.isFunc(callback) && callback(resp, requ);
         });
       } else if (2 == resp.code) {
-        if (lemon.isString(rdata.data)) {
-          mapi.resp.val(rdata.data);
-        } else {
-          mapi.resp.json(rdata.data);
-        }
+        requs.doResponse(choosed.api, rdata.data);
 
         lemon.isFunc(callback) && callback(resp, requ);
       } else {
@@ -1239,7 +1286,7 @@ var qry = {
             && lemon.has(aCfg, '$setting$')) {
 
             var pg = lemon.progress(mapi.navbarId + ',' + doId);
-            $.post('/api/batchgetset', {
+            $.post('/api/settings', {
               source: mapi.source(),
               params: lemon.enc({
                 apiId: apiId,
@@ -1272,7 +1319,7 @@ var qry = {
         //anAPI = lemon.data('#anapi_' + apiId, 'api')
 
       var pg = lemon.progress(mapi.navbarId);
-      $.post('/api/batchgetset', {
+      $.post('/api/settings', {
         source: mapi.source(),
         params: lemon.enc({ apiId: apiId})
       }).done(function (resp) {

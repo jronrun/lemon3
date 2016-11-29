@@ -25,14 +25,16 @@ router.post(index.addcomment.do, function (req, res, next) {
   }
 
   var params = _.extend({
+    //Both value & desc obj, or just value obj
     data: {},
+    commentData: {},
     valueField: '',
     commentField: '',
     //type 1 /** example */, 2 // example
     type: 2
   }, paramsParse.get());
 
-  var commentD = _.cloneDeep(_.get(params.data, params.commentField));
+  var commentD = _.cloneDeep(_.get(params.commentData, params.commentField) || _.get(params.data, params.commentField) || {});
   _.unset(params.data, params.commentField);
 
   var tokens = json5s.tokenize(json5s.format(json5s.stringify(params.data))),

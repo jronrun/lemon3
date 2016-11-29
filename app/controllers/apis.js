@@ -279,7 +279,8 @@ router.post(index.settings.do, function (req, res, next) {
         '\n',
         '  Setting-up $single$.comment',
         "    Result eg: {desc: {name: 'User Name'}, value: {name: 'jack', passwd: ''}}",
-        "    then config is {comment: 'value|desc'}, both are from result",
+        "    then config is {comment: 'value|desc'} or {comment: ['value|desc']}",
+        "    value from result, desc from result or defined API response",
         '\n',
         '  Query Final Result - Mongo Style',
         '    1. Supported operators: $in, $nin, $exists, $gte, $gt, $lte, $lt, $eq, $ne, $mod, $all, $and, $or,' +

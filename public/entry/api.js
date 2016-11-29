@@ -655,16 +655,42 @@ var requs = {
       aResult = lemon.queries(scfg.query, data, scfg.field) || {};
 
       if (!lemon.isBlank(scfg.comment)) {
-        if (!lemon.isString(scfg.comment) || scfg.comment.indexOf('|') === -1) {
+        var comments = null, validC = null, commentData = null, matchedC = false;
+        if (!lemon.isArray(scfg.comment)) {
+          comments = [scfg.comment];
+        } else {
+          comments = scfg.comment;
+        }
+
+        lemon.each(comments, function (ac) {
+          if (!matchedC && lemon.isString(ac) && ac.indexOf('|') !== -1) {
+            var cArr = ac.split('|'), vPath = cArr[0], cPath = cArr[1];
+            if (lemon.gets(aResult, vPath)) {
+              if (lemon.gets(aResult, cPath)) {
+                matchedC = true;
+                validC = { vf: vPath, cf: cPath};
+                return false;
+              } else if (lemon.gets(anApi.response || {}, cPath)) {
+                matchedC = true;
+                commentData = anApi.response;
+                validC = { vf: vPath, cf: cPath};
+                return false;
+              }
+            }
+          }
+        });
+
+        if (lemon.isBlank(validC)) {
           lemon.warn(scfg.comment, 'Invalid comment setting, valid setting ${value field}|${comment field}');
           showData(aResult);
         } else {
-          var cArr = scfg.comment.split('|'), acPg = lemon.progress(mapi.respToolId);
+          var acPg = lemon.progress(mapi.respToolId);
           $.post('/general/addcomment', {
             params: lemon.enc({
               data: aResult,
-              valueField: cArr[0],
-              commentField: cArr[1],
+              commentData: commentData,
+              valueField: validC.vf,
+              commentField: validC.cf,
             })
           }).done(function (resp) {
             if (0 == resp.code) {

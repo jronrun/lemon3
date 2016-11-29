@@ -208,7 +208,7 @@ router.post(index.settings.do, function (req, res, next) {
               field: 1,
               comment: null,
               query: null
-            }, target.settings.single || {}, aData.update[keySingle])
+            }, target.settings.single || {}, aData.update[keySingle]);
             singleD.query = crypto.compress(singleD.query);
             if (singleD.comment) {
               if (!_.isString(singleD.comment) || singleD.comment.indexOf('|') === -1) {

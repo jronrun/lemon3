@@ -210,6 +210,16 @@ router.post(index.settings.do, function (req, res, next) {
               query: null
             }, target.settings.single || {}, aData.update[keySingle])
             singleD.query = crypto.compress(singleD.query);
+            if (singleD.comment) {
+              if (!_.isString(singleD.comment) || singleD.comment.indexOf('|') === -1) {
+                return res.json(answer.fail('$single$.comment is not a valid string'));
+              }
+
+              var cArr = singleD.comment.split('|');
+              if (cArr[0] === cArr[1]) {
+                return res.json(answer.fail('$single$.comment must provide different values besides of "|"'));
+              }
+            }
           }
 
           Interface.findOneAndUpdate(
@@ -281,6 +291,7 @@ router.post(index.settings.do, function (req, res, next) {
         "    Result eg: {desc: {name: 'User Name'}, value: {name: 'jack', passwd: ''}}",
         "    then config is {comment: 'value|desc'} or {comment: ['value|desc']}",
         "    value from result, desc from result or defined API response",
+        "    value and desc must have a different value",
         '\n',
         '  Query Final Result - Mongo Style',
         '    1. Supported operators: $in, $nin, $exists, $gte, $gt, $lte, $lt, $eq, $ne, $mod, $all, $and, $or,' +

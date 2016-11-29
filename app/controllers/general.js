@@ -34,8 +34,14 @@ router.post(index.addcomment.do, function (req, res, next) {
     type: 2
   }, paramsParse.get());
 
-  var commentD = _.cloneDeep(_.get(params.commentData, params.commentField) || _.get(params.data, params.commentField) || {});
-  _.unset(params.data, params.commentField);
+  var commentD = _.get(params.commentData, params.commentField);
+  if (!commentD) {
+    commentD = _.get(params.data, params.commentField);
+    if (commentD) {
+      _.unset(params.data, params.commentField);
+    }
+  }
+  commentD = _.cloneDeep(commentD || {});
 
   var tokens = json5s.tokenize(json5s.format(json5s.stringify(params.data))),
     keyPrefix = params.valueField + '.', aResult = '';

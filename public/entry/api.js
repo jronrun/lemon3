@@ -53,7 +53,7 @@ var apis = {
     }
   },
 
-  choose: function(apiId) {
+  choose: function(apiId, srcFrom) {
     var elId = apis.apiHead.id(apiId);
     if (!$(elId).length) {
       return;
@@ -64,23 +64,36 @@ var apis = {
     };
 
     current(data);
-    apis.doChoose(data.apiGroup, data.api);
+    apis.doChoose(data.apiGroup, data.api, false, srcFrom);
   },
 
-  doChoose: function(group, api, forceResp) {
+  //srcFrom 1 history, 2 which api click, 3 which api right click, 4 api search list, 5 snapload, 6 SHARE_API event
+  doChoose: function(group, api, forceResp, srcFrom) {
     if (lemon.isJson(api.request || {})) {
       mapi.requ.json(api.request || {});
     }
 
     if (!lemon.isBlank(api.response || {})) {
-      if (lemon.has(api, 'json') && api.json) {
-        mapi.resp.json(api.response);
-      } else {
-        try {
-          mapi.resp.json(api.response);
-        } catch (e) {
-          mapi.resp.val(lemon.dec(api.response));
-        }
+      switch (srcFrom) {
+        case 2:
+        case 3:
+        case 4:
+          var aApiResp = lemon.dec(api.response_doc);
+          mapi.resp.val(aApiResp);
+          break;
+        case 1:
+        case 5:
+        case 6:
+          if (lemon.has(api, 'json') && api.json) {
+            mapi.resp.json(api.response);
+          } else {
+            try {
+              mapi.resp.json(api.response);
+            } catch (e) {
+              mapi.resp.val(lemon.dec(api.response));
+            }
+          }
+          break;
       }
     } else if (forceResp) {
       mapi.resp.json({});
@@ -139,7 +152,7 @@ var apis = {
               });
 
               $(apiElId).click(function () {
-                apis.choose(interf.id);
+                apis.choose(interf.id, 2);
               });
               if (lemon.isSmallDownView()) {
 
@@ -178,7 +191,7 @@ var apis = {
                 });
 
                 lemon.rightclick(apiElId, function() {
-                  apis.choose(interf.id);
+                  apis.choose(interf.id, 3);
                   $(mapi.requDocId).click();
                 });
               }
@@ -844,7 +857,7 @@ var history = {
     history.cur = his.id;
     envs.doChoose(his.env, his.group, his.serv);
     mapi.setCur(his.env, his.serv, his.group);
-    apis.doChoose(his.group, his.api, true);
+    apis.doChoose(his.group, his.api, true, 1);
     mapi.setCur(null, null, null, his.group, his.api);
   },
 
@@ -1178,7 +1191,7 @@ var qry = {
           $('td[clickable="' + batchNo + '"]').on('dblclick', function () {
             var api = lemon.data(this, 'api'), group = lemon.data(this, 'group');
             api.json = true;
-            apis.doChoose(group, api);
+            apis.doChoose(group, api, false, 4);
             mapi.setCur(null, null, null, group, api);
             $(qry.searchId).click();
           });
@@ -1846,7 +1859,7 @@ var mapi = {
       envs.doChoose(choosed.env, choosed.envGroup, choosed.serv);
     }
     if (choosed.apiGroup && choosed.api) {
-      apis.doChoose(choosed.apiGroup, choosed.api);
+      apis.doChoose(choosed.apiGroup, choosed.api, false, 5);
     }
 
     mapi.requ.val(snapdata.requ);
@@ -2614,7 +2627,7 @@ var mapi = {
             }
 
             mapi.shares(data.data, function() {
-              apis.doChoose(content.group, content.api, true);
+              apis.doChoose(content.group, content.api, true, 6);
               mapi.setCur(null, null, null, content.group, content.api);
             });
             break;

@@ -48,7 +48,11 @@ router.post(index.update5.do, function (req, res, next) {
 
   try {
     params.source = asStr(params.source);
-    params.value = asStr(params.value);
+
+    if (!_.isString(params.value)) {
+      params.value = json5s.stringify(params.value);
+    }
+    params.value = json5s.parse(params.value);
 
     var aResult = json5update(params.source, params.value);
     return res.json(ansEncode(answer.succ(aResult)));

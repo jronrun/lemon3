@@ -73,6 +73,7 @@ var apis = {
       mapi.requ.json(api.request || {});
     }
 
+    $(mapi.tglDescId).hide();
     if (!lemon.isBlank(api.response || {})) {
       switch (srcFrom) {
         case 2:
@@ -84,17 +85,32 @@ var apis = {
         case 1:
         case 5:
         case 6:
+          var hisApiId = null;
           if (lemon.has(api, 'json') && api.json) {
             mapi.resp.json(api.response);
+            if (1 === srcFrom) {
+              hisApiId = api.id;
+            }
           } else {
             try {
               mapi.resp.json(api.response);
+              if (1 === srcFrom) {
+                hisApiId = api.id;
+              }
             } catch (e) {
               mapi.resp.val(lemon.dec(api.response));
             }
           }
+
+          if (!lemon.isBlank(hisApiId)) {
+            $(mapi.tglDescId).show();
+            lemon.data(mapi.tglDescId, {
+              aapi: api
+            });
+          }
           break;
       }
+
     } else if (forceResp) {
       mapi.resp.json({});
     }
@@ -1763,6 +1779,7 @@ var mapi = {
   viewUrlId: '#btn-show-url',
   tglCommentId: '#btn-tgl-comment',
   grantId: '#server_signin',
+  tglDescId: '#btn-tgl-resp-desc',
 
   navbarId: '#navbar-layout',
   gridId: '#grid-layout',
@@ -2373,6 +2390,33 @@ var mapi = {
       if (grant && grant.length > 0) {
         var grantW = window.open(grant, '_blank');
         grantW.focus();
+      }
+    });
+
+    $(mapi.tglDescId).click(function () {
+      var thiz = mapi.tglDescId + ' em', aapi = lemon.data(mapi.tglDescId, 'aapi');
+      if (mapi.buttonTgl(thiz)) {
+        if (mapi.resp.isJson()) {
+          var pg = lemon.progress(mapi.respToolId);
+          $.post('/api/definebyid', {
+            id: aapi.id
+          }).done(function (resp) {
+            if (0 == resp.code) {
+              var rdata = lemon.deepDec(resp.result);
+              requs.doResponse(rdata, mapi.resp.json());
+            } else {
+              mapi.buttonTgl(thiz, 3);
+              lemon.warn(resp.msg, 'toggle response description');
+            }
+            pg.end();
+          });
+        } else {
+          mapi.buttonTgl(thiz, 3);
+        }
+      } else {
+        try {
+          mapi.resp.json(aapi.response);
+        } catch (e) {/**/}
       }
     });
 

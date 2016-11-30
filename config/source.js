@@ -83,7 +83,8 @@ var resource = [
       {id: 50007, name: 'viewurl', desc: 'Show API Request URL', method: M.POST, protect: false},
       {id: 50008, name: 'header', desc: 'User Information', method: M.POST, protect: false},
       {id: 50009, name: 'batch', desc: 'Batch Configuration', method: M.POST, protect: false},
-      {id: 50010, name: 'settings', desc: 'Get & Set Interface Settings', method: M.POST, protect: false}
+      {id: 50010, name: 'settings', desc: 'Get & Set Interface Settings', method: M.POST, protect: false},
+      {id: 50011, name: 'definebyid', desc: 'Get API define by ID', method: M.POST, protect: false}
     ]
   },
 

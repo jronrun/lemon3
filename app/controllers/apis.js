@@ -100,6 +100,40 @@ router.post(index.request.do, function (req, res, next) {
 });
 
 /**
+ * Get API define by ID
+ */
+router.post(index.definebyid.do, function (req, res, next) {
+  if (req.anonymous) {
+    return res.json(answer.fail('anonymous'));
+  }
+
+  var apiId = req.body.id, resSuccAns = function (aTarget) {
+    return res.json(ansEncode(answer.succ(requs.getRespAPI(aTarget, req.user))));
+  };
+  Interface.find({id: parseInt(apiId)}).limit(1).next(function(err, anInterf){
+    if (err) {
+      return res.json(answer.fail(err.message));
+    }
+
+    if (!anInterf) {
+      return res.json(answer.fail('none exist ' + apiId));
+    }
+
+    if (anInterf.create_by.id != req.user.id) {
+      Power.hasInnerPower('PUBLIC_RETRIEVE', function (hasPublicRetrieve) {
+        if (!hasPublicRetrieve || 1 !== anInterf.owner) {
+          return res.json(answer.fail('no authority'));
+        }
+
+        return resSuccAns(anInterf);
+      }, req.user);
+    } else {
+      return resSuccAns(anInterf);
+    }
+  });
+});
+
+/**
  * API define
  */
 router.post(index.define.do, function (req, res, next) {
@@ -118,7 +152,7 @@ router.post(index.settings.do, function (req, res, next) {
     return res.json(paramsParse.target);
   }
 
-  var warnMsg = 'There is no authority for config batch request',
+  var warnMsg = 'There is no authority for setting-up interface',
     keyBatch = '$batch$', keySetting = '$setting$', keySingle = '$single$', aData = _.extend({
     apiId: 0,
     update: null
@@ -156,7 +190,7 @@ router.post(index.settings.do, function (req, res, next) {
 
         if (anInterf.create_by.id != req.user.id) {
           Power.hasInnerPower('PUBLIC_RETRIEVE', function (hasPublicRetrieve) {
-            if (!hasPublicRetrieve) {
+            if (!hasPublicRetrieve || 1 !== anInterf.owner) {
               return res.json(answer.fail(warnMsg));
             }
 

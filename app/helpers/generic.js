@@ -545,7 +545,7 @@ module.exports = function(model, index, defineForm) {
 
         Power.hasInnerPower('PUBLIC_RETRIEVE', function (hasPublicRetrieve) {
           if (!hasPublicRetrieve && generic.getSchema('create_by')) {
-            if (!result.create_by || result.create_by.id !== req.user.id) {
+            if (!result.create_by || result.create_by.id !== req.user.id || 1 !== anInterf.owner) {
               return res.json(answer.fail('Do not have permission to retrieve the requested resource.'));
             }
           }

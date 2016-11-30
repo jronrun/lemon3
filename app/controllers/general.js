@@ -18,6 +18,9 @@ router.get(index.do, function (req, res, next) {
   res.render(index);
 });
 
+/**
+ * Update JSON5
+ */
 router.post(index.update5.do, function (req, res, next) {
   var paramsParse = deepParse(req.body.params);
   if (paramsParse.isFail()) {

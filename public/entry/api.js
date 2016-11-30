@@ -73,7 +73,9 @@ var apis = {
       mapi.requ.json(api.request || {});
     }
 
+    mapi.buttonTgl(mapi.tglDescId + ' em', 3);
     $(mapi.tglDescId).hide();
+
     if (!lemon.isBlank(api.response || {})) {
       switch (srcFrom) {
         case 2:

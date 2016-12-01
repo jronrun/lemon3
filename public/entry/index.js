@@ -130,10 +130,6 @@ global.register = function(call) {
 };
 
 function doGetValue(prop, val) {
-  if (!prop || !val) {
-    return val;
-  }
-
   var original = prop, aVal = null, arrIdxFlag = false, arrIdx = function (idxStr, idxTgt) {
     var idxs = lemon.betn(idxStr, '[', ']');
     if (idxs.length > 0) {
@@ -160,7 +156,7 @@ function doGetValue(prop, val) {
     aVal = arrIdx(original, aVal);
   } else if (!aVal) {
     var exp = new RegExp(prop || '.*', 'i'), newO = {}, matched = 0, matchedFirstK = null;
-    lemon.each(val, function (rv, rk) {
+    lemon.each(val || {}, function (rv, rk) {
       if (exp.test(rk)) {
         newO[rk] = rv;
         if (0 == matched) {

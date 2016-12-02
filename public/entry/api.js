@@ -1557,7 +1557,7 @@ var qry = {
         if (rdata.items.length > 0) {
           var baseW = Math.min($(window).width(), $(qry.partHisId).width());
           var preStyle = {
-            'font-size': 14,
+            'font-size': 12,
             padding: 9.5
           };
 

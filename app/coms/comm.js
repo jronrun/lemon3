@@ -34,7 +34,7 @@ var path = require('path'),
 
 var CONSTANT = {
   ADMIN_ROLE: 0,
-  DEFAULT_PAGESIZE: 30,
+  DEFAULT_PAGESIZE: 10,
   DEFAULT_ORDER: 10000
 };
 

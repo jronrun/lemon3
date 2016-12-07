@@ -215,26 +215,8 @@ function intlJsonQueries(host) {
               lemon.info(qrys, 'JSON queries');
               lemon.info(qryResult, 'JSON queries result');
 
-              var aContent = qryResult;
-              try {
-                aContent = lemon.fmtjson(qryResult);
-              } catch (e) {/**/}
-
               host.queries.qModal.hide();
-              lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
-                view.tellEvent('SHOW_JSON_QRY_IN_NOTE', {
-                  th: 'lemon',
-                  note: {
-                    content: aContent,
-                    language: {
-                      name: 'JSON-LD',
-                      mime: 'application/ld+json'
-                    }
-                  }
-                }, function () {
-                  pg.end();
-                });
-              });
+              showInNote(fmtIfJson(qryResult));
             } else {
               lemon.msg('Not a valid Query', {
                 containerId: fid
@@ -246,6 +228,31 @@ function intlJsonQueries(host) {
       }
     });
   }
+}
+
+function fmtIfJson(data) {
+  try {
+    data = lemon.fmtjson(data);
+  } catch (e) {/**/}
+  return data;
+}
+
+function showInNote(aContent, pg) {
+  pg = pg || lemon.homeProgress();
+  return lemon.preview(lemon.fullUrl('/note'), false, false, function (view, previewM) {
+    view.tellEvent('SHOW_JSON_QRY_IN_NOTE', {
+      th: 'lemon',
+      note: {
+        content: aContent,
+        language: {
+          name: 'JSON-LD',
+          mime: 'application/ld+json'
+        }
+      }
+    }, function () {
+      pg.end();
+    });
+  });
 }
 
 var helper = function(cm, events) {
@@ -536,6 +543,13 @@ var helper = function(cm, events) {
         cm.refresh();
       }, delay || 100);
     },
+    cloneToNote: function () {
+      return showInNote(tools.fmtIfJson());
+    },
+    fmtIfJson: function (data) {
+      var data = data || tools.val();
+      return fmtIfJson(data);
+    },
     json: function(data) {
       if (lemon.isUndefined(data)) {
         return json5s.parse(cm.getValue());
@@ -604,6 +618,7 @@ var mirror = function (elId, options, events) {
   var custOptions = lemon.extend({
     escKey: true,     //fullscreen toggle
     ctrl1Key: true,   //standard JSON string toggle
+    ctrl2Key: true,   //clone current content to a new note
     ctrlEKey: true,   //query JSON
     ctrlLKey: true,   //gutters toggle
     ctrlMKey: true    //JSON <=> XML
@@ -668,6 +683,12 @@ var mirror = function (elId, options, events) {
   if (true === custOptions.ctrl1Key) {
     custKeys['Ctrl-1'] = function (cm) {
       aHelp.standardJsonTgl();
+    };
+  }
+
+  if (true === custOptions.ctrl2Key) {
+    custKeys['Ctrl-2'] = function (cm) {
+      aHelp.cloneToNote();
     };
   }
 

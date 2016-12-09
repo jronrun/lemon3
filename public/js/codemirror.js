@@ -165,6 +165,38 @@ function loadTheme(th) {
 
 var customEvts = [ 'fullscreen' ];
 
+function intlJoinsModal(host) {
+  var html = [
+    '<div class="card" style="border: none">',
+    '<div class="card-block">',
+    '<div class="row">',
+    '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">',
+    '<input type="text" id="j_i_s" class="form-control borderinfo" placeholder="Separator default is ,">',
+    '</div>',
+    '</div>',
+    '<h1 class="invisible"></h1>',
+    '<div class="row">',
+    '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">',
+    '<input type="text" id="j_i_l" class="form-control borderinfo" placeholder="Left, default is empty">',
+    '</div>',
+    '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">',
+    '<input type="text" id="j_i_r" class="form-control borderinfo" placeholder="Right, default is empty">',
+    '</div>',
+    '</div>',
+    '</div>',
+    '</div>'
+  ].join('\n');
+
+  host.joins.jModal = lemon.modal({
+    cache: true,
+    body: html
+  }, {
+    hidden: function() {
+      host.joins.cfg = { s: $('#j_i_s').val(), l: $('#j_i_l').val(), r: $('#j_i_r').val()};
+    }
+  });
+}
+
 function intlJsonQueries(host) {
   if (!host.queries.qModal) {
     var doId = '#do_json_qry' + lemon.uniqueId(), mid = '#json_qry_mirror' + lemon.uniqueId(),
@@ -264,6 +296,63 @@ var helper = function(cm, events) {
       qMirror: null
     },
     langInfo: langInfo,
+    joins: {
+      jModal: null,
+      cfg: null
+    },
+    joinOrParse: function (progress) {
+      if (tools.doc().somethingSelected()) {
+        tools.joins.cfg = tools.joins.cfg || {};
+        var sel = tools.doc().getSelection();
+        if (!lemon.isBlank(sel)) {
+          var join = [], tmp = null;
+          lemon.each(sel.split(/\s/), function(v, idx) {
+            if (!lemon.isBlank(tmp = lemon.trim(v))) {
+              tmp = (tools.joins.cfg.l || '') + tmp;
+              tmp = tmp + (tools.joins.cfg.r || '');
+
+              join.push(tmp);
+            }
+          });
+        }
+
+        tools.repSelected(join.join(tools.joins.cfg.s || ','));
+        progress && progress.end();
+        return false;
+      }
+
+      try {
+        tools.json(JSON.parse(tools.val()));
+        progress && progress.end();
+        return false;
+      } catch (e) {/**/}
+
+      if (tools.isJson() || tools.isXml()) {
+        tools.format();
+        progress && progress.end();
+        return false;
+      }
+
+      var progress = progress || lemon.progressHome();
+      $.post('/general/convertqs', {
+        data: lemon.enc(tools.val())
+      }).done(function (resp) {
+        if (0 == resp.code) {
+          var rdata = lemon.deepDec(resp.result);
+          tools.json(rdata.parsed);
+        } else {
+          lemon.alert(resp.msg);
+        }
+
+        progress.end();
+      });
+    },
+    joinSepConfigTgl: function () {
+      if (!tools.joins.jModal) {
+        intlJoinsModal(tools);
+      }
+      tools.joins.jModal.toggle();
+    },
     handleCmd: function (input) {
       return cm.execCommand(input);
     },
@@ -619,6 +708,8 @@ var mirror = function (elId, options, events) {
     escKey: true,     //fullscreen toggle
     ctrl1Key: true,   //standard JSON string toggle
     ctrl2Key: true,   //clone current content to a new note
+    ctrl3Key: true,       //join or parse string
+    ctrl4Key: true,  //toggle join or parse config
     ctrlEKey: true,   //query JSON
     ctrlLKey: true,   //gutters toggle
     ctrlMKey: true    //JSON <=> XML
@@ -689,6 +780,18 @@ var mirror = function (elId, options, events) {
   if (true === custOptions.ctrl2Key) {
     custKeys['Ctrl-2'] = function (cm) {
       aHelp.cloneToNote();
+    };
+  }
+
+  if (true === custOptions.ctrl3Key) {
+    custKeys['Ctrl-3'] = function (cm) {
+      aHelp.joinOrParse();
+    };
+  }
+
+  if (true === custOptions.ctrl4Key) {
+    custKeys['Ctrl-4'] = function (cm) {
+      aHelp.joinSepConfigTgl();
     };
   }
 

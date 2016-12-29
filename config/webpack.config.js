@@ -64,6 +64,14 @@ module.exports = {
       {test: /\.jpg$/, loader: "file-loader"},
       {test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader'},
       {test: /\.coffee$/, loader: "coffee-loader"},
+      {test: /\.json/, loader: "json-loader"},
+      {
+        test: /d3-dsv|d3-format|d3-time|d3-time-format/,
+        loader: "babel-loader",
+        query: {
+          presets: ['es2015']
+        }
+      },
 
       {test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery'},
       {test: /\.scss$/, loaders: ['style', 'css', 'sass']},

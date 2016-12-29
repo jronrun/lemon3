@@ -14,6 +14,8 @@ require('./lib/vkBeautify');
 global._ = {};  //for json5s
 _.each = lemon.each;
 
+require('./datalib');
+
 require('codemirror/addon/comment/comment');
 require('codemirror/addon/comment/continuecomment');
 require('codemirror/addon/dialog/dialog.css');

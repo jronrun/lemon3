@@ -1356,7 +1356,7 @@ var qry = {
           gutters: [],
           cust: {
             escKey: false,
-            ctrlEKey: false
+            ctrl1Key: false
           }
         });
 

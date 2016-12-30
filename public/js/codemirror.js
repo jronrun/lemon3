@@ -5,7 +5,8 @@ require('codemirror/lib/codemirror.css');
 
 global.CodeMirror = require('codemirror/lib/codemirror'),
   json5s = require('./json5s'),
-  X2JSFactory = require('./lib/xml2json')
+  X2JSFactory = require('./lib/xml2json'),
+  dl = require('./datalib')
   ;
 
 var X2JS = new X2JSFactory();
@@ -13,8 +14,6 @@ var X2JS = new X2JSFactory();
 require('./lib/vkBeautify');
 global._ = {};  //for json5s
 _.each = lemon.each;
-
-require('./datalib');
 
 require('codemirror/addon/comment/comment');
 require('codemirror/addon/comment/continuecomment');
@@ -231,7 +230,7 @@ function intlJsonQueries(host) {
             gutters: [],
             cust: {
               escKey: false,
-              ctrlEKey: false
+              ctrl1Key: false
             }
           });
           host.queries.qMirror.val(lemon.data(doId, 'qryIntl'));
@@ -691,12 +690,34 @@ var helper = function(cm, events) {
   return tools;
 };
 
+var keyMappings = {
+  escKey: { k: 'Esc', f: 'fullscreenTgl'},
+  ctrlLKey: { k: 'Ctrl-L', f: 'guttersTgl'},
+
+  ctrl1Key: { k: 'Ctrl-1', f: 'queriesTgl'},
+  shiftCtrl1Key: { k: 'Shift-Ctrl-1', f: 'cloneToNote'},
+
+  ctrl3Key: { k: 'Ctrl-3', f: 'joinOrParse'},
+  shiftCtrl3Key: { k: 'Shift-Ctrl-3', f: 'joinSepConfigTgl'},
+
+  ctrl4Key: { k: 'Ctrl-4', f: 'standardJsonTgl'},
+  shiftCtrl4Key: { k: 'Shift-Ctrl-4', f: 'xmlJsonTgl'},
+};
+
 /**
  *
  * @param elId
  * @param options {
  *  cust: {
- *    escKey: true    // toggle fullscreen
+ *    escKey: true,           //toggle fullscreen
+ *    ctrlLKey: true,         //gutters toggle
+ *    ctrl1Key: true,         //query JSON
+ *    shiftCtrl1Key: true,    //clone current content to a new note
+ *    ctrl3Key: true,         //join or parse string
+ *    shiftCtrl3Key: true,    //toggle join or parse config
+ *    ctrl4Key: true,         //standard JSON string toggle
+ *    shiftCtrl4Key: true,    //JSON <=> XML
+ *  }
  * }
  * @param events {
  *  fullscreen: function(isFullscreen) {}
@@ -706,15 +727,19 @@ var helper = function(cm, events) {
 var mirror = function (elId, options, events) {
   options = options || {}, events = events || {};
 
+  //default order (Shift-Cmd-Ctrl-Alt)
   var custOptions = lemon.extend({
-    escKey: true,     //fullscreen toggle
-    ctrl1Key: true,   //standard JSON string toggle
-    ctrl2Key: true,   //clone current content to a new note
+    escKey: true,          //fullscreen toggle
+    ctrlLKey: true,        //gutters toggle
+
+    ctrl1Key: true,        //query JSON
+    shiftCtrl1Key: true,   //clone current content to a new note
+
     ctrl3Key: true,       //join or parse string
-    ctrl4Key: true,  //toggle join or parse config
-    ctrlEKey: true,   //query JSON
-    ctrlLKey: true,   //gutters toggle
-    ctrlMKey: true    //JSON <=> XML
+    shiftCtrl3Key: true,  //toggle join or parse config
+
+    ctrl4Key: true,         //standard JSON string toggle
+    shiftCtrl4Key: true,    //JSON <=> XML
   }, options.cust || {});
   delete options.cust;
 
@@ -749,53 +774,20 @@ var mirror = function (elId, options, events) {
 
   var aHelp = helper(rich, events), custKeys = {};
 
-  if (true === custOptions.escKey) {
-    custKeys['Esc'] = function (cm) {
-      aHelp.fullscreenTgl();
-    };
-  }
-
-  if (true === custOptions.ctrlEKey) {
-    custKeys['Ctrl-E'] = function (cm) {
-      aHelp.queriesTgl();
-    };
-  }
-
-  if (true === custOptions.ctrlLKey) {
-    custKeys['Ctrl-L'] = function (cm) {
-      aHelp.guttersTgl();
-    };
-  }
-
-  if (true === custOptions.ctrlMKey) {
-    custKeys['Ctrl-M'] = function (cm) {
-      aHelp.xmlJsonTgl();
-    };
-  }
-
-  if (true === custOptions.ctrl1Key) {
-    custKeys['Ctrl-1'] = function (cm) {
-      aHelp.standardJsonTgl();
-    };
-  }
-
-  if (true === custOptions.ctrl2Key) {
-    custKeys['Ctrl-2'] = function (cm) {
-      aHelp.cloneToNote();
-    };
-  }
-
-  if (true === custOptions.ctrl3Key) {
-    custKeys['Ctrl-3'] = function (cm) {
-      aHelp.joinOrParse();
-    };
-  }
-
-  if (true === custOptions.ctrl4Key) {
-    custKeys['Ctrl-4'] = function (cm) {
-      aHelp.joinSepConfigTgl();
-    };
-  }
+  lemon.each(lemon.keys(custOptions), function (ck) {
+    if (true === custOptions[ck]) {
+      var km = keyMappings[ck];
+      if (lemon.isString(km.f)) {
+        custKeys[km.k] = function (cm) {
+          return aHelp[km.f]();
+        };
+      } else if (lemon.isFunc(km.f)) {
+        custKeys[km.k] = function (cm) {
+          return km.f(aHelp);
+        };
+      }
+    }
+  });
 
   if (!lemon.isBlank(custKeys)) {
     aHelp.mapkey(custKeys);

@@ -3,11 +3,11 @@
  */
 require('codemirror/lib/codemirror.css');
 
-global.CodeMirror = require('codemirror/lib/codemirror'),
-  json5s = require('./json5s'),
+global.CodeMirror = require('codemirror/lib/codemirror');
+
+var json5s = require('./json5s'),
   X2JSFactory = require('./lib/xml2json'),
-  dl = require('./datalib'),
-  $dlEditorData = {}
+  dl = require('./datalib')
   ;
 
 var X2JS = new X2JSFactory();
@@ -493,10 +493,15 @@ var helper = function(cm, events) {
 
       var aJson = mirror.parse(text);
       if (!lemon.isBlank(dlAnalyst) && lemon.isString(dlAnalyst)) {
-        $dlEditorData = aJson;
-        var aCmd = lemon.startIf(dlAnalyst, 'dl.').replace(new RegExp('\\$data', 'g'), '$dlEditorData'),
+        global.$dlEditorData = aJson; global.dl = dl;
+        var aCmd = lemon.startIf(dlAnalyst, 'dl.').replace(new RegExp('\\$data', 'g'), '$dlEditorData'), aResult = '';
+        try {
           aResult = lemon.exe(aCmd);
-        $dlEditorData = {};
+        } catch (e) {
+          aResult = aJson;
+          lemon.warn('mirror.queryJson try dl analyst: ' + e.message);
+        }
+        global.$dlEditorData = undefined; global.dl = undefined;
 
         if (mirror.isJson(aResult, true)) {
           aJson = aResult;

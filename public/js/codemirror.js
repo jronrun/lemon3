@@ -493,12 +493,13 @@ var helper = function(cm, events) {
 
       var aJson = mirror.parse(text);
       if (!lemon.isBlank(dlAnalyst) && lemon.isString(dlAnalyst)) {
+        var useEditorData = dlAnalyst.indexOf('$data') != -1;
         global.$dlEditorData = aJson; global.dl = dl;
         var aCmd = lemon.startIf(dlAnalyst, 'dl.').replace(new RegExp('\\$data', 'g'), '$dlEditorData'), aResult = '';
         try {
           aResult = lemon.exe(aCmd);
         } catch (e) {
-          aResult = aJson;
+          aResult = useEditorData ? aJson : e.message;
           lemon.warn('mirror.queryJson try dl analyst: ' + e.message);
         }
         global.$dlEditorData = undefined; global.dl = undefined;

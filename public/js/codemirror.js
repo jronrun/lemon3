@@ -6,7 +6,8 @@ require('codemirror/lib/codemirror.css');
 global.CodeMirror = require('codemirror/lib/codemirror'),
   json5s = require('./json5s'),
   X2JSFactory = require('./lib/xml2json'),
-  dl = require('./datalib')
+  dl = require('./datalib'),
+  $dlEditorData = {}
   ;
 
 var X2JS = new X2JSFactory();
@@ -208,9 +209,13 @@ function intlJsonQueries(host) {
       '<textarea class="form-control" rows="3" style="border:none;" id="' + lemon.ltrim(mid, '#') + '"></textarea>',
       '</form>'
     ].join(''), footer = [
+      '<a class="btn btn-secondary btn-sm text-info icondh" href="https://github.com/vega/datalib/wiki/API-Reference" ' +
+      'title="Datalib API Reference" target="_blank" style="border: none; ">',
+        '<em class="fa fa-bar-chart"></em>',
+      '</a>',
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
-      'data-qry-intl="FAegVGAECKCuCmAnAlvAzpZA7SApAygPIBykYIwA3sAJACOCiAngFyTU020C+ANLSBABxeABdIAMVQAbACZsAjJADuACwD20+L0gBtALqSZsyAEFEiAIZMBIeAHM2sy7oAM+gHTJZO9YkiI8FiWALbwkJYYsN5OLu5esgA+0bK0AGbIWrJoisDcoGDAkDCMTHhEpAC0kACy6lj26pD4okxaRZAKHs2wAA69fqLwJuq9SJaifjmQACTYOjNY87PwAB7IaKJoC-ZDO6IL0nuzRwvwdAtY2rMh6j6zltLSC5ZY9zN+l5+zWOoHs2hkAAva4zVpjBaBexrBZqJCg+BaEI1CYAY1UHQATN0AEoONa9SBoeCWRDo9AdADM3TQsAARpB1HSAFbwVHiYmk9HYewdAAs3Vkf0gv1EE2Q9SJJLJqh5wHIwCAA">',
+      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRyHNKG4qETSE2AUyoU-CxUqYfSkPZFABuSCIjjZlUBJUgvnQ6CWhhAICSgd80uyFP8ZRAweS8BATqQpClIG8pAA1qQQNAAAoASX6jLdJQ9hGA7GAQA">',
       '<em class="fa fa-search" title="Query"></em> Query',
       '</button>'
     ].join(' ');
@@ -239,7 +244,7 @@ function intlJsonQueries(host) {
             if (host.queries.qMirror.isJson()) {
               var pg = lemon.homeProgress();
               var qrys = host.queries.qMirror.json(),
-                qryResult = host.queryJson(qrys.query, 1 === qrys.fileds ? undefined : qrys.fileds);
+                qryResult = host.queryJson(qrys.query, 1 === qrys.fileds ? undefined : qrys.fileds, qrys.analyst);
               if (-1 === qryResult) {
                 lemon.alert('There is none valid json.'); pg.end();
                 return;
@@ -480,13 +485,27 @@ var helper = function(cm, events) {
 
       tools.queries.qModal && tools.queries.qModal.toggle();
     },
-    queryJson: function (mongoStyleQry, fields) {
+    queryJson: function (mongoStyleQry, fields, dlAnalyst) {
       var text = tools.selected();
       if (!mirror.isJson(text)) {
         return -1;
       }
 
-      return lemon.queries(mongoStyleQry, mirror.parse(text), fields);
+      var aJson = mirror.parse(text);
+      if (!lemon.isBlank(dlAnalyst) && lemon.isString(dlAnalyst)) {
+        $dlEditorData = aJson;
+        var aCmd = lemon.startIf(dlAnalyst, 'dl.').replace(new RegExp('\\$data', 'g'), '$dlEditorData'),
+          aResult = lemon.exe(aCmd);
+        $dlEditorData = {};
+
+        if (mirror.isJson(aResult, true)) {
+          aJson = aResult;
+        } else {
+          return aResult;
+        }
+      }
+
+      return lemon.queries(mongoStyleQry, aJson, fields);
     },
     standardJsonTgl: function () {
       if (!tools.checkIsJson()) {

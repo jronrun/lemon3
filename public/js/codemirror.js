@@ -339,7 +339,7 @@ var helper = function(cm, events) {
         return false;
       }
 
-      var progress = progress || lemon.progressHome();
+      var progress = progress || lemon.homeProgress();
       $.post('/general/convertqs', {
         data: lemon.enc(tools.val())
       }).done(function (resp) {

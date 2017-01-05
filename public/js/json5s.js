@@ -92,8 +92,8 @@ var json5format = function(target) {
             } else {
               out += nl;
             }
+            out += tabs(indent);
           }
-          out += tabs(indent);
           //out += sep + nl + tabs(indent);
         } else if (':' == sep) {
           out += sep + ' ';

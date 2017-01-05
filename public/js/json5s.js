@@ -83,8 +83,9 @@ var json5format = function(target) {
           out += nl + tabs(--indent) + sep;
         } else if (',' == sep) {
           next = nextToken(tokens, idx);
-          out += sep;
           if (next.raw != '}' && next.raw != ']') {
+            out += sep;
+
             if (next.type == 'comment') {
               if (next.betnHasNL > 0) {
                 out += nl;
@@ -92,6 +93,7 @@ var json5format = function(target) {
             } else {
               out += nl;
             }
+
             out += tabs(indent);
           }
           //out += sep + nl + tabs(indent);

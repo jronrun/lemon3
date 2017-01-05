@@ -1,0 +1,22 @@
+{{#content "head" mode="append"}}
+    <script src="/dist/show.js"></script>
+{{/content}}
+
+<ul class="nav nav-tabs" style="display: none;" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link" id="tri-show-tab1" data-toggle="tab" data-target="#show-tab1" href="#show-tab1" role="tab"></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="tri-show-tab2" data-toggle="tab" data-target="#show-tab2" href="#show-tab2" role="tab"></a>
+  </li>
+</ul>
+<div class="tab-content" id="show-layout">
+  <div class="tab-pane active" id="show-tab1" role="tabpanel">
+
+    <div class="card card-block borderinfo" id="show-card">
+      <textarea class="form-control" rows="1" style="border: none;display: none;" id="show_ta"></textarea>
+    </div>
+
+  </div>
+  <div class="tab-pane" id="show-tab2" role="tabpanel"></div>
+</div>

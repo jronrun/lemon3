@@ -463,6 +463,18 @@ var helper = function(cm, events) {
     wordwrap: function() {
       return tools.tglOption('lineWrapping');
     },
+    elId: function () {
+      var theId = $(tools.el()).attr('id');
+      if (!theId) {
+        theId = 'mirror_' + lemon.uniqueId();
+        $(tools.el()).attr({id: theId});
+      }
+
+      return '#' + theId;
+    },
+    el: function () {
+      return cm.getWrapperElement();
+    },
     doc: function() {
       return cm.doc;
     },
@@ -603,6 +615,43 @@ var helper = function(cm, events) {
       } else {
         return tools.attrs('readOnly', 'nocursor');
       }
+    },
+    hasJsonFmtLine: function () {
+      if (!tools.isJson()) {
+        return false;
+      }
+
+      var $tgt = $(tools.el()).find('.cm-tab:eq(0)');
+      if (!$tgt.length) {
+        return false;
+      }
+
+      return $tgt.css('border-left').indexOf('dotted') != -1;
+    },
+    //opt 1 toggle, 2 add, 3 rem, 4 get
+    jsonFmtLineTgl: function (opt) {
+      if (!tools.isJson()) {
+        return false;
+      }
+      var $tgt = $(tools.el()).find('.cm-tab');
+      if (!$tgt.length) {
+        return false;
+      }
+
+      switch (opt = opt || 1) {
+        case 1:
+          $tgt.css({ 'border-left': (tools.hasJsonFmtLine() ? 'none' : '1px dotted #ccc')});
+        case 2:
+          $tgt.css({ 'border-left': '1px dotted #ccc'});
+          break;
+        case 3:
+          $tgt.css({ 'border-left': 'none'});
+          break;
+        case 4:
+          break;
+      }
+
+      return tools.hasJsonFmtLine();
     },
     format: function () {
       var cursor = cm.getCursor();
@@ -752,28 +801,38 @@ var keyMappings = {
 var mirror = function (elId, options, events) {
   options = options || {}, events = events || {};
 
-  //default order (Shift-Cmd-Ctrl-Alt)
-  var custOptions = lemon.extend({
-    escKey: true,          //fullscreen toggle
-    ctrlLKey: true,        //gutters toggle
+  var custOptions = {};
+  if (false === options.cust) {
 
-    ctrl1Key: true,        //query JSON
-    shiftCtrl1Key: true,   //clone current content to a new note
+  } else {
+    //default order (Shift-Cmd-Ctrl-Alt)
+    custOptions = lemon.extend({
+      escKey: true,          //fullscreen toggle
+      ctrlLKey: true,        //gutters toggle
 
-    ctrl3Key: true,       //join or parse string
-    shiftCtrl3Key: true,  //toggle join or parse config
+      ctrl1Key: true,        //query JSON
+      shiftCtrl1Key: true,   //clone current content to a new note
 
-    ctrl4Key: true,         //standard JSON string toggle
-    shiftCtrl4Key: true,    //JSON <=> XML
-  }, options.cust || {});
+      ctrl3Key: true,       //join or parse string
+      shiftCtrl3Key: true,  //toggle join or parse config
+
+      ctrl4Key: true,         //standard JSON string toggle
+      shiftCtrl4Key: true,    //JSON <=> XML
+    }, options.cust || {});
+  }
   delete options.cust;
 
-  var extraKeys = lemon.extend({
-    //http://codemirror.net/doc/manual.html#commands
-    'Ctrl-K': 'toMatchingTag',
-    'Ctrl-J': 'autocomplete',
-    'Ctrl-Q': 'toggleFold',
-  }, options.extraKeys || {});
+  var extraKeys = {};
+  if (false === options.extraKeys) {
+
+  } else {
+    extraKeys = lemon.extend({
+      //http://codemirror.net/doc/manual.html#commands
+      'Ctrl-K': 'toMatchingTag',
+      'Ctrl-J': 'autocomplete',
+      'Ctrl-Q': 'toggleFold',
+    }, options.extraKeys || {});
+  }
   delete options.extraKeys;
 
   var rich = CodeMirror.fromTextArea(lemon.query(lemon.startIf(elId, '#')), lemon.extend({
@@ -819,6 +878,111 @@ var mirror = function (elId, options, events) {
   }
 
   return aHelp;
+};
+
+mirror.shows = function (elId) {
+  var showOpts = {
+    cust: {
+      escKey: false,
+      ctrlLKey: false,
+      ctrl1Key: true,
+      shiftCtrl1Key: false,
+      ctrl3Key: false,
+      shiftCtrl3Key: false,
+      ctrl4Key: true,
+      shiftCtrl4Key: false,
+    },
+    extraKeys: { 'Ctrl-J': ''},
+    // readOnly: true,
+    fullScreen: true,
+    styleActiveLine: false,
+    foldGutter: false,
+    lineNumbers: false,
+    gutters: []
+  }, showEvts = {
+    inputRead: null
+  };
+
+  var showInst = mirror(elId, showOpts, showEvts), mId = showInst.elId();
+
+  var selProps = mId + ' .cm-property', extraRender = function () {
+    lemon.delay(function () {
+      if (showInst.isJson()) {
+        showInst.jsonFmtLineTgl(2);
+
+        $(selProps).css({
+          cursor:'pointer'
+        });
+      }
+    }, 100);
+  };
+
+  lemon.live('click', selProps, function(evt){
+    var el = evt.originalEvent.target;
+    showInst.toggleFold();
+  });
+
+  showInst.target.on('fold', function (cm, from, to) {
+    var aRange = cm.getRange(from, to), rRange = '', fText = '';
+    try {
+      rRange = mirror.parse('{' + aRange + '}');
+    } catch (e) {/**/
+    }
+    if (lemon.isBlank(rRange)) {
+      try {
+        rRange = mirror.parse('[' + aRange + ']');
+      } catch (e) {/**/
+      }
+    }
+
+    if (lemon.isBlank(rRange)) {
+      return;
+    }
+
+    if (lemon.isArray(rRange)) {
+      fText = rRange.length + ' items';
+    } else if (lemon.isObject(rRange)) {
+      fText = lemon.keys(rRange).length + ' keys';
+    }
+
+    lemon.delay(function () {
+      $(cm.getWrapperElement()).find('.CodeMirror-foldmarker').each(function () {
+        if (!lemon.isEvented(this)) {
+          $(this).css({
+            color: 'silver',
+            'text-shadow': 'none',
+            'font-size': 14
+          }).html(' ' + fText + ' ');
+          lemon.setEvented(this);
+        }
+      });
+    }, 60);
+
+    extraRender();
+  });
+
+  showInst.target.on('update', function () {
+    extraRender();
+  });
+
+  showInst.target.on('unfold', function(cm, from, to) {
+    extraRender();
+  });
+
+  showInst.target.on('inputRead', function (cm, changeObj) {
+    extraRender();
+  });
+
+
+  //$('.cm-tab').css({'border-left':'1px dotted #ccc'})
+  /*
+   mapi.requ.target.on('fold', function(cm,st,end){
+   st.ch=st.ch-1;end.ch=end.ch+1000;
+   console.log(cm.getRange(st,end));lemon.delay(function(){
+
+   $('.CodeMirror-foldmarker').each(function(){if (!$(this).attr('title')){$(this).attr({title:'test'+lemon.uniqueId()}).html('aa'+lemon.uniqueId())}})},100);})
+   */
+  return showInst;
 };
 
 mirror.asStandardJsonObj = function (target) {

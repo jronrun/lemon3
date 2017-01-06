@@ -4,11 +4,15 @@
 var mirror = require('../js/codemirror');
 
 var show = {
-  id: 'show_ta',
+  taId: '#show_ta',
+  instance: null,
+
   initialize: function() {
     if (lemon.isMediumUpView()) {
       lemon.console();
     }
+
+    show.instance = mirror.shows(show.taId);
 
     lemon.subMsg(function (data) {
       //lemon.info(data, 'Show received msg');
@@ -24,5 +28,9 @@ var show = {
 };
 
 $(function () { show.initialize(); });
+
+//TODO rem
+global.show=show;
+global.$=$;
 
 

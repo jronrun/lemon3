@@ -76,6 +76,18 @@ var shar = {
           lang = share.content.mirror.mode.chosen;
           theme = share.content.mirror.th;
         }
+        content = lemon.dec(content);
+
+        var mInfo = mirror.modeInfo(lang);
+        if (mInfo && mInfo.name && (['JSON', 'JSON-LD'].indexOf(mInfo.name.toUpperCase()) != -1)) {
+          var pg = lemon.homeProgress();
+          lemon.previews(lemon.getUrl(lemon.fullUrl('/show')), false, false, function (view, previewM) {
+            view.tellEvent('FILL_CONTENT', {lang: {name: mInfo.name, mime: lang}, th: theme, content: content });
+            pg.end();
+          });
+
+          return false;
+        }
 
         var vid = 'note_share_view', bid = '#n_preview', rightTip = [
           '<button type="button" id="n_preview" class="btn btn-outline-secondary icondh" style="border:0">',
@@ -87,7 +99,6 @@ var shar = {
           padding: 0
         }).html('<div id="' + vid + '"></div>');
 
-        content = lemon.dec(content);
         mirror.highlights({
           input: content,
           mode: lang,

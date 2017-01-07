@@ -721,6 +721,23 @@ var helper = function(cm, events) {
 
       cm.setValue(lemon.fmtjson(lemon.isNull(data) ? {} : data));
       tools.refreshDelay();
+    },
+    shows: function (domReadyCallback, modalOptions, modalEvents) {
+      var pg = lemon.homeProgress();
+      lemon.preview(lemon.getUrl(lemon.fullUrl('/show')), false, false, function (view, previewM) {
+        var cMode = tools.mode();
+        view.tellEvent('FILL_CONTENT', {
+          lang: {
+            name: cMode.name,
+            mime: cMode.chosenMimeOrExt || cMode.mime
+          },
+          th: tools.theme(),
+          content: tools.val()
+        });
+
+        lemon.isFunc(domReadyCallback) && domReadyCallback(view, previewM);
+        pg.end();
+      }, modalOptions, modalEvents);
     }
   };
 
@@ -771,6 +788,8 @@ var keyMappings = {
   ctrl1Key: { k: 'Ctrl-1', f: 'queriesTgl'},
   shiftCtrl1Key: { k: 'Shift-Ctrl-1', f: 'cloneToNote'},
 
+  ctrl2Key: { k: 'Ctrl-2', f: 'shows'},
+
   ctrl3Key: { k: 'Ctrl-3', f: 'joinOrParse'},
   shiftCtrl3Key: { k: 'Shift-Ctrl-3', f: 'joinSepConfigTgl'},
 
@@ -787,6 +806,7 @@ var keyMappings = {
  *    ctrlLKey: true,         //gutters toggle
  *    ctrl1Key: true,         //query JSON
  *    shiftCtrl1Key: true,    //clone current content to a new note
+ *    ctrl2Key: true,         //content in show mode
  *    ctrl3Key: true,         //join or parse string
  *    shiftCtrl3Key: true,    //toggle join or parse config
  *    ctrl4Key: true,         //standard JSON string toggle
@@ -812,6 +832,8 @@ var mirror = function (elId, options, events) {
 
       ctrl1Key: true,        //query JSON
       shiftCtrl1Key: true,   //clone current content to a new note
+
+      ctrl2Key: true,       //content in show mode
 
       ctrl3Key: true,       //join or parse string
       shiftCtrl3Key: true,  //toggle join or parse config
@@ -882,42 +904,39 @@ var mirror = function (elId, options, events) {
 
 mirror.shows = function (elId) {
   var showOpts = {
-    cust: {
-      escKey: false,
-      ctrlLKey: false,
-      ctrl1Key: true,
-      shiftCtrl1Key: false,
-      ctrl3Key: false,
-      shiftCtrl3Key: false,
-      ctrl4Key: true,
-      shiftCtrl4Key: false,
-    },
-    extraKeys: { 'Ctrl-J': ''},
-    // readOnly: true,
-    fullScreen: true,
+    cust: false,
+    extraKeys: false,
+    readOnly: 'nocursor',
+    // fullScreen: true,
     styleActiveLine: false,
-    foldGutter: false,
-    lineNumbers: false,
-    gutters: []
+    foldGutter: true,
+    lineNumbers: false
   }, showEvts = {
     inputRead: null
   };
 
   var showInst = mirror(elId, showOpts, showEvts), mId = showInst.elId();
 
-  var selProps = mId + ' .cm-property', extraRender = function () {
+  var extraRender = function () {
     lemon.delay(function () {
       if (showInst.isJson()) {
         showInst.jsonFmtLineTgl(2);
 
-        $(selProps).css({
+        for (var aLine = showInst.target.firstLine(), e = showInst.target.lastLine(); aLine <= e; aLine++) {
+          var aLineInfo = showInst.doc().lineInfo(aLine);
+          if (null != aLineInfo.gutterMarkers) {
+            showInst.doc().addLineClass(aLine, 'text', 'foldable-a');
+          }
+        }
+
+        $(mId + ' .foldable-a .cm-property').css({
           cursor:'pointer'
         });
       }
     }, 100);
   };
 
-  lemon.live('click', selProps, function(evt){
+  lemon.live('click', '.foldable-a .cm-property', function(evt){
     var el = evt.originalEvent.target;
     showInst.toggleFold();
   });

@@ -263,6 +263,11 @@ function intlJsonQueries(host) {
           });
           lemon.setEvented(doId);
         }
+
+        lemon.isFunc(host.queries.shownCall) && host.queries.shownCall(evt, el);
+      },
+      hidden: function (evt, el) {
+        lemon.isFunc(host.queries.hiddenCall) && host.queries.hiddenCall(evt, el);
       }
     });
   }
@@ -299,7 +304,9 @@ var helper = function(cm, events) {
     target: cm,
     queries: {
       qModal: null,
-      qMirror: null
+      qMirror: null,
+      shownCall: null,
+      hiddenCall: null
     },
     langInfo: langInfo,
     joins: {
@@ -488,13 +495,15 @@ var helper = function(cm, events) {
     toLine: function (line, ch) {
       cm.setCursor((line || 1) - 1, ch || 0)
     },
-    queriesTgl: function (uncheck) {
+    queriesTgl: function (uncheck, hiddenCall, shownCall) {
       if (true !== uncheck) {
         if (!tools.checkIsJson()) {
           return;
         }
       }
 
+      tools.queries.hiddenCall = hiddenCall;
+      tools.queries.shownCall = shownCall;
       tools.queries.qModal && tools.queries.qModal.toggle();
     },
     queryJson: function (mongoStyleQry, fields, dlAnalyst) {
@@ -732,7 +741,7 @@ var helper = function(cm, events) {
             mime: cMode.chosenMimeOrExt || cMode.mime
           },
           th: tools.theme(),
-          content: tools.val()
+          content: tools.selected()
         });
 
         lemon.isFunc(domReadyCallback) && domReadyCallback(view, previewM);
@@ -910,7 +919,8 @@ mirror.shows = function (elId) {
     // fullScreen: true,
     styleActiveLine: false,
     foldGutter: true,
-    lineNumbers: false
+    lineNumbers: false,
+    lineWrapping: false
   }, showEvts = {
     inputRead: null
   };
@@ -1225,6 +1235,7 @@ mirror.script = function (target, callback) {
   });
 };
 
+mirror.dl = dl;
 mirror.themes = themes;
 mirror.languages = languages;
 mirror.X2JS = X2JS;

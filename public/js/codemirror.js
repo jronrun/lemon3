@@ -167,6 +167,47 @@ function loadTheme(th) {
 
 var customEvts = [ 'fullscreen' ];
 
+/**
+ lemon.popover('#' + popupId, {
+    trigger: 'hover',
+    placement: 'top',
+    content: function() {
+      return lemon.tmpl(showsPopupTmpl, {
+        cardId: 'shows_tb_url',
+          btns: [
+            {
+              type: 1,
+              icon: 'eye',
+              title: 'Preview'
+            }
+          ]
+      });
+    }
+  }, {
+    show: function(el, target) {
+    },
+    shown: function(el) {
+    }
+  });
+ */
+/*
+var showsPopupTmpl = [
+  '<div class="card card-block borderinfo" id="<%= cardId %>" style="margin-bottom: 0.01rem; border: none;">',
+  '<form>',
+  '<div class="form-group">',
+  '<div class="btn-group btn-group-sm pull-right" role="group">',
+  '<% lemon.each(btns, function(btn){ %>',
+  '<button type="button" data-btype="<%= btn.type %>" class="btn btn-secondary icondh" style="border: none;">',
+  '<em class="text-silver fa fa-<%= btn.icon %>" title="<%= btn.title %>"></em>',
+  '</button>',
+  '<% }); %>',
+  '</div>',
+  '</div>',
+  '</form>',
+  '</div>'
+].join('\n');
+*/
+
 function intlJoinsModal(host) {
   var html = [
     '<div class="card" style="border: none">',
@@ -745,7 +786,7 @@ var helper = function(cm, events) {
         });
 
         lemon.isFunc(domReadyCallback) && domReadyCallback(view, previewM);
-        pg.end();
+        try { pg.end(); } catch (e) {/**/}
       }, modalOptions, modalEvents);
     }
   };
@@ -942,6 +983,23 @@ mirror.shows = function (elId) {
         $(mId + ' .foldable-a .cm-property').css({
           cursor:'pointer'
         });
+
+        $(mId + ' .cm-string').each(function () {
+          var txt = $(this).text(), oClazz = 'openable-a', marked = $(this).hasClass(oClazz);
+          txt = lemon.trim(lemon.trim(txt || '', '"'), "'");
+          if (!marked && lemon.isUrl(txt)) {
+            $(this).addClass(oClazz).css({
+              cursor:'pointer'
+            }).click(function () {
+              lemon.preview(txt);
+            }).contextmenu(function () {
+              event.preventDefault();
+              var newW = window.open(txt, '_blank');
+              newW.focus();
+              return false;
+            });
+          }
+        });
       }
     }, 100);
   };
@@ -1002,15 +1060,6 @@ mirror.shows = function (elId) {
     extraRender();
   });
 
-
-  //$('.cm-tab').css({'border-left':'1px dotted #ccc'})
-  /*
-   mapi.requ.target.on('fold', function(cm,st,end){
-   st.ch=st.ch-1;end.ch=end.ch+1000;
-   console.log(cm.getRange(st,end));lemon.delay(function(){
-
-   $('.CodeMirror-foldmarker').each(function(){if (!$(this).attr('title')){$(this).attr({title:'test'+lemon.uniqueId()}).html('aa'+lemon.uniqueId())}})},100);})
-   */
   return showInst;
 };
 

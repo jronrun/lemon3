@@ -775,7 +775,7 @@ var helper = function(cm, events) {
     showOriginalTxt: function () {
       var text = tools.selected();
       if (mirror.isJson(text)) {
-        text = JSON.stringify(tools.json());
+        text = JSON.stringify(mirror.parse(text));
       }
       lemon.preview(text);
     },

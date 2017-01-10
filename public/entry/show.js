@@ -23,12 +23,22 @@ var show = {
           btnSel = 'button[data-show="' + lemon.enc(showT) + '"]';
         if (show.tool.btnTgl(btnSel)) {
           switch (showT) {
-            case 1: show.instance.val(mirror.dl.format.summary(show.instance.json())); break;
+            case 1:
+              try {
+                show.instance.val(mirror.dl.format.summary(show.instance.json()));
+              } catch (e) {
+                show.tool.btnTgl(btnSel, 3);
+              }
+              break;
             case 2:
-              show.instance.val(mirror.dl.format.table(show.instance.json(), {
-                minwidth: 200,
-                maxwidth: 500
-              }));
+              try {
+                show.instance.val(mirror.dl.format.table(show.instance.json(), {
+                  minwidth: 200,
+                  maxwidth: 500
+                }));
+              } catch (e) {
+                show.tool.btnTgl(btnSel, 3);
+              }
               break;
             case 3:
               show.instance.queriesTgl(true, function () {

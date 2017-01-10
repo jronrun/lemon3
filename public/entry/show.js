@@ -62,12 +62,12 @@ var show = {
         return;
       }
 
-      var isArr = lemon.isArray(show.instance.json());
+      var aJson = show.instance.json(), isArr = lemon.isArray(aJson);
       $(show.cardId + ' button[data-show]').each(function () {
         var showT = lemon.data(this, 'show');
         switch (showT) {
-          case 1:
-          case 2: if (isArr) { $(this).show(); } break;
+          case 1: if (isArr) { try { mirror.dl.format.summary(aJson); $(this).show(); } catch (e) {/**/} } break;
+          case 2: if (isArr) { try { mirror.dl.format.table(aJson); $(this).show(); } catch (e) {/**/} } break;
           //case 3: $(this).show(); break;
         }
       });

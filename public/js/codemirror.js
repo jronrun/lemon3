@@ -772,6 +772,13 @@ var helper = function(cm, events) {
       cm.setValue(lemon.fmtjson(lemon.isNull(data) ? {} : data));
       tools.refreshDelay();
     },
+    showOriginalTxt: function () {
+      var text = tools.selected();
+      if (mirror.isJson(text)) {
+        text = JSON.stringify(tools.json());
+      }
+      lemon.preview(text);
+    },
     shows: function (domReadyCallback, modalOptions, modalEvents) {
       var pg = lemon.homeProgress();
       lemon.preview(lemon.getUrl(lemon.fullUrl('/show')), false, false, function (view, previewM) {
@@ -839,6 +846,7 @@ var keyMappings = {
   shiftCtrl1Key: { k: 'Shift-Ctrl-1', f: 'cloneToNote'},
 
   ctrl2Key: { k: 'Ctrl-2', f: 'shows'},
+  shiftCtrl2Key: { k: 'Shift-Ctrl-2', f: 'showOriginalTxt'},
 
   ctrl3Key: { k: 'Ctrl-3', f: 'joinOrParse'},
   shiftCtrl3Key: { k: 'Shift-Ctrl-3', f: 'joinSepConfigTgl'},
@@ -857,6 +865,7 @@ var keyMappings = {
  *    ctrl1Key: true,         //query JSON
  *    shiftCtrl1Key: true,    //clone current content to a new note
  *    ctrl2Key: true,         //content in show mode
+ *    shiftCtrl2Key: true,    //show original unformatted json string
  *    ctrl3Key: true,         //join or parse string
  *    shiftCtrl3Key: true,    //toggle join or parse config
  *    ctrl4Key: true,         //standard JSON string toggle
@@ -884,6 +893,7 @@ var mirror = function (elId, options, events) {
       shiftCtrl1Key: true,   //clone current content to a new note
 
       ctrl2Key: true,       //content in show mode
+      shiftCtrl2Key: true,  //show original unformatted json string
 
       ctrl3Key: true,       //join or parse string
       shiftCtrl3Key: true,  //toggle join or parse config

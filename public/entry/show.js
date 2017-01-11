@@ -13,16 +13,7 @@ marked.setOptions({
   pedantic: false,
   sanitize: false,
   smartLists: true,
-  smartypants: false,
-  highlight: function (code, lang, callback) {
-    mirror.highlights({
-      input: code,
-      mode: lang || 'text',
-      resultHandle: function (ret) {
-        callback(null, ret);
-      }
-    });
-  }
+  smartypants: false
 });
 
 var show = {
@@ -87,7 +78,20 @@ var show = {
 
     try {
       if (['Markdown'].indexOf(langN) != -1) {
-        marked(evtData.content, function (err, content) {
+        marked.setOptions({
+          highlight: function (code, lang, callback) {
+            mirror.highlights({
+              input: code,
+              mode: lang || 'text',
+              theme: evtData.th,
+              resultHandle: function (ret) {
+                callback(null, ret);
+              }
+            });
+          }
+        });
+
+        return marked(evtData.content, function (err, content) {
           $(show.cardId).html(content);
         });
         // return lemon.previewInSelfWin(markedH);

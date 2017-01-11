@@ -41,7 +41,15 @@ var note = {
     },
 
     preview: function () {
-      note.views(note.instance.selected());
+      //note.views(note.instance.selected());
+      note.instance.shows(function () {
+        note.menu.whenModalShow();
+      }, false, false, {
+        hidden: function () {
+          note.menu.whenModalHide();
+          lemon.isFunc(hiddenCall) && hiddenCall();
+        }
+      });
     },
     joinline: function (params) {
       var start = 0, end = undefined;

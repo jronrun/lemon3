@@ -779,9 +779,9 @@ var helper = function(cm, events) {
       }
       lemon.preview(text);
     },
-    shows: function (domReadyCallback, modalOptions, modalEvents) {
+    shows: function (callback, domReadyCallback, modalOptions, modalEvents) {
       var pg = lemon.homeProgress();
-      lemon.preview(lemon.getUrl(lemon.fullUrl('/show')), false, false, function (view, previewM) {
+      lemon.preview(lemon.getUrl(lemon.fullUrl('/show')), callback, false, function (view, previewM) {
         var cMode = tools.mode();
         view.tellEvent('FILL_CONTENT', {
           lang: {

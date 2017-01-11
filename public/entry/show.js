@@ -1,7 +1,29 @@
 /**
  *
  */
-var mirror = require('../js/codemirror');
+var mirror = require('../js/codemirror'),
+  marked = require('marked')
+  ;
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: true,
+  pedantic: false,
+  sanitize: false,
+  smartLists: true,
+  smartypants: false,
+  highlight: function (code, lang, callback) {
+    mirror.highlights({
+      input: code,
+      mode: lang,
+      resultHandle: function (ret) {
+        callback(null, ret);
+      }
+    });
+  }
+});
 
 var show = {
   taId: '#show_ta',
@@ -56,6 +78,34 @@ var show = {
     }
   },
 
+  load: function (evtData) {
+    var langN = evtData.lang.name;
+    if (['HTML'].indexOf(langN) != -1) {
+      return lemon.previewInSelfWin(evtData.content);
+    }
+
+    try {
+      if (['Markdown'].indexOf(langN) != -1) {
+        marked(evtData.content, function (err, content) {
+          $(show.cardId).html(content);
+        });
+        // return lemon.previewInSelfWin(markedH);
+      }
+    } catch (e) {
+      lemon.warn('marked err: ' + e.message);
+    }
+
+    show.loadMirror(evtData);
+  },
+
+  loadMirror: function (evtData) {
+    show.instance.mode(evtData.lang.name || 'text', evtData.lang.mime || undefined);
+    show.instance.val(evtData.content);
+    show.instance.theme(evtData.th);
+    show.tool.intl();
+    show.content = evtData.content;
+  },
+
   tool: {
     intl: function () {
       if (!show.instance.isJson()) {
@@ -88,16 +138,12 @@ var show = {
 
     show.view.intl();
     lemon.subMsg(function (data) {
-      //lemon.info(data, 'Show received msg');
+      lemon.info(data, 'Show received msg');
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {
           case 'FILL_CONTENT':
-            show.instance.mode(evtData.lang.name || 'text', evtData.lang.mime || undefined);
-            show.instance.val(evtData.content);
-            show.instance.theme(evtData.th);
-            show.tool.intl();
-            show.content = evtData.content;
+            show.load(evtData);
             break;
         }
       }

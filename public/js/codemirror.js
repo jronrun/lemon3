@@ -746,8 +746,8 @@ var helper = function(cm, events) {
 
       return true;
     },
-    isJson: function() {
-      return mirror.isJson(cm.getValue());
+    isJson: function(noneLogWarnMsg) {
+      return mirror.isJson(cm.getValue(), noneLogWarnMsg);
     },
     isXml: function () {
       return mirror.isXml(cm.getValue());
@@ -1257,7 +1257,13 @@ mirror.helpers = helper;
 mirror.modeInfo = langInfo;
 mirror.requireTheme = loadTheme;
 mirror.requireMode = function (mode, callback) {
-  var lang = langInfo(mode), reqM = function (aMode) {
+  var lang = langInfo(mode);
+  if (lemon.isBlank(lang)) {
+    lemon.warn('mirror.requireMode ignored. invalid mode ' + mode);
+    return;
+  }
+
+  var reqM = function (aMode) {
     if (!CodeMirror.modes.hasOwnProperty(aMode)) {
       CodeMirror.requireMode(aMode, function() {
         lemon.isFunc(callback) && callback(lang);

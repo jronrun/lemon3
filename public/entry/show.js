@@ -9,7 +9,7 @@ marked.setOptions({
   renderer: new marked.Renderer(),
   gfm: true,
   tables: true,
-  breaks: true,
+  breaks: false,
   pedantic: false,
   sanitize: false,
   smartLists: true,
@@ -17,7 +17,7 @@ marked.setOptions({
   highlight: function (code, lang, callback) {
     mirror.highlights({
       input: code,
-      mode: lang,
+      mode: lang || 'text',
       resultHandle: function (ret) {
         callback(null, ret);
       }
@@ -34,7 +34,8 @@ var show = {
   view: {
     intl: function () {
       $(show.cardId).css({
-        height: $(window).height()
+        height: $(window).height(),
+        width: $(window).width()
       });
 
       show.instance = mirror.shows(show.taId);
@@ -108,7 +109,7 @@ var show = {
 
   tool: {
     intl: function () {
-      if (!show.instance.isJson()) {
+      if (!show.instance.isJson(true)) {
         return;
       }
 
@@ -138,7 +139,7 @@ var show = {
 
     show.view.intl();
     lemon.subMsg(function (data) {
-      lemon.info(data, 'Show received msg');
+      // lemon.info(data, 'Show received msg');
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {

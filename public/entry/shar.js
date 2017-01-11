@@ -79,7 +79,7 @@ var shar = {
         content = lemon.dec(content);
 
         var mInfo = mirror.modeInfo(lang);
-        if (mInfo && mInfo.name && (['JSON', 'JSON-LD'].indexOf(mInfo.name.toUpperCase()) != -1)) {
+        if (mInfo && mInfo.name && (['JSON', 'JSON-LD', 'Markdown'].indexOf(mInfo.name.toUpperCase()) != -1)) {
           var pg = lemon.homeProgress();
           lemon.previews(lemon.getUrl(lemon.fullUrl('/show')), false, false, function (view, previewM) {
             view.tellEvent('FILL_CONTENT', {lang: {name: mInfo.name, mime: lang}, th: theme, content: content });

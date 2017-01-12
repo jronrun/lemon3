@@ -71,6 +71,10 @@ var show = {
   },
 
   load: function (evtData) {
+    if (lemon.isUrl(evtData.content)) {
+      return lemon.previewInSelfWin(evtData.content);
+    }
+
     var langN = evtData.lang.name;
     if (['HTML'].indexOf(langN) != -1) {
       return lemon.previewInSelfWin(evtData.content);

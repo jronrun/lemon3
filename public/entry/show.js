@@ -71,13 +71,14 @@ var show = {
   },
 
   load: function (evtData) {
-    if (lemon.isUrl(evtData.content)) {
-      return lemon.previewInSelfWin(evtData.content);
+    var txt = evtData.content;
+    if (lemon.isUrl(txt)) {
+      return lemon.previewInSelfWin(txt);
     }
 
     var langN = evtData.lang.name;
     if (['HTML'].indexOf(langN) != -1) {
-      return lemon.previewInSelfWin(evtData.content);
+      return lemon.previewInSelfWin(txt);
     }
 
     try {
@@ -95,13 +96,20 @@ var show = {
           }
         });
 
-        return marked(evtData.content, function (err, content) {
+        return marked(txt, function (err, content) {
           $(show.cardId).html(content);
         });
         // return lemon.previewInSelfWin(markedH);
       }
     } catch (e) {
       lemon.warn('marked err: ' + e.message);
+    }
+
+    var lang = mirror.modeInfo(langN) || {};
+    if (['sql'].indexOf(lang.mode) != -1) {
+      evtData.content = lemon.fmtsql(txt);
+    } else if (['css'].indexOf(lang.mode) != -1) {
+      evtData.content = lemon.fmtcss(txt);
     }
 
     show.loadMirror(evtData);

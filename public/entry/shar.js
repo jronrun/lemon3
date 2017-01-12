@@ -78,8 +78,10 @@ var shar = {
         }
         content = lemon.dec(content);
 
-        var mInfo = mirror.modeInfo(lang);
-        if (mInfo && mInfo.name && (['JSON', 'JSON-LD', 'Markdown'].indexOf(mInfo.name) != -1)) {
+        var mInfo = mirror.modeInfo(lang) || {};
+        if ((['JSON', 'JSON-LD', 'Markdown'].indexOf(mInfo.name) != -1)
+          || (['sql', 'css'].indexOf(mInfo.mode) != -1)) {
+
           var pg = lemon.homeProgress();
           lemon.previews(lemon.getUrl(lemon.fullUrl('/show')), false, false, function (view, previewM) {
             view.tellEvent('FILL_CONTENT', {lang: {name: mInfo.name, mime: lang}, th: theme, content: content });

@@ -76,12 +76,14 @@ lemon.fmtjson = function(target) {
   }
   return json5s.format(target);
 };
-lemon.fmtxml = function (target, isMin) {
-  if (!lemon.isString(target)) {
-    return target;
-  }
-
-  return vkbeautify[isMin ? 'xmlmin' : 'xml'](target);
+lemon.fmtxml = function (target, isMin, arg1) {
+  return lemon.isString(target) ? (vkbeautify[isMin ? 'xmlmin' : 'xml'](target, arg1)) : target;
+};
+lemon.fmtsql = function (target, isMin, arg1) {
+  return lemon.isString(target) ? (vkbeautify[isMin ? 'sqlmin' : 'sql'](target, arg1)) : target;
+};
+lemon.fmtcss = function (target, isMin, arg1) {
+  return lemon.isString(target) ? (vkbeautify[isMin ? 'cssmin' : 'css'](target, arg1)) : target;
 };
 
 var languages = {}, modes = {}, loadedTheme = ['default', 'lemon'], themes = [
@@ -1258,7 +1260,7 @@ mirror.modeInfo = langInfo;
 mirror.requireTheme = loadTheme;
 mirror.requireMode = function (mode, callback) {
   var lang = langInfo(mode);
-  if (lemon.isBlank(lang)) {
+  if (null == lang) {
     lemon.warn('mirror.requireMode ignored. invalid mode ' + mode);
     return;
   }

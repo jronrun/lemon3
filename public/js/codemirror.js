@@ -341,6 +341,30 @@ function showInNote(aContent, pg) {
   });
 }
 
+function openInShows(showData, callback, domReadyCallback, modalOptions, modalEvents) {
+  var aData = lemon.extend({
+    mode: {},
+    theme: '',
+    content: ''
+  }, showData || {});
+
+  var pg = lemon.homeProgress();
+  lemon.preview(lemon.getUrl(lemon.fullUrl('/show')), callback, false, function (view, previewM) {
+    var cMode = aData.mode;
+    view.tellEvent('FILL_CONTENT', {
+      lang: {
+        name: cMode.name,
+        mime: cMode.chosenMimeOrExt || cMode.mime
+      },
+      th: aData.theme,
+      content: aData.content
+    });
+
+    lemon.isFunc(domReadyCallback) && domReadyCallback(view, previewM);
+    try { pg.end(); } catch (e) {/**/}
+  }, modalOptions, modalEvents);
+}
+
 var helper = function(cm, events) {
   events = events || {};
   var tools = {
@@ -782,21 +806,11 @@ var helper = function(cm, events) {
       lemon.preview(text);
     },
     shows: function (callback, domReadyCallback, modalOptions, modalEvents) {
-      var pg = lemon.homeProgress();
-      lemon.preview(lemon.getUrl(lemon.fullUrl('/show')), callback, false, function (view, previewM) {
-        var cMode = tools.mode();
-        view.tellEvent('FILL_CONTENT', {
-          lang: {
-            name: cMode.name,
-            mime: cMode.chosenMimeOrExt || cMode.mime
-          },
-          th: tools.theme(),
-          content: tools.selected()
-        });
-
-        lemon.isFunc(domReadyCallback) && domReadyCallback(view, previewM);
-        try { pg.end(); } catch (e) {/**/}
-      }, modalOptions, modalEvents);
+      openInShows({
+        mode: tools.mode(),
+        theme: tools.theme(),
+        content: tools.selected()
+      }, callback, domReadyCallback, modalOptions, modalEvents);
     }
   };
 
@@ -1307,6 +1321,7 @@ mirror.themes = themes;
 mirror.languages = languages;
 mirror.X2JS = X2JS;
 mirror.X2JSFactory = X2JSFactory;
+mirror.openInShows = openInShows;
 mirror.css = function (target) {
   lemon.css(lemon.fullUrl('/components/codemirror' + target));
 };

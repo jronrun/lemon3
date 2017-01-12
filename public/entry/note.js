@@ -47,7 +47,6 @@ var note = {
       }, false, false, {
         hidden: function () {
           note.menu.whenModalHide();
-          lemon.isFunc(hiddenCall) && hiddenCall();
         }
       });
     },
@@ -84,7 +83,17 @@ var note = {
         return;
       }
 
-      note.views(lemon.isFunc(topicDef.link) ? topicDef.link() : topicDef.link);
+      mirror.mirrors.openInShows({
+        mode: mirror.mirrors.modeInfo('json'),
+        theme: 'lemon',
+        content: (lemon.isFunc(topicDef.link) ? topicDef.link() : topicDef.link)
+      }, function () {
+        note.menu.whenModalShow();
+      }, false, false, {
+        hidden: function () {
+          note.menu.whenModalHide();
+        }
+      });
     },
     delNote: function (params) {
       var fromCmd = params.get, nid = fromCmd ? (params.get(0) || current()._id) : params.noteId;
@@ -306,7 +315,7 @@ var note = {
       },
       note: {
         link: function () {
-          return mirror.defineEx();
+          return lemon.fmtjson(mirror.defineEx());
         }
       }
     }

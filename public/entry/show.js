@@ -108,17 +108,21 @@ var show = {
       lemon.warn('marked err: ' + e.message);
     }
 
-    var lang = mirror.modeInfo(langN) || {}, matched = false;
-    lemon.each(show.beautifies, function (aRender) {
-      if (matched) {
-        return false;
-      }
+    try {
+      var lang = mirror.modeInfo(langN) || {}, matched = false;
+      lemon.each(show.beautifies, function (aRender) {
+        if (matched) {
+          return false;
+        }
 
-      if (aRender.key.indexOf(lang[aRender.type || 'mode']) != -1) {
-        evtData.content = aRender.beautify(txt);
-        matched = true;
-      }
-    });
+        if (aRender.key.indexOf(lang[aRender.type || 'mode']) != -1) {
+          evtData.content = aRender.beautify(txt);
+          matched = true;
+        }
+      });
+    } catch (e) {
+      lemon.warn('beautify err: ' + e.message);
+    }
 
     show.loadMirror(evtData);
   },

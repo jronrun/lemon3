@@ -987,7 +987,7 @@ mirror.shows = function (elId) {
     styleActiveLine: false,
     foldGutter: true,
     lineNumbers: false,
-    lineWrapping: false
+    lineWrapping: true
   }, showEvts = {
     inputRead: null
   };

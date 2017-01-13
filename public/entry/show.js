@@ -34,6 +34,9 @@ var show = {
 
       show.instance = mirror.shows(show.taId);
       show.instance.setSize(null, $(show.cardId).height());
+      show.instance.chgStyle({
+        padding: '1.2rem'
+      });
 
       lemon.live('click', show.cardId + ' button[data-show]', function (evt) {
         var el = evt.originalEvent.target.parentNode, showT = lemon.data(el, 'show'),

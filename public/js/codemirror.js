@@ -552,6 +552,9 @@ var helper = function(cm, events) {
     doc: function() {
       return cm.doc;
     },
+    prependHtml: function (aHtml) {
+      $(tools.el()).prepend(aHtml);
+    },
     mapkey: function (keymap) {
       cm.setOption("extraKeys", lemon.extend(cm.getOption('extraKeys') || {}, keymap || {}));
     },

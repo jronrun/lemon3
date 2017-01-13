@@ -2,7 +2,10 @@
  *
  */
 var mirror = require('../js/codemirror'),
-  marked = require('marked')
+  marked = require('marked'),
+  beautify = require('js-beautify'),
+  beautifyCss = beautify.css,
+  beautifyHtml = beautify.html
   ;
 
 marked.setOptions({
@@ -105,15 +108,50 @@ var show = {
       lemon.warn('marked err: ' + e.message);
     }
 
-    var lang = mirror.modeInfo(langN) || {};
-    if (['sql'].indexOf(lang.mode) != -1) {
-      evtData.content = lemon.fmtsql(txt);
-    } else if (['css'].indexOf(lang.mode) != -1) {
-      evtData.content = lemon.fmtcss(txt);
-    }
+    var lang = mirror.modeInfo(langN) || {}, matched = false;
+    lemon.each(show.beautifies, function (aRender) {
+      if (matched) {
+        return false;
+      }
+
+      if (aRender.key.indexOf(lang[aRender.type || 'mode']) != -1) {
+        evtData.content = aRender.beautify(txt);
+        matched = true;
+      }
+    });
 
     show.loadMirror(evtData);
   },
+
+  beautifies: [
+    {
+      key: ['sql'],
+      beautify: lemon.fmtsql
+    },
+    {
+      key: ['xml'],
+      beautify: lemon.fmtxml
+    },
+    {
+      key: ['css'],
+      beautify: beautifyCss
+    },
+    {
+      key: ['htmlembedded', 'htmlmixed'],
+      beautify: beautifyHtml
+    },
+
+    {
+      type: 'name',
+      key: ['JSON', 'JSON-LD'],
+      beautify: lemon.fmtjson
+    },
+    {
+      type: 'name',
+      key: ['JavaScript', 'Embedded Javascript', 'TypeScript'],
+      beautify: beautify
+    }
+  ],
 
   loadMirror: function (evtData) {
     show.instance.mode(evtData.lang.name || 'text', evtData.lang.mime || undefined);

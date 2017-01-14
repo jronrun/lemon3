@@ -15,28 +15,31 @@
 
     {{!-- <div class="card card-block borderinfo" id="show-card" style="margin-bottom: 0.01rem; border: none;"> --}}
     <div id="show-card" style="margin-top:-1rem; border: none;">
-      <form>
-        <div class="form-group">
-          <div class="btn-group btn-group-sm pull-right" role="group">
-            <button type="button" data-show="IxA" class="btn btn-secondary icondh" style="border: none; display: none;">
-              <em class="text-silver fa fa-laptop" title="Summary"></em>
-            </button>
-            <button type="button" data-show="ExA" class="btn btn-secondary icondh" style="border: none; display: none;">
-              <em class="text-silver fa fa-tablet" title="Table"></em>
-            </button>
-            {{!--
-            <button type="button" data-show="MxA" class="btn btn-secondary icondh" style="border: none; display: none;">
-              <em class="text-silver fa fa-filter" title="Table"></em>
-            </button>
-            --}}
-          </div>
-        </div>
-        <div>
-          <textarea class="form-control" rows="1" style="border: none;display: none;" id="show_ta"></textarea>
-        </div>
-      </form>
+      <div>
+        <textarea class="form-control" rows="1" style="border: none;display: none;" id="show_ta"></textarea>
+      </div>
     </div>
 
   </div>
   <div class="tab-pane" id="show-tab2" role="tabpanel"></div>
 </div>
+
+<script type="text/html" id="statics_tool_tmpl">
+  <form>
+    <div class="form-group">
+      <div class="btn-group btn-group-sm pull-right" role="group">
+        <button type="button" data-show="IxA" class="btn btn-secondary icondh" style="border: none; display: none;">
+          <em class="text-silver fa fa-laptop" title="Summary"></em>
+        </button>
+        <button type="button" data-show="ExA" class="btn btn-secondary icondh" style="border: none; display: none;">
+          <em class="text-silver fa fa-tablet" title="Table"></em>
+        </button>
+        {{!--
+        <button type="button" data-show="MxA" class="btn btn-secondary icondh" style="border: none; display: none;">
+          <em class="text-silver fa fa-filter" title="Table"></em>
+        </button>
+        --}}
+      </div>
+    </div>
+  </form>
+</script>

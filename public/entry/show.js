@@ -37,6 +37,7 @@ var show = {
       show.instance.chgStyle({
         padding: '1.2rem'
       });
+      show.instance.prependHtml(lemon.tmpl($('#statics_tool_tmpl').html(), {}));
 
       lemon.live('click', show.cardId + ' button[data-show]', function (evt) {
         var el = evt.originalEvent.target.parentNode, showT = lemon.data(el, 'show'),
@@ -46,6 +47,7 @@ var show = {
             case 1:
               try {
                 show.instance.val(mirror.dl.format.summary(show.instance.json()));
+                show.instance.attrs('lineWrapping', false);
               } catch (e) {
                 show.tool.btnTgl(btnSel, 3);
               }
@@ -56,6 +58,7 @@ var show = {
                   minwidth: 200,
                   maxwidth: 500
                 }));
+                show.instance.attrs('lineWrapping', false);
               } catch (e) {
                 show.tool.btnTgl(btnSel, 3);
               }
@@ -68,7 +71,11 @@ var show = {
           }
         } else {
           switch (showT) {
-            case 1: case 2: show.instance.val(show.content); break;
+            case 1:
+            case 2:
+              show.instance.val(show.content);
+              show.instance.attrs('lineWrapping', true);
+              break;
           }
         }
         $(el).blur();
@@ -214,4 +221,3 @@ var show = {
 };
 
 $(function () { show.initialize(); });
-

@@ -802,11 +802,16 @@ var helper = function(cm, events) {
       tools.refreshDelay();
     },
     showOriginalTxt: function () {
-      var text = tools.selected();
+      var text = tools.selected(), jsonOpts = false;
       if (mirror.isJson(text)) {
         text = JSON.stringify(mirror.parse(text));
+        jsonOpts = {
+          mirror: mirror,
+          isDecode: true,
+          element: 'div'
+        };
       }
-      lemon.preview(text);
+      lemon.preview(text, false, jsonOpts);
     },
     shows: function (callback, domReadyCallback, modalOptions, modalEvents) {
       openInShows({

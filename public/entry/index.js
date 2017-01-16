@@ -757,12 +757,14 @@ lemon.register({
     return lemon.data('#modals_context', 'styl');
   },
 
-  getHighlightDoc: function(mirror, target, rightTip, css, isDecode, attrs) {
+  getHighlightDoc: function(mirror, target, rightTip, css, isDecode, attrs, element) {
     var exchange = '#dd_api_exchange';
-    $(exchange).empty().append('<pre class="roundedcorner" style="background-color:#ffffff;border:0;overflow-y:scroll;"></pre>');
-    mirror.highlightJson5(isDecode ? target : lemon.dec(target), exchange + ' pre');
-    $(exchange + ' pre').css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
-    $(exchange + ' pre').attr(attrs || {});
+    element = element || 'pre';
+    $(exchange).empty().append('<' + element +
+      ' class="roundedcorner" style="background-color:#ffffff;border:0;overflow-y:scroll;"></' + element + '>');
+    mirror.highlightJson5(isDecode ? target : lemon.dec(target), exchange + ' ' + element);
+    $(exchange + ' ' + element).css(css || {}).prepend('<p class="pull-right text-muted">' + rightTip + '</p>');
+    $(exchange + ' ' + element).attr(attrs || {});
     return $(exchange).html() + '';
   }
 });
@@ -1451,13 +1453,14 @@ lemon.register({
         rightTip: '',
         css: {},
         isDecode: false,
-        attrs: {}
+        attrs: {},
+        element: 'pre'
       }, jsonOptions || {});
       if (jsonOptions.mirror && jsonOptions.mirror.isJson(text)) {
         text = [
           lemon.jsonStyl(),
           lemon.getHighlightDoc(jsonOptions.mirror, text,
-            jsonOptions.rightTip, jsonOptions.css, jsonOptions.isDecode, jsonOptions.attrs)
+            jsonOptions.rightTip, jsonOptions.css, jsonOptions.isDecode, jsonOptions.attrs, jsonOptions.element)
         ].join('');
       }
     }

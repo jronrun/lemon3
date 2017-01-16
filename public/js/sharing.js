@@ -103,8 +103,7 @@ sharing.shows = function(options) {
   if (true === options.clipboard) {
     options.headBtns.push({
       id: 'sharing_clip',
-      icon: 'clipboard',
-      onClick: function () {/**/}
+      icon: 'clipboard'
     });
   }
 

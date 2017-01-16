@@ -94,6 +94,11 @@ var show = {
       return lemon.previewInSelfWin(txt);
     }
 
+    $(show.cardId).css({
+      'margin-top': '-1rem',
+      padding: '0rem'
+    });
+
     try {
       if (['Markdown'].indexOf(langN) != -1) {
         marked.setOptions({
@@ -107,6 +112,11 @@ var show = {
               }
             });
           }
+        });
+
+        $(show.cardId).css({
+          'margin-top': '0rem',
+          padding: '1rem'
         });
 
         return marked(txt, function (err, content) {

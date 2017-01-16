@@ -89,7 +89,8 @@ sharing.shows = function(options) {
     tab: 1,     //1 text tab, 2 QRCode tab
     isURL: true,
     desc: false,       //text or function
-    onShown: false
+    onShown: false,
+    clipboard: true    //head add clipboard button
   }, options || {});
 
   if (options.isURL) {
@@ -98,6 +99,14 @@ sharing.shows = function(options) {
   }
 
   var viewport = lemon.viewport(), hasQrclink = !lemon.isBlank(options.qrclink);
+
+  if (true === options.clipboard) {
+    options.headBtns.push({
+      id: 'sharing_clip',
+      icon: 'clipboard',
+      onClick: function () {/**/}
+    });
+  }
 
   options.headBtns = btnsIntl(options.headBtns);
   options.footBtns = btnsIntl(options.footBtns);
@@ -145,6 +154,15 @@ sharing.shows = function(options) {
 
       btnsTrigger(options.headBtns, shareM, el, textId);
       btnsTrigger(options.footBtns, shareM, el, textId);
+
+      if (true === options.clipboard) {
+        var clipId = '#sharing_clip';
+        lemon.clipboard(clipId, function () {
+          return $(textId).val();
+        }, function () {
+          lemon.inlineTip(clipId, 'Copied!');
+        });
+      }
 
       lemon.isFunc(options.onShown) && options.onShown(shareM, el, textId);
       $(el).slideDown();

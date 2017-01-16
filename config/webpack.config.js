@@ -76,6 +76,10 @@ module.exports = {
       {test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery'},
       {test: /\.scss$/, loaders: ['style', 'css', 'sass']},
       {test: /\.(png|woff|woff2|eot|ttf|svg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=100000'}
+    ],
+    //Ignore  "This seems to be a pre-built javascript file. Though this is possible...."
+    noParse: [
+      /clipboard\/dist\/clipboard\.js/
     ]
   },
   externals: {},

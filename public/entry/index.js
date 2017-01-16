@@ -9,7 +9,8 @@ require('../css/style.styl');
 require('blast-text');
 require('jquery-qrcode');
 require('jquery-console/jquery.console');
-var screenfull = require('screenfull');
+var screenfull = require('screenfull'),
+  Clipboard = require('clipboard');
 
 var handlePageCall = {},
   handleModalCall = { show: {}, shown: {}, confirm: {} },
@@ -421,6 +422,43 @@ lemon.register({
   },
   enableEl: function(selector) {
     progressJs(selector).end();
+  },
+  clipboard: function (selector, options, events) {
+    var opts = {}, evts = {};
+    events = events || {};
+
+    if (lemon.isFunc(options)) {
+      //Dynamically set a text, you'll return a String
+      opts = {
+        text: function(trigger) {
+          return options(trigger);
+        }
+      };
+    } else {
+      opts = options || {};
+    }
+
+    var clip = new Clipboard(selector, opts);
+
+    if (lemon.isFunc(events)) {
+      evts = { success: events };
+    } else {
+      evts = events || {};
+    }
+
+    /* evt.action, evt.text, evt.trigger, evt.clearSelection() */
+    if (lemon.isFunc(evts.success)) {
+      clip.on('success', function (evt) {
+        return evts.success(evt);
+      });
+    }
+    if (lemon.isFunc(evts.error)) {
+      clip.on('error', function(evt) {
+        return evts.error(evt);
+      });
+    }
+
+    return clip;
   },
   disableRightclick: function(selector) {
     //forbiden right click context menu

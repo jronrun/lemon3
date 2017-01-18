@@ -1,45 +1,75 @@
 /**
  *
  */
-var mirror = require('../js/codemirror'),
-  marked = require('marked'),
+var cardId = '#show-card',
+  mirror = require('../js/codemirror'),
+  marked = require('../js/markdown')({
+    mirror: mirror,
+    output: cardId
+  }),
   beautify = require('js-beautify'),
   beautifyCss = beautify.css,
   beautifyHtml = beautify.html
   ;
 
-marked.setOptions({
-  renderer: new marked.Renderer(),
-  gfm: true,
-  tables: true,
-  breaks: false,
-  pedantic: false,
-  sanitize: false,
-  smartLists: true,
-  smartypants: false
-});
+/*
+ marked = require('marked')
+
+ marked.setOptions({
+   renderer: new marked.Renderer(),
+   gfm: true,
+   tables: true,
+   breaks: false,
+   pedantic: false,
+   sanitize: false,
+   smartLists: true,
+   smartypants: false
+ });
+
+ marked.setOptions({
+   highlight: function (code, lang, callback) {
+   mirror.highlights({
+     input: code,
+     mode: lang || 'text',
+     theme: evtData.th,
+     resultHandle: function (ret) {
+      callback(null, ret);
+     }
+   });
+   }
+ });
+
+ return marked(txt, function (err, content) {
+    $(cardId).html(content);
+ });
+ */
+
+//TODO rem
+global.$=$;
+global.marked=marked;
+
+
 
 var show = {
   taId: '#show_ta',
-  cardId: '#show-card',
   instance: null,
   content: null,
 
   view: {
     intl: function () {
-      $(show.cardId).css({
+      $(cardId).css({
         height: $(window).height(),
         width: $(window).width()
       });
 
       show.instance = mirror.shows(show.taId);
-      show.instance.setSize(null, $(show.cardId).height());
+      show.instance.setSize(null, $(cardId).height());
       show.instance.chgStyle({
         padding: '1.2rem'
       });
       show.instance.prependHtml(lemon.tmpl($('#statics_tool_tmpl').html(), {}));
 
-      lemon.live('click', show.cardId + ' button[data-show]', function (evt) {
+      lemon.live('click', cardId + ' button[data-show]', function (evt) {
         var el = evt.originalEvent.target.parentNode, showT = lemon.data(el, 'show'),
           btnSel = 'button[data-show="' + lemon.enc(showT) + '"]';
         if (show.tool.btnTgl(btnSel)) {
@@ -94,34 +124,19 @@ var show = {
       return lemon.previewInSelfWin(txt);
     }
 
-    $(show.cardId).css({
+    $(cardId).css({
       'margin-top': '-1rem',
       padding: '0rem'
     });
 
     try {
       if (['Markdown'].indexOf(langN) != -1) {
-        marked.setOptions({
-          highlight: function (code, lang, callback) {
-            mirror.highlights({
-              input: code,
-              mode: lang || 'text',
-              theme: evtData.th,
-              resultHandle: function (ret) {
-                callback(null, ret);
-              }
-            });
-          }
-        });
-
-        $(show.cardId).css({
+        $(cardId).css({
           'margin-top': '0rem',
           padding: '1rem'
         });
 
-        return marked(txt, function (err, content) {
-          $(show.cardId).html(content);
-        });
+        return marked.render(txt, {}, evtData.th);
         // return lemon.previewInSelfWin(markedH);
       }
     } catch (e) {
@@ -192,7 +207,7 @@ var show = {
       }
 
       var aJson = show.instance.json(), isArr = lemon.isArray(aJson);
-      $(show.cardId + ' button[data-show]').each(function () {
+      $(cardId + ' button[data-show]').each(function () {
         var showT = lemon.data(this, 'show');
         switch (showT) {
           case 1: if (isArr) { try { mirror.dl.format.summary(aJson); $(this).show(); } catch (e) {/**/} } break;

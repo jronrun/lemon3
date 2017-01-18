@@ -79,7 +79,9 @@ module.exports = {
     ],
     //Ignore  "This seems to be a pre-built javascript file. Though this is possible...."
     noParse: [
-      /clipboard\/dist\/clipboard\.js/
+      /clipboard\/dist\/clipboard\.js/,
+      /markdown-it\/dist\/markdown-it\.js/,
+      /markdown-it-footnote\/dist\/markdown-it-footnote\.js/
     ]
   },
   externals: {},

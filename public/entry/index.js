@@ -302,6 +302,9 @@ lemon.register({
   deCase: function(target) {
     return target.replace(/[A-Z]/g, function(a) {return '-' + a.toLowerCase()});
   },
+  cloneHtml: function (selector) {
+    return $('<div>').append($(selector).clone()).html();
+  },
   qrcode: function(selector, options) {
     if (!lemon.isString(options)) {
       options = lemon.extend({

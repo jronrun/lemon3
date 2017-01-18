@@ -4,46 +4,45 @@
 var MarkdownIt = require('markdown-it'),
   MarkdownItFootnote = require('markdown-it-footnote');
 
-function bootstrap4element($html) {
-  $html.find('blockquote').addClass('blockquote');
-}
-
 var helper = function (inst, options) {
   options = options || {};
   var tools = {
     target: inst,
 
     render: function (src, env, theme) {
-      var markedHtml = inst.render(src, env), $html = $(markedHtml);
+      var markedHtml = inst.render(src, env);
 
-      bootstrap4element($html);
-
-      var resultHtml = $('<div>').append($html.clone()).html();
       if (null != options.output && $(options.output).length) {
-        $(options.output).html(resultHtml);
-        tools.highlight(theme);
+        $(options.output).html(markedHtml);
+        tools.features(theme);
       }
 
-      return resultHtml;
+      return markedHtml;
     },
 
-    highlight: function (theme, mirror) {
-      var aMirror = mirror || options.mirror;
-      if (!aMirror) {
-        return false;
+    features: function (theme, mirror, rootElSelector) {
+      var aMirror = mirror || options.mirror,
+        inRoot = function (subSelector) {
+          var rootEl = rootElSelector || options.output || '';
+          return lemon.isBlank(rootEl) ? subSelector : (rootEl + ' ' + subSelector);
+        };
+
+      if (!lemon.isBlank(aMirror)) {
+        $(inRoot('pre.mirror-hl')).each(function () {
+          var info = lemon.data(this), thiz = this;
+          aMirror.highlights({
+            input: lemon.unescape(info.code),
+            mode: info.lang,
+            theme: theme || 'lemon',
+            resultHandle: function (ret) {
+              $(thiz).html(ret);
+            }
+          });
+        });
       }
 
-      $('pre.mirror-hl').each(function () {
-        var info = lemon.data(this), thiz = this;
-        aMirror.highlights({
-          input: lemon.unescape(info.code),
-          mode: info.lang,
-          theme: theme || 'lemon',
-          resultHandle: function (ret) {
-            $(thiz).html(ret);
-          }
-        });
-      });
+      $(inRoot('blockquote')).addClass('blockquote');
+      $(inRoot('table')).addClass('table table-hover table-sm');
 
       return true;
     }

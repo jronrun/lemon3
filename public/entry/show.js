@@ -133,7 +133,7 @@ var show = {
       if (['Markdown'].indexOf(langN) != -1) {
         $(cardId).css({
           'margin-top': '0rem',
-          padding: '1rem'
+          padding: '2rem'
         });
 
         return marked.render(txt, {}, evtData.th);

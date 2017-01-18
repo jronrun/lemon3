@@ -66,7 +66,7 @@ module.exports = {
       {test: /\.coffee$/, loader: "coffee-loader"},
       {test: /\.json/, loader: "json-loader"},
       {
-        test: /d3-dsv|d3-format|d3-time|d3-time-format/,
+        test: /d3-dsv|d3-format|d3-time|d3-time-format|markdown-it-toc-and-anchor/,
         loader: "babel-loader",
         query: {
           presets: ['es2015']

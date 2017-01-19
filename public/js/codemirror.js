@@ -99,8 +99,8 @@ function initializeLangs() {
   var langs = [];
   lemon.each(CodeMirror.modeInfo || [], function(lang, idx) {
     lang.id = lemon.uniqueId();
-    languages[lang.name] = lang;
-    modes[lang.mode] = lang;
+    languages[lang.name.toLowerCase()] = lang;
+    modes[lang.mode.toLowerCase()] = lang;
     langs.push(lang);
   });
   return CodeMirror.modeInfo = langs;
@@ -113,7 +113,7 @@ function langInfo(lang) {
     return null;
   }
 
-  var m, info = null, lang = String(lang);
+  var m, info = null, lang = String(lang).toLowerCase();
   info = languages[lang];
   if (!lemon.isBlank(info)) {
     return info;

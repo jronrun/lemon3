@@ -1424,6 +1424,7 @@ var note = {
   },
 
   initialize: function () {
+    lemon.homeProgress();
     if (lemon.isMediumUpView()) {
       lemon.console();
     }
@@ -1553,6 +1554,9 @@ var note = {
       }
     });
 
+    lemon.delay(function () {
+      lemon.homeProgressEnd();
+    }, 900);
   }
 };
 

@@ -4,7 +4,9 @@
 var MarkdownIt = require('markdown-it'),
   MarkdownItFootnote = require('markdown-it-footnote'),
   MarkdownItTocAndAnchor = require('markdown-it-toc-and-anchor/src/index').default,
-  MarkdownItCheckbox = require('markdown-it-checkbox');
+  MarkdownItCheckbox = require('markdown-it-checkbox'),
+  MarkdownItEmoji = require('markdown-it-emoji')
+  ;
 
 require('../css/markdown.styl');
 
@@ -138,6 +140,7 @@ var markdown = function (options, markdownOptions) {
       anchorLinkSymbol: ''
     })
     .use(MarkdownItCheckbox)
+    .use(MarkdownItEmoji)
     ;
 
   return helper(inst, options);

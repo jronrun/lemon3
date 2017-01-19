@@ -42,9 +42,7 @@ var anchorLinkSymbol = '<svg aria-hidden="true" class="octicon octicon-link" hei
       $(inRoot('a.anchor')).html(anchorLinkSymbol);
       $(inRoot('blockquote')).addClass('blockquote');
       $(inRoot('table')).addClass('table table-hover table-sm');
-      $(inRoot('input[type="checkbox"]'))
-        .css({'margin-right': '0.5rem'})
-        .attr({disabled: true}).addClass('disabled');
+      $(inRoot('input[type="checkbox"]')).attr({disabled: true}).addClass('disabled');
 
       var resultH = $(tmpId).html();
       $(tmpId).remove();
@@ -69,6 +67,12 @@ var anchorLinkSymbol = '<svg aria-hidden="true" class="octicon octicon-link" hei
           mode: langInfo.mime || langInfo.mode,
           theme: theme || 'lemon',
           rightTip: langInfo.name,
+          style: {
+            height: '100%',
+            margin: -16,
+            padding: '1rem',
+            'overflow-x': 'auto'
+          },
           resultHandle: function (ret) {
             $(thiz).html(ret);
             hCount--;

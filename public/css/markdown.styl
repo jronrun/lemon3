@@ -59,6 +59,7 @@
 
 .markdown-body blockquote {
   padding: 0 1em;
+  font-size: 100%;
   color: #777;
   border-left: 0.25em solid #ddd
 }
@@ -69,6 +70,10 @@
 
 .markdown-body blockquote > :last-child {
   margin-bottom: 0
+}
+
+.markdown-body input {
+  margin-right: 0.5rem;
 }
 
 .markdown-body kbd {
@@ -336,6 +341,53 @@
   text-decoration: inherit
 }
 
+.markdown-body pre {
+  word-wrap: normal
+}
+
+.markdown-body pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal
+}
+
+.markdown-body .highlight pre, .markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px
+}
+
+.markdown-body pre code, .markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0
+}
+
+.markdown-body pre code::before, .markdown-body pre code::after, .markdown-body pre tt::before, .markdown-body pre tt::after {
+  content: normal
+}
+
 .markdown-body .csv-data td, .markdown-body .csv-data th {
   padding: 5px;
   overflow: hidden;
@@ -360,4 +412,15 @@
   font-weight: bold;
   background: #f8f8f8;
   border-top: 0
+}
+
+.state {
+  display: inline-block;
+  padding: 4px 8px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #999;
+  border-radius: 3px
 }

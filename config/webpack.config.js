@@ -81,9 +81,16 @@ module.exports = {
     noParse: [
       /clipboard\/dist\/clipboard\.js/,
       /markdown-it\/dist\/markdown-it\.js/,
-      /markdown-it-footnote\/dist\/markdown-it-footnote\.js/,
+      /markdown-it-abbr\/dist\/markdown-it-abbr\.js/,
       /markdown-it-checkbox\/dist\/markdown-it-checkbox\.js/,
-      /markdown-it-emoji\/dist\/markdown-it-emoji\.js/
+      /markdown-it-container\/dist\/markdown-it-container\.js/,
+      /markdown-it-deflist\/dist\/markdown-it-deflist\.js/,
+      /markdown-it-emoji\/dist\/markdown-it-emoji\.js/,
+      /markdown-it-footnote\/dist\/markdown-it-footnote\.js/,
+      /markdown-it-ins\/dist\/markdown-it-ins\.js/,
+      /markdown-it-mark\/dist\/markdown-it-mark\.js/,
+      /markdown-it-sub\/dist\/markdown-it-sub\.js/,
+      /markdown-it-sup\/dist\/markdown-it-sup\.js/
     ]
   },
   externals: {},

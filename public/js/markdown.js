@@ -2,10 +2,17 @@
  *
  */
 var MarkdownIt = require('markdown-it'),
-  MarkdownItFootnote = require('markdown-it-footnote'),
-  MarkdownItTocAndAnchor = require('markdown-it-toc-and-anchor/src/index').default,
-  MarkdownItCheckbox = require('markdown-it-checkbox'),
-  MarkdownItEmoji = require('markdown-it-emoji')
+  pluginFootnote = require('markdown-it-footnote'),
+  pluginTocAndAnchor = require('markdown-it-toc-and-anchor/src/index').default,
+  pluginCheckbox = require('markdown-it-checkbox'),
+  pluginEmoji = require('markdown-it-emoji'),
+  pluginMark = require('markdown-it-mark'),
+  pluginSub = require('markdown-it-sub'),
+  pluginSup = require('markdown-it-sup'),
+  pluginAbbr = require('markdown-it-abbr'),
+  pluginDeflist = require('markdown-it-deflist'),
+  pluginContainer = require('markdown-it-container'),
+  pluginIns = require('markdown-it-ins')
   ;
 
 require('../css/markdown.styl');
@@ -135,13 +142,20 @@ var markdown = function (options, markdownOptions) {
   }, markdownOptions || {});
 
   var inst = MarkdownIt(markdownOptions)
-    .use(MarkdownItFootnote)
-    .use(MarkdownItTocAndAnchor, {
+    .use(pluginTocAndAnchor, {
       anchorClassName: 'anchor',
       anchorLinkSymbol: ''
     })
-    .use(MarkdownItCheckbox)
-    .use(MarkdownItEmoji)
+    .use(pluginFootnote)
+    .use(pluginCheckbox)
+    .use(pluginEmoji)
+    .use(pluginMark)
+    .use(pluginSub)
+    .use(pluginSup)
+    .use(pluginAbbr)
+    .use(pluginDeflist)
+    .use(pluginContainer)
+    .use(pluginIns)
     ;
 
   return helper(inst, options);

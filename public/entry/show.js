@@ -44,12 +44,6 @@ var cardId = '#show-card',
  });
  */
 
-//TODO rem
-global.$=$;
-global.marked=marked;
-
-
-
 var show = {
   taId: '#show_ta',
   instance: null,

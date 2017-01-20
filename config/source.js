@@ -45,6 +45,7 @@ var resource = [
   {id: 24, name: 'rich', desc: 'Rich Text', protect: false},
   {id: 25, name: 'riches', desc: 'Multiple Rich Text', protect: false, page: 'apis/index'},
   {id: 26, name: 'show', desc: 'Shows', protect: false},
+  {id: 27, name: 'eyes', desc: 'Eyes', protect: false},
 
   {
     id: 30, name: 'user', desc: 'User', children: [

@@ -54,6 +54,7 @@
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-deflist": "^2.0.1",
     "markdown-it-container": "^2.0.0",
-    "markdown-it-ins": "^2.0.0"
+    "markdown-it-ins": "^2.0.0",
+    "Split.js": "^1.2.0"
   }
 }

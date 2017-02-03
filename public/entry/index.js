@@ -1009,8 +1009,12 @@ lemon.register({
     iframes.attr(options);
     $(selector || 'body').append(iframe);
 
-    iframes.dom = $(window.frames[options.name].document).contents();
-    iframes.doc = $(iframes.getDocument());
+    iframes.docInited = false;
+    try {
+      iframes.dom = $(window.frames[options.name].document).contents();
+      iframes.doc = $(iframes.getDocument());
+      iframes.docInited = true;
+    } catch (e) {/**/}
 
     return iframes;
   },
@@ -1514,12 +1518,14 @@ lemon.register({
         } else {
           text = (text || '').replace(/\\\//g, '/');
           view.write(text);
-          view.doc.keydown(function(e){
-            //esc key
-            if (27 == e.keyCode) {
-              previewM.hide();
-            }
-          });
+          if (view.docInited) {
+            view.doc.keydown(function(e){
+              //esc key
+              if (27 == e.keyCode) {
+                previewM.hide();
+              }
+            });
+          }
           pg.end();
         }
 

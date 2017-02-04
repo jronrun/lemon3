@@ -830,6 +830,7 @@ lemon.register({
         });
       }
     }, meta = {
+      srcIsUrl: false,
       iframe: iframe,
       isAvailable: function() {
         return null != iframe;
@@ -869,12 +870,13 @@ lemon.register({
         return meta;
       },
       openUrl: function(url, onready) {
-        meta.attr({
-          src: url
-        });
+        meta.attr({ src: url });
+        meta.srcIsUrl = true;
+
         $('#' + meta.getId()).load(function() {
           lemon.isFunc(onready) && onready(meta);
         });
+
         return meta;
       },
       reload: function() {

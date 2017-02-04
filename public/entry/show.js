@@ -234,12 +234,17 @@ var show = {
 
   tool: {
     intl: function () {
+      var bsel = cardId + ' button[data-show]';
       if (!show.instance.isJson(true)) {
-        return;
+        return $(bsel).hide();
       }
 
       var aJson = show.instance.json(), isArr = lemon.isArray(aJson);
-      $(cardId + ' button[data-show]').each(function () {
+      if (!isArr) {
+        return $(bsel).hide();
+      }
+
+      $(bsel).each(function () {
         var showT = lemon.data(this, 'show');
         switch (showT) {
           case 1: if (isArr) { try { mirror.dl.format.summary(aJson); $(this).show(); } catch (e) {/**/} } break;

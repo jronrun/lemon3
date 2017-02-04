@@ -66,29 +66,33 @@ var anchorLinkSymbol = '<svg aria-hidden="true" class="octicon octicon-link" hei
 
     if (hasMirror) {
       var mirrorHls = $(inRoot('pre.mirror-hl')), hCount = mirrorHls.length;
-      mirrorHls.each(function () {
-        var info = lemon.data(this), thiz = this, langInfo = (options.mirror.modeInfo(info.lang) || {});
+      if (hCount > 0) {
+        mirrorHls.each(function () {
+          var info = lemon.data(this), thiz = this, langInfo = (options.mirror.modeInfo(info.lang) || {});
 
-        options.mirror.highlights({
-          input: lemon.unescape(info.code),
-          mode: langInfo.mime || langInfo.mode || 'text',
-          theme: theme || 'lemon',
-          style: {
-            height: '100%',
-            margin: -16,
-            padding: '1rem',
-            'font-size': 14,
-            'overflow-x': 'auto'
-          },
-          resultHandle: function (ret) {
-            $(thiz).html(ret);
-            hCount--;
-            if (0 === hCount) {
-              featuresLast();
+          options.mirror.highlights({
+            input: lemon.unescape(info.code),
+            mode: langInfo.mime || langInfo.mode || 'text',
+            theme: theme || 'lemon',
+            style: {
+              height: '100%',
+              margin: -16,
+              padding: '1rem',
+              'font-size': 14,
+              'overflow-x': 'auto'
+            },
+            resultHandle: function (ret) {
+              $(thiz).html(ret);
+              hCount--;
+              if (0 === hCount) {
+                featuresLast();
+              }
             }
-          }
+          });
         });
-      });
+      } else {
+        featuresLast();
+      }
     } else {
       featuresLast();
     }

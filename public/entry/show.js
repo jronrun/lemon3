@@ -47,10 +47,15 @@ var cardId = '#show-card',
 var show = {
   taId: '#show_ta',
   instance: null,
+  lframe: null,
   content: null,
 
   view: {
     intl: function () {
+      if (!$(show.taId).length) {
+        $(cardId).append('<textarea class="form-control" rows="1" style="border: none;display: none;" id="show_ta"></textarea>');
+      }
+
       $(cardId).css({
         height: $(window).height(),
         width: $(window).width()
@@ -108,15 +113,45 @@ var show = {
   },
 
   load: function (evtData) {
-    var txt = evtData.content;
-    if (lemon.isUrl(txt)) {
-      return lemon.previewInSelfWin(txt);
-    }
+    var txt = evtData.content, cleanIfr = function () {
+      if (show.lframe) {
+        show.lframe.destroy();
+        show.lframe = null;
+      }
+    },  makePreview = function (targetTxt) {
+      return lemon.previewInSelfWin(targetTxt, function (lview, lframe) {
+        lframe.lview = lview;
+        show.lframe = lframe;
+      }, false, false, {
+        contentClose: false
+      });
+    }, showInIfr = function (targetTxt, isHref) {
+      if (!show.lframe) {
+        return makePreview(targetTxt);
+      }
+
+      if (isHref) {
+        return show.lframe.lview.openUrl(targetTxt);
+      }
+
+      if (show.lframe.lview.srcIsUrl) {
+        cleanIfr();
+        return makePreview(targetTxt);
+      }
+
+      show.lframe.lview.write((targetTxt || '').replace(/\\\//g, '/'));
+    };
 
     var langN = evtData.lang.name;
-    if (['HTML'].indexOf(langN) != -1) {
-      return lemon.previewInSelfWin(txt);
+    if (lemon.isUrl(txt)) {
+      return showInIfr(txt, true);
     }
+
+    if (['HTML'].indexOf(langN) != -1) {
+      return showInIfr(txt);
+    }
+
+    cleanIfr();
 
     $(cardId).css({
       'margin-top': '-1rem',
@@ -131,7 +166,6 @@ var show = {
         });
 
         return marked.render(txt, {}, evtData.th);
-        // return lemon.previewInSelfWin(markedH);
       }
     } catch (e) {
       lemon.warn('marked err: ' + e.message);
@@ -187,6 +221,10 @@ var show = {
   ],
 
   loadMirror: function (evtData) {
+    if (!$(show.taId).length) {
+      show.view.intl();
+    }
+
     show.instance.mode(evtData.lang.name || 'text', evtData.lang.mime || undefined);
     show.instance.val(evtData.content);
     show.instance.theme(evtData.th);
@@ -224,7 +262,6 @@ var show = {
       lemon.console();
     }
 
-    show.view.intl();
     lemon.subMsg(function (data) {
       // lemon.info(data, 'Show received msg');
       if (data && data.event) {

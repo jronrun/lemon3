@@ -269,7 +269,7 @@ var show = {
     }
 
     lemon.subMsg(function (data) {
-      //lemon.info(data, 'Show received msg');
+      lemon.info(data, 'Show received msg');
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {

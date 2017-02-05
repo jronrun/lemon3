@@ -44,8 +44,10 @@ var eye = {
         eye[eType] = container;
       }).init(function () {
         lemon.delay(function () {
-          eye.noteEvt('SNAPLOAD');
-        }, 800);
+          eye.noteEvt('TOGGLE_NOTIFY', {}, function () {
+            eye.noteEvt('SNAPLOAD');
+          });
+        }, 900);
       }).contentStyle({
         border: 'none'
       });
@@ -55,6 +57,12 @@ var eye = {
   noteEvt: function (evtN, evtData, ackCallback) {
     if (eye.note && eye.note.lframe) {
       eye.note.lframe.tellEvent(evtN, evtData, ackCallback);
+    }
+  },
+
+  previewEvt: function (evtN, evtData, ackCallback) {
+    if (eye.preview && eye.preview.lframe) {
+      eye.preview.lframe.tellEvent(evtN, evtData, ackCallback);
     }
   },
 
@@ -70,7 +78,9 @@ var eye = {
       if (data && data.event) {
         var evtData = data.data;
         switch (data.event) {
-          case 'FILL_CONTENT':
+          case 'MIRROR_INPUTREAD_NOTIFY':
+            console.log(evtData, 'MIRROR_INPUTREAD_NOTIFY');
+            eye.previewEvt('FILL_CONTENT', evtData);
             break;
         }
       }

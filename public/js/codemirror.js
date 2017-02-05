@@ -167,7 +167,7 @@ function loadTheme(th) {
   return th;
 }
 
-var customEvts = [ 'fullscreen' ];
+var customEvts = [ 'fullscreen' ], inputReadNotifyEvt = 'inputReadNotifyEvt';
 
 /**
  lemon.popover('#' + popupId, {
@@ -688,6 +688,21 @@ var helper = function(cm, events) {
       }
       lemon.isFunc(events.fullscreen) && events.fullscreen(isFullscreen);
     },
+    notifyContent: function () {
+      var evtN = 'MIRROR_INPUTREAD_NOTIFY', cMode = tools.mode();
+      lemon.pubEvent(evtN, {
+        lang: {
+          name: cMode.name,
+          mime: cMode.chosenMimeOrExt || cMode.mime
+        },
+        th: tools.theme(),
+        content: tools.val()
+      });
+      return evtN;
+    },
+    inputReadNotifyTgl: function () {
+      return tools.tglOption(inputReadNotifyEvt);
+    },
     readonlyTgl: function (isNocursor) {
       if (!isNocursor) {
         return tools.tglOption('readOnly');
@@ -831,7 +846,16 @@ var helper = function(cm, events) {
   lemon.each(events, function (v, k) {
     //CodeMirror event
     if (customEvts.indexOf(k) == -1 && lemon.isFunc(v)) {
-      cm.on(k, v);
+      if ('inputRead' === k) {
+        cm.on(k, function (cm, changeObj) {
+          v(cm, changeObj);
+          if (tools.attrs(inputReadNotifyEvt)) {
+            tools.notifyContent();
+          }
+        });
+      } else {
+        cm.on(k, v);
+      }
     }
   });
 

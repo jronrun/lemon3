@@ -609,6 +609,7 @@ var note = {
   load: function (aNote) {
     note.instance.mode(aNote.language.name || 'text', aNote.language.mime || undefined);
     note.instance.val(aNote.content);
+    note.instance.notifyContent();
     current(aNote);
   },
 
@@ -653,6 +654,7 @@ var note = {
     change: function (aLang, langInfo) {
       try {
         note.lang.tip(note.instance.mode(aLang, langInfo || ''));
+        note.instance.notifyContent();
       } catch (e) {
         note.action.menuShow();
         lemon.dropdownTgl('#menu_dd_mode_dd');
@@ -667,6 +669,7 @@ var note = {
     change: function (aTheme) {
       try {
         note.theme.tip(note.instance.theme(aTheme));
+        note.instance.notifyContent();
       } catch (e) {
         note.action.menuShow();
         lemon.dropdownTgl('#menu_dd_theme_dd');
@@ -1543,6 +1546,9 @@ var note = {
           case 'SHOW_JSON_QRY_IN_NOTE':
             note.load(note.make(evtData.note));
             note.theme.change(evtData.th);
+            break;
+          case 'TOGGLE_NOTIFY':
+            note.instance.inputReadNotifyTgl();
             break;
         }
       }

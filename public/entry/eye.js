@@ -1,7 +1,9 @@
 /**
  *
  */
-var gl = require('../js/golden');
+var gl = require('../js/golden'),
+  lastNotifyTime = 0, lastNotifyData = null, lastTell = false
+  ;
 
 function leave() {
   eye.noteEvt('LEAVE');
@@ -20,26 +22,48 @@ var eye = {
               id: 'eyes_note',
               src: lemon.fullUrl('/note')
             }),
-            gl.kits('eyesv', {
-              id: 'eyes_preview',
-              src: lemon.fullUrl('/show')
-            })
+            {
+              type: 'column',
+              content: [
+                gl.kits('eyesv', {
+                  id: 'eyes_tool'
+                }, false, {
+                  height: 0
+                }),
+                gl.kits('eyesv', {
+                  id: 'eyes_preview',
+                  src: lemon.fullUrl('/show')
+                })
+              ]
+            }
           ]
         }]
-      }).register( 'eyesv', function(container, state){
+      }).register('eyesv', function(container, state){
+        var eType = lemon.ltrim(state.id, 'eyes_'), hasLframe = ['note', 'preview'].indexOf(eType) != -1;
         container.on('resize', function(){
-          container.lframe.attr({
-            height: container.height,
-            width: container.width
-          });
+          if (hasLframe) {
+            container.lframe.attr({
+              height: container.height,
+              width: container.width
+            });
+          }
+
+          if ('tool' === eType) {
+            //container.setSize(container.width, 26);
+          }
         });
 
-        var eType = lemon.ltrim(state.id, 'eyes_');
-        container.lframe = lemon.iframe({
-          id: state.id, name: state.id,
-          frameborder: 0,
-          src: state.src
-        }, container.getElement());
+        if (hasLframe) {
+          container.lframe = lemon.iframe({
+            id: state.id, name: state.id,
+            frameborder: 0,
+            src: state.src
+          }, container.getElement());
+        }
+
+        if ('tool' === eType) {
+          container.getElement().append('tool');
+        }
 
         eye[eType] = container;
       }).init(function () {
@@ -79,8 +103,23 @@ var eye = {
         var evtData = data.data;
         switch (data.event) {
           case 'MIRROR_INPUTREAD_NOTIFY':
-            console.log(evtData, 'MIRROR_INPUTREAD_NOTIFY');
-            eye.previewEvt('FILL_CONTENT', evtData);
+            lastNotifyData = evtData;
+            var curTime = parseInt(lemon.now()), ptell = function () {
+              eye.previewEvt('FILL_CONTENT', lastNotifyData);
+            };
+
+            if (curTime - lastNotifyTime > 1500) {
+              lastNotifyTime = curTime;
+              ptell();
+            } else {
+              if (!lastTell) {
+                lastTell = true;
+                lemon.delay(function () {
+                  ptell();
+                  lastTell = false;
+                }, 1000);
+              }
+            }
             break;
         }
       }

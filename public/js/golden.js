@@ -70,6 +70,10 @@ var gl = function (config, options) {
     hasHeaders: false
   }, config.settings || {});
 
+  config.dimensions = lemon.extend({
+    minItemHeight: 0
+  }, config.dimensions || {});
+
   var inst = new GoldenLayout(config);
 
   return helper(inst, options);

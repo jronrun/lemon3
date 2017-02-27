@@ -840,13 +840,23 @@ var helper = function(cm, events) {
   events = lemon.extend({
     inputRead: function(cm, changeObj) {
       tools.format();
+    },
+    keyHandled: function (cm, keyName, event) {
+
     }
   }, events);
 
   lemon.each(events, function (v, k) {
     //CodeMirror event
     if (customEvts.indexOf(k) == -1 && lemon.isFunc(v)) {
-      if ('inputRead' === k) {
+      if ('keyHandled' === k) {
+        cm.on(k, function (cm, keyName, event) {
+          v(cm, keyName, event);
+          if ('Backspace' === keyName && tools.attrs(inputReadNotifyEvt)) {
+            tools.notifyContent();
+          }
+        });
+      } else if ('inputRead' === k) {
         cm.on(k, function (cm, changeObj) {
           v(cm, changeObj);
           if (tools.attrs(inputReadNotifyEvt)) {

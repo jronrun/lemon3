@@ -195,6 +195,9 @@ var note = {
         note.action.closeNote();
       });
     },
+    toggleLiveView: function (params) {
+      parent.location.href = (lemon.fullUrl((parent.location.href.indexOf('/eyes') == -1) ? '/eyes' : '/note'));
+    },
     noteInfo: function (params) {
       var nid = params.get ? params.get(0) : '', ashow = function (n) {
         n = note.make(n); if (lemon.isBlank(n.content)) {
@@ -772,6 +775,7 @@ var note = {
       ex('fullscreen', function (args, cm) { na('fullscreenTgl', args, cm); }, 'Toggle Fullscreen', 'full');
       ex('query', function (args, cm) { na('queriesTgl', args, cm); }, 'JSON Quieres', 'que');
       ex('xjson', function (args, cm) { na('xmlJsonTgl', args, cm); }, 'Convert between JSON and XML');
+      ex('livetgl', function (args, cm) { na('toggleLiveView', args, cm); }, 'Toggle Live View', 'live');
 
       //CodeMirror.commands.save = note.action.saveNote;
       ex('w', function (args, cm) { na('saveNote', args, cm); }, 'Save Note');
@@ -807,6 +811,7 @@ var note = {
             note.menu.item('Close Note', ':q', 'visual & edit', 'Close Note', 'closeNote', false, true),
             note.menu.item('Share Note', ':share', 'visual & edit', 'Share Note', 'shareNote'),
             note.menu.item('Preview', ':v', 'visual & edit', 'Preview (:view)', 'preview'),
+            tgl_item('Live View', ':live  ', 'Toggle Live View (:livetgl)', 'toggleLiveView'),
             tgl_item('Fullscreen', 'Ctrl-L', 'Toggle Fullscreen (Ctrl-L)', 'fullscreenTgl'),
             note.menu.item('separator'),
             note.menu.item('Note Info', ':info', 'visual & edit', 'Note Info', 'noteInfo'),

@@ -1066,11 +1066,14 @@ var qry = {
         qry.hisEnd = false;
 
         var advQry = lemon.getParam('#adv_form'), qryData = qry.advMirror.json();
-        if (!qryData.request.data) {
-          qryData.request = {
-            data: qryData.request
+        if (lemon.has(qryData, 'request')) {
+          if (!qryData.request.data) {
+            qryData.request = {
+              data: qryData.request
+            }
           }
         }
+
         lemon.extend(advQry, {
           body: qryData
         });

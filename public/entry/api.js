@@ -1065,9 +1065,14 @@ var qry = {
         qry.apiEnd = true;
         qry.hisEnd = false;
 
-        var advQry = lemon.getParam('#adv_form');
+        var advQry = lemon.getParam('#adv_form'), qryData = qry.advMirror.json();
+        if (!qryData.request.data) {
+          qryData.request = {
+            data: qryData.request
+          }
+        }
         lemon.extend(advQry, {
-          body: qry.advMirror.json()
+          body: qryData
         });
 
         $(qry.partApiId).empty();

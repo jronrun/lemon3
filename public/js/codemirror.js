@@ -258,7 +258,7 @@ function intlJsonQueries(host) {
       '</a>',
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
-      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRz0ALEdAU-CYTSFSDaDzRej4MplDk9DBGjCkCmoRwAAXggPwsHtVgAPABeAB8jiSxH8yylyAAFABKbKSgMc1GEfMhTjlQgiADksZzCfrBSWBxC9YpzfQrfrADckHk+2Vbsixn29Ld0NQlfWwqowsXroq3ZXDmlDYWrZAozG4wnIOhfKVNu2qrF4lU9NFO6W+-B+ztcSPqCP4Fd5zuN7t4MVCJohKwBSlSurEpSYPopB7EUg6IEQCy8pYWY5kseb5vWFSAvWxaloGZBovmnCNgevZCPW94SJhpL+PW5HdvGvaqMuVyrus+Y-luyHZrmBa4f6+EVlWNaxnWkAkT2rZnh2FH+q+sDvp+VGPs+hDzouLFseum7wNuViOGylSAiUkC+Og6DtkIIAgEk0G+NK2TdmUIBPkk8AgDpiCkFKIDeKQADWpAgNAAAKACS-SMoBJTAYQHQAConqyyyrM6GzwEkWbJEaJqaPGSrGrAlAcnWvADkgRCoHRkAAEK1PYNQsvwF5xD0-iaFUiCIFQsBLG6soKkqlDUEeSUocs2RlQxLYiAAwj2o2VHshrdbA-pSiQmwdSSFQJsNNDHpU41LJNPDlV5ejVfNjGQHBlWjbsF6VAa+r4F1wTxnoAHUBsnrMPAzALPQhCVHoiCOT22RwXkp2YWO6pXQth2vWUG1FO1r1dZsRSfd9fzRHdFBAyDkBgxDjHZKOqDjkksNTmGwFkZA12Hsja2o5t9Mzozt0VUTkwk2T03oNkXOziLZX3nN-hlH16yLclZRbbz8EUD1VSQMdxOg+DpawxU-CI7La4KwbND5ipcS4oWyuE-tGtawLOuU+ysCw5bGVqdLxvy8jZuQBbT5W4QNsY3b6t-o7YVfQm4ZIEeEzUYbsODmQ-AgUbctLUlqCxksui82nsW23z9uRzxJ1O6T4Op6Q6eECn5b10smcm8jqx9YgOU0LX9cl6rZeaxXsMYF9-at77Od5wXIawGkxDRGPdcziaYelxHQ+odr1clugY8j3vhD9i33tZwrHdvd3rKGnPHKL0fy+Ff390jeXW9lRUU6G6fbdJZ-dc0DXgPDejtgbO3-vwWG0gjAT2zpURA-hvCbVkByGcBcpTNnnm1Dq4dX6bwmlXMmKDnQ6AbmVaQopYEKxSsg-AqDSGQAwZ9IMz81Z4NAYLcGxC0FkLOoCL6qB-KEG8FQv2QJKiCOEX8amrDB4cPAeIyR3h9Zvh-pPIy1BSBlH9CrIgIDh6EPBtcdYCZ9YflEX-D8WidGE30VvQx2RjEQXdsQJIo4FIiFsHPBW1A5YDUVJgY8j13FaIrJQZGtj2HDzKhyNx5jPHUGiMjXx-V-DygCQ9TAgYbijjROEpKkSaBvwmsAdgwAgA">',
+      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRz0ALEdAU-CYTSFSDaDzRej4MplDk9DBGjCkCmoRwAAXggPwsHtVgAPABeAB8jiSxH8yylyAAFABKbKSgMc1GEfMhTjlQgiADksZzCfrBSWBxC9YpzfQrfrADckHk+2Vbsixn29Ld0NQlfWwqowsXroq3ZXDmlDYWrZAozG4wnIOhfKVNu2qrF4lU9NFO6W+-B+ztcSPqCP4Fd5zvDoapbpIKmaZeoUgboNkv66PmG67PAwScKOsDeHkx4iDSGQZBIgZXEhegoZAACs6GqNuViHKWgbyAB6bAcQoElv6FEFtBW7fpu8DFIQmiErAFKVK6sSlJg+ikHsRSDogRALLylhZjmSx5vm9YVIC9bFuR5ZovmnCNgevZCPW94SEppL+PW+ndvGvbEdkK6uusUFsSRsm5gWakMRplbVrWDZNpZrZnh2Bn+q+sDvp+RmPs+hDzouy5XKu9nMfAJGQI4bKVICJSQL46DoO2QggCASQib40rZN2ZQgE+STwCAbGIKQUogEhADWpAgNAAAKACS-SMlxJQ8YQHQAConqyyyrM6GzwEkWbJEaJqaPGSrGrAlAcnWvADkgRCoGZkAAEK1PYNQsvwF5xD0-iaFUiCIFQsBLG6soKkqlDUEe43OUs2TbRZLYiAAwj2X2VHshoPbA-pSiQmy3SSFQJh9NDHpUP1-TwO0NXoB0g5ZkDiXtX27BelQGvq+D3cE8Z6Jx1AbJ6zDwMwCz0IQlR6Ig5U9tk4l5JjSljuqeOg2jlNlLDRQ3ZT92bEUtP0380RExQbMc5AXM85Z2Sjqg45JILU5hjxemQPjh7i9Dktw8bM6m4Tu1q5MGtawDYF27OYHbfewP+GUz3rGDE1lPDjsSRQj1VJAGMu5z3OloLFT8KLAdrsHyc0PmkVxLihZh6rKPR7H7Px7r7KwILOezdFftp0H4uZ5A2dPrnhD5zLhdR+xsfdXTCbhkgR4TMZKeC4OZD8LxqeB+D42oLGSz-hPpBT5UndO0XPfZss6tlyva-j+Wa9LDP6fi6sz2IItNAH0NBeb93Mc779PvoHT-Znw38+L-+IawGkYg0QP6rxnCaDeEct7PzknvTWCd36EH7ILDAH9T511nsHS+VMb6skNAAjkwDEGgLWg-SBT8MbbQqFOFO6Dz7jSoavGgEDiafW3jAuOcDy7UMrttaQRgv5z0qIgfw3g4ayA5DOf8UpmyAOurdLurDoG7w4VrcRzodCEEFtIUUAjg6TTEfgCRGjIDSNpkGUhLCaBsOUaXThajJGaMoUCCgLVCDeF0Y3ZxrJXHeD+PrCxkdFEl1dtzQEdNUA+KTm+Wh38MrUFIGUf04ciDkJfrArW1x1gJiTh+Dx9CPwJKSarVJ7DbEZKuFk72WMORJAQgdWwADg7UEDq9RUmBjykwQgkislBxbFKCWk7aNSsL1OoNEcWzSXr+HlG0kmmAsLdLRL08a-SrFKNfuwYAQA">',
       '<em class="fa fa-search" title="Query"></em> Query',
       '</button>'
     ].join(' ');
@@ -565,6 +565,16 @@ var helper = function(cm, events) {
     toLine: function (line, ch) {
       cm.setCursor((line || 1) - 1, ch || 0)
     },
+    showFormatDate: function () {
+      try {
+        var srcD = parseInt(tools.selected());
+        lemon.alert([
+          srcD,
+          '<span class="text-muted icondh"><em class="fa fa-arrow-down"></em></span>',
+          lemon.dateFmt(srcD)
+        ].join('</br>'));
+      } catch (e) {/**/}
+    },
     queriesTgl: function (uncheck, hiddenCall, shownCall) {
       if (true !== uncheck) {
         if (!tools.checkIsJson()) {
@@ -591,8 +601,24 @@ var helper = function(cm, events) {
          groupby().summarize([{name: 'amount', ops: ['count','valid','missing','distinct']}]).execute($data)
 
          @@amount then ops array add ['sum','average','min','max']
+
+         $table <=> format.table($data, { minwidth: 200, maxwidth: 500 }))
+         $summary <=> format.summary($data)
          */
-        if (lemon.startWith(dlAnalyst, '@@')) {
+        if (lemon.startWith(dlAnalyst, '\\$')) {
+          switch (dlAnalyst) {
+            case '$table':
+              aResult = dl.format.table(aJson, { minwidth: 200, maxwidth: 500 });
+              break;
+            case '$summary':
+              aResult = dl.format.summary(aJson);
+              break;
+            default:
+              aResult = '';
+              break;
+          }
+        }
+        else if (lemon.startWith(dlAnalyst, '@@')) {
           aResult = dl.groupby().summarize([{name: lemon.ltrim(dlAnalyst, '@@'), ops: [
             'count', 'valid', 'missing', 'distinct', 'sum', 'average', 'min', 'max'
           ]}]).execute(aJson);
@@ -930,6 +956,8 @@ var keyMappings = {
 
   ctrl4Key: { k: 'Ctrl-4', f: 'standardJsonTgl'},
   shiftCtrl4Key: { k: 'Shift-Ctrl-4', f: 'xmlJsonTgl'},
+
+  ctrl5Key: { k: 'Ctrl-5', f: 'showFormatDate'},
 };
 
 /**
@@ -947,6 +975,7 @@ var keyMappings = {
  *    shiftCtrl3Key: true,    //toggle join or parse config
  *    ctrl4Key: true,         //standard JSON string toggle
  *    shiftCtrl4Key: true,    //JSON <=> XML
+ *    ctrl5Key: true,         //Date Format
  *  }
  * }
  * @param events {
@@ -977,6 +1006,8 @@ var mirror = function (elId, options, events) {
 
       ctrl4Key: true,         //standard JSON string toggle
       shiftCtrl4Key: true,    //JSON <=> XML
+
+      ctrl5Key: true
     }, options.cust || {});
   }
   delete options.cust;

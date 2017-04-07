@@ -258,7 +258,7 @@ function intlJsonQueries(host) {
       '</a>',
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
-      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRz0ALEdAU-CYTSFSDaDzRej4MplDk9DBGjCkCmoRwAAXggPwsHtVgAPABeAB8jiSxH8yylyAAFABKbKSgMc1GEfMhTjlQgiADksZzCfrBSWBxC9YpzfQrfrADckHk+2Vbsixn29Ld0NQlX3S334P2driR9QR-ArvWwqowsXroq3ZXDmlDYWrUdT-BioRNITYBTKq7YqVMPpSHsioPEEQFrzLFmOZLHm+b1hUgL1sWpaBmQaL5pwjZxi2Qj1guEhgaS-j1ih3bxr2qj7lch7rPmJ67PA56QIBuYFlB-owRWVY1rGdaQIhPatps7YiJ2aFgeu6GBlu6FLiuhDbruhHEceV6UZAjhspUgIlJAvjoOg3EgCASQfr40rZN2ZQgMuSTwCAV6IKQUogN4pAANakCA0AAAoAJL9Iyd4lA+hAdAAKr4lSSisawbPASRZskRompo8ZKsasCUByda8AOSBEKg2GQAAQrU9g1Cy-BVLE8SbJoVSIIgVCwEsbqygqSqUNQkDoIFVHZss2SpbhyGQAAwj2LVtXshpVbA-pSiQZWQCSFQJk1NCtZU1FLF1PBpZZehZQNeGQN+GVDbsxWVAa+r4JVwTxnot7UBsnrMPAzALPQhCVHoiAGT22Tfnka38ag45JNtg1LWdZSTUU-jleNlWbEUV03X80T7RQz2vZA72fXh2SjgD6p-VOYYPr2Ig7QmQ0nRNU2EzOxN7elqOTOjmM9eg2Q07ObOpQupP+GUtXrBTrL+tNKMLVU7VAWjb0faWf0VPwwP80eQsKzQ+aiXEuKFqLDPi9eK3SxjH1q39mvheJvPK4LoNq5AGvLlrhA61D9M-hQ1US4bkCuddCbhkgLUTBhit-YOZD8I+SsC5UoOoLGSy6PTEc+br7v65LnVMzL33lpHhBh3nPlLNHKug6stWINFNDh6Q+dpwdzUGx1q3c+g139qXNttfH-NJyGsBpMQ0Qd3XM4mq7Yue83UvZ8bJbt4Q-Z-RgHcl1bMdCxX53V6yhqDxyI9L2PCUNx7TeZ6360VFOisb2XbU33XNCT3r0+X0bmNP-wf3SEYXexzaogfw3gpqyA5DOJOUpmxDx6K-dO79vYvRzuA50OgC6pWkKKABQtljbCKKgyBlRoFXSDGfDOSDmYfUIeg+WQIKB2UIN4HBtt6GskYd4P4ANyGIJbp-E29DUAcPluue+3clLUFIGUEWKNeGz2QfPa46wEzy03Cwx+m4pEyIZnIrOCjMZKNfGbYgSRRywCyrYQeQtqAC3qoqTArUjpmKkRWSgoNZEX0NqlDkpi1EiEsdEUGNi6r+HlPYw6mAhIuLRG4tqHiaAz06sAdgwAgA">',
+      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRz0ALEdAU-CYTSFSDaDzRej4MplDk9DBGjCkCmoRwAAXggPwsHtVgAPABeAB8jiSxH8yylyAAFABKbKSgMc1GEfMhTjlQgiADksZzCfrBSWBxC9YpzfQrfrADckHk+2Vbsixn29Ld0NQlfWwqowsXroq3ZXDmlDYWrZAozG4wnIOhfKVNu2qrF4lU9NFO6W+-B+ztcSPqCP4Fd5zuN7t4MVCJohKwBSlSurEpSYPopB7EUg6IEQCy8pYWY5kseb5vWFSAvWxaloGZBovmnCNgevZCPW94SJhpL+PW5HdvGvaqMuVyrus+Y-luyHZrmBa4f6+EVlWNaxnWkAkT2rZnh2FH+q+sDvp+VGPs+hDzouLFseum7wNuViOGylSAiUkC+Og6DtkIIAgEk0G+NK2TdmUIBPkk8AgDpiCkFKIDeKQADWpAgNAAAKACS-SMoBJTAYQHQAConqyyyrM6GzwEkWbJEaJqaPGSrGrAlAcnWvADkgRCoHRkAAEK1PYNQsvwF5xD0-iaFUiCIFQsBLG6soKkqlDUEeSUocs2RlQxLYiAAwj2o2VHshrdbA-pSiQmwdSSFQJsNNDHpU41LJNPDlV5ejVfNjGQHBlWjbsF6VAa+r4F1wTxnoAHUBsnrMPAzALPQhCVHoiCOT22RwXkp2YWO6pXQth2vWUG1FO1r1dZsRSfd9fzRHdFBAyDkBgxDjHZKOqDjkksNTmGwFkZA12Hsja2o5t9Mzozt0VUTkwk2T03oNkXOziLZX3nN-hlH16yLclZRbbz8EUD1VSQMdxOg+DpawxU-CI7La4KwbND5ipcS4oWyuE-tGtawLOuU+ysCw5bGVqdLxvy8jZuQBbT5W4QNsY3b6t-o7YVfQm4ZIEeEzUYbsODmQ-AgUbctLUlqCxksui82nsW23z9uRzxJ1O6T4Op6Q6eECn5b10smcm8jqx9YgOU0LX9cl6rZeaxXsMYF9-at77Od5wXIawGkxDRGPdcziaYelxHQ+odr1clugY8j3vhD9i33tZwrHdvd3rKGnPHKL0fy+Ff390jeXW9lRUU6G6fbdJZ-dc0DXgPDejtgbO3-vwWG0gjAT2zpURA-hvCbVkByGcBcpTNnnm1Dq4dX6bwmlXMmKDnQ6AbmVaQopYEKxSsg-AqDSGQAwZ9IMz81Z4NAYLcGxC0FkLOoCL6qB-KEG8FQv2QJKiCOEX8amrDB4cPAeIyR3h9Zvh-pPIy1BSBlH9CrIgIDh6EPBtcdYCZ9YflEX-D8WidGE30VvQx2RjEQXdsQJIo4FIiFsHPBW1A5YDUVJgY8j13FaIrJQZGtj2HDzKhyNx5jPHUGiMjXx-V-DygCQ9TAgYbijjROEpKkSaBvwmsAdgwAgA">',
       '<em class="fa fa-search" title="Query"></em> Query',
       '</button>'
     ].join(' ');
@@ -588,11 +588,18 @@ var helper = function(cm, events) {
          Shortcut for field Summary statistics
          @amount
          <=>
-         groupby().summarize([{name: 'amount', ops: ['count','valid','missing','distinct','sum','average','min','max']}]).execute($data)
+         groupby().summarize([{name: 'amount', ops: ['count','valid','missing','distinct']}]).execute($data)
+
+         @@amount then ops array add ['sum','average','min','max']
          */
-        if (lemon.startWith(dlAnalyst, '@')) {
-          aResult = dl.groupby().summarize([{name: lemon.ltrim(dlAnalyst, '@'), ops: [
+        if (lemon.startWith(dlAnalyst, '@@')) {
+          aResult = dl.groupby().summarize([{name: lemon.ltrim(dlAnalyst, '@@'), ops: [
             'count', 'valid', 'missing', 'distinct', 'sum', 'average', 'min', 'max'
+          ]}]).execute(aJson);
+        }
+        else if (lemon.startWith(dlAnalyst, '@')) {
+          aResult = dl.groupby().summarize([{name: lemon.ltrim(dlAnalyst, '@'), ops: [
+            'count', 'valid', 'missing', 'distinct'
           ]}]).execute(aJson);
         } else {
           var useEditorData = dlAnalyst.indexOf('$data') != -1;

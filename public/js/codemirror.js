@@ -258,7 +258,7 @@ function intlJsonQueries(host) {
       '</a>',
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
-      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRz0ALEdAU-CYTSFSDaDzRej4MplDk9DBGjCkCmoRwAAXggPwsHtVgAPABeAB8jiSxH8yylyAAFABKbKSgMc1GEfMhTjlQgiADksZzCfrBSWBxC9YpzfQrfrADckHk+2Vbsixn29Ld0NQlfWwqowsXroq3ZXDmlDYWrZAozG4wnIOhfKVNu2qrF4lU9NFO6W+-B+ztcSPqCP4Fd5zvDoapbpIKmaZeoUgboNkv66PmG67PAwScKOsDeHkx4iDSGQZBIgZXEhegoZAACs6GqNuViHKWgbyAB6bAcQoElv6FEFtBW7fpu8DFIQmiErAFKVK6sSlJg+ikHsRSDogRALLylhZjmSx5vm9YVIC9bFuR5ZovmnCNgevZCPW94SEppL+PW+ndvGvbEdkK6uusUFsSRsm5gWakMRplbVrWDZNpZrZnh2Bn+q+sDvp+RmPs+hDzouy5XKu9nMfAJGQI4bKVICJSQL46DoO2QggCASQib40rZN2ZQgE+STwCAbGIKQUogEhADWpAgNAAAKACS-SMlxJQ8YQHQAConqyyyrM6GzwEkWbJEaJqaPGSrGrAlAcnWvADkgRCoGZkAAEK1PYNQsvwF5xD0-iaFUiCIFQsBLG6soKkqlDUEe43OUs2TbRZLYiAAwj2X2VHshoPbA-pSiQmy3SSFQJh9NDHpUP1-TwO0NXoB0g5ZkDiXtX27BelQGvq+D3cE8Z6Jx1AbJ6zDwMwCz0IQlR6Ig5U9tk4l5JjSljuqeOg2jlNlLDRQ3ZT92bEUtP0380RExQbMc5AXM85Z2Sjqg45JILU5hjxemQPjh7i9Dktw8bM6m4Tu1q5MGtawDYF27OYHbfewP+GUz3rGDE1lPDjsSRQj1VJAGMu5z3OloLFT8KLAdrsHyc0PmkVxLihZh6rKPR7H7Px7r7KwILOezdFftp0H4uZ5A2dPrnhD5zLhdR+xsfdXTCbhkgR4TMZKeC4OZD8LxqeB+D42oLGSz-hPpBT5UndO0XPfZss6tlyva-j+Wa9LDP6fi6sz2IItNAH0NBeb93Mc779PvoHT-Znw38+L-+IawGkYg0QP6rxnCaDeEct7PzknvTWCd36EH7ILDAH9T511nsHS+VMb6skNAAjkwDEGgLWg-SBT8MbbQqFOFO6Dz7jSoavGgEDiafW3jAuOcDy7UMrttaQRgv5z0qIgfw3g4ayA5DOf8UpmyAOurdLurDoG7w4VrcRzodCEEFtIUUAjg6TTEfgCRGjIDSNpkGUhLCaBsOUaXThajJGaMoUCCgLVCDeF0Y3ZxrJXHeD+PrCxkdFEl1dtzQEdNUA+KTm+Wh38MrUFIGUf04ciDkJfrArW1x1gJiTh+Dx9CPwJKSarVJ7DbEZKuFk72WMORJAQgdWwADg7UEDq9RUmBjykwQgkislBxbFKCWk7aNSsL1OoNEcWzSXr+HlG0kmmAsLdLRL08a-SrFKNfuwYAQA">',
+      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRz0ALEdAU-CYTSFSDaDzRej4MplDk9DBGjCkCmoRzwBYAAUcMfggPwsHtVgAPABeAB8jiSxH8yylyAAFABKbKSgMc1GEYshTjlQgiADkiYLKebBSWBxCzYp7fQnebADckHkh2VbsixkO9Ld0NQlc2wqowuXroq3bXDmlDaWrZAYwmkynIOhfKVNt2qrF4lU9NFe5Wh-BhztcRPqBP4FdlwepQsADEjiARUgKQJmWaQHmBZLEWxbNmB-jNuuVybusxY7rs8D7iBSFYJwrYnoOQjNs+EiIaSyGkf2yaDmY6bZpYMGFiWlGAihFb+oGZBosWhFtnRzakeR7HUX2A7NqoqHoduu44QeFILIcjiHIaUq6BB2ZeoUgboNk6m6Jh8nBJwk6wN4eTniINIZBkEiBlcll6NZkAAKx2dJqmVjxPSQTpxB6VxVbyMZ2H7lYjh6Mp8mqfJxSEJohKwBSlSurEpSYPopB7EUo6IEQCy8sx+asQhSGcRuroYVhe4HmylSAiUkC+Og6DdkIIAgEkOW+NK2T9mUIBvkk8AgPJiCkFKICWQA1qQIDQAACgAkv0jJJSUKWEB0AAqF6sssqzOhs8BJHmyRGiamjJkqxqwJQHJNrwI5IEQqDCZAABCtT2DULL8DecQ9P4mhVIgiBULASxurKCpKpQ1BngdLFLNkL20R2IgAMIDsjlR7IakOwP6UokJsYMkhUKaIzQ56VKj6M8K9k16J9uN0ZA+Xvcjuw3pUBr6vgEPBMmeiJdQGyesw8DMAs9CEJUeiIANA7ZPleRM4hU7quzeP00LZRk0UoNCxDmxFGLEt-NE3MUPLiuQMrqt0dkk6oNOSRa3OYYpSRkAc6eBsk0b5M+wuftc299uTI7zuY-p4eLvpL3Pjj-hlDD6z44dZQU1HBUUFDVTQaVaOx0rKuVlrFT8Hrmdbjntc0MWr7voQpb53btMl4zFdOyrzda23cQfunDfZwbzeQK3b6jx3XfRz38Cl7BCwreLKbhkgZ4TJRdda6OZD8Kl9dZwTB2oImSyaUfpAn5Upvd8XK99wrlfq9WD+H1-21LGfjcDarBhogK6NA74P0XoXZeq9lhawwOLYcADJ6X2vppEMsA0jEGiIg++C4TRPyXi-WB5d34DwrOgRB8DKGEGHP-ce58c7AOFmA1khpMEchwbQvB90oE8yRq-MuNdsp1wYYAg6FQ5yA0IdA4hb846DxEbALW0gjDIIvpURA-hvDk1kByBcmkpTtiwSDMGz8BEkIdh-PRzodCEBUaKdROcjq6PwPouxkAjFiyDHwouFj5HWLcbY3QNcgQUFmoQbwTip5hNZBE7wfwPa+JgQE8hgJxaoHiTXL8YiUGNWoKQMo-oC5EDkUI-uztrjrBTDXH80SJE-kKcUu2ZS14VJVlUzKw9iBJHMp9WwmCc7UCznDRUmBzx83MoUmslADYtP8UIl6HJel1JEAM6IBthmw38PKMZvNMCOWmWiWZB15k0EEWvYA7BgBAA">',
       '<em class="fa fa-search" title="Query"></em> Query',
       '</button>'
     ].join(' ');
@@ -602,10 +602,24 @@ var helper = function(cm, events) {
 
          @@amount then ops array add ['sum','average','min','max']
 
+         #memo <=> groupby('memo').execute($data)
+
+         #memo&{'amount':'sum','memo':'count'}
+         <=>
+         groupby('memo').summarize({'amount':'sum','memo':'count'}).execute($data)
+
          $table <=> format.table($data, { minwidth: 200, maxwidth: 500 }))
          $summary <=> format.summary($data)
          */
-        if (lemon.startWith(dlAnalyst, '\\$')) {
+        if (lemon.startWith(dlAnalyst, '#')) {
+          var gTmp = lemon.ltrim(dlAnalyst, '#').split('&');
+          if (gTmp.length == 1 || lemon.isBlank(gTmp[1]) || !mirror.isJson(gTmp[1], true)) {
+            aResult = dl.groupby(gTmp[0]).execute(aJson);
+          } else {
+            aResult = dl.groupby(gTmp[0]).summarize(mirror.parse(gTmp[1])).execute(aJson);
+          }
+        }
+        else if (lemon.startWith(dlAnalyst, '\\$')) {
           switch (dlAnalyst) {
             case '$table':
               aResult = dl.format.table(aJson, { minwidth: 200, maxwidth: 500 });

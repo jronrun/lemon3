@@ -258,7 +258,7 @@ function intlJsonQueries(host) {
       '</a>',
       '<button type="button" class="btn btn-secondary borderinfo" data-dismiss="modal">Cancel</button>',
       '<button type="button" id="' + lemon.ltrim(doId, '#') + '" class="btn btn-primary icondh" ',
-      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGYKtBhgkSADFyiA5cgBxQpluF7xyAHcAFgHtdCUgAbQBdGzs9GGJieGRHQgBzET14EIAGMIA6Uj1g-2JIYkIEAFtCSHhKfDzU9KzcvQAfWr1HRwISZDomVgBaSABZf1gk-0h6dGRdRyNsyfwAByXC9H1IfyWSeHRCw0gAEmpgw9gTo8IAD1IMVFOk9Yf0U8Qno7fTwmlT2EJTsr+fJHJCIU78YGHQq-aFHWD+F5HVCkABe-yO022pxKSWupz8JHRhw8hDKQ12AGNfI4AEwLABKyWuS0gqEI8GIVIowWSIhAAD11hgOFYAMwLVD4ABGmylACtCBTMGyOVTqElHAAWBZ6BGQeHoXakUas9mc3zqjpWOBINDoRz0ALEdAU-CYTSFSDaDzRej4MplDk9DBGjCkCmoRzwBYAAUcMfggPwsHtVgAPABeAB8jiSxH8yylyAAFABKbKSgMc1GEYshTjlQgiADkiYLKebBSWBxCzYp7fQnebADckHkh2VbsixkO9Ld0NQlc2wqowuXroq3bXDmlDaWrZAYwmkynIOhfKVNt2qrF4lU9NFe5Wh-BhztcRPqBP4FdlwepQsADEjiARUgKQJmWaQHmBZLEWxbNmB-jNuuVybusxY7rs8D7iBSFYJwrYnoOQjNs+EiIaSyGkf2yaDmY6bZpYMGFiWlGAihFb+oGZBosWhFtnRzakeR7HUX2A7NqoqHoduu44QeFILIcjiHIaUq6BB2ZeoUgboNk6m6Jh8nBJwk6wN4eTniINIZBkEiBlcll6NZkAAKx2dJqmVjxPSQTpxB6VxVbyMZ2H7lYjh6Mp8mqfJxSEJohKwBSlSurEpSYPopB7EUo6IEQCy8sx+asQhSGcRuroYVhe4HmylSAiUkC+Og6DdkIIAgEkOW+NK2T9mUIBvkk8AgPJiCkFKICWQA1qQIDQAACgAkv0jJJSUKWEB0AAqF6sssqzOhs8BJHmyRGiamjJkqxqwJQHJNrwI5IEQqDCZAABCtT2DULL8DecQ9P4mhVIgiBULASxurKCpKpQ1BngdLFLNkL20R2IgAMIDsjlR7IakOwP6UokJsYMkhUKaIzQ56VKj6M8K9k16J9uN0ZA+Xvcjuw3pUBr6vgEPBMmeiJdQGyesw8DMAs9CEJUeiIANA7ZPleRM4hU7quzeP00LZRk0UoNCxDmxFGLEt-NE3MUPLiuQMrqt0dkk6oNOSRa3OYYpSRkAc6eBsk0b5M+wuftc299uTI7zuY-p4eLvpL3Pjj-hlDD6z44dZQU1HBUUFDVTQaVaOx0rKuVlrFT8Hrmdbjntc0MWr7voQpb53btMl4zFdOyrzda23cQfunDfZwbzeQK3b6jx3XfRz38Cl7BCwreLKbhkgZ4TJRdda6OZD8Kl9dZwTB2oImSyaUfpAn5Upvd8XK99wrlfq9WD+H1-21LGfjcDarBhogK6NA74P0XoXZeq9lhawwOLYcADJ6X2vppEMsA0jEGiIg++C4TRPyXi-WB5d34DwrOgRB8DKGEGHP-ce58c7AOFmA1khpMEchwbQvB90oE8yRq-MuNdsp1wYYAg6FQ5yA0IdA4hb846DxEbALW0gjDIIvpURA-hvDk1kByBcmkpTtiwSDMGz8BEkIdh-PRzodCEBUaKdROcjq6PwPouxkAjFiyDHwouFj5HWLcbY3QNcgQUFmoQbwTip5hNZBE7wfwPa+JgQE8hgJxaoHiTXL8YiUGNWoKQMo-oC5EDkUI-uztrjrBTDXH80SJE-kKcUu2ZS14VJVlUzKw9iBJHMp9WwmCc7UCznDRUmBzx83MoUmslADYtP8UIl6HJel1JEAM6IBthmw38PKMZvNMCOWmWiWZB15k0EEWvYA7BgBAA">',
+      'data-qry-intl="FAegVGAECCB2CGAbAngZwC6QGSQIoFcBTAJwEtDVJTZIApAZQHkA5SMEYAb2AEh4EUGAFyQARKIA0vAI5FiyEdx49eAXyk8AZqUSEAJqhEBGDagD2xdIt5byiPSIDkjjTwt6SI2PkSI1wVVAwYEhIADE7AxDIAHFCTAjCe2NIAHcACzNdCUgAbQBdcMiYYmJ4ZGjCAHMRPXhcgAZ8gDpSPRyLSGJCBABbQkh4Snw22vqm1r0AHxG9aOiCEmQ6JlYAWkgAWTNYKrNIenRkXWijZoP8AAdLi3R9SDNLknh0C0NIABJqHI-Yb8-CAAPUgYVA-Kp3cHoH6ISGfWE-QjSH6wQg-XpmdqfJCIH78LEfCwoomfWBmaGfVCkABeaM+RyeP26VSBPwyJDpHyShF6mxeAGN0tEAEznABK1SBl0gqEI8GIgooOWqIhAAD07hgOKEAMznVD4ABGD0NACtCPzMLL5YLqFVogAWc56cmQMnoF6kHYyuUK9J2+ahei3aLmSyQQ3LS7EMwANzaA20ST0g1gKfcJAjUZj8Y8n04GeIgVChcgRkGqH5OQakA8lcDMAEaHQ0XomUs-PwmE0nST9guvV68uWGE9GFI-NQ0Xg5wAAtFZ-AMfhYC3QgAeAC8AD5olUY1dIwAKACUzQNg-lNMIR9ynD6hCcS7MK-QLgel3euUc-Jfq5cjixkgbQAb0IJUrsAF6CC6DUJajj5Ko+RnkCFpdjeHx1B6J4NrOi7LqukDoOkPQfpQ8plMs8B6Cm34XgB8Cxs8LKgdQoHwICCENoa5wAMTRLx-QYpAW7bpA+4vpcx6OEJZiOChgJoXcR6YS88A4QJslYJwjjPq+jhCI49ESDJPJyYZv76cWIk7iEEmHsgR6mRi8nnvgl5kLSR46Xp-6GcZznmT+f5vqoClKRhWHqQ2-LnB80QfB6hq6DZYk9sQQ7oM0SW6CpUU5JwYGwKkbTESIwoNA0EhDoCJV6GVkAAKyVWFCUXkO8ipZA6WZW5HmOap2ENnocVRQlUVdIQmgcrA-IDJ2pQ9Jg+ikK8xCQEBiBEOcKp2QeUmOYFrmoZ2ymDdFoShoQAwYt0kDpOg6CfkIIAgFUq3pEazS-r0IBMVU8AgFFiCkIaIAlQA1qQIDQAACgAkmsErTd0s2EPMAAqJEylcNyWPc8BVPu1Set6mgrpaXqwOR3RCLwgFIEQqAGZAABCIz2MM0r8IMpTlA8miDL4VCwJcXYmualqUNQRHY-ZlzNPTll+ZAADCIWywMrweogbruYamZmIL3L9Ku0s0MRAzy4rPAMyDegs+rr4bYzFCyy8vMDO6eu+DkK4eNoqLputzDwMw5z0NdtaIN9IXNJtbQ2zJ4F2o7GuW3rvQG+tRs+7rnT+1N1D3JtTMR1Hegx8rWVgagEFVEn0HjrNb4iE7hEZ94WeZk3sEty7W0UOXAyV7Hr7NL3cFZfT9Ft2YvRi3cms470AsD0zIuDOJ+3D9HfVJ-0-Bpwv6HL4fNBHoxzGECea+l27MvwNvkm76P59J1fZQsXPJ9Lxn5+QEvkxL+N876u3Nlva2kB4YeFXBOJARF9imSPknICZB+BzWPovLW2NUBLkuClNBpAMEDFzvfCBT8oGRxHjHIhJDUFXhIZcLBp8M43DFogUmNA6FozAYPChz8rhJwwB4WMLC-64PwSlUcaZ5QplEcQ2C3oyHgM3pQneBwK4xxEYQWMwj0CiOYT-bBy92E+C4TKD0sjiDyN0YoqmfCN6P0EQrem-RoJH2Maw7G7jiE0BUfwtRLjX4x18fwJO0gjDiJwQMRAZhUiZlkPKWCKVDR-jqJ1AJTiaDqJfpomhzQkmWB0IQCJOponL1xok-AySSkRnScORxD8cnBPyXvIpKTSluMxBQCGhBUgVP-j0mUfTUiojrk0gRVCtHNAxHWUZB82JeIkTdagpBejuXXgMZx0yClAjuKuA+HFBk+I4uszZ98gm7L3vspaH9iBVCKizCIaZl7UEXhLC0mBiIeyKus68lAM6XJ2Tvem8pHnHJEC8lMGd3nizMGaL57tMA1X+bSQF2NgUtOtsAdgwAgA">',
       '<em class="fa fa-search" title="Query"></em> Query',
       '</button>'
     ].join(' ');
@@ -287,7 +287,7 @@ function intlJsonQueries(host) {
             if (host.queries.qMirror.isJson()) {
               var pg = lemon.homeProgress();
               var qrys = host.queries.qMirror.json(),
-                qryResult = host.queryJson(qrys.query, 1 === qrys.fileds ? undefined : qrys.fileds, qrys.analyst);
+                qryResult = host.queryJson(qrys.query, 1 === qrys.fileds ? undefined : qrys.fileds, qrys.analyst, qrys.sort);
               if (-1 === qryResult) {
                 lemon.alert('There is none valid json.'); pg.end();
                 return;
@@ -586,12 +586,18 @@ var helper = function(cm, events) {
       tools.queries.shownCall = shownCall;
       tools.queries.qModal && tools.queries.qModal.toggle();
     },
-    queryJson: function (mongoStyleQry, fields, dlAnalyst) {
+    queryJson: function (mongoStyleQry, fields, dlAnalyst, sortObj) {
       var text = tools.selected();
       if (!mirror.isJson(text)) {
         return -1;
       }
 
+      /*
+       sortObj {
+          field: '',                  //sort by this field
+          order: ''                   //1 asc, 0 desc
+       }
+       */
       var aJson = mirror.parse(text), aResult = '';
       if (!lemon.isBlank(dlAnalyst) && lemon.isString(dlAnalyst)) {
         /*
@@ -661,7 +667,13 @@ var helper = function(cm, events) {
         }
       }
 
-      return lemon.queries(mongoStyleQry, aJson, fields);
+      var theR = lemon.queries(mongoStyleQry, aJson, fields);
+
+      if (lemon.isArray(theR) && ([0, 1].indexOf((sortObj = (sortObj || {})).order) !== -1)) {
+        return lemon.sorts(theR, sortObj.field, sortObj.order);
+      }
+
+      return theR;
     },
     standardJsonTgl: function () {
       if (!tools.checkIsJson()) {

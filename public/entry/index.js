@@ -202,8 +202,61 @@ function values(json, prop) {
   return val;
 }
 
+// value 1 asc, 0 desc
+function compare(attr, value) {
+  var x, y, hasAttr = !lemon.isBlank(attr), valG = function (compareObj) {
+    if (lemon.isBlank(compareObj)) {
+      return compareObj;
+    }
+
+    return (compareObj[attr] === null) ? '' : '' + compareObj[attr];
+  };
+
+  if (value) {
+    return function (a, b) {
+      x = hasAttr ? a[attr] : a, y = hasAttr ? b[attr] : b;
+      if (lemon.isNumber(x) && lemon.isNumber(y)) {
+        return x - y;
+      }
+
+      x = valG(a), y = valG(b);
+      return x < y ? -1 : (x > y ? 1 : 0)
+    }
+  }
+  else {
+    return function (a, b) {
+      x = hasAttr ? a[attr] : a, y = hasAttr ? b[attr] : b;
+      if (lemon.isNumber(x) && lemon.isNumber(y)) {
+        return y - x;
+      }
+
+      var x = valG(a), y = valG(b);
+      return x < y ? 1 : (x > y ? -1 : 0)
+    }
+  }
+}
+
 var homeProgress = null;
 lemon.register({
+  sorts: function (anArr, prop, order) {
+    if (anArr == null || !lemon.isArray(anArr)) {
+      return anArr;
+    }
+
+    if (arguments.length === 1) {
+      return anArr.sort();
+    }
+
+    if (lemon.isBlank(order) || 1 === order || 'asc' === order) {
+      order = 1;
+    } else if (0 === order || 'desc' === order) {
+      order = 0;
+    } else {
+      order = 1;
+    }
+
+    return anArr.sort(compare(prop, order));
+  },
   gets: function(json, path) {
     if (!lemon.isJson(json)) {
       return json;

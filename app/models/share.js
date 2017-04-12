@@ -76,7 +76,7 @@ share.isAvailable = function(aShare, requestInfo) {
   }
 
   //-1 is Unlimited
-  if (-1 != aShare.count && ((aShare.used_count + 1) >= aShare.count)) {
+  if (-1 != aShare.count && ((aShare.used_count + 1) > aShare.count)) {
     return answer.fail('No more request count. max count ' + aShare.count);
   }
 

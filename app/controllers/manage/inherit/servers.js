@@ -157,23 +157,32 @@ module.exports = function (router, index, root) {
         queryHandle: function(realQry, qry) {
           if (realQry['env_id']) {
             realQry['env_id'] = parseInt(qry['env_id']);
-          }
 
-          _.extend(realQry, {
-            env_id: {
-              $in: result.envIds
+            if (!req.user.isAdmin && result.envIds.indexOf(realQry.env_id) == -1) {
+              realQry.env_id = -1;
             }
-          });
+          } else {
+            _.extend(realQry, {
+              env_id: {
+                $in: result.envIds
+              }
+            });
+          }
 
           if (realQry['group_id']) {
             realQry['group_id'] = parseInt(qry['group_id']);
+
+            if (!req.user.isAdmin && result.groupIds.indexOf(realQry.group_id) == -1) {
+              realQry.group_id = -1;
+            }
+          } else {
+            _.extend(realQry, {
+              group_id: {
+                $in: result.groupIds
+              }
+            });
           }
 
-          _.extend(realQry, {
-            group_id: {
-              $in: result.groupIds
-            }
-          });
         }
       }, req, res, next);
     });

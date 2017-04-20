@@ -91,8 +91,13 @@ var languages = {}, modes = {}, loadedTheme = ['default', 'lemon'], themes = [
   'colorforth','dracula','eclipse','elegant','erlang-dark','hopscotch','icecoder','isotope','lesser-dark','liquibyte',
   'material','mbo','mdn-like','midnight','monokai','neat','neo','night','paraiso-dark','paraiso-light','pastel-on-dark',
   'railscasts','rubyblue','seti','solarized,dark','solarized,light','the-matrix','tomorrow-night-bright','tomorrow-night-eighties',
-  'ttcn','twilight','vibrant-ink','xq-dark','xq-light','yeti','zenburn'
+  'ttcn','twilight','vibrant-ink','xq-dark','xq-light','yeti','zenburn',
+  ], thirdThemes = [
+    'one-dark'
   ];
+
+//merge third themes
+lemon.each(thirdThemes, function (a3rdTh) { themes.push(a3rdTh); });
 
 function initializeLangs() {
   //["name", "mime", "mode"], Optional property: ["ext", "mimes", "file", "alias"]
@@ -1441,7 +1446,20 @@ mirror.X2JS = X2JS;
 mirror.X2JSFactory = X2JSFactory;
 mirror.openInShows = openInShows;
 mirror.css = function (target) {
-  lemon.css(lemon.fullUrl('/components/codemirror' + target));
+  var aPath = '/components/codemirror' + target, isThirdTheme = false;
+
+  lemon.each(thirdThemes, function (a3rdth) {
+    if (target.indexOf(a3rdth) != -1) {
+      isThirdTheme = true;
+      return false;
+    }
+  });
+
+  if (isThirdTheme) {
+    aPath = '/css/mirror' + target;
+  }
+
+  lemon.css(lemon.fullUrl(aPath));
 };
 
 module.exports = mirror;

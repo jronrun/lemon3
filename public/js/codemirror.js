@@ -158,6 +158,19 @@ function langInfo(lang) {
   return null;
 }
 
+function isThirdTheme(target) {
+  var isThirdTheme = false;
+
+  lemon.each(thirdThemes, function (a3rdth) {
+    if (target.indexOf(a3rdth) != -1) {
+      isThirdTheme = true;
+      return false;
+    }
+  });
+
+  return isThirdTheme;
+}
+
 function loadTheme(th) {
   th = lemon.startWith(th, 'solarized') ? 'solarized' : th;
   if (themes.indexOf(th) == -1) {
@@ -1446,16 +1459,9 @@ mirror.X2JS = X2JS;
 mirror.X2JSFactory = X2JSFactory;
 mirror.openInShows = openInShows;
 mirror.css = function (target) {
-  var aPath = '/components/codemirror' + target, isThirdTheme = false;
+  var aPath = '/components/codemirror' + target;
 
-  lemon.each(thirdThemes, function (a3rdth) {
-    if (target.indexOf(a3rdth) != -1) {
-      isThirdTheme = true;
-      return false;
-    }
-  });
-
-  if (isThirdTheme) {
+  if (isThirdTheme(target)) {
     aPath = '/css/mirror' + target;
   }
 

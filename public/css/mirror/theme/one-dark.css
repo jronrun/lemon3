@@ -9,7 +9,7 @@
 /* UI Theme /----------------------------------------------------------------------------------- */
 
 .cm-s-one-dark.CodeMirror { background-color: hsl(220, 13%, 18%); color: hsl(220, 14%, 71%);}
-.cm-s-one-dark .CodeMirror-gutters { background: #555; border-right: 2px solid #314151; }
+.cm-s-one-dark .CodeMirror-gutters { background: #555; border-right: 1px solid #314151; }
 .cm-s-one-dark .CodeMirror-guttermarker-subtle { color: azure; }
 .cm-s-one-dark .CodeMirror-activeline-background { background: #314151; }
 

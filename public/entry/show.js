@@ -62,7 +62,7 @@ var show = {
       });
 
       show.instance = mirror.shows(show.taId);
-      show.instance.setSize(null, $(cardId).height());
+      show.instance.setSize(null, $(cardId).height() + 16);
       show.instance.chgStyle({
         padding: '1.2rem'
       });

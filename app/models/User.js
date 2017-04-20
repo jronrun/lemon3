@@ -215,7 +215,7 @@ var user = model_bind('user', model);
                 var theSource = {
                   resource: theResources,
                   innerPowers: theInnerPowers
-                };
+                }, definedUserId = definedUser._id.toString();
 
                 Power.hasInnerPower('PUBLIC_LIST', function (hasPublicList) {
                   if (hasPublicList) {
@@ -226,15 +226,66 @@ var user = model_bind('user', model);
                       interface: theInterface
                     });
 
+                    //self environment
+                    Environment.find({ 'create_by.id': definedUserId}, {id: 1}).sort({_id: -1}).toArray(function (envErr, envItems) {
+                      if (envErr) {
+                        deferred.reject(envErr);
+                      } else {
+                        _.each(envItems || [], function (envItem) {
+                          theSource.env.push(envItem.id);
+                        });
+
+                        //self group
+                        Group.find({ 'create_by.id': definedUserId}, {id: 1}).sort({_id: -1}).toArray(function (groupErr, groupItems) {
+                          if (groupErr) {
+                            deferred.reject(groupErr);
+                          } else {
+                            _.each(groupItems || [], function (groupItem) {
+                              theSource.group.push(groupItem.id);
+                            });
+
+                            //self server
+                            Server.find({ 'create_by.id': definedUserId}, {id: 1}).sort({_id: -1}).toArray(function (serverErr, serverItems) {
+                              if (serverErr) {
+                                deferred.reject(serverErr);
+                              } else {
+                                _.each(serverItems || [], function (serverItem) {
+                                  theSource.server.define.push(serverItem.id);
+                                });
+
+                                //self interface
+                                Interface.find({ 'create_by.id': definedUserId}, {id: 1}).sort({_id: -1}).toArray(function (interfErr, interfItems) {
+                                  if (interfErr) {
+                                    deferred.reject(interfErr);
+                                  } else {
+                                    _.each(interfItems || [], function (interfItem) {
+                                      theSource.interface.define.push(interfItem.id);
+                                    });
+
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
+
                     userReourceCache.set(userId, theSource);
                     deferred.resolve(theSource);
                   } else {
-                    var definedUserId = definedUser._id.toString();
 
                     //npl environment
                     Environment.find({
-                      id: { $in: theEnv},
-                      'create_by.id': definedUserId
+                      $or: [
+                        {
+                          id: { $in: theEnv},
+                          'create_by.id': definedUserId
+                        },
+                        {
+                          'create_by.id': definedUserId
+                        }
+                      ]
                     }, {id:1}).sort({_id: -1}).toArray(function (envErr, envItems) {
                       if (envErr) {
                         deferred.reject(envErr);
@@ -246,8 +297,15 @@ var user = model_bind('user', model);
 
                         //npl group
                         Group.find({
-                          id: { $in: theGroup},
-                          'create_by.id': definedUserId
+                          $or: [
+                            {
+                              id: { $in: theGroup},
+                              'create_by.id': definedUserId
+                            },
+                            {
+                              'create_by.id': definedUserId
+                            }
+                          ]
                         }, {id:1}).sort({_id: -1}).toArray(function (groupErr, groupItems) {
                           if (groupErr) {
                             deferred.reject(groupErr);
@@ -260,8 +318,15 @@ var user = model_bind('user', model);
 
                             //npl server
                             Server.find({
-                              id: { $in: theServer.define},
-                              'create_by.id': definedUserId
+                              $or: [
+                                {
+                                  id: { $in: theServer.define},
+                                  'create_by.id': definedUserId
+                                },
+                                {
+                                  'create_by.id': definedUserId
+                                }
+                              ]
                             }, {id:1}).sort({_id: -1}).toArray(function (serverErr, serverItems) {
                               if (serverErr) {
                                 deferred.reject(serverErr);
@@ -275,8 +340,15 @@ var user = model_bind('user', model);
 
                                 //npl interface
                                 Interface.find({
-                                  id: { $in: theInterface.define},
-                                  'create_by.id': definedUserId
+                                  $or: [
+                                    {
+                                      id: { $in: theInterface.define},
+                                      'create_by.id': definedUserId
+                                    },
+                                    {
+                                      'create_by.id': definedUserId
+                                    }
+                                  ]
                                 }, {id:1}).sort({_id: -1}).toArray(function (interfErr, interfItems) {
                                   if (interfErr) {
                                     deferred.reject(interfErr);

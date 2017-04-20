@@ -78,6 +78,20 @@ var shar = {
         }
         content = lemon.dec(content);
 
+        var blackBG = ['dark', 'night', 'black'], isBlackBG = false;
+        lemon.each(blackBG, function (bbg) {
+          if (theme.indexOf(bbg) != -1) {
+            isBlackBG = true;
+            return false;
+          }
+        });
+
+        if (isBlackBG) {
+          lemon.delay(function () {
+            $('body').css({'background-color': 'black'});
+          }, 800);
+        }
+
         var mInfo = mirror.modeInfo(lang) || {};
         if ((['JSON', 'JSON-LD', 'Markdown', 'JavaScript', 'Embedded Javascript', 'TypeScript'].indexOf(mInfo.name) != -1)
           || (['sql', 'css', 'xml'].indexOf(mInfo.mode) != -1)) {

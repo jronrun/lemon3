@@ -253,6 +253,10 @@ var user = model_bind('user', model);
                                   _.each(serverItems || [], function (serverItem) {
                                     theSource.server.define.push(serverItem.id);
                                   });
+
+                                  if (3 == theSource.server.scope) {
+                                    theSource.server.scope = 2;
+                                  }
                                 }
 
                                 //self interface
@@ -260,12 +264,19 @@ var user = model_bind('user', model);
                                   if (interfErr) {
                                     deferred.reject(interfErr);
                                   } else {
-                                    if (4 != theSource.server.scope) {
+                                    if (4 != theSource.interface.scope) {
                                       _.each(interfItems || [], function (interfItem) {
                                         theSource.interface.define.push(interfItem.id);
                                       });
+
+                                      if (3 == theSource.interface.scope) {
+                                        theSource.interface.scope = 2;
+                                      }
                                     }
 
+                                    //pl finish
+                                    userReourceCache.set(userId, theSource);
+                                    deferred.resolve(theSource);
                                   }
                                 });
                               }
@@ -275,8 +286,6 @@ var user = model_bind('user', model);
                       }
                     });
 
-                    userReourceCache.set(userId, theSource);
-                    deferred.resolve(theSource);
                   } else {
 
                     //npl environment
@@ -322,15 +331,8 @@ var user = model_bind('user', model);
 
                             //npl server
                             Server.find({
-                              $or: [
-                                {
-                                  id: { $in: theServer.define},
-                                  'create_by.id': definedUserId
-                                },
-                                {
-                                  'create_by.id': definedUserId
-                                }
-                              ]
+                              id: { $in: theServer.define},
+                              'create_by.id': definedUserId
                             }, {id:1}).sort({_id: -1}).toArray(function (serverErr, serverItems) {
                               if (serverErr) {
                                 deferred.reject(serverErr);
@@ -341,34 +343,64 @@ var user = model_bind('user', model);
                                 theServer.define = nplServer;
                                 _.extend(theSource, { server: theServer});
 
+                                //self server
+                                Server.find({ 'create_by.id': definedUserId}, {id: 1}).sort({_id: -1}).toArray(function (selfServerErr, selfServerItems) {
+                                  if (selfServerErr) {
+                                    deferred.reject(selfServerErr);
+                                  } else {
+                                    if (4 != theSource.server.scope) {
+                                      _.each(selfServerItems || [], function (selfServerItem) {
+                                        theSource.server.define.push(selfServerItem.id);
+                                      });
 
-                                //npl interface
-                                Interface.find({
-                                  $or: [
-                                    {
+                                      if (3 == theSource.server.scope) {
+                                        theSource.server.scope = 2;
+                                      }
+                                    }
+
+                                    //npl interface
+                                    Interface.find({
                                       id: { $in: theInterface.define},
                                       'create_by.id': definedUserId
-                                    },
-                                    {
-                                      'create_by.id': definedUserId
-                                    }
-                                  ]
-                                }, {id:1}).sort({_id: -1}).toArray(function (interfErr, interfItems) {
-                                  if (interfErr) {
-                                    deferred.reject(interfErr);
-                                  } else {
-                                    var nplInterf = []; _.each(interfItems || [], function (interfItem) {
-                                      nplInterf.push(interfItem.id);
+                                    }, {id:1}).sort({_id: -1}).toArray(function (interfErr, interfItems) {
+                                      if (interfErr) {
+                                        deferred.reject(interfErr);
+                                      } else {
+                                        var nplInterf = []; _.each(interfItems || [], function (interfItem) {
+                                          nplInterf.push(interfItem.id);
+                                        });
+                                        theInterface.define = nplInterf;
+                                        _.extend(theSource, { interface: theInterface});
+
+
+                                        //self interface
+                                        Interface.find({ 'create_by.id': definedUserId}, {id: 1}).sort({_id: -1}).toArray(function (selfInterfErr, selfInterfItems) {
+                                          if (selfInterfErr) {
+                                            deferred.reject(selfInterfErr);
+                                          } else {
+                                            if (4 != theSource.interface.scope) {
+                                              _.each(selfInterfItems || [], function (selfInterfItem) {
+                                                theSource.interface.define.push(selfInterfItem.id);
+                                              });
+
+                                              if (3 == theSource.interface.scope) {
+                                                theSource.interface.scope = 2;
+                                              }
+                                            }
+
+                                            //npl finish
+                                            userReourceCache.set(userId, theSource);
+                                            deferred.resolve(theSource);
+                                          }
+                                        });
+
+                                      }
                                     });
-                                    theInterface.define = nplInterf;
-                                    _.extend(theSource, { interface: theInterface});
 
-
-                                    //npl finish
-                                    userReourceCache.set(userId, theSource);
-                                    deferred.resolve(theSource);
                                   }
                                 });
+
+
                               }
                             });
                           }

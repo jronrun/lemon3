@@ -249,18 +249,22 @@ var user = model_bind('user', model);
                               if (serverErr) {
                                 deferred.reject(serverErr);
                               } else {
-                                _.each(serverItems || [], function (serverItem) {
-                                  theSource.server.define.push(serverItem.id);
-                                });
+                                if (4 != theSource.server.scope) {
+                                  _.each(serverItems || [], function (serverItem) {
+                                    theSource.server.define.push(serverItem.id);
+                                  });
+                                }
 
                                 //self interface
                                 Interface.find({ 'create_by.id': definedUserId}, {id: 1}).sort({_id: -1}).toArray(function (interfErr, interfItems) {
                                   if (interfErr) {
                                     deferred.reject(interfErr);
                                   } else {
-                                    _.each(interfItems || [], function (interfItem) {
-                                      theSource.interface.define.push(interfItem.id);
-                                    });
+                                    if (4 != theSource.server.scope) {
+                                      _.each(interfItems || [], function (interfItem) {
+                                        theSource.interface.define.push(interfItem.id);
+                                      });
+                                    }
 
                                   }
                                 });

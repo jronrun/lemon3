@@ -2402,6 +2402,7 @@ var mapi = {
       apis.apiNoteInst = lemon.preview(lemon.fullUrl(uri), false, false, function(view, previewM) {
         mapi.noteView = view;
         mapi.noteView.tellEvent('SNAPLOAD', snapData || {});
+        $(previewM.elId).css({'background-color': 'black'});
         pg.end();
       }, false, {
         hide: function () {

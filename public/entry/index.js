@@ -1654,6 +1654,7 @@ lemon.register({
     }
 
     return {
+      elId: modalId,
       target: theModal,
       opened: function () {
         return 1 == lemon.data(modalId, 'shown');

@@ -47,16 +47,18 @@ var shar = {
   note: {
     render: function (share) {
       if (shar.note.detectRW(share, 4)) {
-        shar.views(share, lemon.fullUrl('/note'), false, false, function (view) {
+        shar.views(share, lemon.fullUrl('/note'), false, false, function (view, previewM) {
           view.tellEvent('SHARE_NOTE', share);
+          $(previewM.elId).css({'background-color': 'black'});
         });
       }
     },
 
     snapshotRender: function (share) {
       if (shar.note.detectRW(share, 5)) {
-        shar.views(share, lemon.fullUrl('/note'), false, false, function(view) {
+        shar.views(share, lemon.fullUrl('/note'), false, false, function(view, previewM) {
           view.tellEvent('SHARE_NOTE_SNAPSHOT', share);
+          $(previewM.elId).css({'background-color': 'black'});
         });
       }
     },
